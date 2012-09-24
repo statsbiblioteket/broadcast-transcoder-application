@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import junit.framework.TestCase;
 
 /**
@@ -10,7 +11,17 @@ import junit.framework.TestCase;
  * To change this template use File | Settings | File Templates.
  */
 public class BroadcastTranscoderApplicationTest extends TestCase {
-    public void testMain() throws Exception {
-         BroadcastTranscoderApplication.main(null);
+
+    public void testMainError() throws Exception {
+        try {
+            BroadcastTranscoderApplication.main(null);
+            fail();
+        } catch (OptionParseException e) {
+            //expected
+        }
+    }
+
+    public void testMainCorrect() throws OptionParseException {
+          BroadcastTranscoderApplication.main(new String[] {"-domsendpoint", "http://some.thing"});
     }
 }

@@ -15,7 +15,9 @@ import org.apache.commons.cli.PosixParser;
  */
 public class OptionsParser {
 
+    protected static final Option PID_OPTION = new Option("programpid", true, "The DOMS pid of the program to be transcoded");
     protected static final Option DOMS_ENDPOINT_OPTION = new Option("domsendpoint", true, "The service location for the DOMS endpoint");
+    protected static final Option VIDEO_BITRATE_OPTION = new Option("videobitrate", true, "The required video bitrate (kbps)");
 
     protected static Options options;
 
@@ -24,7 +26,9 @@ public class OptionsParser {
     public OptionsParser() {
         context = new Context();
         options = new Options();
+        options.addOption(PID_OPTION);
         options.addOption(DOMS_ENDPOINT_OPTION);
+        options.addOption(VIDEO_BITRATE_OPTION);
     }
 
 
@@ -37,7 +41,9 @@ public class OptionsParser {
             parseError(e.toString());
             throw new OptionParseException(e.getMessage(), e);
         }
+        parseProgramPid(cmd);
         parseDOMSEndpoint(cmd);
+        parseVideoBitrate(cmd);
         return context;
     }
 
@@ -50,6 +56,24 @@ public class OptionsParser {
             context.setDomsEndpoint(domsEndpoint);
         }
     }
+
+    protected void parseProgramPid(CommandLine cmd) throws OptionParseException {
+        String programPid = cmd.getOptionValue(PID_OPTION.getOpt());
+        if (programPid == null) {
+            parseError(PID_OPTION.toString());
+            throw new OptionParseException(PID_OPTION.toString());
+        } else {
+            context.setProgrampid(programPid);
+        }
+    }
+
+    protected void parseVideoBitrate(CommandLine cmd) {
+        String videoBitrate = cmd.getOptionValue(VIDEO_BITRATE_OPTION.getOpt());
+        if (videoBitrate != null) {
+            context.setVideoBitrate(Integer.parseInt(videoBitrate));
+        }
+    }
+
 
     protected void printUsage() {
         final HelpFormatter usageFormatter = new HelpFormatter();
