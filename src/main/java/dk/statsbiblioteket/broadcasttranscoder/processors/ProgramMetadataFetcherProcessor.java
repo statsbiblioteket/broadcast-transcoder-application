@@ -6,15 +6,9 @@ import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramStructure;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.broadcasttranscoder.util.JaxbWrapper;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
-import dk.statsbiblioteket.doms.central.CentralWebserviceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.namespace.QName;
-import javax.xml.ws.BindingProvider;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Map;
 
 /**
  *
@@ -35,7 +29,7 @@ public class ProgramMetadataFetcherProcessor extends ProcessorChainElement {
         CentralWebservice domsAPI = CentralWebserviceFactory.getServiceInstance(context);
         String structureXmlString = null;
         try {
-            structureXmlString = domsAPI.getDatastreamContents(context.getProgrampid(), "PROGRAM_STRUCTURE_SCHEMA");
+            structureXmlString = domsAPI.getDatastreamContents(context.getProgrampid(), "PROGRAM_STRUCTURE");
             logger.debug("Program Structure for " + context.getProgrampid() + "\n" + structureXmlString);
         } catch (Exception e) {
             throw new ProcessorException(e);
@@ -54,7 +48,7 @@ public class ProgramMetadataFetcherProcessor extends ProcessorChainElement {
         CentralWebservice domsAPI = CentralWebserviceFactory.getServiceInstance(context);
         String broadcastXmlString = null;
         try {
-            broadcastXmlString = domsAPI.getDatastreamContents(context.getProgrampid(), "PROGRAM_BROADCAST_SCHEMA");
+            broadcastXmlString = domsAPI.getDatastreamContents(context.getProgrampid(), "PROGRAM_BROADCAST");
             logger.debug("Broadcast Structure for " + context.getProgrampid() + "\n" + broadcastXmlString);
         } catch (Exception e) {
             throw new ProcessorException(e);

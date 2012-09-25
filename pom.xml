@@ -41,6 +41,11 @@
           <artifactId>jaxb-impl</artifactId>
           <version>2.1.12</version>
         </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.3</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -67,9 +72,6 @@
                                 <param>-npa</param>
                             </args>
                             <generatePackage>dk.statsbiblioteket.broadcasttranscoder.domscontent</generatePackage>
-                            <schemaIncludes>
-                                <include>pbcore.xsd</include>
-                            </schemaIncludes>
                             <removeOldOutput>true</removeOldOutput>
                             <verbose>true</verbose>
                         </configuration>
