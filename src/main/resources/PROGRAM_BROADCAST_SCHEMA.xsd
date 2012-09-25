@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
+  <xs:element name="programBroadcast" type="programBroadcast"></xs:element>
+  <xs:complexType name="programBroadcast">
+    <xs:sequence>
+      <xs:element name="timeStart" type="xs:dateTime"></xs:element>
+      <xs:element name="timeStop" type="xs:dateTime"></xs:element>
+      <xs:element name="channelId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
