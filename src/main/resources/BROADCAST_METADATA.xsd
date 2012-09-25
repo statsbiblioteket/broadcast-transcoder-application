@@ -12,10 +12,8 @@
             <xs:element name="checksum" type="xs:string"/>
             <xs:element name="recorder" type="xs:string"/>
             <xs:element name="format" type="xs:string"/>
-            <xs:element name="start_time" type="xs:long"
-                        minOccurs="0"/>
-            <xs:element name="stop_time" type="xs:long"
-                        minOccurs="0"/>
+            <xs:element name="start_time" type="xs:dateTime"/>
+            <xs:element name="stop_time" type="xs:dateTime"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -32,9 +30,9 @@
                     minOccurs="0"/>
         <xs:element name="muxProgramNr" type="xs:int"
                     minOccurs="0"/>
-        <xs:element name="start_time" type="xs:long"
+        <xs:element name="start_time" type="xs:dateTime"
                     minOccurs="0"/>
-        <xs:element name="stop_time" type="xs:long"
+        <xs:element name="stop_time" type="xs:dateTime"
                     minOccurs="0"/>
         <xs:element name="format_uri" type="xs:string"/>
     </xs:sequence>

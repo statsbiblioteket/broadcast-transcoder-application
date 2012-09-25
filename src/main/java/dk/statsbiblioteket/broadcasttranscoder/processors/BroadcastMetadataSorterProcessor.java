@@ -23,9 +23,9 @@ public class BroadcastMetadataSorterProcessor extends ProcessorChainElement {
             done = true;
             for (int i=0; i < size-1; i++) {
                 BroadcastMetadata element1 = broadcastMetadata.get(i);
-                long time1 = element1.getStartTime();
+                long time1 = element1.getStartTime().toGregorianCalendar().getTimeInMillis();
                 BroadcastMetadata element2 = broadcastMetadata.get(i+1);
-                long time2 = element2.getStartTime();
+                long time2 = element2.getStartTime().toGregorianCalendar().getTimeInMillis();
                 if (time2 < time1) {
                     done = false;
                     Collections.swap(broadcastMetadata, i, i+1);
