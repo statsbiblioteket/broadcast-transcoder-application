@@ -65,6 +65,11 @@ public class PidExtractorProcessor extends ProcessorChainElement {
             findPidsSingleMux(commandOutput, request, context);
         }
         validateFoundData(request, context);
+        if (request.getFileFormat().equals(FileFormatEnum.AUDIO_WAV)) {
+            throw new ProcessorException("Radio transcoding not implemented");
+        }  else {
+            this.setChildElement(new MediestreamTransportStreamTranscoderProcessor());
+        }
     }
 
     private void validateFoundData(TranscodeRequest request, Context context) throws ProcessorException {

@@ -11,6 +11,7 @@ import dk.statsbiblioteket.broadcasttranscoder.processors.FilefinderFetcherProce
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
+import dk.statsbiblioteket.broadcasttranscoder.processors.TranscoderDispatcherProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,11 +32,13 @@ public class BroadcastTranscoderApplication {
         ProcessorChainElement fetcher = new FilefinderFetcherProcessor();
         ProcessorChainElement identifier = new FilePropertiesIdentifierProcessor();
         ProcessorChainElement clipper = new ClipMarshallerProcessor();
+        ProcessorChainElement dispatcher = new TranscoderDispatcherProcessor();
         metadata.setChildElement(filedata);
         filedata.setChildElement(sorter);
         sorter.setChildElement(fetcher);
         fetcher.setChildElement(identifier);
         identifier.setChildElement(clipper);
+        clipper.setChildElement(dispatcher);
         metadata.processIteratively(request, context);
     }
 
