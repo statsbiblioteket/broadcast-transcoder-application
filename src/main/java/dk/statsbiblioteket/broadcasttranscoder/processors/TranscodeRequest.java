@@ -6,8 +6,10 @@ import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramStructure;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -73,6 +75,74 @@ public class TranscodeRequest {
         this.clips = clips;
     }
 
+    public String getDvbsubPid() {
+        return dvbsubPid;
+    }
+
+    public void setDvbsubPid(String dvbsubPid) {
+        this.dvbsubPid = dvbsubPid;
+    }
+
+    public String getVideoPid() {
+        return videoPid;
+    }
+
+    public void setVideoPid(String videoPid) {
+        this.videoPid = videoPid;
+    }
+
+    public String getVideoFcc() {
+        return videoFcc;
+    }
+
+    public void setVideoFcc(String videoFcc) {
+        this.videoFcc = videoFcc;
+    }
+
+
+
+    public String getAudioFcc() {
+        return audioFcc;
+    }
+
+    public void setAudioFcc(String audioFcc) {
+        this.audioFcc = audioFcc;
+    }
+
+    private Set<String> audioPids = new HashSet<String>();
+    public void addAudioPid(String pid) {
+        audioPids.add(pid);
+    }
+
+    public Set<String> getAudioPids() {
+        return audioPids;
+    }
+
+    public int getMinimumAudioPid() {
+        int minimum = Integer.MAX_VALUE;
+        for (String pid: audioPids) {
+            Integer newPid = Integer.decode(pid);
+            minimum = Math.min(newPid, minimum);
+        }
+        return minimum;
+    }
+
+    public Double getDisplayAspectRatio() {
+        return displayAspectRatio;
+    }
+
+    public void setDisplayAspectRatio(Double displayAspectRatio) {
+        this.displayAspectRatio = displayAspectRatio;
+    }
+
+    public String getDisplayAspectRatioString() {
+        return displayAspectRatioString;
+    }
+
+    public void setDisplayAspectRatioString(String displayAspectRatioString) {
+        this.displayAspectRatioString = displayAspectRatioString;
+    }
+
     private ProgramBroadcast programBroadcast;
     private ProgramStructure programStructure;
     private List<BroadcastMetadata> broadcastMetadata;
@@ -81,6 +151,14 @@ public class TranscodeRequest {
     private FileFormatEnum fileFormat;
     private List<FileClip> clips;
 
+    private String dvbsubPid;
+    private String videoPid;
+    private String videoFcc;
+    private String audioFcc;
+
+
+    private Double displayAspectRatio;
+    private String displayAspectRatioString;
 
     /**
        * Class representing the absolute minimum information needed to clip data from a file
