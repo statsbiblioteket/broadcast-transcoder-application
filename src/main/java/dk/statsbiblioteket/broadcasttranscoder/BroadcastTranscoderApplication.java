@@ -5,6 +5,8 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.processors.BroadcastMetadataSorterProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.processors.FileMetadataFetcherProcessor;
+import dk.statsbiblioteket.broadcasttranscoder.processors.FilePropertiesIdentifierProcessor;
+import dk.statsbiblioteket.broadcasttranscoder.processors.FilefinderFetcherProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
@@ -25,8 +27,12 @@ public class BroadcastTranscoderApplication {
         ProcessorChainElement metadata = new FileMetadataFetcherProcessor();
         ProcessorChainElement filedata = new FileMetadataFetcherProcessor();
         ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
+        ProcessorChainElement fetcher = new FilefinderFetcherProcessor();
+        ProcessorChainElement identifier = new FilePropertiesIdentifierProcessor();
         metadata.setChildElement(filedata);
         filedata.setChildElement(sorter);
+        sorter.setChildElement(fetcher);
+        fetcher.setChildElement(identifier);
         metadata.processIteratively(request, context);
     }
 
