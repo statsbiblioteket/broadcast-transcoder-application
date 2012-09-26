@@ -65,11 +65,94 @@ public class TranscodeRequest {
         this.fileFormat = fileFormat;
     }
 
+    public List<FileClip> getClips() {
+        return clips;
+    }
+
+    public void setClips(List<FileClip> clips) {
+        this.clips = clips;
+    }
+
     private ProgramBroadcast programBroadcast;
     private ProgramStructure programStructure;
     private List<BroadcastMetadata> broadcastMetadata;
     private Map<BroadcastMetadata, File> fileMap;
     private long bitrate; // bytes/second
     private FileFormatEnum fileFormat;
+    private List<FileClip> clips;
+
+
+    /**
+       * Class representing the absolute minimum information needed to clip data from a file
+       */
+    public static class FileClip {
+          private String filepath;
+          private Integer programId; //non-null only for mux'es
+          private Long startOffsetBytes;
+          private Long clipLength;
+
+          private Long fileStartTime;
+          private Long fileEndTime;
+
+
+          public Long getFileStartTime() {
+              return fileStartTime;
+          }
+
+          public void setFileStartTime(Long fileStartTime) {
+              this.fileStartTime = fileStartTime;
+          }
+
+          public Long getFileEndTime() {
+              return fileEndTime;
+          }
+
+          public void setFileEndTime(Long fileEndTime) {
+              this.fileEndTime = fileEndTime;
+          }
+
+          public FileClip(String filepath) {
+              this.filepath = filepath;
+          }
+
+          public void setProgramId(Integer programId) {
+              this.programId = programId;
+          }
+
+          public void setStartOffsetBytes(Long startOffsetBytes) {
+              this.startOffsetBytes = startOffsetBytes;
+          }
+
+          public void setClipLength(Long clipLength) {
+              this.clipLength = clipLength;
+          }
+
+          public String getFilepath() {
+              return filepath;
+          }
+
+          public Integer getProgramId() {
+              return programId;
+          }
+
+          public Long getStartOffsetBytes() {
+              return startOffsetBytes;
+          }
+
+          public Long getClipLength() {
+              return clipLength;
+          }
+
+          @Override
+          public String toString() {
+              return "FileClip{" +
+                      "filepath='" + filepath + '\'' +
+                      ", programId=" + programId +
+                      ", startOffsetBytes=" + startOffsetBytes +
+                      ", clipLength=" + clipLength +
+                      '}';
+          }
+      }
+
 
 }
