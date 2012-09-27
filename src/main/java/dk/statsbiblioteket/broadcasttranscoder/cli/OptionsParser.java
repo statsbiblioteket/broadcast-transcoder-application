@@ -58,6 +58,44 @@ public class OptionsParser {
         Properties props = new Properties();
         props.load(new FileInputStream(context.getConfigFile()));
         context.setVideoBitrate(readIntegerProperty(VIDEO_BITRATE, props));
+        context.setAudioBitrate(readIntegerProperty(AUDIO_BITRATE, props));
+        context.setVideoHeight(readIntegerProperty(HEIGHT, props));
+        context.setX264Params(readStringProperty(X264_PARAMS, props));
+        context.setTranscodingTimeoutDivisor(readIntegerProperty(TRANSCODING_DIVISOR, props));
+        context.setAnalysisClipLength(readLongProperty(ANALYSIS_CLIP_LENGTH, props));
+        context.setFileOutputRootdir(readExistingDirectoryProperty(FILE_DIR, props));
+        context.setPreviewOutputRootdir(readExistingDirectoryProperty(PREVIEW_DIR, props));
+        context.setSnapshotOutputRootdir(readExistingDirectoryProperty(SNAPSHOT_DIR, props));
+        context.setLockDir(readExistingDirectoryProperty(LOCK_DIR, props));
+        context.setFileDepth(readIntegerProperty(FILE_DEPTH, props));
+        context.setFileFinderUrl(readStringProperty(FILE_FINDER, props));
+        context.setMaxFilesFetched(readIntegerProperty(MAX_FILES_FETCHED, props));
+        context.setStartOffsetTS(readIntegerProperty(START_OFFSET_TS, props));
+        context.setEndOffsetTS(readIntegerProperty(END_OFFSET_TS, props));
+        context.setStartOffsetPS(readIntegerProperty(START_OFFSET_PS, props));
+        context.setEndOffsetPS(readIntegerProperty(END_OFFSET_PS, props));
+        context.setStartOffsetWAV(readIntegerProperty(START_OFFSET_WAV, props));
+        context.setEndOffsetWAV(readIntegerProperty(END_OFFSET_WAV, props));
+    }
+
+    protected File readExistingDirectoryProperty (String propName, Properties props) throws OptionParseException {
+        String prop = props.getProperty(propName);
+        if (prop == null || "".equals(prop)) {
+            throw new OptionParseException("Property " + propName + " not set.");
+        }
+        File dir = new  File(prop);
+        if (!dir.exists() || !dir.isDirectory()) {
+            throw new OptionParseException(dir.getAbsolutePath() + " must be a pre-existing directory");
+        }
+        return dir;
+    }
+
+    protected String readStringProperty (String propName, Properties props) throws OptionParseException {
+        String prop = props.getProperty(propName);
+        if (prop == null || "".equals(prop)) {
+            throw new OptionParseException("Property " + propName + " not set.");
+        }
+        return prop;
     }
 
     protected int readIntegerProperty(String propName, Properties props) throws OptionParseException {
@@ -68,10 +106,17 @@ public class OptionsParser {
         } catch (NumberFormatException e) {
             throw new OptionParseException("Cannot parse " + prop + " as an integer.");
         }
-
     }
 
-
+     protected long readLongProperty(String propName, Properties props) throws OptionParseException {
+        String prop = props.getProperty(propName);
+        try {
+            Long result = Long.parseLong(prop);
+            return result;
+        } catch (NumberFormatException e) {
+            throw new OptionParseException("Cannot parse " + prop + " as an integer.");
+        }
+    }
 
     protected void parseConfigFileOption(CommandLine cmd) throws OptionParseException {
         String configFileString = cmd.getOptionValue(CONFIG_FILE_OPTION.getOpt());
