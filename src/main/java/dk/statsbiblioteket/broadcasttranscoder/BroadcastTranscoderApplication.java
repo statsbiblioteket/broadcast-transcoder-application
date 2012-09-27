@@ -23,7 +23,7 @@ public class BroadcastTranscoderApplication {
         ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
         ProcessorChainElement fetcher = new FilefinderFetcherProcessor();
         ProcessorChainElement identifier = new FilePropertiesIdentifierProcessor();
-        ProcessorChainElement clipper = new ClipMarshallerProcessor();
+        ProcessorChainElement clipper = new ClipFinderProcessor();
         ProcessorChainElement fixer = new StructureFixerProcessor();
         ProcessorChainElement dispatcher = new TranscoderDispatcherProcessor();
         metadata.setChildElement(filedata);
