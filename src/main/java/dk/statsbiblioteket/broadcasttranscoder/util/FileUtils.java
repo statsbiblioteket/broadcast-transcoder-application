@@ -47,4 +47,10 @@ public class FileUtils {
         return new File(rootDir, relativePath);
     }
 
+
+    public static File getLockFile(TranscodeRequest request, Context context) {
+        File rootDir = context.getLockDir();
+        String basename = context.getProgrampid().replace("uuid:", "");
+        return new File(rootDir, basename + ".lck");
+    }
 }
