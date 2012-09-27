@@ -35,10 +35,11 @@ public class WavTranscoderProcessor extends ProcessorChainElement {
             logger.debug("Setting transcoding timeout for '" + context.getProgrampid() + "' to " + timeout + "ms");
             ExternalJobRunner.runClipperCommand(timeout, command);
         } catch (ExternalProcessTimedOutException e) {
-            logger.warn("Deleting '" + outputFile.getAbsolutePath() + "'");
+            logger.warn("Deleting '" + outputFile.getAbsolutePath() + "'", e);
             outputFile.delete();
+            throw new ProcessorException(e);
         }
-
+        this.setChildElement(new PreviewClipperProcessor());
     }
 
     private String getMultiClipCommand(TranscodeRequest request, Context context) {

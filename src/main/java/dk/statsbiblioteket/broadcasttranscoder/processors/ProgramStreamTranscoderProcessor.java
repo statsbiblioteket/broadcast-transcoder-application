@@ -60,6 +60,7 @@ public class ProgramStreamTranscoderProcessor extends ProcessorChainElement {
             outputFile.delete();
             throw new ProcessorException(e);
         }
+        this.setChildElement(new PreviewClipperProcessor());
     }
 
        private String getMultiClipCommand(TranscodeRequest request, Context context) {
