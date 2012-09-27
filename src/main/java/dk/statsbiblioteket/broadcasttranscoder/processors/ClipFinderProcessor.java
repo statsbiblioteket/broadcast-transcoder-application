@@ -31,9 +31,22 @@ public class ClipFinderProcessor extends ProcessorChainElement {
                 throw new ProcessorException("Could not find channel in mux");
             }
         }
-        //TODO: Add offsets to the following two lines
         long programStart = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStart());
         long programEnd = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStop());
+        switch (request.getFileFormat()) {
+            case MPEG_PS:
+                programStart += context.getStartOffsetPS();
+                programEnd += context.getEndOffsetPS();
+                break;
+            case AUDIO_WAV:
+                programStart += context.getStartOffsetWAV();
+                programEnd += context.getEndOffsetWAV();
+                break;
+            default:
+                programStart += context.getStartOffsetTS();
+                programEnd += context.getEndOffsetTS();
+                break;
+        }
         long bitrate = request.getBitrate();
         List<TranscodeRequest.FileClip> clips = new ArrayList<TranscodeRequest.FileClip>();
         for (BroadcastMetadata metadata: request.getBroadcastMetadata()) {

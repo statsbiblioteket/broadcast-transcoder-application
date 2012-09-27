@@ -22,13 +22,12 @@ import java.util.regex.Pattern;
 public class PidExtractorProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(PidExtractorProcessor.class);
-    private static final long clipSize = 100000000L;
 
 
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         Long blocksize = 1880L;
-        Long blockcount = clipSize/blocksize;
+        Long blockcount = context.getAnalysisClipLength()/blocksize;
         String filename = null;
         Integer program;
         Long offset = null;
