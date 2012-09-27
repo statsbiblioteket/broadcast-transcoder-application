@@ -85,7 +85,10 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
             }
         }
 
-        // The odd logic here is that we prefer to use custom-PMT if we have all three pids, but because of a bug in vlc we
+        File outputDir = FileUtils.getMediaOutputDir(request, context);
+        outputDir.mkdirs();
+
+        //The odd logic here is that we prefer to use custom-PMT if we have all three pids, but because of a bug in vlc we
         //may need to use a custom PMT to get DR1 (program 101) to work even if we don't have a pid for dvbsub. So:
         boolean useCustomPMT = (request.getDvbsubPid() != null && !request.getAudioPids().isEmpty() && request.getVideoPid() != null && request.getVideoFcc() != null && request.getAudioFcc() != null );
         useCustomPMT = useCustomPMT |  (!request.getAudioPids().isEmpty() && request.getVideoPid() != null && request.getVideoFcc() != null && request.getAudioFcc() != null && programNumber==101);
