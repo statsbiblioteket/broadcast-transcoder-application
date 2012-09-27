@@ -1,9 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
-import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
-import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutException;
-import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
+import dk.statsbiblioteket.broadcasttranscoder.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,20 +16,14 @@ import java.io.File;
  */
 public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChainElement {
 
-    //TODO make these configurable
-    private static final Long height = 288L;
-    private static final String x264_vlc = "profile=High,preset=superfast,level=3.0";
-    private static final String video_bitrate = "400";
-    private static final String audio_bitrate = "96";
-
     public static int getHeight(TranscodeRequest request, Context context) {
-        return height.intValue();
+        return context.getVideoHeight();
     }
 
     public static int getWidth(TranscodeRequest request, Context context) {
         Double aspectRatio = request.getDisplayAspectRatio();
         if (aspectRatio != null) {
-            long width = Math.round(aspectRatio*height);
+            long width = Math.round(aspectRatio*getHeight(request, context));
             if (width%2 == 1) width += 1;
             return (int) width;
         } else {
@@ -89,40 +81,23 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
             }
         }
 
-        // The odd logic here is that we prefer to use custom-PMT if we have all three pids, but because of a bug in vlc we
+        File outputDir = FileUtils.getMediaOutputDir(request, context);
+        outputDir.mkdirs();
+
+        //The odd logic here is that we prefer to use custom-PMT if we have all three pids, but because of a bug in vlc we
         //may need to use a custom PMT to get DR1 (program 101) to work even if we don't have a pid for dvbsub. So:
         boolean useCustomPMT = (request.getDvbsubPid() != null && !request.getAudioPids().isEmpty() && request.getVideoPid() != null && request.getVideoFcc() != null && request.getAudioFcc() != null );
         useCustomPMT = useCustomPMT |  (!request.getAudioPids().isEmpty() && request.getVideoPid() != null && request.getVideoFcc() != null && request.getAudioFcc() != null && programNumber==101);
         String clipperCommand = null;
-        if (!useCustomPMT) {
-            clipperCommand = "cat " + processSubstitutionFileList + " | vlc - --program=" + programNumber + " --quiet --demux=ts --intf dummy --play-and-exit --noaudio --novideo "
-                    + "--sout-all --sout '#duplicate{dst=\"transcode{senc=dvbsub}"
-                    + ":transcode{vcodec=h264,vb=" + video_bitrate + ",venc=x264{" + x264_vlc + "},soverlay,deinterlace,audio-sync,"
-                    + ",width=" + getWidth(request, context)
-                    + ",height=" + getHeight(request, context) +",threads=0}"
-                    + ":std{access=file,mux=ts,dst=-}\""
-                    + ",select=\"program=" + programNumber + "\"' | "
-                    + "ffmpeg -i -  -async 2 -vcodec copy -ac 2 -acodec libmp3lame -ar 44100 -ab " + audio_bitrate + " -f flv " + FileUtils.getMediaOutputFile(request, context);
+        if (request.getFileFormat().equals(FileFormatEnum.AUDIO_WAV)) {
+            clipperCommand = findAudioClipperCommand(request, context, processSubstitutionFileList);
         } else {
-            String programSelector = " --program=1010 --sout-all --ts-extra-pmt=1010:1010=" + request.getVideoPid() + ":video=" + request.getVideoFcc()
-                    + "," + request.getMinimumAudioPid() + ":audio=" + request.getAudioFcc();
-            if (request.getDvbsubPid() != null) {
-                programSelector += "," + request.getDvbsubPid() + ":spu=dvbs";
-            }
-            logger.debug("Using Custom PMT for '" + context.getProgrampid() + "': " + programSelector);
-            clipperCommand = "cat " + processSubstitutionFileList + " |  vlc - " + programSelector + " --quiet --demux=ts --intf dummy --play-and-exit --noaudio --novideo "
-                    + "--sout-all --sout '#transcode{vcodec=x264,vb=" + video_bitrate + ",venc=x264{" + x264_vlc + "}" +
-                    ",soverlay,deinterlace,audio-sync,"
-                    + ",width=" + getWidth(request, context)
-                    + ",height=" + getHeight(request, context) +",threads=0}"
-                    + ":std{access=file,mux=ts,dst=-}' |" +
-                    "ffmpeg -i -  -async 2 -vcodec copy -acodec libmp3lame -ac 2 -ar 44100 -ab " + audio_bitrate
-                    + "000 -f flv " + FileUtils.getMediaOutputFile(request, context);
+            clipperCommand = findVideoClipperCommand(request, context, processSubstitutionFileList, programNumber, useCustomPMT);
         }
-
         try {
-            //TODO make timeout dynamic
-            long timeout = 1800000L;
+            long programLength = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStop())
+                    - CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStart());
+            long timeout = programLength/context.getTranscodingTimeoutDivisor();
             logger.debug("Setting transcoding timeout for '" + context.getProgrampid() + "' to " + timeout + "ms" );
             ExternalJobRunner.runClipperCommand(timeout, clipperCommand);
         } catch (ExternalProcessTimedOutException e) {
@@ -134,6 +109,41 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
 
     }
 
+    private String findAudioClipperCommand(TranscodeRequest request, Context context, String processSubstitutionFileList) {
+        return "cat " + processSubstitutionFileList + "| "
+                + "ffmpeg -i - -acodec libmp3lame -ar 44100 -ab "
+                + context.getAudioBitrate() + "000 " + FileUtils.getMediaOutputFile(request, context);
+    }
+
+    private String findVideoClipperCommand(TranscodeRequest request, Context context, String processSubstitutionFileList, int programNumber, boolean useCustomPMT) {
+        String clipperCommand;
+        if (!useCustomPMT) {
+            clipperCommand = "cat " + processSubstitutionFileList + " | vlc - --program=" + programNumber + " --quiet --demux=ts --intf dummy --play-and-exit --noaudio --novideo "
+                    + "--sout-all --sout '#duplicate{dst=\"transcode{senc=dvbsub}"
+                    + ":transcode{vcodec=h264,vb=" + context.getVideoBitrate() + ",venc=x264{" + context.getX264Params() + "},soverlay,deinterlace,audio-sync,"
+                    + ",width=" + getWidth(request, context)
+                    + ",height=" + getHeight(request, context) +",threads=0}"
+                    + ":std{access=file,mux=ts,dst=-}\""
+                    + ",select=\"program=" + programNumber + "\"' | "
+                    + "ffmpeg -i -  -async 2 -vcodec copy -ac 2 -acodec libmp3lame -ar 44100 -ab " + context.getAudioBitrate() + "000 -f flv " + FileUtils.getMediaOutputFile(request, context);
+        } else {
+            String programSelector = " --program=1010 --sout-all --ts-extra-pmt=1010:1010=" + request.getVideoPid() + ":video=" + request.getVideoFcc()
+                    + "," + request.getMinimumAudioPid() + ":audio=" + request.getAudioFcc();
+            if (request.getDvbsubPid() != null) {
+                programSelector += "," + request.getDvbsubPid() + ":spu=dvbs";
+            }
+            logger.debug("Using Custom PMT for '" + context.getProgrampid() + "': " + programSelector);
+            clipperCommand = "cat " + processSubstitutionFileList + " |  vlc - " + programSelector + " --quiet --demux=ts --intf dummy --play-and-exit --noaudio --novideo "
+                    + "--sout-all --sout '#transcode{vcodec=x264,vb=" + context.getVideoBitrate() + ",venc=x264{" + context.getX264Params() + "}" +
+                    ",soverlay,deinterlace,audio-sync,"
+                    + ",width=" + getWidth(request, context)
+                    + ",height=" + getHeight(request, context) +",threads=0}"
+                    + ":std{access=file,mux=ts,dst=-}' |" +
+                    "ffmpeg -i -  -async 2 -vcodec copy -acodec libmp3lame -ac 2 -ar 44100 -ab " + context.getAudioBitrate()
+                    + "000 -f flv " + FileUtils.getMediaOutputFile(request, context);
+        }
+        return clipperCommand;
+    }
 
 
 }

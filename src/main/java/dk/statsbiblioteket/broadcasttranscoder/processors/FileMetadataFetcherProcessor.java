@@ -14,7 +14,9 @@ import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -30,11 +32,12 @@ public class FileMetadataFetcherProcessor extends ProcessorChainElement {
         } catch (Exception e) {
            throw new ProcessorException(e);
         }
-        List<BroadcastMetadata> broadcastMetadata = getBroadcastMetadata(fileObjectPids, context);
+        List<BroadcastMetadata> broadcastMetadata = getBroadcastMetadata(fileObjectPids, context, request);
         request.setBroadcastMetadata(broadcastMetadata);
     }
 
-    private List<BroadcastMetadata> getBroadcastMetadata(List<String> fileObjectPids, Context context) throws ProcessorException {
+    private List<BroadcastMetadata> getBroadcastMetadata(List<String> fileObjectPids, Context context, TranscodeRequest request) throws ProcessorException {
+        Map<String, BroadcastMetadata> pidMap = new HashMap<String, BroadcastMetadata>();
         CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);
         JaxbWrapper<BroadcastMetadata> broadcastMetadataWrapper = null;
         try {
@@ -54,7 +57,9 @@ public class FileMetadataFetcherProcessor extends ProcessorChainElement {
                 throw new ProcessorException(e);
             }
             broadcastMetadataList.add(broadcastMetadata);
+            pidMap.put(fileObjectPid, broadcastMetadata);
         }
+        request.setPidMap(pidMap);
         return broadcastMetadataList;
     }
 

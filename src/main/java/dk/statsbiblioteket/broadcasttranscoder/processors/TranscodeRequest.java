@@ -143,10 +143,19 @@ public class TranscodeRequest {
         this.displayAspectRatioString = displayAspectRatioString;
     }
 
+    public Map<String, BroadcastMetadata> getPidMap() {
+        return pidMap;
+    }
+
+    public void setPidMap(Map<String, BroadcastMetadata> pidMap) {
+        this.pidMap = pidMap;
+    }
+
     private ProgramBroadcast programBroadcast;
     private ProgramStructure programStructure;
     private List<BroadcastMetadata> broadcastMetadata;
     private Map<BroadcastMetadata, File> fileMap;
+    private Map<String, BroadcastMetadata> pidMap;
     private long bitrate; // bytes/second
     private FileFormatEnum fileFormat;
     private List<FileClip> clips;
