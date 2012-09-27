@@ -19,11 +19,11 @@ public class TranscoderDispatcherProcessor extends ProcessorChainElement {
                 this.setChildElement(new PidExtractorProcessor());
                 break;
             case MPEG_PS:
-                throw new ProcessorException("mpeg transcoding not implemented");
-                //break;
+               this.setChildElement(new ProgramStreamTranscoderProcessor());
+                break;
             case AUDIO_WAV:
-                throw new ProcessorException("wav transcoding not implemented");
-                //break;
+                this.setChildElement(new WavTranscoderProcessor());
+                break;
         }
     }
 }
