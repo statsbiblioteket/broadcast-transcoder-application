@@ -7,7 +7,6 @@ import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutExcep
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.util.resources.CalendarData;
 
 import java.io.File;
 

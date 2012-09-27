@@ -76,6 +76,9 @@ public class OptionsParser {
         context.setEndOffsetPS(readIntegerProperty(END_OFFSET_PS, props));
         context.setStartOffsetWAV(readIntegerProperty(START_OFFSET_WAV, props));
         context.setEndOffsetWAV(readIntegerProperty(END_OFFSET_WAV, props));
+        context.setMaxMissingStart(readIntegerProperty(MAX_MISSING_START, props));
+        context.setMaxMissingEnd(readIntegerProperty(MAX_MISSING_END, props));
+        context.setMaxHole(readIntegerProperty(MAX_HOLE_SIZE, props));
     }
 
     protected File readExistingDirectoryProperty (String propName, Properties props) throws OptionParseException {

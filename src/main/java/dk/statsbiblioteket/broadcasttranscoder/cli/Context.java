@@ -199,6 +199,30 @@ public class Context {
         this.maxFilesFetched = maxFilesFetched;
     }
 
+    public int getMaxMissingStart() {
+        return maxMissingStart;
+    }
+
+    public void setMaxMissingStart(int maxMissingStart) {
+        this.maxMissingStart = maxMissingStart;
+    }
+
+    public int getMaxHole() {
+        return maxHole;
+    }
+
+    public void setMaxHole(int maxHole) {
+        this.maxHole = maxHole;
+    }
+
+    public int getMaxMissingEnd() {
+        return maxMissingEnd;
+    }
+
+    public void setMaxMissingEnd(int maxMissingEnd) {
+        this.maxMissingEnd = maxMissingEnd;
+    }
+
     private String programpid;
     private File configFile;
 
@@ -218,6 +242,10 @@ public class Context {
     private String x264Params;
     private int transcodingTimeoutDivisor;
     private long analysisClipLength;
+
+    private int maxMissingStart;
+    private int maxMissingEnd;
+    private int maxHole;
 
     private int startOffsetTS;
     private int endOffsetTS;

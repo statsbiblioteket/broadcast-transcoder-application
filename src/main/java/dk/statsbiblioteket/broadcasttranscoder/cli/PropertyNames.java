@@ -48,6 +48,14 @@ public class PropertyNames {
     public static final String END_OFFSET_WAV = "endOffsetWAV";
 
     /*
+    Properties relating to handling of missing data
+     */
+    public static final String MAX_MISSING_START = "maxMissingStart";
+    public static final String MAX_MISSING_END = "maxMissingEnd";
+    public static final String MAX_HOLE_SIZE = "maxHole";
+
+
+    /*
     Properties related to nearline storage
      */
     public static final String FILE_FINDER = "nearlineFilefinderUrl";

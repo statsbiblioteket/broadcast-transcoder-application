@@ -3,15 +3,7 @@ package dk.statsbiblioteket.broadcasttranscoder;
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionsParser;
-import dk.statsbiblioteket.broadcasttranscoder.processors.BroadcastMetadataSorterProcessor;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ClipMarshallerProcessor;
-import dk.statsbiblioteket.broadcasttranscoder.processors.FileMetadataFetcherProcessor;
-import dk.statsbiblioteket.broadcasttranscoder.processors.FilePropertiesIdentifierProcessor;
-import dk.statsbiblioteket.broadcasttranscoder.processors.FilefinderFetcherProcessor;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
-import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
-import dk.statsbiblioteket.broadcasttranscoder.processors.TranscoderDispatcherProcessor;
+import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,13 +24,15 @@ public class BroadcastTranscoderApplication {
         ProcessorChainElement fetcher = new FilefinderFetcherProcessor();
         ProcessorChainElement identifier = new FilePropertiesIdentifierProcessor();
         ProcessorChainElement clipper = new ClipMarshallerProcessor();
+        ProcessorChainElement fixer = new StructureFixerProcessor();
         ProcessorChainElement dispatcher = new TranscoderDispatcherProcessor();
         metadata.setChildElement(filedata);
         filedata.setChildElement(sorter);
         sorter.setChildElement(fetcher);
         fetcher.setChildElement(identifier);
         identifier.setChildElement(clipper);
-        clipper.setChildElement(dispatcher);
+        clipper.setChildElement(fixer);
+        fixer.setChildElement(dispatcher);
         metadata.processIteratively(request, context);
     }
 
