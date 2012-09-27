@@ -1,10 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
-import dk.statsbiblioteket.broadcasttranscoder.util.CalendarUtils;
-import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
-import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutException;
-import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
+import dk.statsbiblioteket.broadcasttranscoder.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,6 +89,34 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
         boolean useCustomPMT = (request.getDvbsubPid() != null && !request.getAudioPids().isEmpty() && request.getVideoPid() != null && request.getVideoFcc() != null && request.getAudioFcc() != null );
         useCustomPMT = useCustomPMT |  (!request.getAudioPids().isEmpty() && request.getVideoPid() != null && request.getVideoFcc() != null && request.getAudioFcc() != null && programNumber==101);
         String clipperCommand = null;
+        if (request.getFileFormat().equals(FileFormatEnum.AUDIO_WAV)) {
+            clipperCommand = findAudioClipperCommand(request, context, processSubstitutionFileList);
+        } else {
+            clipperCommand = findVideoClipperCommand(request, context, processSubstitutionFileList, programNumber, useCustomPMT);
+        }
+        try {
+            long programLength = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStop())
+                    - CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStart());
+            long timeout = programLength/context.getTranscodingTimeoutDivisor();
+            logger.debug("Setting transcoding timeout for '" + context.getProgrampid() + "' to " + timeout + "ms" );
+            ExternalJobRunner.runClipperCommand(timeout, clipperCommand);
+        } catch (ExternalProcessTimedOutException e) {
+            File outputFile =  FileUtils.getMediaOutputFile(request, context);
+            logger.warn("Deleting '" + outputFile.getAbsolutePath() + "'");
+            outputFile.delete();
+            throw new ProcessorException(e);
+        }
+
+    }
+
+    private String findAudioClipperCommand(TranscodeRequest request, Context context, String processSubstitutionFileList) {
+        return "cat " + processSubstitutionFileList + "| "
+                + "ffmpeg -i - -acodec libmp3lame -ar 44100 -ab "
+                + context.getAudioBitrate() + "000 " + FileUtils.getMediaOutputFile(request, context);
+    }
+
+    private String findVideoClipperCommand(TranscodeRequest request, Context context, String processSubstitutionFileList, int programNumber, boolean useCustomPMT) {
+        String clipperCommand;
         if (!useCustomPMT) {
             clipperCommand = "cat " + processSubstitutionFileList + " | vlc - --program=" + programNumber + " --quiet --demux=ts --intf dummy --play-and-exit --noaudio --novideo "
                     + "--sout-all --sout '#duplicate{dst=\"transcode{senc=dvbsub}"
@@ -100,7 +125,7 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
                     + ",height=" + getHeight(request, context) +",threads=0}"
                     + ":std{access=file,mux=ts,dst=-}\""
                     + ",select=\"program=" + programNumber + "\"' | "
-                    + "ffmpeg -i -  -async 2 -vcodec copy -ac 2 -acodec libmp3lame -ar 44100 -ab " + context.getAudioBitrate() + " -f flv " + FileUtils.getMediaOutputFile(request, context);
+                    + "ffmpeg -i -  -async 2 -vcodec copy -ac 2 -acodec libmp3lame -ar 44100 -ab " + context.getAudioBitrate() + "000 -f flv " + FileUtils.getMediaOutputFile(request, context);
         } else {
             String programSelector = " --program=1010 --sout-all --ts-extra-pmt=1010:1010=" + request.getVideoPid() + ":video=" + request.getVideoFcc()
                     + "," + request.getMinimumAudioPid() + ":audio=" + request.getAudioFcc();
@@ -117,22 +142,8 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
                     "ffmpeg -i -  -async 2 -vcodec copy -acodec libmp3lame -ac 2 -ar 44100 -ab " + context.getAudioBitrate()
                     + "000 -f flv " + FileUtils.getMediaOutputFile(request, context);
         }
-
-        try {
-            long programLength = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStop())
-                    - CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStart());
-            long timeout = programLength/context.getTranscodingTimeoutDivisor();
-            logger.debug("Setting transcoding timeout for '" + context.getProgrampid() + "' to " + timeout + "ms" );
-            ExternalJobRunner.runClipperCommand(timeout, clipperCommand);
-        } catch (ExternalProcessTimedOutException e) {
-            File outputFile =  FileUtils.getMediaOutputFile(request, context);
-            logger.warn("Deleting '" + outputFile.getAbsolutePath() + "'");
-            outputFile.delete();
-            throw new ProcessorException(e);
-        }
-
+        return clipperCommand;
     }
-
 
 
 }

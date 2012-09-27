@@ -64,11 +64,7 @@ public class PidExtractorProcessor extends ProcessorChainElement {
             findPidsSingleMux(commandOutput, request, context);
         }
         validateFoundData(request, context);
-        if (request.getFileFormat().equals(FileFormatEnum.AUDIO_WAV)) {
-            throw new ProcessorException("Radio transcoding not implemented");
-        }  else {
-            this.setChildElement(new MediestreamTransportStreamTranscoderProcessor());
-        }
+        this.setChildElement(new MediestreamTransportStreamTranscoderProcessor());
     }
 
     private void validateFoundData(TranscodeRequest request, Context context) throws ProcessorException {
@@ -83,14 +79,14 @@ public class PidExtractorProcessor extends ProcessorChainElement {
     }
 
     private void findPidsSingleMux(String[] commandOutput, TranscodeRequest request, Context context) {
-          boolean foundProgram = false;
+        boolean foundProgram = false;
         for (String line: commandOutput) {
-                findPidInLine(line, request, context);
+            findPidInLine(line, request, context);
         }
     }
 
     private void findPidsMultiMux(String[] commandOutput, TranscodeRequest request, Context context) {
-          boolean foundProgram = false;
+        boolean foundProgram = false;
         Pattern thisProgramPattern = Pattern.compile(".*Program\\s"+request.getClips().get(0).getProgramId()+".*");
         Pattern programPattern = Pattern.compile(".*Program.*");
 

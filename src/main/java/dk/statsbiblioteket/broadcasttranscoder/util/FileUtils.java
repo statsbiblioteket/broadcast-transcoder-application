@@ -25,6 +25,9 @@ public class FileUtils {
             case SINGLE_PROGRAM_AUDIO_TS:
                 filename += ".mp3";
                 break;
+            case AUDIO_WAV:
+                filename += ".mp3";
+                break;
             default:
                 filename += ".flv";
         }
