@@ -46,6 +46,35 @@
             <artifactId>logback-classic</artifactId>
             <version>1.0.3</version>
         </dependency>
+        <dependency>
+            <groupId>dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch</groupId>
+              <artifactId>bes-media-file-status-log</artifactId>
+              <version>1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+                  <groupId>org.hibernate</groupId>
+                  <artifactId>hibernate-core</artifactId>
+                  <version>3.3.1.GA</version>
+                  <!-- Ant project: 3.3.0.SP1 -->
+              </dependency>
+              <dependency>
+                  <groupId>org.hibernate</groupId>
+                  <artifactId>hibernate-annotations</artifactId>
+                  <version>3.4.0.GA</version>
+                  <!-- Same as ant project -->
+              </dependency>
+              <dependency>
+                  <groupId>org.hibernate</groupId>
+                  <artifactId>hibernate-c3p0</artifactId>
+                  <version>3.3.1.GA</version>
+                  <!-- New -->
+              </dependency>
+        <dependency>
+             <groupId>org.hsqldb</groupId>
+             <artifactId>hsqldb</artifactId>
+             <version>1.8.0.10</version>
+             <scope>test</scope>
+           </dependency>
     </dependencies>
 
     <build>

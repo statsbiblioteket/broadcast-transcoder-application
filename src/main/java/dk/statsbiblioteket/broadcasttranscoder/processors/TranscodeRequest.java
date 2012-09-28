@@ -27,12 +27,12 @@ public class TranscodeRequest {
         this.programBroadcast = programBroadcast;
     }
 
-    public ProgramStructure getProgramStructure() {
-        return programStructure;
+    public ProgramStructure getDomsProgramStructure() {
+        return domsProgramStructure;
     }
 
-    public void setProgramStructure(ProgramStructure programStructure) {
-        this.programStructure = programStructure;
+    public void setDomsProgramStructure(ProgramStructure domsProgramStructure) {
+        this.domsProgramStructure = domsProgramStructure;
     }
 
     public List<BroadcastMetadata> getBroadcastMetadata() {
@@ -151,8 +151,17 @@ public class TranscodeRequest {
         this.pidMap = pidMap;
     }
 
+    public ProgramStructure getLocalProgramStructure() {
+        return localProgramStructure;
+    }
+
+    public void setLocalProgramStructure(ProgramStructure localProgramStructure) {
+        this.localProgramStructure = localProgramStructure;
+    }
+
     private ProgramBroadcast programBroadcast;
-    private ProgramStructure programStructure;
+    private ProgramStructure domsProgramStructure;
+    private ProgramStructure localProgramStructure;
     private List<BroadcastMetadata> broadcastMetadata;
     private Map<BroadcastMetadata, File> fileMap;
     private Map<String, BroadcastMetadata> pidMap;

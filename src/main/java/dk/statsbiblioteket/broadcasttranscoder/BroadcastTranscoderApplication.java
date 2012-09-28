@@ -24,6 +24,7 @@ public class BroadcastTranscoderApplication {
         ProcessorChainElement fetcher = new FilefinderFetcherProcessor();
         ProcessorChainElement identifier = new FilePropertiesIdentifierProcessor();
         ProcessorChainElement clipper = new ClipFinderProcessor();
+        ProcessorChainElement coverage = new CoverageAnalyserProcessor();
         ProcessorChainElement fixer = new StructureFixerProcessor();
         ProcessorChainElement dispatcher = new TranscoderDispatcherProcessor();
         metadata.setChildElement(filedata);
@@ -31,7 +32,8 @@ public class BroadcastTranscoderApplication {
         sorter.setChildElement(fetcher);
         fetcher.setChildElement(identifier);
         identifier.setChildElement(clipper);
-        clipper.setChildElement(fixer);
+        clipper.setChildElement(coverage);
+        coverage.setChildElement(fixer);
         fixer.setChildElement(dispatcher);
         metadata.processIteratively(request, context);
     }

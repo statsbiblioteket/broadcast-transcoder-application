@@ -28,7 +28,7 @@ public class StructureFixerProcessor extends ProcessorChainElement {
     }
 
     private void handleOverlaps(TranscodeRequest request, Context context) throws ProcessorException {
-        ProgramStructure.Overlaps overlaps = request.getProgramStructure().getOverlaps();
+        ProgramStructure.Overlaps overlaps = request.getLocalProgramStructure().getOverlaps();
         if (overlaps == null) {
             return;
         }
@@ -86,7 +86,7 @@ public class StructureFixerProcessor extends ProcessorChainElement {
     }
 
     private void handleMissingStart(TranscodeRequest request, Context context) throws ProcessorException {
-        MissingStart missingStart = request.getProgramStructure().getMissingStart();
+        MissingStart missingStart = request.getLocalProgramStructure().getMissingStart();
         if (missingStart != null) {
             if (missingStart.getMissingSeconds() > context.getMaxMissingStart()) {
                 throw new ProcessorException("Cannot transcode program " + context.getProgrampid() + " because there are" +
@@ -99,7 +99,7 @@ public class StructureFixerProcessor extends ProcessorChainElement {
     }
 
     private void handleMissingEnd(TranscodeRequest request, Context context) throws ProcessorException {
-        MissingEnd missingEnd = request.getProgramStructure().getMissingEnd();
+        MissingEnd missingEnd = request.getLocalProgramStructure().getMissingEnd();
         if (missingEnd != null) {
             if (missingEnd.getMissingSeconds() > context.getMaxMissingEnd()) {
                 throw new ProcessorException("Cannot transcode program " + context.getProgrampid() + " because there are" +
@@ -112,7 +112,7 @@ public class StructureFixerProcessor extends ProcessorChainElement {
     }
 
     private void handleHoles(TranscodeRequest request, Context context) throws ProcessorException {
-        ProgramStructure.Holes holes = request.getProgramStructure().getHoles();
+        ProgramStructure.Holes holes = request.getLocalProgramStructure().getHoles();
         if (holes == null) {
             return;
         }

@@ -22,7 +22,7 @@ public class ProgramMetadataFetcherProcessor extends ProcessorChainElement {
         ProgramBroadcast programBroadcast = getProgramBroadcast(context);
         request.setProgramBroadcast(programBroadcast);
         ProgramStructure programStructure = getProgramStructure(context);
-        request.setProgramStructure(programStructure);
+        request.setDomsProgramStructure(programStructure);
     }
 
     private ProgramStructure getProgramStructure(Context context) throws ProcessorException {
