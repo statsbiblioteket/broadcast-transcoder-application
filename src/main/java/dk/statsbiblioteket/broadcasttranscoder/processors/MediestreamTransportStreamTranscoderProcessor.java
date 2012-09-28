@@ -106,7 +106,7 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
             outputFile.delete();
             throw new ProcessorException(e);
         }
-
+        this.setChildElement(new PreviewClipperProcessor());
     }
 
     private String findAudioClipperCommand(TranscodeRequest request, Context context, String processSubstitutionFileList) {
