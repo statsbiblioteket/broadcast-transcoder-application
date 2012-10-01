@@ -88,26 +88,16 @@ public class StructureFixerProcessor extends ProcessorChainElement {
     private void handleMissingStart(TranscodeRequest request, Context context) throws ProcessorException {
         MissingStart missingStart = request.getLocalProgramStructure().getMissingStart();
         if (missingStart != null) {
-            if (missingStart.getMissingSeconds() > context.getMaxMissingStart()) {
-                throw new ProcessorException("Cannot transcode program " + context.getProgrampid() + " because there are" +
-                        missingStart.getMissingSeconds() + " missing at the start.");
-            } else {
                 logger.warn("Ignoring " + missingStart.getMissingSeconds() + " missing seconds at start for " +
                         context.getProgrampid());
-            }
         }
     }
 
     private void handleMissingEnd(TranscodeRequest request, Context context) throws ProcessorException {
         MissingEnd missingEnd = request.getLocalProgramStructure().getMissingEnd();
         if (missingEnd != null) {
-            if (missingEnd.getMissingSeconds() > context.getMaxMissingEnd()) {
-                throw new ProcessorException("Cannot transcode program " + context.getProgrampid() + " because there are" +
-                        missingEnd.getMissingSeconds() + " missing at the end.");
-            } else {
-                logger.warn("Ignoring  " + missingEnd.getMissingSeconds() + " missing seconds at end for " +
+             logger.warn("Ignoring  " + missingEnd.getMissingSeconds() + " missing seconds at end for " +
                         context.getProgrampid());
-            }
         }
     }
 
@@ -121,12 +111,7 @@ public class StructureFixerProcessor extends ProcessorChainElement {
             return;
         } else {
             for (Hole hole: holeList) {
-                if (hole.getHoleLength() > context.getMaxHole()) {
-                    throw new ProcessorException("Cannot transcode program " + context.getProgrampid() + " because there is a hole " +
-                            "of length " + hole.getHoleLength() + " in the recording" );
-                } else {
-                    logger.warn("Ignoring a hole of length " + hole.getHoleLength() + " seconds in the recording of " + context.getProgrampid());
-                }
+                logger.warn("Ignoring a hole of length " + hole.getHoleLength() + " seconds in the recording of " + context.getProgrampid());
             }
         }
     }

@@ -39,6 +39,7 @@ public class BroadcastTranscoderApplication {
         }
         try {
             ProcessorChainElement metadata = new FileMetadataFetcherProcessor();
+            PersistentMetadataExtractorProcessor persistentMetadata = new PersistentMetadataExtractorProcessor();
             ProcessorChainElement filedata = new FileMetadataFetcherProcessor();
             ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
             ProcessorChainElement fetcher = new FilefinderFetcherProcessor();
@@ -47,7 +48,8 @@ public class BroadcastTranscoderApplication {
             ProcessorChainElement coverage = new CoverageAnalyserProcessor();
             ProcessorChainElement fixer = new StructureFixerProcessor();
             ProcessorChainElement dispatcher = new TranscoderDispatcherProcessor();
-            metadata.setChildElement(filedata);
+            metadata.setChildElement(persistentMetadata);
+            persistentMetadata.setChildElement(filedata);
             filedata.setChildElement(sorter);
             sorter.setChildElement(fetcher);
             fetcher.setChildElement(identifier);

@@ -223,6 +223,14 @@ public class Context {
         this.maxMissingEnd = maxMissingEnd;
     }
 
+    public File getHibernateConfigFile() {
+        return hibernateConfigFile;
+    }
+
+    public void setHibernateConfigFile(File hibernateConfigFile) {
+        this.hibernateConfigFile = hibernateConfigFile;
+    }
+
     private String programpid;
     private File configFile;
 
@@ -256,4 +264,6 @@ public class Context {
 
     private String fileFinderUrl;
     private int maxFilesFetched;
+
+    private File hibernateConfigFile;
 }

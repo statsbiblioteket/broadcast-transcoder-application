@@ -1,6 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
+import dk.statsbiblioteket.broadcasttranscoder.domscontent.PBCoreDescriptionDocument;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramBroadcast;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramStructure;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
@@ -158,6 +159,8 @@ public class TranscodeRequest {
     public void setLocalProgramStructure(ProgramStructure localProgramStructure) {
         this.localProgramStructure = localProgramStructure;
     }
+
+
 
     private ProgramBroadcast programBroadcast;
     private ProgramStructure domsProgramStructure;
