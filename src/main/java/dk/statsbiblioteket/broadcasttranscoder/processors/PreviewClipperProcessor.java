@@ -48,7 +48,20 @@ public class PreviewClipperProcessor extends ProcessorChainElement {
             outputFile.delete();
             throw new ProcessorException(e);
         }
-       persist(request, context, command);
+        persist(request, context, command);
+        switch (request.getFileFormat()) {
+            case MULTI_PROGRAM_MUX:
+                this.setChildElement(new SnapshotExtractorProcessor());
+                break;
+            case MPEG_PS:
+                this.setChildElement(new SnapshotExtractorProcessor());
+                break;
+            case SINGLE_PROGRAM_VIDEO_TS:
+                this.setChildElement(new SnapshotExtractorProcessor());
+                break;
+            default:
+                break;
+        }
     }
 
     private void persist(TranscodeRequest request, Context context, String commandLine) {
