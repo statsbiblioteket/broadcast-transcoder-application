@@ -19,10 +19,14 @@ public class TranscoderDispatcherProcessor extends ProcessorChainElement {
                 this.setChildElement(new PidExtractorProcessor());
                 break;
             case MPEG_PS:
-               this.setChildElement(new ProgramStreamTranscoderProcessor());
+                final ProgramStreamTranscoderProcessor childElement = new ProgramStreamTranscoderProcessor();
+                this.setChildElement(childElement);
+                childElement.setChildElement(new TranscoderPersistenceProcessor());
                 break;
             case AUDIO_WAV:
-                this.setChildElement(new WavTranscoderProcessor());
+                final WavTranscoderProcessor childElement1 = new WavTranscoderProcessor();
+                this.setChildElement(childElement1);
+                childElement1.setChildElement(new TranscoderPersistenceProcessor());
                 break;
         }
     }

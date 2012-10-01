@@ -160,7 +160,29 @@ public class TranscodeRequest {
         this.localProgramStructure = localProgramStructure;
     }
 
+    public String getClipperCommand() {
+        return clipperCommand;
+    }
 
+    public void setClipperCommand(String clipperCommand) {
+        this.clipperCommand = clipperCommand;
+    }
+
+    public int getStartOffsetUsed() {
+        return startOffsetUsed;
+    }
+
+    public void setStartOffsetUsed(int startOffsetUsed) {
+        this.startOffsetUsed = startOffsetUsed;
+    }
+
+    public int getEndOffsetUsed() {
+        return endOffsetUsed;
+    }
+
+    public void setEndOffsetUsed(int endOffsetUsed) {
+        this.endOffsetUsed = endOffsetUsed;
+    }
 
     private ProgramBroadcast programBroadcast;
     private ProgramStructure domsProgramStructure;
@@ -180,6 +202,11 @@ public class TranscodeRequest {
 
     private Double displayAspectRatio;
     private String displayAspectRatioString;
+
+    private String clipperCommand;
+    private int startOffsetUsed;
+    private int endOffsetUsed;
+
 
     /**
        * Class representing the absolute minimum information needed to clip data from a file

@@ -33,20 +33,26 @@ public class ClipFinderProcessor extends ProcessorChainElement {
         }
         long programStart = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStart());
         long programEnd = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStop());
+        int startOffset;
+        int endOffset;
         switch (request.getFileFormat()) {
             case MPEG_PS:
-                programStart += context.getStartOffsetPS();
-                programEnd += context.getEndOffsetPS();
+                startOffset = context.getStartOffsetPS();
+                endOffset = context.getEndOffsetPS();
                 break;
             case AUDIO_WAV:
-                programStart += context.getStartOffsetWAV();
-                programEnd += context.getEndOffsetWAV();
+                startOffset = context.getStartOffsetWAV();
+                endOffset = context.getEndOffsetWAV();
                 break;
             default:
-                programStart += context.getStartOffsetTS();
-                programEnd += context.getEndOffsetTS();
+                startOffset = context.getStartOffsetTS();
+                endOffset = context.getEndOffsetTS();
                 break;
         }
+        programStart += startOffset;
+        programEnd += endOffset;
+        request.setStartOffsetUsed(startOffset);
+        request.setEndOffsetUsed(endOffset);
         long bitrate = request.getBitrate();
         List<TranscodeRequest.FileClip> clips = new ArrayList<TranscodeRequest.FileClip>();
         for (BroadcastMetadata metadata: request.getBroadcastMetadata()) {

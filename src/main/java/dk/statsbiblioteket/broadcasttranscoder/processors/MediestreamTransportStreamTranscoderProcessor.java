@@ -99,6 +99,7 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
                     - CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStart());
             long timeout = programLength/context.getTranscodingTimeoutDivisor();
             logger.debug("Setting transcoding timeout for '" + context.getProgrampid() + "' to " + timeout + "ms" );
+            request.setClipperCommand(clipperCommand);
             ExternalJobRunner.runClipperCommand(timeout, clipperCommand);
         } catch (ExternalProcessTimedOutException e) {
             File outputFile =  FileUtils.getMediaOutputFile(request, context);
