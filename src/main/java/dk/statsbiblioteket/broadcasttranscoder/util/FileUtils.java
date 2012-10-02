@@ -50,6 +50,18 @@ public class FileUtils {
         return new File(dir, filename);
     }
 
+    public static String getSnapshotOutputFileStringTemplate(TranscodeRequest request, Context context) {
+        File dir = getSnapshotOutputDir(request, context);
+        String name = context.getProgrampid().replace("uuid:","") + ".%d.png";
+        return dir.getAbsolutePath() + "/" + name;
+    }
+
+    public static File getSnapshotOutputDir(TranscodeRequest request, Context context) {
+            File rootDir = context.getSnapshotOutputRootdir();
+            int depth = context.getFileDepth();
+            logger.trace("Snapshot directory is relative to '" + rootDir + "'");
+            return getOutputSubdirectory(context, rootDir, depth);
+        }
 
     public static File getMediaOutputDir(TranscodeRequest request, Context context) {
         File rootDir = context.getFileOutputRootdir();
