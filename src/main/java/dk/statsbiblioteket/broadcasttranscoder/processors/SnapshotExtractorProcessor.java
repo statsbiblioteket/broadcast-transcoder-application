@@ -5,10 +5,15 @@ import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutException;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.MetadataUtils;
+import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
+import dk.statsbiblioteket.broadcasttranscoder.util.persistence.SnapshotMediaInfoDAO;
+import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.db.SnapshotMediaInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Date;
 
 /**
  *
@@ -40,12 +45,13 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
 
     private static final double targetAspectRatio = (1.*targetNumerator)/(1.*targetDenominator);
 
-    private static final long timeout = 10*60*1000L;
+    private static final int timeoutDivisor = 5;
 
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
-
         File fullMediaFile = FileUtils.getMediaOutputFile(request, context);
+        File snapshotOutputDir = FileUtils.getSnapshotOutputDir(request, context);
+        snapshotOutputDir.mkdirs();
         String commandLine = "ffmpeg -i " + fullMediaFile.getAbsolutePath();
         Double aspectRatio = request.getDisplayAspectRatio();
         int N = targetNumerator * scale;
@@ -71,11 +77,39 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         commandLine = commandLine + " -ss " + paddingSeconds + " -r "  + rate + geometry
                 + " -an " + FileUtils.getSnapshotOutputFileStringTemplate(request, context);
         try {
-            ExternalJobRunner.runClipperCommand(timeout, commandLine);
+            ExternalJobRunner.runClipperCommand(length/timeoutDivisor, commandLine);
         } catch (ExternalProcessTimedOutException e) {
             logger.warn("Process '" + commandLine + "' timed out.");
             throw new ProcessorException(e);
         }
+        persist(request, context, commandLine);
+    }
+
+    private void persist(final TranscodeRequest request, final Context context, String commandLine) {
+        File snapshotOutputDir = FileUtils.getSnapshotOutputDir(request, context);
+        FilenameFilter filter = new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                String pid = context.getProgrampid().replace("uuid:","");
+                return name.startsWith(pid) && name.endsWith(".png");
+            }
+        } ;
+        File[] outputFiles = snapshotOutputDir.listFiles(filter);
+        for (File outputFile: outputFiles) {
+            logger.info("Creating persistent entry for " + outputFile.getAbsolutePath());
+            SnapshotMediaInfo info = new SnapshotMediaInfo();
+            info.setFileExists(true);
+            info.setFilename(outputFile.getName());
+            info.setFileSizeByte(outputFile.length());
+            info.setFileTimestamp(new Date(outputFile.lastModified()));
+            info.setLastTouched(new Date());
+            info.setShardUuid(context.getProgrampid());
+            info.setNote("shardUuid is actually programUuid");
+            info.setTranscodeCommandLine(commandLine);
+            SnapshotMediaInfoDAO dao = new SnapshotMediaInfoDAO(HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath()));
+            dao.create(info);
+        }
 
     }
+
 }
