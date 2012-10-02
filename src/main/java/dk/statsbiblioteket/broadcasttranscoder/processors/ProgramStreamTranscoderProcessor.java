@@ -98,12 +98,11 @@ public class ProgramStreamTranscoderProcessor extends ProcessorChainElement {
     public static String getFfmpegCommandLine(TranscodeRequest request, Context context) {
            File outputFile = FileUtils.getMediaOutputFile(request, context);
            //TODO move these parameters to config file
-           String line = "ffmpeg -i - -async 2 -vcodec libx264 -deinterlace -ar 44100 "
+           String line = "ffmpeg -i - " + context.getX264FfmpegParams()
                    + " -b:v " + context.getVideoBitrate() + "000"
                    + " -b:a " + context.getAudioBitrate() + "000"
                    + " " + getFfmpegAspectRatio(request, context)
-                   + " " + " -preset superfast "
-                   + " -threads 0 " + outputFile.getAbsolutePath();
+                   + outputFile.getAbsolutePath();
            return line;
        }
 

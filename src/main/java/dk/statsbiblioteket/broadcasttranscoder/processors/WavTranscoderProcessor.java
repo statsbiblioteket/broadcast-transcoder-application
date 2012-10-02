@@ -8,10 +8,7 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
-import dk.statsbiblioteket.broadcasttranscoder.util.CalendarUtils;
-import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
-import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutException;
-import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
+import dk.statsbiblioteket.broadcasttranscoder.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,9 +25,7 @@ public class WavTranscoderProcessor extends ProcessorChainElement {
         File outputFile = FileUtils.getMediaOutputFile(request, context);
         FileUtils.getMediaOutputFile(request, context).mkdirs();
         try {
-            //TODO the follolwing two lines appear in multiple places. Replace with utility method.
-            long programLength = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStop())
-                    - CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStart());
+            long programLength = MetadataUtils.findProgramLengthMillis(request);
             long timeout = programLength/context.getTranscodingTimeoutDivisor();
             logger.debug("Setting transcoding timeout for '" + context.getProgrampid() + "' to " + timeout + "ms");
             request.setClipperCommand(command);
@@ -49,8 +44,7 @@ public class WavTranscoderProcessor extends ProcessorChainElement {
         long bitrate = request.getBitrate();
         for (int i=0; i<clips.size(); i++) {
             TranscodeRequest.FileClip clip = clips.get(i);
-            //TODO move to config
-            String soxTranscodeParameters = " -t raw -s -b 16 -c2 ";
+            String soxTranscodeParameters = context.getSoxTranscodeParams();
             command += " <(sox " + clip.getFilepath() + " " + soxTranscodeParameters + " - ";
             if ((clip.getStartOffsetBytes() != null && clip.getStartOffsetBytes() != 0) || clip.getClipLength() != null) {
                 String trimFilter = " trim ";

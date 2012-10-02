@@ -23,10 +23,11 @@ import java.util.Map;
 public class CoverageAnalyserProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(CoverageAnalyserProcessor.class);
-    private static final int gapToleranceSeconds = 2;
+    private static int gapToleranceSeconds;
 
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+        gapToleranceSeconds = context.getGapToleranceSeconds();
         ProgramStructure localStructure = new ProgramStructure();
         findMissingStart(request, context, localStructure);
         findMissingEnd(request, context, localStructure);

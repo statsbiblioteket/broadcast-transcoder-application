@@ -7,6 +7,8 @@
     <groupId>broadcast-transcoder-application</groupId>
     <artifactId>broadcast-transcoder-application</artifactId>
     <version>0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
 
     <repositories>
         <repository>
@@ -107,6 +109,37 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                    </archive>
+                    <excludes>
+                        <exclude>
+                            log4j.xml
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>dk.statsbiblioteket.broadcasttranscoder.BroadcastTranscoderApplication</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

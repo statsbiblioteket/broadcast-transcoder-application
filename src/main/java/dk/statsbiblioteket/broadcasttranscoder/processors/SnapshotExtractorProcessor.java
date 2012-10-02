@@ -32,23 +32,15 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
 
     private static final Logger logger = LoggerFactory.getLogger(SnapshotExtractorProcessor.class);
 
-   //TODO all these parameters to config files.
-    private static final int scale = 26; //multiply by 16x9 for final size
-
-    private static final int nframes = 5;
-
-    private static final int paddingSeconds = 120;
-
-    private static final int targetNumerator = 16;
-
-    private static final int targetDenominator = 9;
-
-    private static final double targetAspectRatio = (1.*targetNumerator)/(1.*targetDenominator);
-
-    private static final int timeoutDivisor = 5;
-
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+        int targetNumerator = context.getSnapshotTargetNumerator();
+        int targetDenominator = context.getSnapshotTargetDenominator();
+        int scale = context.getSnapshotScale();
+        double targetAspectRatio = (targetNumerator*1.)/(targetDenominator*1.);
+        int paddingSeconds = context.getSnapshotPaddingSeconds();
+        int nframes = context.getSnapshotFrames();
+        int timeoutDivisor = context.getSnapshotTimeoutDivisor();
         File fullMediaFile = FileUtils.getMediaOutputFile(request, context);
         File snapshotOutputDir = FileUtils.getSnapshotOutputDir(request, context);
         snapshotOutputDir.mkdirs();

@@ -38,8 +38,8 @@ public class PreviewClipperProcessor extends ProcessorChainElement {
         File outputFile = FileUtils.getPreviewOutputFile(request, context);
         String command = "ffmpeg -ss "  + programLength/(2*1000L) + " -i "
                 + sourceFile.getAbsolutePath() + " -acodec copy -vcodec copy "
-                + "  -t 30 " + outputFile.getAbsolutePath();
-        long timeout = 5*30*1000L;
+                + "  -t " + context.getPreviewLength() +" " + outputFile.getAbsolutePath();
+        long timeout = context.getPreviewTimeout()*1000L;
         logger.debug("Setting preview timeout to " + timeout + " ms.");
         try {
             ExternalJobRunner.runClipperCommand(timeout, command);
@@ -85,12 +85,12 @@ public class PreviewClipperProcessor extends ProcessorChainElement {
                         break;
                 }
         info.setEndOffset(request.getEndOffsetUsed());
-        info.setExpectedFileSizeByte(30*request.getBitrate());
+        info.setExpectedFileSizeByte(context.getPreviewLength()*request.getBitrate());
         info.setFileExists(outputFile.exists());
         info.setFileSizeByte(outputFile.length());
         info.setFileTimestamp(new Date(outputFile.lastModified()));
         info.setLastTouched(new Date());
-        info.setLengthInSeconds(30);
+        info.setLengthInSeconds(context.getPreviewLength());
         if (outputFile.getAbsolutePath().endsWith("mp3")) {
                     info.setMediaType(MediaTypeEnum.MP3);
                 } else if (outputFile.getAbsolutePath().endsWith("flv")) {

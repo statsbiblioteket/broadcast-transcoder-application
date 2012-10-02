@@ -121,7 +121,7 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
         if (!useCustomPMT) {
             clipperCommand = "cat " + processSubstitutionFileList + " | vlc - --program=" + programNumber + " --quiet --demux=ts --intf dummy --play-and-exit --noaudio --novideo "
                     + "--sout-all --sout '#duplicate{dst=\"transcode{senc=dvbsub}"
-                    + ":transcode{vcodec=h264,vb=" + context.getVideoBitrate() + ",venc=x264{" + context.getX264Params() + "},soverlay,deinterlace,audio-sync,"
+                    + ":transcode{vcodec=h264,vb=" + context.getVideoBitrate() + ",venc=x264{" + context.getX264VlcParams() + "},soverlay,deinterlace,audio-sync,"
                     + ",width=" + getWidth(request, context)
                     + ",height=" + getHeight(request, context) +",threads=0}"
                     + ":std{access=file,mux=ts,dst=-}\""
@@ -135,7 +135,7 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
             }
             logger.debug("Using Custom PMT for '" + context.getProgrampid() + "': " + programSelector);
             clipperCommand = "cat " + processSubstitutionFileList + " |  vlc - " + programSelector + " --quiet --demux=ts --intf dummy --play-and-exit --noaudio --novideo "
-                    + "--sout-all --sout '#transcode{vcodec=x264,vb=" + context.getVideoBitrate() + ",venc=x264{" + context.getX264Params() + "}" +
+                    + "--sout-all --sout '#transcode{vcodec=x264,vb=" + context.getVideoBitrate() + ",venc=x264{" + context.getX264VlcParams() + "}" +
                     ",soverlay,deinterlace,audio-sync,"
                     + ",width=" + getWidth(request, context)
                     + ",height=" + getHeight(request, context) +",threads=0}"

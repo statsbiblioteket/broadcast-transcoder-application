@@ -15,12 +15,12 @@ public class Context {
         this.programpid = programpid;
     }
 
-    public File getConfigFile() {
-        return configFile;
+    public File getInfrastructuralConfigFile() {
+        return infrastructuralConfigFile;
     }
 
-    public void setConfigFile(File configFile) {
-        this.configFile = configFile;
+    public void setInfrastructuralConfigFile(File infrastructuralConfigFile) {
+        this.infrastructuralConfigFile = infrastructuralConfigFile;
     }
 
     public int getVideoBitrate() {
@@ -111,12 +111,12 @@ public class Context {
         this.videoHeight = videoHeight;
     }
 
-    public String getX264Params() {
-        return x264Params;
+    public String getX264VlcParams() {
+        return x264VlcParams;
     }
 
-    public void setX264Params(String x264Params) {
-        this.x264Params = x264Params;
+    public void setX264VlcParams(String x264VlcParams) {
+        this.x264VlcParams = x264VlcParams;
     }
 
     public int getTranscodingTimeoutDivisor() {
@@ -231,8 +231,105 @@ public class Context {
         this.hibernateConfigFile = hibernateConfigFile;
     }
 
+    public File getBehaviourConfigFile() {
+        return behaviourConfigFile;
+    }
+
+    public void setBehaviourConfigFile(File behaviourConfigFile) {
+        this.behaviourConfigFile = behaviourConfigFile;
+    }
+
+    public int getGapToleranceSeconds() {
+        return gapToleranceSeconds;
+    }
+
+    public void setGapToleranceSeconds(int gapToleranceSeconds) {
+        this.gapToleranceSeconds = gapToleranceSeconds;
+    }
+
+    public int getPreviewLength() {
+        return previewLength;
+    }
+
+    public void setPreviewLength(int previewLength) {
+        this.previewLength = previewLength;
+    }
+
+    public int getPreviewTimeout() {
+        return previewTimeout;
+    }
+
+    public void setPreviewTimeout(int previewTimeout) {
+        this.previewTimeout = previewTimeout;
+    }
+
+    public String getX264FfmpegParams() {
+        return x264FfmpegParams;
+    }
+
+    public void setX264FfmpegParams(String x264FfmpegParams) {
+        this.x264FfmpegParams = x264FfmpegParams;
+    }
+
+    public int getSnapshotScale() {
+        return snapshotScale;
+    }
+
+    public void setSnapshotScale(int snapshotScale) {
+        this.snapshotScale = snapshotScale;
+    }
+
+    public int getSnapshotTargetNumerator() {
+        return snapshotTargetNumerator;
+    }
+
+    public void setSnapshotTargetNumerator(int snapshotTargetNumerator) {
+        this.snapshotTargetNumerator = snapshotTargetNumerator;
+    }
+
+    public int getSnapshotTargetDenominator() {
+        return snapshotTargetDenominator;
+    }
+
+    public void setSnapshotTargetDenominator(int snapshotTargetDenominator) {
+        this.snapshotTargetDenominator = snapshotTargetDenominator;
+    }
+
+    public int getSnapshotFrames() {
+        return snapshotFrames;
+    }
+
+    public void setSnapshotFrames(int snapshotFrames) {
+        this.snapshotFrames = snapshotFrames;
+    }
+
+    public int getSnapshotPaddingSeconds() {
+        return snapshotPaddingSeconds;
+    }
+
+    public void setSnapshotPaddingSeconds(int snapshotPaddingSeconds) {
+        this.snapshotPaddingSeconds = snapshotPaddingSeconds;
+    }
+
+    public int getSnapshotTimeoutDivisor() {
+        return snapshotTimeoutDivisor;
+    }
+
+    public void setSnapshotTimeoutDivisor(int snapshotTimeoutDivisor) {
+        this.snapshotTimeoutDivisor = snapshotTimeoutDivisor;
+    }
+
+    public String getSoxTranscodeParams() {
+        return soxTranscodeParams;
+    }
+
+    public void setSoxTranscodeParams(String soxTranscodeParams) {
+        this.soxTranscodeParams = soxTranscodeParams;
+    }
+
     private String programpid;
-    private File configFile;
+    private File infrastructuralConfigFile;
+    private File behaviourConfigFile;
 
     private String domsEndpoint;
     private String domsUsername;
@@ -247,13 +344,15 @@ public class Context {
     private int videoBitrate;
     private int audioBitrate;
     private int videoHeight;
-    private String x264Params;
+    private String x264VlcParams;
+    private String x264FfmpegParams;
     private int transcodingTimeoutDivisor;
     private long analysisClipLength;
 
     private int maxMissingStart;
     private int maxMissingEnd;
     private int maxHole;
+    private int gapToleranceSeconds;
 
     private int startOffsetTS;
     private int endOffsetTS;
@@ -266,4 +365,16 @@ public class Context {
     private int maxFilesFetched;
 
     private File hibernateConfigFile;
+
+    private int previewLength;
+    private int previewTimeout;
+
+    private int snapshotScale;
+    private int snapshotTargetNumerator;
+    private int snapshotTargetDenominator;
+    private int snapshotFrames;
+    private int snapshotPaddingSeconds;
+    private int snapshotTimeoutDivisor;
+
+    private String soxTranscodeParams;
 }
