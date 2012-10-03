@@ -61,7 +61,10 @@ public class ProgramStreamTranscoderProcessor extends ProcessorChainElement {
             outputFile.delete();
             throw new ProcessorException(e);
         }
-        this.setChildElement(new PreviewClipperProcessor());
+        final PreviewClipperProcessor previewClipperProcessor = new PreviewClipperProcessor();
+        final TranscoderPersistenceProcessor persister = new TranscoderPersistenceProcessor();
+        persister.setChildElement(previewClipperProcessor);
+        this.setChildElement(persister);
     }
 
        private String getMultiClipCommand(TranscodeRequest request, Context context) {
@@ -100,8 +103,8 @@ public class ProgramStreamTranscoderProcessor extends ProcessorChainElement {
            //TODO move these parameters to config file
            String line = "ffmpeg -i - " + context.getX264FfmpegParams()
                    + " -b:v " + context.getVideoBitrate() + "000"
-                   + " -b:a " + context.getAudioBitrate() + "000"
-                   + " " + getFfmpegAspectRatio(request, context)
+                   + " -b:a " + context.getAudioBitrate() + "000 -y "
+                   + " " + getFfmpegAspectRatio(request, context)  + " "
                    + outputFile.getAbsolutePath();
            return line;
        }
@@ -110,7 +113,7 @@ public class ProgramStreamTranscoderProcessor extends ProcessorChainElement {
        protected static String getFfmpegAspectRatio(TranscodeRequest request, Context context) {
            Double aspectRatio = request.getDisplayAspectRatio();
            String ffmpegResolution;
-           Long height = context.getVideoHeight()*0L;
+           Long height = context.getVideoHeight()*1L;
            if (aspectRatio != null) {
                long width = Math.round(aspectRatio*height);
                if (width%2 == 1) width += 1;

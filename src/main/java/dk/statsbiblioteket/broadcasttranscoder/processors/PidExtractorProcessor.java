@@ -2,13 +2,11 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
-import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutException;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,10 +59,14 @@ public class PidExtractorProcessor extends ProcessorChainElement {
         if (request.getFileFormat().equals(FileFormatEnum.MULTI_PROGRAM_MUX)) {
             findPidsMultiMux(commandOutput, request, context);
         }  else {
-            findPidsSingleMux(commandOutput, request, context);
+            findPidsSingleMuxOrMpeg(commandOutput, request, context);
         }
-        validateFoundData(request, context);
-        this.setChildElement(new MediestreamTransportStreamTranscoderProcessor());
+        if (request.getFileFormat().equals(FileFormatEnum.MPEG_PS)) {
+            this.setChildElement(new ProgramStreamTranscoderProcessor());
+        }  else {
+            validateFoundData(request, context);
+            this.setChildElement(new MediestreamTransportStreamTranscoderProcessor());
+        }
     }
 
     private void validateFoundData(TranscodeRequest request, Context context) throws ProcessorException {
@@ -78,7 +80,7 @@ public class PidExtractorProcessor extends ProcessorChainElement {
         }
     }
 
-    private void findPidsSingleMux(String[] commandOutput, TranscodeRequest request, Context context) {
+    private void findPidsSingleMuxOrMpeg(String[] commandOutput, TranscodeRequest request, Context context) {
         boolean foundProgram = false;
         for (String line: commandOutput) {
             findPidInLine(line, request, context);
@@ -150,8 +152,8 @@ public class PidExtractorProcessor extends ProcessorChainElement {
         }
         Matcher darMatcher = videoPattern.matcher(line);
         if (darMatcher.matches()) {
-            String top = darMatcher.group(1);
-            String bottom = darMatcher.group(2);
+            String top = darMatcher.group(3);
+            String bottom = darMatcher.group(4);
             logger.debug("Matched DAR '" + top + ":" + bottom);
             final double displayAspectRatio = Double.parseDouble(top) / Double.parseDouble(bottom);
             logger.info("Detected aspect ratio '" + displayAspectRatio + "' for '" + context.getProgrampid() + "'");

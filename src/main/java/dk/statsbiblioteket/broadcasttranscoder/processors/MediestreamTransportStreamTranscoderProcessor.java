@@ -95,8 +95,7 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
             clipperCommand = findVideoClipperCommand(request, context, processSubstitutionFileList, programNumber, useCustomPMT);
         }
         try {
-            long programLength = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStop())
-                    - CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStart());
+            long programLength = MetadataUtils.findProgramLengthMillis(request);
             long timeout = programLength/context.getTranscodingTimeoutDivisor();
             logger.debug("Setting transcoding timeout for '" + context.getProgrampid() + "' to " + timeout + "ms" );
             request.setClipperCommand(clipperCommand);
@@ -107,12 +106,15 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
             outputFile.delete();
             throw new ProcessorException(e);
         }
-        this.setChildElement(new PreviewClipperProcessor());
+        final PreviewClipperProcessor previewer = new PreviewClipperProcessor();
+        final TranscoderPersistenceProcessor persister = new TranscoderPersistenceProcessor();
+        persister.setChildElement(previewer);
+        this.setChildElement(persister);
     }
 
     private String findAudioClipperCommand(TranscodeRequest request, Context context, String processSubstitutionFileList) {
         return "cat " + processSubstitutionFileList + "| "
-                + "ffmpeg -i - -acodec libmp3lame -ar 44100 -ab "
+                + "ffmpeg -i - -acodec libmp3lame -ar 44100 -ab -y "
                 + context.getAudioBitrate() + "000 " + FileUtils.getMediaOutputFile(request, context);
     }
 
@@ -126,7 +128,7 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
                     + ",height=" + getHeight(request, context) +",threads=0}"
                     + ":std{access=file,mux=ts,dst=-}\""
                     + ",select=\"program=" + programNumber + "\"' | "
-                    + "ffmpeg -i -  -async 2 -vcodec copy -ac 2 -acodec libmp3lame -ar 44100 -ab " + context.getAudioBitrate() + "000 -f flv " + FileUtils.getMediaOutputFile(request, context);
+                    + "ffmpeg -i -  -async 2 -vcodec copy -ac 2 -acodec libmp3lame -ar 44100 -ab " + context.getAudioBitrate() + "000 -y -f flv " + FileUtils.getMediaOutputFile(request, context);
         } else {
             String programSelector = " --program=1010 --sout-all --ts-extra-pmt=1010:1010=" + request.getVideoPid() + ":video=" + request.getVideoFcc()
                     + "," + request.getMinimumAudioPid() + ":audio=" + request.getAudioFcc();
@@ -141,7 +143,7 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
                     + ",height=" + getHeight(request, context) +",threads=0}"
                     + ":std{access=file,mux=ts,dst=-}' |" +
                     "ffmpeg -i -  -async 2 -vcodec copy -acodec libmp3lame -ac 2 -ar 44100 -ab " + context.getAudioBitrate()
-                    + "000 -f flv " + FileUtils.getMediaOutputFile(request, context);
+                    + "000 -y -f flv " + FileUtils.getMediaOutputFile(request, context);
         }
         return clipperCommand;
     }

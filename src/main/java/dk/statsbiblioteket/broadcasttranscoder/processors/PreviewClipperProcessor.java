@@ -38,7 +38,7 @@ public class PreviewClipperProcessor extends ProcessorChainElement {
         File outputFile = FileUtils.getPreviewOutputFile(request, context);
         String command = "ffmpeg -ss "  + programLength/(2*1000L) + " -i "
                 + sourceFile.getAbsolutePath() + " -acodec copy -vcodec copy "
-                + "  -t " + context.getPreviewLength() +" " + outputFile.getAbsolutePath();
+                + "  -t " + context.getPreviewLength() + " -y " + outputFile.getAbsolutePath();
         long timeout = context.getPreviewTimeout()*1000L;
         logger.debug("Setting preview timeout to " + timeout + " ms.");
         try {

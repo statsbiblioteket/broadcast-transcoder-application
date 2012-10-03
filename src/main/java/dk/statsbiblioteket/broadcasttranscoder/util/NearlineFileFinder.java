@@ -1,7 +1,9 @@
 package dk.statsbiblioteket.broadcasttranscoder.util;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
+import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,21 +24,23 @@ import java.util.Map;
  * Time: 9:44 AM
  * To change this template use File | Settings | File Templates.
  */
-public class NearlineFileFinder {
+public class NearlineFileFinder implements FileFinder {
 
     private static final Logger logger = LoggerFactory.getLogger(NearlineFileFinder.class);
-    private static final String NEARLINE_SERVICE = "http://plufire/~bart/stage_files.cgi";
-    private static final int MAX_FILES = 10;
 
 
     /**
      * Given a list of files to bring online, bring them online and return a map listing their local locations.
-     * @param metadatas
      * @return
      */
-    public static Map<BroadcastMetadata, File> findAndBringOnline(List<BroadcastMetadata> metadatas) throws ProcessorException {
+    @Override
+    public Map<BroadcastMetadata, File> findAndBringOnline(TranscodeRequest request, Context context) throws ProcessorException {
+        String finderBaseUrl = context.getFileFinderUrl();
+        List<BroadcastMetadata> metadatas = request.getBroadcastMetadata();
+        int max_files = context.getMaxFilesFetched();
+
         Map<BroadcastMetadata, File> result = new HashMap<BroadcastMetadata, File>();
-        if (metadatas.size() > MAX_FILES) {
+        if (metadatas.size() > max_files) {
             throw new ProcessorException("Tried to fetch " + metadatas.size() + " at a time. Disallowed.");
         }
         String query = "";
@@ -46,7 +50,7 @@ public class NearlineFileFinder {
             }
             query+=metadata.getFilename();
         }
-        String url = NEARLINE_SERVICE + "?" + query;
+        String url = finderBaseUrl + "?" + query;
         logger.debug("Executing file finder query: " + url);
         InputStream is = null;
         try {

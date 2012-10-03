@@ -67,9 +67,9 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         int modLength = length - 2*paddingSeconds;
         String rate = nframes + "/" + modLength;
         commandLine = commandLine + " -ss " + paddingSeconds + " -r "  + rate + geometry
-                + " -an " + FileUtils.getSnapshotOutputFileStringTemplate(request, context);
+                + " -an -y " + FileUtils.getSnapshotOutputFileStringTemplate(request, context);
         try {
-            ExternalJobRunner.runClipperCommand(length/timeoutDivisor, commandLine);
+            ExternalJobRunner.runClipperCommand(1000L*length/timeoutDivisor, commandLine);
         } catch (ExternalProcessTimedOutException e) {
             logger.warn("Process '" + commandLine + "' timed out.");
             throw new ProcessorException(e);

@@ -9,6 +9,6 @@ import dk.statsbiblioteket.broadcasttranscoder.util.NearlineFileFinder;
 public class FilefinderFetcherProcessor extends ProcessorChainElement {
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
-        request.setFileMap(NearlineFileFinder.findAndBringOnline(request.getBroadcastMetadata()));
+        request.setFileMap(new NearlineFileFinder().findAndBringOnline(request, context));
     }
 }
