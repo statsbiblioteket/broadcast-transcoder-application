@@ -66,7 +66,7 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         int length = (int) (MetadataUtils.findProgramLengthMillis(request)/1000L);
         int modLength = length - 2*paddingSeconds;
         String rate = nframes + "/" + modLength;
-        commandLine = commandLine + " -ss " + paddingSeconds + " -r "  + rate + geometry
+        commandLine = commandLine + " -ss " + paddingSeconds + " -t " + modLength + " -r "  + rate + geometry
                 + " -an -y " + FileUtils.getSnapshotOutputFileStringTemplate(request, context);
         try {
             ExternalJobRunner.runClipperCommand(1000L*length/timeoutDivisor, commandLine);
