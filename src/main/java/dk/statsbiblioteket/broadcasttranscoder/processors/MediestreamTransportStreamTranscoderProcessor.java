@@ -44,7 +44,14 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
             TranscodeRequest.FileClip clip = request.getClips().get(iclip);
             Long clipLength = clip.getClipLength();
             if (iclip == 0) {
-                programNumber = clip.getProgramId();
+                if (request.getFileFormat().equals(FileFormatEnum.MULTI_PROGRAM_MUX)) {
+                    Integer programNumberObject = clip.getProgramId();
+                    if (programNumberObject == null) {
+                        throw new ProcessorException("Cannot transcode multi-program transport stream because no program number specified: " + context.getProgrampid());
+                    } else {
+                        programNumber = programNumberObject;
+                    }
+                }
                 if (clip.getStartOffsetBytes() == null) {
                     offsetBytes = 0L;
                 } else {
@@ -88,8 +95,9 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
         //may need to use a custom PMT to get DR1 (program 101) to work even if we don't have a pid for dvbsub. So:
         boolean useCustomPMT = (request.getDvbsubPid() != null && !request.getAudioPids().isEmpty() && request.getVideoPid() != null && request.getVideoFcc() != null && request.getAudioFcc() != null );
         useCustomPMT = useCustomPMT |  (!request.getAudioPids().isEmpty() && request.getVideoPid() != null && request.getVideoFcc() != null && request.getAudioFcc() != null && programNumber==101);
+        useCustomPMT = true;
         String clipperCommand = null;
-        if (request.getFileFormat().equals(FileFormatEnum.AUDIO_WAV)) {
+        if (request.getFileFormat().equals(FileFormatEnum.SINGLE_PROGRAM_AUDIO_TS)) {
             clipperCommand = findAudioClipperCommand(request, context, processSubstitutionFileList);
         } else {
             clipperCommand = findVideoClipperCommand(request, context, processSubstitutionFileList, programNumber, useCustomPMT);
@@ -114,20 +122,26 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
 
     private String findAudioClipperCommand(TranscodeRequest request, Context context, String processSubstitutionFileList) {
         return "cat " + processSubstitutionFileList + "| "
-                + "ffmpeg -i - -acodec libmp3lame -ar 44100 -ab -y "
-                + context.getAudioBitrate() + "000 " + FileUtils.getMediaOutputFile(request, context);
+                + "ffmpeg -i - -acodec libmp3lame -ar 44100 -ab "
+                + context.getAudioBitrate() + "000 -y " + FileUtils.getMediaOutputFile(request, context);
     }
 
     private String findVideoClipperCommand(TranscodeRequest request, Context context, String processSubstitutionFileList, int programNumber, boolean useCustomPMT) {
         String clipperCommand;
         if (!useCustomPMT) {
-            clipperCommand = "cat " + processSubstitutionFileList + " | vlc - --program=" + programNumber + " --quiet --demux=ts --intf dummy --play-and-exit --noaudio --novideo "
+            String programString = "";
+            String programSelectString = "";
+            if (request.getFileFormat().equals(FileFormatEnum.MULTI_PROGRAM_MUX)) {
+                programString = " --program=" + programNumber;
+                programSelectString = ",select=\"program=\" + programNumber + \"\"";
+            }
+            clipperCommand = "cat " + processSubstitutionFileList + " | vlc - " + programString + " --quiet --demux=ts --intf dummy --play-and-exit --noaudio --novideo "
                     + "--sout-all --sout '#duplicate{dst=\"transcode{senc=dvbsub}"
                     + ":transcode{vcodec=h264,vb=" + context.getVideoBitrate() + ",venc=x264{" + context.getX264VlcParams() + "},soverlay,deinterlace,audio-sync,"
                     + ",width=" + getWidth(request, context)
                     + ",height=" + getHeight(request, context) +",threads=0}"
                     + ":std{access=file,mux=ts,dst=-}\""
-                    + ",select=\"program=" + programNumber + "\"' | "
+                    + programSelectString + "' | "
                     + "ffmpeg -i -  -async 2 -vcodec copy -ac 2 -acodec libmp3lame -ar 44100 -ab " + context.getAudioBitrate() + "000 -y -f flv " + FileUtils.getMediaOutputFile(request, context);
         } else {
             String programSelector = " --program=1010 --sout-all --ts-extra-pmt=1010:1010=" + request.getVideoPid() + ":video=" + request.getVideoFcc()

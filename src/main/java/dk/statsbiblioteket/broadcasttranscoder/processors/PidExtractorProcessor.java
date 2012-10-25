@@ -133,7 +133,7 @@ public class PidExtractorProcessor extends ProcessorChainElement {
             logger.debug("Identified aspect ratio '" + request.getDisplayAspectRatioString() + "'");
         }
         Matcher audioMatcher = audioPattern1.matcher(line);
-        if (audioMatcher.matches()) {
+        if (audioMatcher.matches() && !line.contains("5.1")) {
             request.addAudioPid(audioMatcher.group(1));
             logger.info("Setting pid for audio '" + audioMatcher.group(1) + "'");
             if (line.contains("aac_latm")) {
@@ -144,7 +144,7 @@ public class PidExtractorProcessor extends ProcessorChainElement {
             logger.debug("Identified audio fourcc for " + context.getProgrampid() + ": " + request.getAudioFcc());
         }
         audioMatcher = audioPattern2.matcher(line);
-        if (audioMatcher.matches()) {
+        if (audioMatcher.matches() && !line.contains("5.1")) {
             request.addAudioPid(audioMatcher.group(1));
             logger.info("Setting pid for audio '" + audioMatcher.group(1) + "'");
             request.setAudioFcc("mp4a");

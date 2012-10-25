@@ -153,7 +153,7 @@ public class OptionsParser {
             Long result = Long.parseLong(prop);
             return result;
         } catch (NumberFormatException e) {
-            throw new OptionParseException("Cannot parse " + prop + " as an integer.");
+            throw new OptionParseException("Cannot parse " + prop + " as a long.");
         }
     }
 

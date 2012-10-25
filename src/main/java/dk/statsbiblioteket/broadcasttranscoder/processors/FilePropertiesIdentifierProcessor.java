@@ -34,7 +34,7 @@ public class FilePropertiesIdentifierProcessor extends ProcessorChainElement {
             format = FileFormatEnum.MPEG_PS;
         } else if (filename.startsWith("mux") && filename.endsWith("ts")) {
             format = FileFormatEnum.MULTI_PROGRAM_MUX;
-        } else if (filename.endsWith("ts")) {
+        } else if (filename.endsWith("mux")) {
             if (bitrate > 100000l) {
                 format = FileFormatEnum.SINGLE_PROGRAM_VIDEO_TS;
             } else {

@@ -1,11 +1,13 @@
 <assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
-    <id>jar-with-dependencies-packed</id>
+    <id>zip-package</id>
     <formats>
         <format>zip</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
+
+
 
     <fileSets>
         <fileSet>
@@ -16,7 +18,13 @@
             </includes>
             <filtered>false</filtered>
         </fileSet>
-
+        <fileSet>
+              <directory>${project.build.directory}</directory>
+              <outputDirectory>/</outputDirectory>
+              <includes>
+                <include>*.jar</include>
+              </includes>
+            </fileSet>
         <!--<fileSet>
             <directory>${basedir}/src/main/scripts</directory>
             <outputDirectory>${project.build.finalName}/bin</outputDirectory>
@@ -26,19 +34,15 @@
 
 
     </fileSets>
-
-      <dependencySets>
-
+    <dependencySets>
         <dependencySet>
-               <outputDirectory>${project.build.finalName}/lib</outputDirectory>
+            <outputDirectory>${project.build.finalName}/lib</outputDirectory>
             <useTransitiveFiltering>true</useTransitiveFiltering>
-
-            <includes>
+            <!--<includes>
                 <include>broadcast-transcoder-application</include>
             </includes>
-            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectArtifact>false</useProjectArtifact> -->
         </dependencySet>
-
     </dependencySets>
 
 </assembly>

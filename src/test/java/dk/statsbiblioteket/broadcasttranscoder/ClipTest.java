@@ -39,6 +39,13 @@ public class ClipTest extends TestCase {
     String mux2 =  "/home/csr/old_home/yousee_scratch/mux1.1323493200-2011-12-10-06.00.00_1323496800-2011-12-10-07.00.00_dvb1-1.ts";
     String wav = "/home/csr/old_home/yousee_scratch/rakl_106.200_Radio-Klassisk_pcm_20111203045601_20111204045502_encoder1-2.wav ";
     String mpeg = "/home/csr/old_home/yousee_scratch/tv3p_647.250_K43-TV3P_mpeg1_20111114045601_20111115045502_encoder6-2.mpeg";
+    //String ts1 = "/home/csr/old_home/yousee_scratch/DR1_20120611_210000_20120611_210500.mux";
+    String ts_dr1 =  "/home/csr/old_home/yousee_scratch/dr1_test.mux";
+    String ts2 = "/home/csr/old_home/yousee_scratch/DRRAMA_20120514_210000_20120514_210500.mux";
+    String ts_animal = "/home/csr/old_home/yousee_scratch/ANIMAL_20121008_120000_20121008_130000.mux";
+    //String ts_dr1 = "/home/csr/old_home/yousee_scratch/DR1_20121008_120000_20121008_130000.mux";
+    String ts_drp8 = "/home/csr/old_home/yousee_scratch/DRP8_20121008_120000_20121008_130000.mux";
+
 
     @Override
     protected void setUp() throws Exception {
@@ -141,6 +148,81 @@ public class ClipTest extends TestCase {
 
         ProgramBroadcast pb = new ProgramBroadcast();
         XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,5,0));
+        XMLGregorianCalendar xmlcalstart = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,30));
+        pb.setTimeStart(xmlcalstart);
+        pb.setTimeStop(xmlcalend);
+        request.setProgramBroadcast(pb);
+
+        ProcessorChainElement dispatcher = new TranscoderDispatcherProcessor();
+        dispatcher.processIteratively(request, context);
+
+    }
+
+     public void testAnimal() throws DatatypeConfigurationException, ProcessorException {
+        TranscodeRequest request = new TranscodeRequest();
+        request.setFileFormat(FileFormatEnum.SINGLE_PROGRAM_VIDEO_TS);
+        TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip(ts_animal);
+        clip.setClipLength(200000000L);
+        clip.setStartOffsetBytes(20000000L);
+        List<TranscodeRequest.FileClip> clips = new ArrayList<TranscodeRequest.FileClip>();
+        clips.add(clip);
+        request.setClips(clips);
+        request.setBitrate(425625L);
+
+        context.setProgrampid("uuid:animal");
+
+        ProgramBroadcast pb = new ProgramBroadcast();
+        XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,32));
+        XMLGregorianCalendar xmlcalstart = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,30));
+        pb.setTimeStart(xmlcalstart);
+        pb.setTimeStop(xmlcalend);
+        request.setProgramBroadcast(pb);
+
+        ProcessorChainElement dispatcher = new TranscoderDispatcherProcessor();
+        dispatcher.processIteratively(request, context);
+
+    }
+
+     public void testDr1() throws DatatypeConfigurationException, ProcessorException {
+        TranscodeRequest request = new TranscodeRequest();
+        request.setFileFormat(FileFormatEnum.SINGLE_PROGRAM_VIDEO_TS);
+        TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip(ts_dr1);
+        clip.setClipLength(200000000L);
+        clip.setStartOffsetBytes(20000000L);
+        List<TranscodeRequest.FileClip> clips = new ArrayList<TranscodeRequest.FileClip>();
+        clips.add(clip);
+        request.setClips(clips);
+        request.setBitrate(828750L);
+
+        context.setProgrampid("uuid:drone");
+
+        ProgramBroadcast pb = new ProgramBroadcast();
+        XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,32));
+        XMLGregorianCalendar xmlcalstart = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,30));
+        pb.setTimeStart(xmlcalstart);
+        pb.setTimeStop(xmlcalend);
+        request.setProgramBroadcast(pb);
+
+        ProcessorChainElement dispatcher = new TranscoderDispatcherProcessor();
+        dispatcher.processIteratively(request, context);
+
+    }
+
+    public void testDrp8() throws DatatypeConfigurationException, ProcessorException {
+        TranscodeRequest request = new TranscodeRequest();
+        request.setFileFormat(FileFormatEnum.SINGLE_PROGRAM_AUDIO_TS);
+        TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip(ts_drp8);
+        clip.setClipLength(200000000L);
+        clip.setStartOffsetBytes(20000000L);
+        List<TranscodeRequest.FileClip> clips = new ArrayList<TranscodeRequest.FileClip>();
+        clips.add(clip);
+        request.setClips(clips);
+        request.setBitrate(32000L);
+
+        context.setProgrampid("uuid:drp8");
+
+        ProgramBroadcast pb = new ProgramBroadcast();
+        XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,32));
         XMLGregorianCalendar xmlcalstart = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,30));
         pb.setTimeStart(xmlcalstart);
         pb.setTimeStop(xmlcalend);

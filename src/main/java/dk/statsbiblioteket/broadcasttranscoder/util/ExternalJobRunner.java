@@ -206,13 +206,13 @@ public class ExternalJobRunner {
     }
 
     public static void runClipperCommand(long timeout, String clipperCommand) throws ProcessorException, ExternalProcessTimedOutException {
-        log.info("Executing '" + clipperCommand + "'");
+        log.info("Executing '" + clipperCommand + "' with timeout " + timeout + " ms.");
         try {
             ExternalJobRunner runner = new ExternalJobRunner(timeout, new String[]{"bash", "-c", clipperCommand});
             if (runner.getExitValue() != 0) {
                 log.warn("Command '" + clipperCommand + "' returned with exit value '" + runner.getExitValue() + "'");
                 log.warn("Standard out:\n" + runner.getOutput());
-               log.warn("Standard err:\n" + runner.getError());
+                log.warn("Standard err:\n" + runner.getError());
             } else {
                 log.info("Command '" + clipperCommand + "' returned with exit value '" + runner.getExitValue() + "'");
             }
