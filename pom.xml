@@ -123,6 +123,12 @@
                         <exclude>
                             log4j.xml
                         </exclude>
+                        <exclude>
+                            logback.xml.xml
+                        </exclude>
+                        <exclude>
+                            logback-test.xml
+                        </exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -162,6 +168,13 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                               logback-test.xml
+                        </exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
