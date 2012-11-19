@@ -123,6 +123,12 @@
                         <exclude>
                             log4j.xml
                         </exclude>
+                        <exclude>
+                            logback.xml.xml
+                        </exclude>
+                        <exclude>
+                            logback-test.xml
+                        </exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -148,6 +154,7 @@
                         <descriptor>src/main/assembly/zip_package.xml</descriptor>
                     </descriptors>
                 </configuration>
+
                 <executions>
                     <execution>
                         <id>make-assembly</id> <!-- this is used for inheritance merges -->
@@ -158,18 +165,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test-jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
         </plugins>
     </build>
 
