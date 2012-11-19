@@ -1,24 +1,13 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
-import dk.statsbiblioteket.broadcasttranscoder.domscontent.PBCoreDescriptionDocument;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramBroadcast;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramStructure;
-import dk.statsbiblioteket.broadcasttranscoder.util.CalendarUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.broadcasttranscoder.util.JaxbWrapper;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.MetadataDAO;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.db.Metadata;
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.extraction.DOMSMetadataExtractor;
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.extraction.exception.DOMSMetadataExtractionParsePBCoreException;
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.extraction.model.PBCoreProgramMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Date;
-import java.util.Properties;
 
 
 /**

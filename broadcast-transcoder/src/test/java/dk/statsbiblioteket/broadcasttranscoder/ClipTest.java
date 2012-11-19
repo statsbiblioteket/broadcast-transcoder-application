@@ -2,13 +2,7 @@ package dk.statsbiblioteket.broadcasttranscoder;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramBroadcast;
-import dk.statsbiblioteket.broadcasttranscoder.processors.BroadcastMetadataSorterProcessor;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ClipFinderProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.processors.CoverageAnalyserProcessor;
-import dk.statsbiblioteket.broadcasttranscoder.processors.FileMetadataFetcherProcessor;
-import dk.statsbiblioteket.broadcasttranscoder.processors.FilePropertiesIdentifierProcessor;
-import dk.statsbiblioteket.broadcasttranscoder.processors.FilefinderFetcherProcessor;
-import dk.statsbiblioteket.broadcasttranscoder.processors.PersistentMetadataExtractorProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
 import dk.statsbiblioteket.broadcasttranscoder.processors.StructureFixerProcessor;
@@ -22,7 +16,6 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -36,15 +29,20 @@ import java.util.List;
 public class ClipTest extends TestCase {
 
     Context context = new Context();
-    String mux2 =  "/home/csr/old_home/yousee_scratch/mux1.1323493200-2011-12-10-06.00.00_1323496800-2011-12-10-07.00.00_dvb1-1.ts";
-    String wav = "/home/csr/old_home/yousee_scratch/rakl_106.200_Radio-Klassisk_pcm_20111203045601_20111204045502_encoder1-2.wav ";
-    String mpeg = "/home/csr/old_home/yousee_scratch/tv3p_647.250_K43-TV3P_mpeg1_20111114045601_20111115045502_encoder6-2.mpeg";
-    //String ts1 = "/home/csr/old_home/yousee_scratch/DR1_20120611_210000_20120611_210500.mux";
-    String ts_dr1 =  "/home/csr/old_home/yousee_scratch/dr1_test.mux";
-    String ts2 = "/home/csr/old_home/yousee_scratch/DRRAMA_20120514_210000_20120514_210500.mux";
-    String ts_animal = "/home/csr/old_home/yousee_scratch/ANIMAL_20121008_120000_20121008_130000.mux";
-    //String ts_dr1 = "/home/csr/old_home/yousee_scratch/DR1_20121008_120000_20121008_130000.mux";
-    String ts_drp8 = "/home/csr/old_home/yousee_scratch/DRP8_20121008_120000_20121008_130000.mux";
+
+    String scratchDir="/home/csr/old_home/yousee_scratch/";
+    String scratchWriteDir="target/";
+
+
+    String mux2 =  scratchDir+"mux1.1323493200-2011-12-10-06.00.00_1323496800-2011-12-10-07.00.00_dvb1-1.ts";
+    String wav = scratchDir+"rakl_106.200_Radio-Klassisk_pcm_20111203045601_20111204045502_encoder1-2.wav ";
+    String mpeg = scratchDir+"tv3p_647.250_K43-TV3P_mpeg1_20111114045601_20111115045502_encoder6-2.mpeg";
+    //String ts1 = scratchDir + "DR1_20120611_210000_20120611_210500.mux";
+    String ts_dr1 =  scratchDir+"dr1_test.mux";
+    String ts2 = scratchDir+"DRRAMA_20120514_210000_20120514_210500.mux";
+    String ts_animal = scratchDir+"ANIMAL_20121008_120000_20121008_130000.mux";
+    //String ts_dr1 = scratchDir+"DR1_20121008_120000_20121008_130000.mux";
+    String ts_drp8 = scratchDir+"DRP8_20121008_120000_20121008_130000.mux";
 
 
     @Override
@@ -56,16 +54,16 @@ public class ClipTest extends TestCase {
         context.setEndOffsetTS(10);
         context.setFileDepth(4);
         context.setGapToleranceSeconds(2);
-        context.setLockDir(new File("/home/csr/old_home/yousee_scratch/lockdir"));
+        context.setLockDir(new File(scratchWriteDir+"lockdir"));
         context.setHibernateConfigFile(new File("/home/csr/projects/broadcast-transcoder-application/src/test/config/hibernate.in-memory_unittest.cfg.xml"));
         context.setMaxHole(10);
         context.setMaxMissingEnd(10);
         context.setMaxMissingStart(10);
         context.setPreviewLength(30);
-        context.setPreviewOutputRootdir(new File("/home/csr/old_home/yousee_scratch/previewdir"));
+        context.setPreviewOutputRootdir(new File(scratchWriteDir+"previewdir"));
         context.setPreviewTimeout(100);
         context.setSnapshotFrames(5);
-        context.setSnapshotOutputRootdir(new File("/home/csr/old_home/yousee_scratch/snapshotdir"));
+        context.setSnapshotOutputRootdir(new File(scratchWriteDir+"snapshotdir"));
         context.setSnapshotPaddingSeconds(20);
         context.setSnapshotScale(26);
         context.setSnapshotTargetDenominator(9);
@@ -78,7 +76,7 @@ public class ClipTest extends TestCase {
         context.setX264VlcParams("profile=High,preset=superfast,level=3.0");
         context.setX264FfmpegParams("-async 2 -vcodec libx264 -deinterlace -ar 44100 -preset superfast -threads 0");
         context.setSoxTranscodeParams(" -t raw -s -b 16 -c2");
-        context.setFileOutputRootdir(new File("/home/csr/old_home/yousee_scratch/outputdir"));
+        context.setFileOutputRootdir(new File(scratchWriteDir+"outputdir"));
     }
 
     public void testMultiProgramMux() throws ProcessorException, DatatypeConfigurationException {
