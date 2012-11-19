@@ -19,6 +19,6 @@ public class BroadcastTranscoderApplicationTest extends TestCase {
     }
 
     public void testMainCorrect() throws OptionParseException, ProcessorException {
-          BroadcastTranscoderApplication.main(new String[] {"-domsendpoint", "http://some.thing", "-programpid", "foobar"});
+          BroadcastTranscoderApplication.main(new String[] {"-hibernate_configfile", "file3", "-infrastructure_configfile", "file2", "-u","-behavioural_configfile", "file1", "-programpid", "foobar"});
     }
 }

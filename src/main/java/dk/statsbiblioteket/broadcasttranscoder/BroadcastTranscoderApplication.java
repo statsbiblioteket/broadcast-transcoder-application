@@ -38,8 +38,8 @@ public class BroadcastTranscoderApplication {
             System.exit(3);
         }
         try {
-            ProcessorChainElement metadata = new FileMetadataFetcherProcessor();
-            PersistentMetadataExtractorProcessor persistentMetadata = new PersistentMetadataExtractorProcessor();
+            ProcessorChainElement metadata = new FileMetadataFetcherProcessor();    //??What??
+            ProcessorChainElement persistentMetadata = new PersistentMetadataExtractorProcessor();
             ProcessorChainElement filedata = new FileMetadataFetcherProcessor();
             ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
             ProcessorChainElement fetcher = new FilefinderFetcherProcessor();
