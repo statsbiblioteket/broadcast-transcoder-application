@@ -1,6 +1,9 @@
 package dk.statsbiblioteket.broadcasttranscoder.util;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.util.GregorianCalendar;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,5 +16,11 @@ public class CalendarUtils {
 
     public static long getTimestamp(XMLGregorianCalendar cal) {
         return cal.toGregorianCalendar().getTimeInMillis();
+    }
+
+    public static XMLGregorianCalendar getCalendar() throws DatatypeConfigurationException {
+        GregorianCalendar cal = new GregorianCalendar();
+        XMLGregorianCalendar xmlcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+        return xmlcal;
     }
 }

@@ -12,5 +12,44 @@
 
     <artifactId>broadcast-transcoder-commandline</artifactId>
 
-    
+    <dependencies>
+        <dependency>
+            <groupId>broadcast-transcoder-application</groupId>
+            <artifactId>broadcast-transcoder</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>dk.statsbiblioteket.broadcasttranscoder.cli.BroadcastTranscoderApplication</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <descriptors>
+                        <descriptor>src/main/assembly/zip_package.xml</descriptor>
+                    </descriptors>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
 </project>

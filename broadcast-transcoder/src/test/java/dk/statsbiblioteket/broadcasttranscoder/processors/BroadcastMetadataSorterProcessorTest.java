@@ -1,9 +1,11 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
+import dk.statsbiblioteket.broadcasttranscoder.util.CalendarUtils;
 import junit.framework.TestCase;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,16 +14,16 @@ import java.util.List;
  */
 public class BroadcastMetadataSorterProcessorTest extends TestCase {
 
-    public void testProcessThis() throws ProcessorException {
+    public void testProcessThis() throws ProcessorException, DatatypeConfigurationException {
         TranscodeRequest request = new TranscodeRequest();
         BroadcastMetadata m1 = new BroadcastMetadata();
         BroadcastMetadata m2 = new BroadcastMetadata();
         BroadcastMetadata m3 = new BroadcastMetadata();
         BroadcastMetadata m4 = new BroadcastMetadata();
-        m1.setStartTime(new XMLGregorianCalendarImpl());
-        m2.setStartTime(new XMLGregorianCalendarImpl());
-        m3.setStartTime(new XMLGregorianCalendarImpl());
-        m4.setStartTime(new XMLGregorianCalendarImpl());
+        m1.setStartTime(CalendarUtils.getCalendar());
+        m2.setStartTime(CalendarUtils.getCalendar());
+        m3.setStartTime(CalendarUtils.getCalendar());
+        m4.setStartTime(CalendarUtils.getCalendar());
         m1.getStartTime().setYear(100);
         m2.getStartTime().setYear(200);
         m3.getStartTime().setYear(300);
