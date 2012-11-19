@@ -1,5 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder.cli;
 
+import dk.statsbiblioteket.doms.central.CentralWebservice;
+
 import java.io.File;
 
 /**
@@ -377,4 +379,17 @@ public class Context {
     private int snapshotTimeoutDivisor;
 
     private String soxTranscodeParams;
+
+
+
+
+    private CentralWebservice domsApi = null;
+
+    public CentralWebservice getDomsApi() {
+        return domsApi;
+    }
+
+    public void setDomsApi(CentralWebservice domsApi) {
+        this.domsApi = domsApi;
+    }
 }
