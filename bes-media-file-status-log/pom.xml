@@ -30,6 +30,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>broadcast-transcoder-application</groupId>
+            <artifactId>broadcast-transcoder-persistence</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>dk.statsbiblioteket.doms.central</groupId>
             <artifactId>centralWebservice-interface</artifactId>
             <version>0.0.23</version>
@@ -38,21 +44,6 @@
             <groupId>dk.statsbiblioteket.sbutil</groupId>
             <artifactId>sbutil</artifactId>
             <version>0.5.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>3.3.1.GA</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>3.4.0.GA</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-c3p0</artifactId>
-            <version>3.3.1.GA</version>
         </dependency>
         <dependency>
             <groupId>javassist</groupId>

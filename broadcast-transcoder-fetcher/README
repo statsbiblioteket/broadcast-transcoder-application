@@ -1,0 +1,8 @@
+This is a separate command-line application within the BTA codebase. It fetches a list of program-pids for update
+ objects since its last run. The timestamp of the current run is then persisted to the existing BES Media File Status
+  Log - Batch program database. There are command line parameters to override and reset the "last-run" date.
+
+
+Ok, design
+
+We need a storage system. This storage system should just store the records we already have
