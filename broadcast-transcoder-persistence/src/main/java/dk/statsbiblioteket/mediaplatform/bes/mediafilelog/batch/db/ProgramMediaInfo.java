@@ -16,6 +16,7 @@ public class ProgramMediaInfo {
     private long id;
     private Date lastTouched;
     private String shardUuid;
+
     private boolean fileExists;
     private MediaTypeEnum mediaType;
     private BroadcastTypeEnum broadcastType;
