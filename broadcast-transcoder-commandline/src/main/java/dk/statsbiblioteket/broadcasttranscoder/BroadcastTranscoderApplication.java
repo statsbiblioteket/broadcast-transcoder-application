@@ -38,7 +38,6 @@ public class BroadcastTranscoderApplication {
             System.exit(3);
         }
         try {
-            ProcessorChainElement metadata = new FileMetadataFetcherProcessor();    //??What??
             ProcessorChainElement persistentMetadata = new PersistentMetadataExtractorProcessor();
             ProcessorChainElement filedata = new FileMetadataFetcherProcessor();
             ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
@@ -46,18 +45,19 @@ public class BroadcastTranscoderApplication {
             ProcessorChainElement identifier = new FilePropertiesIdentifierProcessor();
             ProcessorChainElement clipper = new ClipFinderProcessor();
             ProcessorChainElement coverage = new CoverageAnalyserProcessor();
+            ProcessorChainElement updater = new ProgramStructureUpdaterProcessor();
             ProcessorChainElement fixer = new StructureFixerProcessor();
             ProcessorChainElement dispatcher = new TranscoderDispatcherProcessor();
-            metadata.setChildElement(persistentMetadata);
             persistentMetadata.setChildElement(filedata);
             filedata.setChildElement(sorter);
             sorter.setChildElement(fetcher);
             fetcher.setChildElement(identifier);
             identifier.setChildElement(clipper);
             clipper.setChildElement(coverage);
-            coverage.setChildElement(fixer);
+            coverage.setChildElement(updater);
+            updater.setChildElement(fixer);
             fixer.setChildElement(dispatcher);
-            metadata.processIteratively(request, context);
+            persistentMetadata.processIteratively(request, context);
         } finally {
             boolean deleted = lockFile.delete();
             if (!deleted) {
