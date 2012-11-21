@@ -5,4 +5,12 @@ This is a separate command-line application within the BTA codebase. It fetches 
 
 Ok, design
 
+We will query programs that have changed since a given time
+
+We will extract the metadata for each of these programs.
+
+If this is unequal to the existing metadata we have, we will retrancode the file.
+
+Next time, we will have to remember when a program was last updated, and
+
 We need a storage system. This storage system should just store the records we already have

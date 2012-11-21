@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>broadcast-transcoder-application</groupId>
+        <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>
         <artifactId>broadcast-transcoder-application</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
@@ -30,7 +30,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>broadcast-transcoder-application</groupId>
+            <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>
             <artifactId>broadcast-transcoder-persistence</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
