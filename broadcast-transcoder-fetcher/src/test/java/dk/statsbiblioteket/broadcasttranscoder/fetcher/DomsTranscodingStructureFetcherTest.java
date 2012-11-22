@@ -24,11 +24,11 @@ public class DomsTranscodingStructureFetcherTest extends TestCase {
         context.setViewAngle("GUI");
         context.setDomsPassword("fedoraAdminPass");
         context.setDomsUsername("fedoraAdmin");
-        context.setDomsEndpoint("http://alhena:7880/centralWebservice-service/central/");
-        CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);
-        List<RecordDescription> records = BtaDomsFetcher.requestInBatches(doms, context);
-        assertTrue("No records found",records.size()>0);
-        RecordDescription record = records.get(0);
+        context.setDomsEndpoint("http://alhena:7480/centralWebservice-service/central/");
+        RecordDescription record;
+        record = new RecordDescription();
+        record.setPid("uuid:d11c2f49-4e6f-47bd-b04f-7ee6293520ea");
+        System.out.println(record.getPid());
         DomsTranscodingStructureFetcher thing = new DomsTranscodingStructureFetcher();
         String result = thing.processThis(context, record);
         System.out.println(result);

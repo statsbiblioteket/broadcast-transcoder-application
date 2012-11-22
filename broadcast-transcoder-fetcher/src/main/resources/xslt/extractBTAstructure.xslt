@@ -57,6 +57,7 @@
         </xsl:if>
     </xsl:template>
 
+<!--
     <xsl:template match="foxml:datastream[@ID='PBCORE']">
         <xsl:param name="program"/>
         <xsl:if test="$program">
@@ -65,6 +66,7 @@
             </pbcore>
         </xsl:if>
     </xsl:template>
+-->
 
 
 
@@ -96,6 +98,7 @@
     </xsl:template>
 
 
+<!--
     <xsl:template match="foxml:datastream[@ID='CHARACTERISATION']">
         <xsl:param name="file"/>
         <xsl:if test="$file">
@@ -104,6 +107,7 @@
             </characterisation>
         </xsl:if>
     </xsl:template>
+-->
 
 
     <xsl:template match="foxml:datastream">
