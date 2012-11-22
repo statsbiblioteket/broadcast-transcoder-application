@@ -68,6 +68,7 @@ public class CoverageAnalyserProcessor extends ProcessorChainElement {
         localProgramStructure.setOverlaps(overlaps);
         Map.Entry<String, BroadcastMetadata> firstEntry = null;
         Map.Entry<String, BroadcastMetadata> secondEntry = null;
+        //TODO this is buggy because only the broadcastMetadata is sorted, ot the pidMap.
         for(Map.Entry<String, BroadcastMetadata> entry: request.getPidMap().entrySet()) {
             firstEntry = secondEntry;
             secondEntry = entry;
@@ -101,7 +102,11 @@ public class CoverageAnalyserProcessor extends ProcessorChainElement {
                         overlap.setOverlapType(3);
                     }
                     overlaps.getOverlap().add(overlap);
-                    logger.debug("Adden an overlap for " + context.getProgrampid() + " " + overlap.toString());
+                    logger.debug("program start:" + programStartTime + " " + request.getProgramBroadcast().getTimeStart());
+                    logger.debug("program end  :" + programEndTime + " " + request.getProgramBroadcast().getTimeStop());
+                    logger.debug("first file end :" + firstEntryEnd + " " + firstEntry.getValue().getStopTime());
+                    logger.debug("second file start :" + secondEntryStart + " " + secondEntry.getValue().getStartTime());
+                    logger.debug("Added an overlap for " + context.getProgrampid() + " " + overlap.toString());
                 }
             }
         }

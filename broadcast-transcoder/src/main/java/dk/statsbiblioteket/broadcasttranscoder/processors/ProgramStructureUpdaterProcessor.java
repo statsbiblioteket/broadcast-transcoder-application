@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * This processor has the following behaviour. If the locally calculated ProgramStructure
  * is distinct from that in DOMS, or if there is only a dummy ProgramStructure in DOMS, then
- * the local value is written back to DOMS and the program exits. Otherwise no action is taken.
+ * the local value is written back to DOMS.. Otherwise no action is taken.
  */
 public class ProgramStructureUpdaterProcessor extends ProcessorChainElement {
 
@@ -34,8 +34,8 @@ public class ProgramStructureUpdaterProcessor extends ProcessorChainElement {
                 !areSemanticallyEqual(domsProgramStructure, localProgramStructure)) {
             logger.debug("Writing new program structure for " + context.getProgrampid() + " to DOMS");
             writeStructureToDoms(request, context);
-            this.setChildElement(null);
-            logger.debug("Not transcoding " + context.getProgrampid() + " because of new program structure.");
+            //this.setChildElement(null);
+            //logger.debug("Not transcoding " + context.getProgrampid() + " because of new program structure.");
         } else {
             return;
         }

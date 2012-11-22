@@ -9,7 +9,12 @@ import dk.statsbiblioteket.doms.central.InvalidCredentialsException;
 import dk.statsbiblioteket.doms.central.InvalidResourceException;
 import dk.statsbiblioteket.doms.central.MethodFailedException;
 import dk.statsbiblioteket.doms.central.Relation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.transform.stream.StreamSource;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +24,9 @@ import java.util.Map;
  *
  */
 public class FileMetadataFetcherProcessor extends ProcessorChainElement {
+
+    private static Logger logger = LoggerFactory.getLogger(FileMetadataFetcherProcessor.class);
+
 
     private static final String HAS_FILE_RELATION = "http://doms.statsbiblioteket.dk/relations/default/0/1/#hasFile";
     @Override
@@ -36,20 +44,13 @@ public class FileMetadataFetcherProcessor extends ProcessorChainElement {
     private List<BroadcastMetadata> getBroadcastMetadata(List<String> fileObjectPids, Context context, TranscodeRequest request) throws ProcessorException {
         Map<String, BroadcastMetadata> pidMap = new HashMap<String, BroadcastMetadata>();
         CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);
-        JaxbWrapper<BroadcastMetadata> broadcastMetadataWrapper = null;
-        try {
-            broadcastMetadataWrapper =
-                    new JaxbWrapper<BroadcastMetadata>(getClass().getClassLoader().getResource("BROADCAST_METADATA.xsd")
-                            ,BroadcastMetadata.class);
-        } catch (Exception e) {
-            throw new ProcessorException(e);
-        }
         List<BroadcastMetadata> broadcastMetadataList = new ArrayList<BroadcastMetadata>();
         for (String fileObjectPid: fileObjectPids) {
             BroadcastMetadata broadcastMetadata = null;
             try {
                 String broadcastMetadataXml = doms.getDatastreamContents(fileObjectPid, "BROADCAST_METADATA");
-                broadcastMetadata = broadcastMetadataWrapper.xmlToObject(broadcastMetadataXml);
+                logger.debug("Found file metadata '" + fileObjectPid + "' :\n" + broadcastMetadataXml);
+                broadcastMetadata = JAXBContext.newInstance(BroadcastMetadata.class).createUnmarshaller().unmarshal(new StreamSource(new StringReader(broadcastMetadataXml)), BroadcastMetadata.class).getValue();
             } catch (Exception e) {
                 throw new ProcessorException(e);
             }
@@ -67,7 +68,7 @@ public class FileMetadataFetcherProcessor extends ProcessorChainElement {
         List<Relation> relations = doms.getRelations(context.getProgrampid());
         for (Relation relation: relations) {
             if (relation.getPredicate().equals(HAS_FILE_RELATION)) {
-                  fileObjectPids.add(relation.getSubject());
+                  fileObjectPids.add(relation.getObject());
             }
         }
         return fileObjectPids;

@@ -29,7 +29,6 @@ public class OptionsParser extends AbstractOptionsParser{
     protected static Options options;
 
     private Context context;
-    private final OptionsParser abstractOptionsParser = new OptionsParser();
 
     public OptionsParser() {
         context = new Context();
@@ -75,64 +74,50 @@ public class OptionsParser extends AbstractOptionsParser{
     protected void readInfrastructureProperties(Context context) throws IOException, OptionParseException {
         Properties props = new Properties();
         props.load(new FileInputStream(context.getInfrastructuralConfigFile()));
-        context.setFileOutputRootdir(abstractOptionsParser.readExistingDirectoryProperty(FILE_DIR, props));
-        context.setPreviewOutputRootdir(abstractOptionsParser.readExistingDirectoryProperty(PREVIEW_DIR, props));
-        context.setSnapshotOutputRootdir(abstractOptionsParser.readExistingDirectoryProperty(SNAPSHOT_DIR, props));
-        context.setLockDir(abstractOptionsParser.readExistingDirectoryProperty(LOCK_DIR, props));
-        context.setFileDepth(abstractOptionsParser.readIntegerProperty(FILE_DEPTH, props));
-        context.setFileFinderUrl(abstractOptionsParser.readStringProperty(FILE_FINDER, props));
-        context.setMaxFilesFetched(abstractOptionsParser.readIntegerProperty(MAX_FILES_FETCHED, props));
-        context.setDomsEndpoint(abstractOptionsParser.readStringProperty(DOMS_ENDPOINT, props));
-        context.setDomsUsername(abstractOptionsParser.readStringProperty(DOMS_USER, props));
-        context.setDomsPassword(abstractOptionsParser.readStringProperty(DOMS_PASSWORD, props));
+        context.setFileOutputRootdir(readExistingDirectoryProperty(FILE_DIR, props));
+        context.setPreviewOutputRootdir(readExistingDirectoryProperty(PREVIEW_DIR, props));
+        context.setSnapshotOutputRootdir(readExistingDirectoryProperty(SNAPSHOT_DIR, props));
+        context.setLockDir(readExistingDirectoryProperty(LOCK_DIR, props));
+        context.setFileDepth(readIntegerProperty(FILE_DEPTH, props));
+        context.setFileFinderUrl(readStringProperty(FILE_FINDER, props));
+        context.setMaxFilesFetched(readIntegerProperty(MAX_FILES_FETCHED, props));
+        context.setDomsEndpoint(readStringProperty(DOMS_ENDPOINT, props));
+        context.setDomsUsername(readStringProperty(DOMS_USER, props));
+        context.setDomsPassword(readStringProperty(DOMS_PASSWORD, props));
     }
 
     protected void readBehaviouralProperties(Context context) throws IOException, OptionParseException {
         Properties props = new Properties();
         props.load(new FileInputStream(context.getBehaviourConfigFile()));
-        context.setVideoBitrate(abstractOptionsParser.readIntegerProperty(VIDEO_BITRATE, props));
-        context.setAudioBitrate(abstractOptionsParser.readIntegerProperty(AUDIO_BITRATE, props));
-        context.setVideoHeight(abstractOptionsParser.readIntegerProperty(HEIGHT, props));
-        context.setX264VlcParams(abstractOptionsParser.readStringProperty(X264_VLC_PARAMS, props));
-        context.setX264FfmpegParams(abstractOptionsParser.readStringProperty(X264_FFMPEG_PARAMS, props));
-        context.setTranscodingTimeoutDivisor(abstractOptionsParser.readIntegerProperty(TRANSCODING_DIVISOR, props));
-        context.setAnalysisClipLength(abstractOptionsParser.readLongProperty(ANALYSIS_CLIP_LENGTH, props));
-        context.setStartOffsetTS(abstractOptionsParser.readIntegerProperty(START_OFFSET_TS, props));
-        context.setEndOffsetTS(abstractOptionsParser.readIntegerProperty(END_OFFSET_TS, props));
-        context.setStartOffsetPS(abstractOptionsParser.readIntegerProperty(START_OFFSET_PS, props));
-        context.setEndOffsetPS(abstractOptionsParser.readIntegerProperty(END_OFFSET_PS, props));
-        context.setStartOffsetWAV(abstractOptionsParser.readIntegerProperty(START_OFFSET_WAV, props));
-        context.setEndOffsetWAV(abstractOptionsParser.readIntegerProperty(END_OFFSET_WAV, props));
-        context.setMaxMissingStart(abstractOptionsParser.readIntegerProperty(MAX_MISSING_START, props));
-        context.setMaxMissingEnd(abstractOptionsParser.readIntegerProperty(MAX_MISSING_END, props));
-        context.setMaxHole(abstractOptionsParser.readIntegerProperty(MAX_HOLE_SIZE, props));
-        context.setGapToleranceSeconds(abstractOptionsParser.readIntegerProperty(GAP_TOLERANCE, props));
-        context.setPreviewLength(abstractOptionsParser.readIntegerProperty(PREVIEW_LENGTH, props));
-        context.setPreviewTimeout(abstractOptionsParser.readIntegerProperty(PREVIEW_TIMEOUT, props));
-        context.setSnapshotFrames(abstractOptionsParser.readIntegerProperty(SNAPSHOT_FRAMES, props));
-        context.setSnapshotPaddingSeconds(abstractOptionsParser.readIntegerProperty(SNAPSHOT_PADDING, props));
-        context.setSnapshotScale(abstractOptionsParser.readIntegerProperty(SNAPSHOT_SCALE, props));
-        context.setSnapshotTargetDenominator(abstractOptionsParser.readIntegerProperty(SNAPSHOT_TARGET_DENOMINATIOR, props));
-        context.setSnapshotTargetNumerator(abstractOptionsParser.readIntegerProperty(SNAPSHOT_TARGET_NUMERATOR, props));
-        context.setSnapshotTimeoutDivisor(abstractOptionsParser.readIntegerProperty(SNAPSHOT_TIMEOUT_DIVISOR, props));
-        context.setSoxTranscodeParams(abstractOptionsParser.readStringProperty(SOX_TRANSCODE_PARAMS, props));
+        context.setVideoBitrate(readIntegerProperty(VIDEO_BITRATE, props));
+        context.setAudioBitrate(readIntegerProperty(AUDIO_BITRATE, props));
+        context.setVideoHeight(readIntegerProperty(HEIGHT, props));
+        context.setX264VlcParams(readStringProperty(X264_VLC_PARAMS, props));
+        context.setX264FfmpegParams(readStringProperty(X264_FFMPEG_PARAMS, props));
+        context.setTranscodingTimeoutDivisor(readIntegerProperty(TRANSCODING_DIVISOR, props));
+        context.setAnalysisClipLength(readLongProperty(ANALYSIS_CLIP_LENGTH, props));
+        context.setStartOffsetTS(readIntegerProperty(START_OFFSET_TS, props));
+        context.setEndOffsetTS(readIntegerProperty(END_OFFSET_TS, props));
+        context.setStartOffsetPS(readIntegerProperty(START_OFFSET_PS, props));
+        context.setEndOffsetPS(readIntegerProperty(END_OFFSET_PS, props));
+        context.setStartOffsetWAV(readIntegerProperty(START_OFFSET_WAV, props));
+        context.setEndOffsetWAV(readIntegerProperty(END_OFFSET_WAV, props));
+        context.setMaxMissingStart(readIntegerProperty(MAX_MISSING_START, props));
+        context.setMaxMissingEnd(readIntegerProperty(MAX_MISSING_END, props));
+        context.setMaxHole(readIntegerProperty(MAX_HOLE_SIZE, props));
+        context.setGapToleranceSeconds(readIntegerProperty(GAP_TOLERANCE, props));
+        context.setPreviewLength(readIntegerProperty(PREVIEW_LENGTH, props));
+        context.setPreviewTimeout(readIntegerProperty(PREVIEW_TIMEOUT, props));
+        context.setSnapshotFrames(readIntegerProperty(SNAPSHOT_FRAMES, props));
+        context.setSnapshotPaddingSeconds(readIntegerProperty(SNAPSHOT_PADDING, props));
+        context.setSnapshotScale(readIntegerProperty(SNAPSHOT_SCALE, props));
+        context.setSnapshotTargetDenominator(readIntegerProperty(SNAPSHOT_TARGET_DENOMINATIOR, props));
+        context.setSnapshotTargetNumerator(readIntegerProperty(SNAPSHOT_TARGET_NUMERATOR, props));
+        context.setSnapshotTimeoutDivisor(readIntegerProperty(SNAPSHOT_TIMEOUT_DIVISOR, props));
+        context.setSoxTranscodeParams(readStringProperty(SOX_TRANSCODE_PARAMS, props));
     }
 
-    protected File readExistingDirectoryProperty (String propName, Properties props) throws OptionParseException {
-        return abstractOptionsParser.readExistingDirectoryProperty(propName, props);
-    }
 
-    protected String readStringProperty (String propName, Properties props) throws OptionParseException {
-        return abstractOptionsParser.readStringProperty(propName, props);
-    }
-
-    protected int readIntegerProperty(String propName, Properties props) throws OptionParseException {
-        return abstractOptionsParser.readIntegerProperty(propName, props);
-    }
-
-     protected long readLongProperty(String propName, Properties props) throws OptionParseException {
-         return abstractOptionsParser.readLongProperty(propName, props);
-     }
 
     protected void parseInfrastructureConfigFileOption(CommandLine cmd) throws OptionParseException {
         String configFileString = cmd.getOptionValue(INFRASTRUCTURE_CONFIG_FILE_OPTION.getOpt());

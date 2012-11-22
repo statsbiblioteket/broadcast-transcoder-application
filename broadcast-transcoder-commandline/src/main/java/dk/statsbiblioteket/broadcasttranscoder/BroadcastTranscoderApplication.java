@@ -38,26 +38,28 @@ public class BroadcastTranscoderApplication {
             System.exit(3);
         }
         try {
-            ProcessorChainElement persistentMetadata = new PersistentMetadataExtractorProcessor();
-            ProcessorChainElement filedata = new FileMetadataFetcherProcessor();
+            ProcessorChainElement programFetcher = new ProgramMetadataFetcherProcessor();
+            //ProcessorChainElement metadataExtractor = new PersistentMetadataExtractorProcessor();
+            ProcessorChainElement filedataFetcher    = new FileMetadataFetcherProcessor();
             ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
-            ProcessorChainElement fetcher = new FilefinderFetcherProcessor();
+            ProcessorChainElement fileFinderFetcher = new FilefinderFetcherProcessor();
             ProcessorChainElement identifier = new FilePropertiesIdentifierProcessor();
             ProcessorChainElement clipper = new ClipFinderProcessor();
             ProcessorChainElement coverage = new CoverageAnalyserProcessor();
             ProcessorChainElement updater = new ProgramStructureUpdaterProcessor();
             ProcessorChainElement fixer = new StructureFixerProcessor();
             ProcessorChainElement dispatcher = new TranscoderDispatcherProcessor();
-            persistentMetadata.setChildElement(filedata);
-            filedata.setChildElement(sorter);
-            sorter.setChildElement(fetcher);
-            fetcher.setChildElement(identifier);
+            programFetcher.setChildElement(filedataFetcher);
+            //metadataExtractor.setChildElement(filedataFetcher);
+            filedataFetcher.setChildElement(sorter);
+            sorter.setChildElement(fileFinderFetcher);
+            fileFinderFetcher.setChildElement(identifier);
             identifier.setChildElement(clipper);
             clipper.setChildElement(coverage);
             coverage.setChildElement(updater);
             updater.setChildElement(fixer);
             fixer.setChildElement(dispatcher);
-            persistentMetadata.processIteratively(request, context);
+            programFetcher.processIteratively(request, context);
         } finally {
             boolean deleted = lockFile.delete();
             if (!deleted) {

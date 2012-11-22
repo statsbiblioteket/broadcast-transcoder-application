@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -86,6 +87,7 @@ public class ClipFinderProcessor extends ProcessorChainElement {
                         request.getProgramBroadcast().getTimeStop());
             }
             request.setClips(clips);
+            logger.debug("Clips found:\n" + clips.toString());
         }
 
 
@@ -96,7 +98,7 @@ public class ClipFinderProcessor extends ProcessorChainElement {
         logger.debug("Finding program number for " + channelName);
         BroadcastMetadata metadata = request.getBroadcastMetadata().get(0);
         for (Channel channel: metadata.getChannels().getChannel()) {
-             if (channel.getChannelID() == channelName) {
+             if (channel.getChannelID().equals(channelName)) {
                  logger.debug("Program number for " + channelName + " is " + channel.getMuxProgramNr());
                  return channel.getMuxProgramNr();
              }

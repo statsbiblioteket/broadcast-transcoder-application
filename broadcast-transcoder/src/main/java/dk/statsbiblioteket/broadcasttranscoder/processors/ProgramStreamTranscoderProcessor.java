@@ -62,9 +62,9 @@ public class ProgramStreamTranscoderProcessor extends ProcessorChainElement {
             throw new ProcessorException(e);
         }
         final PreviewClipperProcessor previewClipperProcessor = new PreviewClipperProcessor();
-        final TranscoderPersistenceProcessor persister = new TranscoderPersistenceProcessor();
-        persister.setChildElement(previewClipperProcessor);
-        this.setChildElement(persister);
+        //final TranscoderPersistenceProcessor persister = new TranscoderPersistenceProcessor();
+        //persister.setChildElement(previewClipperProcessor);
+        this.setChildElement(previewClipperProcessor);
     }
 
        private String getMultiClipCommand(TranscodeRequest request, Context context) {

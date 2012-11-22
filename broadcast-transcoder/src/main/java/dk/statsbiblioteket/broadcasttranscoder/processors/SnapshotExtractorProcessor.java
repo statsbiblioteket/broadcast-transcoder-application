@@ -74,7 +74,7 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
             logger.warn("Process '" + commandLine + "' timed out.");
             throw new ProcessorException(e);
         }
-        persist(request, context, commandLine);
+        //persist(request, context, commandLine);
     }
 
     private void persist(final TranscodeRequest request, final Context context, String commandLine) {

@@ -22,4 +22,18 @@ public class PersistentMetadataExtractorProcessorTest extends TestCase {
         context.setDomsUsername("fedoraReadOnlyAdmin");
        processor.processThis(null, context);
     }
+
+    public void testPersistentMetadataExtractorWithFetcher() throws ProcessorException {
+        ProgramMetadataFetcherProcessor fetcher = new ProgramMetadataFetcherProcessor();
+        PersistentMetadataExtractorProcessor processor = new PersistentMetadataExtractorProcessor();
+        Context context = new Context();
+        context.setProgrampid("uuid:d82107be-20cf-4524-b611-07d8534b97f8");
+        context.setDomsEndpoint("http://carme:7880/centralWebservice-service/central/");
+        context.setDomsUsername("fedoraAdmin");
+        context.setDomsPassword("spD68ZJl");
+        TranscodeRequest request = new TranscodeRequest();
+        fetcher.setChildElement(processor);
+        fetcher.processIteratively(request, context);
+    }
+
 }

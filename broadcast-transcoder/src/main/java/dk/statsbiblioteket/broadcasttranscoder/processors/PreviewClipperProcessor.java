@@ -47,7 +47,7 @@ public class PreviewClipperProcessor extends ProcessorChainElement {
             outputFile.delete();
             throw new ProcessorException(e);
         }
-        persist(request, context, command);
+        //persist(request, context, command);
         switch (request.getFileFormat()) {
             case MULTI_PROGRAM_MUX:
                 this.setChildElement(new SnapshotExtractorProcessor());
