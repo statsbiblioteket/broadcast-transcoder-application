@@ -48,8 +48,8 @@ public class ClipFinderProcessor extends ProcessorChainElement {
                 endOffset = context.getEndOffsetTS();
                 break;
         }
-        programStart += startOffset;
-        programEnd += endOffset;
+        programStart += startOffset*1000L;
+        programEnd += endOffset*1000L;
         request.setStartOffsetUsed(startOffset);
         request.setEndOffsetUsed(endOffset);
         long bitrate = request.getBitrate();

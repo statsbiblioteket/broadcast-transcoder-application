@@ -114,8 +114,8 @@ public class ProgramStreamTranscoderProcessor extends ProcessorChainElement {
            String ffmpegResolution;
            Long height = context.getVideoHeight()*1L;
            if (aspectRatio != null) {
-               long width = Math.round(aspectRatio*height);
-               if (width%2 == 1) width += 1;
+               long width = 2*Math.round(aspectRatio*height/2);
+               //if (width%2 == 1) width += 1;
                ffmpegResolution = " -s " + width + "x" + height;
            } else {
                ffmpegResolution = " -s 320x240";

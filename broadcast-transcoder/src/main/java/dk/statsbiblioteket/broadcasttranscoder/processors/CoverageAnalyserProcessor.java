@@ -29,6 +29,7 @@ public class CoverageAnalyserProcessor extends ProcessorChainElement {
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         gapToleranceSeconds = context.getGapToleranceSeconds();
         ProgramStructure localStructure = new ProgramStructure();
+        request.setLocalProgramStructure(localStructure);
         findMissingStart(request, context, localStructure);
         findMissingEnd(request, context, localStructure);
         findHolesAndOverlaps(request, context, localStructure);
@@ -61,15 +62,15 @@ public class CoverageAnalyserProcessor extends ProcessorChainElement {
         }
     }
 
-    private void findHolesAndOverlaps(TranscodeRequest request, Context context, ProgramStructure localProgramStructure) {
+    private void findHolesAndOverlaps(TranscodeRequest request, Context context, ProgramStructure localProgramStructure) throws ProcessorException {
         ProgramStructure.Holes holes = new ProgramStructure.Holes();
         localProgramStructure.setHoles(holes);
         ProgramStructure.Overlaps overlaps = new ProgramStructure.Overlaps();
         localProgramStructure.setOverlaps(overlaps);
         Map.Entry<String, BroadcastMetadata> firstEntry = null;
         Map.Entry<String, BroadcastMetadata> secondEntry = null;
-        //TODO this is buggy because only the broadcastMetadata is sorted, ot the pidMap.
-        for(Map.Entry<String, BroadcastMetadata> entry: request.getPidMap().entrySet()) {
+        for (BroadcastMetadata metadata: request.getBroadcastMetadata()) {
+            Map.Entry<String, BroadcastMetadata> entry= getPidFromBroadcastMetadata(metadata, request);
             firstEntry = secondEntry;
             secondEntry = entry;
             if (firstEntry != null) {
@@ -113,6 +114,13 @@ public class CoverageAnalyserProcessor extends ProcessorChainElement {
 
     }
 
-
+    private static Map.Entry<String, BroadcastMetadata> getPidFromBroadcastMetadata(BroadcastMetadata metadata, TranscodeRequest request) throws ProcessorException {
+        for (Map.Entry<String,BroadcastMetadata> entry: request.getPidMap().entrySet() ) {
+            if (entry.getValue() == metadata) {
+                return entry;
+            }
+        }
+        throw new ProcessorException("Could not find pid for " + metadata + " in pidmap");
+    }
 
 }

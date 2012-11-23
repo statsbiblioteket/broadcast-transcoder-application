@@ -23,7 +23,7 @@ public class FilePropertiesIdentifierProcessor extends ProcessorChainElement {
         Long fileLength = entry.getValue().length();  //bytes
         Long duration = entry.getKey().getStopTime().toGregorianCalendar().getTimeInMillis()
                 - entry.getKey().getStartTime().toGregorianCalendar().getTimeInMillis();
-        Long bitrate = fileLength/duration ;
+        Long bitrate = fileLength/(duration/1000L) ;
         logger.info("Setting bitrate for " + context.getProgrampid() + " to " + bitrate + " bytes/second");
         request.setBitrate(bitrate);
         String filename = entry.getKey().getFilename();

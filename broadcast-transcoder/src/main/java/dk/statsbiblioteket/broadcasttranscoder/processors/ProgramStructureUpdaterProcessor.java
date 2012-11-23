@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
@@ -44,15 +45,11 @@ public class ProgramStructureUpdaterProcessor extends ProcessorChainElement {
     protected void writeStructureToDoms(TranscodeRequest request, Context context) throws ProcessorException {
         CentralWebservice doms = context.getDomsApi();
         ProgramStructure structure = request.getLocalProgramStructure();
-        JaxbWrapper<ProgramStructure> programStructureWrapper = null;
-        try {
-             programStructureWrapper = new JaxbWrapper<ProgramStructure>(getClass().getClassLoader().getResource("PROGRAM_STRUCTURE_SCHEMA.xsd"),ProgramStructure.class);
-        } catch (Exception e) {
-            throw new ProcessorException("Failed to jaxb the ProgramStructure for "+context.getProgrampid(),e);
-        }
+        ObjectFactory objectFactory = new ObjectFactory();
         StringWriter writer = new StringWriter();
         try {
-            programStructureWrapper.objectToXml(structure, writer);
+            JAXBContext.newInstance(ProgramStructure.class).createMarshaller()
+                    .marshal(objectFactory.createProgramStructure(structure), writer);
         } catch (JAXBException e) {
             throw new ProcessorException("Failed to xml-ilise program structure for "+context.getProgrampid(),e);
         }
@@ -83,7 +80,7 @@ public class ProgramStructureUpdaterProcessor extends ProcessorChainElement {
      * @return
      */
      boolean isDummy(ProgramStructure structure) {
-        return false;
+        return (structure == null);
     }
 
     /**

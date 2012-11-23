@@ -46,18 +46,20 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         snapshotOutputDir.mkdirs();
         String commandLine = "ffmpeg -i " + fullMediaFile.getAbsolutePath();
         Double aspectRatio = request.getDisplayAspectRatio();
+        logger.debug("Creating snapshot for video with display aspect ratio '" + aspectRatio + "'");
         int N = targetNumerator * scale;
         int M = targetDenominator * scale;
+        logger.debug("Required aspect ratio is '" + N + "/" + M + "'");
         String geometry = "";
         if (Math.abs(aspectRatio - targetAspectRatio) < 0.01) {
             geometry = " -s " + N + "x" + M;
-        } else if (aspectRatio - targetAspectRatio > 0.01) {
+        } else if (aspectRatio - targetAspectRatio < 0.01) {
             double delta = (N - aspectRatio * M)/2.;
             int Nprime = (int) Math.round(aspectRatio * M);
             geometry = " -s " + Nprime + "x" + M +
                     " -vf 'pad=" + N + ":" + M + ":" + delta + ":0:black' ";
         } else if (targetAspectRatio - aspectRatio < 0.01) {
-            int Mprime = (int) Math.round(M/aspectRatio);
+            int Mprime = (int) Math.round(N/aspectRatio);
             int delta = (M - Mprime)/2;
             geometry = " -s " + N + "x" + Mprime +
                     " -vf 'pad="  + N + ":" + M + ":0:" + delta + ":black' ";

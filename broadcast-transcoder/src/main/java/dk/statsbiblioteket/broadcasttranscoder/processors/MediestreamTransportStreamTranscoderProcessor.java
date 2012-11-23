@@ -23,8 +23,8 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
     public static int getWidth(TranscodeRequest request, Context context) {
         Double aspectRatio = request.getDisplayAspectRatio();
         if (aspectRatio != null) {
-            long width = Math.round(aspectRatio*getHeight(request, context));
-            if (width%2 == 1) width += 1;
+            long width = 2*Math.round(aspectRatio*getHeight(request, context)/2);
+            //if (width%2 == 1) width += 1;
             return (int) width;
         } else {
             return 320;
