@@ -72,7 +72,7 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
             ExternalJobRunner.runClipperCommand(1000L*length/timeoutDivisor, commandLine);
         } catch (ExternalProcessTimedOutException e) {
             logger.warn("Process '" + commandLine + "' timed out.");
-            throw new ProcessorException(e);
+            throw new ProcessorException("Process Timed out for "+context.getProgrampid(),e);
         }
         //persist(request, context, commandLine);
     }

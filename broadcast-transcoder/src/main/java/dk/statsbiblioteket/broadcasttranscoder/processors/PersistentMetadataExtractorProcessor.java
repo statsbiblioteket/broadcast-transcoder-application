@@ -43,12 +43,12 @@ public class PersistentMetadataExtractorProcessor extends ProcessorChainElement 
           try {
               structureXmlString = domsAPI.getDatastreamContents(context.getProgrampid(), "PBCORE");
           } catch (Exception e) {
-              throw new ProcessorException(e);
+              throw new ProcessorException("Failed to get PBCORE for "+context.getProgrampid(),e);
           }
           try {
               programMetadata = DOMSMetadataExtractor.extractMetadataFromPBCore(null, structureXmlString);
           } catch (DOMSMetadataExtractionParsePBCoreException e) {
-              throw new ProcessorException(e);
+              throw new ProcessorException("Failed to parse PBCORE for "+context.getProgrampid(),e);
           }
           metadata.setProgramUuid(context.getProgrampid());
           metadata.setChannelID(programMetadata.channel);

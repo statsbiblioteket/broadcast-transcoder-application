@@ -48,13 +48,13 @@ public class ProgramStructureUpdaterProcessor extends ProcessorChainElement {
         try {
              programStructureWrapper = new JaxbWrapper<ProgramStructure>(getClass().getClassLoader().getResource("PROGRAM_STRUCTURE_SCHEMA.xsd"),ProgramStructure.class);
         } catch (Exception e) {
-            throw new ProcessorException(e);
+            throw new ProcessorException("Failed to jaxb the ProgramStructure for "+context.getProgrampid(),e);
         }
         StringWriter writer = new StringWriter();
         try {
             programStructureWrapper.objectToXml(structure, writer);
         } catch (JAXBException e) {
-            throw new ProcessorException(e);
+            throw new ProcessorException("Failed to xml-ilise program structure for "+context.getProgrampid(),e);
         }
         String xmlString = writer.getBuffer().toString();
         logger.debug("New program structure for " + context.getProgrampid() + " :\n" + xmlString);
@@ -65,7 +65,7 @@ public class ProgramStructureUpdaterProcessor extends ProcessorChainElement {
             doms.modifyDatastream(context.getProgrampid(), "PROGRAM_STRUCTURE", xmlString, "Updated PROGRAM_STRUCTURE with " +
                     "result from analysis by Broadcast Transcoder Application");
         } catch (Exception e) {
-            throw new ProcessorException(e);
+            throw new ProcessorException("Failed to write to DOMS for "+context.getProgrampid(),e);
         } finally {
             try {
                 doms.markPublishedObject(pids, "Updated PROGRAM_STRUCTURE with " +

@@ -217,9 +217,9 @@ public class ExternalJobRunner {
                 log.info("Command '" + clipperCommand + "' returned with exit value '" + runner.getExitValue() + "'");
             }
         } catch (IOException e) {
-            throw new ProcessorException(e);
+            throw new ProcessorException("Job suffered IOException",e);
         } catch (InterruptedException e) {
-            throw new ProcessorException(e);
+            throw new ProcessorException("Job was interrupted",e);
         }
     }
 

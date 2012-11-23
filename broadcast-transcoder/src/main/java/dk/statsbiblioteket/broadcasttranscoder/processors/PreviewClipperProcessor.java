@@ -45,7 +45,7 @@ public class PreviewClipperProcessor extends ProcessorChainElement {
         } catch (ExternalProcessTimedOutException e) {
             logger.warn("Deleting failed preview file " + outputFile.getAbsolutePath(), e);
             outputFile.delete();
-            throw new ProcessorException(e);
+            throw new ProcessorException("Process timed out for "+context.getProgrampid(),e);
         }
         //persist(request, context, command);
         switch (request.getFileFormat()) {

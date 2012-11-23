@@ -56,7 +56,7 @@ public class NearlineFileFinder implements FileFinder {
         try {
             is = new URL(url).openStream();
         } catch (IOException e) {
-            throw new ProcessorException(e);
+            throw new ProcessorException("Failed to open URL "+url,e);
         }
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
         String line;
@@ -71,12 +71,12 @@ public class NearlineFileFinder implements FileFinder {
                 }
             }
         } catch (IOException e) {
-            throw new ProcessorException(e);
+            throw new ProcessorException("IOException while reading file",e);
         }
         try {
             is.close();
         } catch (IOException e) {
-            throw new ProcessorException(e);
+            throw new ProcessorException("IOException when closing file",e);
         }
         if (metadatas.size() != result.size()) {
             throw new ProcessorException("Found " + result.size() + " files. Expected " + metadatas.size() + ".");

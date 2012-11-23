@@ -59,7 +59,7 @@ public class ProgramStreamTranscoderProcessor extends ProcessorChainElement {
         } catch (ExternalProcessTimedOutException e) {
             log.warn("Deleting '" + outputFile + "'");
             outputFile.delete();
-            throw new ProcessorException(e);
+            throw new ProcessorException("External process timed out for " + context.getProgrampid(),e);
         }
         final PreviewClipperProcessor previewClipperProcessor = new PreviewClipperProcessor();
         //final TranscoderPersistenceProcessor persister = new TranscoderPersistenceProcessor();

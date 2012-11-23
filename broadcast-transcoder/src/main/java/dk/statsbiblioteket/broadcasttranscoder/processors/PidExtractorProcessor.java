@@ -53,7 +53,7 @@ public class PidExtractorProcessor extends ProcessorChainElement {
             runner = new ExternalJobRunner(new String[]{"bash", "-c", command});
             logger.debug("Command '" + command + "' returned with output '" + runner.getError());
         } catch (Exception e) {
-            throw new ProcessorException(e);
+            throw new ProcessorException("Failed to run command "+command,e);
         }
         String[] commandOutput = runner.getError().split("\\n");
         if (request.getFileFormat().equals(FileFormatEnum.MULTI_PROGRAM_MUX)) {

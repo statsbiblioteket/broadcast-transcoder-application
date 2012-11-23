@@ -112,7 +112,7 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
             File outputFile =  FileUtils.getMediaOutputFile(request, context);
             logger.warn("Deleting '" + outputFile.getAbsolutePath() + "'");
             outputFile.delete();
-            throw new ProcessorException(e);
+            throw new ProcessorException("Process timed out for "+context.getProgrampid(),e);
         }
         final PreviewClipperProcessor previewer = new PreviewClipperProcessor();
         //final TranscoderPersistenceProcessor persister = new TranscoderPersistenceProcessor();

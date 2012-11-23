@@ -51,7 +51,7 @@ public class ProgramMetadataFetcherProcessor extends ProcessorChainElement {
             }
             logger.debug("Program Structure for " + context.getProgrampid() + "\n" + structureXmlString);
         } catch (Exception e) {
-            throw new ProcessorException(e);
+            throw new ProcessorException("Failed to get Program Structure for "+context.getProgrampid(),e);
         }
         ProgramStructure programStructure = null;
         try {
@@ -60,7 +60,7 @@ public class ProgramMetadataFetcherProcessor extends ProcessorChainElement {
             JAXBContext jaxbContext = JAXBContext.newInstance(ProgramStructure.class);
             programStructure = jaxbContext.createUnmarshaller().unmarshal(new StreamSource(new StringReader(structureXmlString)), ProgramStructure.class).getValue();
         } catch (Exception e) {
-            throw new ProcessorException(e);
+            throw new ProcessorException("Failed to unmarshal ProgramStructure for "+context.getProgrampid(),e);
          }
         return programStructure;
     }
@@ -72,7 +72,7 @@ public class ProgramMetadataFetcherProcessor extends ProcessorChainElement {
             broadcastXmlString = domsAPI.getDatastreamContents(context.getProgrampid(), "PROGRAM_BROADCAST");
             logger.debug("Broadcast Structure for " + context.getProgrampid() + "\n" + broadcastXmlString);
         } catch (Exception e) {
-            throw new ProcessorException(e);
+            throw new ProcessorException("Failed to get Broadcast Structure for " + context.getProgrampid(),e);
         }
         ProgramBroadcast programBroadcast = null;
         try {
@@ -88,7 +88,7 @@ public class ProgramMetadataFetcherProcessor extends ProcessorChainElement {
             //JaxbWrapper<ProgramBroadcast> programBroadcastWrapper = new JaxbWrapper<ProgramBroadcast>(resource,ProgramBroadcast.class);
             //programBroadcast = programBroadcastWrapper.xmlToObject(broadcastXmlString);
         } catch (Exception e) {
-            throw new ProcessorException(e);
+            throw new ProcessorException("Fault barrier for "+context.getProgrampid(),e);
          }
         return programBroadcast;
     }

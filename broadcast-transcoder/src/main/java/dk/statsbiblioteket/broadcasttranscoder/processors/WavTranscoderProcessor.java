@@ -33,7 +33,7 @@ public class WavTranscoderProcessor extends ProcessorChainElement {
         } catch (ExternalProcessTimedOutException e) {
             logger.warn("Deleting '" + outputFile.getAbsolutePath() + "'", e);
             outputFile.delete();
-            throw new ProcessorException(e);
+            throw new ProcessorException("transcoding timeout for '" + context.getProgrampid(),e);
         }
         this.setChildElement(new PreviewClipperProcessor());
     }

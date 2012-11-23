@@ -35,7 +35,7 @@ public class FileMetadataFetcherProcessor extends ProcessorChainElement {
         try {
             fileObjectPids = findFileObjects(context);
         } catch (Exception e) {
-           throw new ProcessorException(e);
+           throw new ProcessorException("Failed to find file objects for "+context.getProgrampid(),e);
         }
         List<BroadcastMetadata> broadcastMetadata = getBroadcastMetadata(fileObjectPids, context, request);
         request.setBroadcastMetadata(broadcastMetadata);
@@ -52,7 +52,7 @@ public class FileMetadataFetcherProcessor extends ProcessorChainElement {
                 logger.debug("Found file metadata '" + fileObjectPid + "' :\n" + broadcastMetadataXml);
                 broadcastMetadata = JAXBContext.newInstance(BroadcastMetadata.class).createUnmarshaller().unmarshal(new StreamSource(new StringReader(broadcastMetadataXml)), BroadcastMetadata.class).getValue();
             } catch (Exception e) {
-                throw new ProcessorException(e);
+                throw new ProcessorException("Failed to get Broadcast Metadata for "+context.getProgrampid(),e);
             }
             broadcastMetadataList.add(broadcastMetadata);
             pidMap.put(fileObjectPid, broadcastMetadata);
