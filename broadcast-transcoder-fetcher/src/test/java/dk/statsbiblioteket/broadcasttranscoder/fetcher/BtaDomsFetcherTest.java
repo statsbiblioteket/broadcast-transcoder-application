@@ -41,6 +41,9 @@ public class BtaDomsFetcherTest extends TestCase {
         context.setDomsEndpoint("http://alhena:7880/centralWebservice-service/central/");
         CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);
         List<RecordDescription> records = BtaDomsFetcher.requestInBatches(doms, context);
+        for (RecordDescription record : records) {
+            System.out.println(record.getPid()+":"+record.getDate());
+        }
         assertTrue("No records found",records.size()>0);
     }
 }

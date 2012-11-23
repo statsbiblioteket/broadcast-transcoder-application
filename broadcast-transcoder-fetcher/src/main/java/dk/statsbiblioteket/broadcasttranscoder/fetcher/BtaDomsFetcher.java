@@ -72,6 +72,36 @@ public class BtaDomsFetcher {
         return records;
     }
 
+
+    static List<RecordDescription> requestInBatches(CentralWebservice doms,FetcherContext context, int max) throws InvalidCredentialsException, MethodFailedException {
+        long since = getSince(context);
+        String collection = getCollection(context);
+        String viewAngle = getViewAngle(context);
+        String state = getState(context);
+        int batchSize = getBatchSize(context);
+        if (batchSize < max){
+            batchSize = max;
+        }
+
+
+        int start = 0;
+        List<RecordDescription> records = doms.getIDsModified(since, collection, viewAngle, state,start,batchSize);
+        int size = records.size();
+        start += size;
+
+        while (size == batchSize && start < max){
+            List<RecordDescription> temp = doms.getIDsModified(since, collection, viewAngle, state, start, batchSize);
+            size = temp.size();
+            start += size;
+            records.addAll(temp);
+        }
+        if (records.size() > max){
+            records = records.subList(0,max);
+        }
+        return records;
+    }
+
+
     private static int getBatchSize(FetcherContext context) {
         return context.getBatchSize();
     }
