@@ -28,11 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created with IntelliJ IDEA.
- * User: abr
- * Date: 11/21/12
- * Time: 4:51 PM
- * To change this template use File | Settings | File Templates.
+ * Query the DOMS to check if the change is important enough to warrant a retranscoding
  */
 public class DomsTranscodingStructureFetcher extends ProcessorChainElement {
 
@@ -56,8 +52,10 @@ public class DomsTranscodingStructureFetcher extends ProcessorChainElement {
             throw new ProcessorException("Doms failed for the object bundle for pid " + context.getProgrampid(), e);
         }
 
+        //TODO timestamp
         long oldTranscodingTimestamp = 0;
         long timeStampOfNewChange = 0;
+
         String bundleString = bundle.getContents();
         String oldStructure;
         String newStructure;
@@ -72,6 +70,7 @@ public class DomsTranscodingStructureFetcher extends ProcessorChainElement {
         try {
             Diff smallDiff = new Diff(oldStructure, newStructure);
             if (smallDiff.similar()){
+                //Kill the transcoding chain
                 setChildElement(null);
             }
         } catch (SAXException e) {
@@ -79,7 +78,7 @@ public class DomsTranscodingStructureFetcher extends ProcessorChainElement {
         } catch (IOException e) {
             throw new ProcessorException("Failed to parse the BTA structure from the object bundle for pid " + context.getProgrampid() + " for comparison");
         }
-        //retranscode the file
+
     }
 
 
