@@ -1,6 +1,8 @@
 package dk.statsbiblioteket.broadcasttranscoder.fetcher;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.fetcher.cli.FetcherContext;
+import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import dk.statsbiblioteket.doms.central.RecordDescription;
 import dk.statsbiblioteket.util.Streams;
 import dk.statsbiblioteket.util.xml.DOM;
@@ -22,19 +24,14 @@ public class DomsTranscodingStructureFetcherTest extends TestCase {
 
 
     public void testProcessThis() throws Exception {
-        FetcherContext context = new FetcherContext();
-        context.setBatchSize(100);
-        context.setCollection("doms:RadioTV_Collection");
-        context.setState("Published");
-        context.setViewAngle("GUI");
+        Context context = new Context();
+        context.setDomsViewAngle("GUI");
         context.setDomsPassword("fedoraAdminPass");
         context.setDomsUsername("fedoraAdmin");
         context.setDomsEndpoint("http://alhena:7480/centralWebservice-service/central/");
-        RecordDescription record;
-        record = new RecordDescription();
-        record.setPid("uuid:d11c2f49-4e6f-47bd-b04f-7ee6293520ea");
-        System.out.println(record.getPid());
+        context.setProgrampid("uuid:a3d19569-07c9-480f-8561-6dbf5e11d144");
         DomsTranscodingStructureFetcher thing = new DomsTranscodingStructureFetcher();
+        thing.processThis(new TranscodeRequest(),context);
         //TODO finish this test
     }
 

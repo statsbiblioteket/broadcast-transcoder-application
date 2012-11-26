@@ -17,6 +17,7 @@ public class PropertyNames {
     public static final String DOMS_ENDPOINT = "domsWSAPIEndpointUrl";
     public static final String DOMS_USER = "domsUsername";
     public static final String DOMS_PASSWORD = "domsPassword";
+    public static final String DOMS_VIEWANGLE = "domsViewAngle";
 
     /*
     Properties related to file paths

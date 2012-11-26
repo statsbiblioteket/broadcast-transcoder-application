@@ -79,7 +79,7 @@ public class DomsTranscodingStructureFetcher extends ProcessorChainElement {
 
         ViewBundle bundle = null;
         try {
-            bundle = doms.getViewBundle( pid, "BES");
+            bundle = doms.getViewBundle(context.getProgrampid(), context.getDomsViewAngle());
         } catch (InvalidCredentialsException e) {
             throw new ProcessorException("Invalid credentials to get the object bundle for pid " +  pid, e);
         } catch (InvalidResourceException e) {

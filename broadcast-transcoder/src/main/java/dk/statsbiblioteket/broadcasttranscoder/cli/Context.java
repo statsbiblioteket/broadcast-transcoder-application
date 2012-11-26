@@ -10,6 +10,8 @@ import java.io.File;
  */
 public class Context {
 
+    private String domsViewAngle;
+
     public String getProgrampid() {
         return programpid;
     }
@@ -425,5 +427,13 @@ public class Context {
 
     public void setDomsApi(CentralWebservice domsApi) {
         this.domsApi = domsApi;
+    }
+
+    public String getDomsViewAngle() {
+        return domsViewAngle;
+    }
+
+    public void setDomsViewAngle(String domsViewAngle) {
+        this.domsViewAngle = domsViewAngle;
     }
 }

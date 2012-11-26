@@ -93,6 +93,7 @@ public class OptionsParser extends AbstractOptionsParser{
         context.setDomsEndpoint(readStringProperty(DOMS_ENDPOINT, props));
         context.setDomsUsername(readStringProperty(DOMS_USER, props));
         context.setDomsPassword(readStringProperty(DOMS_PASSWORD, props));
+        context.setDomsViewAngle(readStringProperty(DOMS_VIEWANGLE,props));
     }
 
     protected void readBehaviouralProperties(Context context) throws IOException, OptionParseException {
