@@ -183,6 +183,14 @@ public class TranscodeRequest {
         this.endOffsetUsed = endOffsetUsed;
     }
 
+    public boolean isGoForTranscoding() {
+        return goForTranscoding;
+    }
+
+    public void setGoForTranscoding(boolean goForTranscoding) {
+        this.goForTranscoding = goForTranscoding;
+    }
+
     private ProgramBroadcast programBroadcast;
     private ProgramStructure domsProgramStructure;
     private ProgramStructure localProgramStructure;
@@ -206,6 +214,7 @@ public class TranscodeRequest {
     private int startOffsetUsed;
     private int endOffsetUsed;
 
+    private boolean goForTranscoding;
 
     /**
        * Class representing the absolute minimum information needed to clip data from a file

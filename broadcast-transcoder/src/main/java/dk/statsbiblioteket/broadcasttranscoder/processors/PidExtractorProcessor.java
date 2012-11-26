@@ -67,11 +67,8 @@ public class PidExtractorProcessor extends ProcessorChainElement {
         }  else {
             findPidsSingleMuxOrMpeg(commandOutput, request, context);
         }
-        if (request.getFileFormat().equals(FileFormatEnum.MPEG_PS)) {
-            this.setChildElement(new ProgramStreamTranscoderProcessor());
-        }  else {
+        if (!request.getFileFormat().equals(FileFormatEnum.MPEG_PS)) {
             validateFoundData(request, context);
-            this.setChildElement(new MediestreamTransportStreamTranscoderProcessor());
         }
     }
 

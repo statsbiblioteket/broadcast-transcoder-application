@@ -38,24 +38,59 @@ public class BroadcastTranscoderApplication {
             logger.warn("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
             System.exit(3);
         }
-
-
         try {
-            ProcessorChainElement chain;
-            chain = new ExistingTranscodingFileProcessor(
-                    new DomsTranscodingStructureFetcher(
-                            new ProgramMetadataFetcherProcessor(
-                                    //new PersistentMetadataExtractorProcessor(
-                                    new FileMetadataFetcherProcessor(
-                                            new BroadcastMetadataSorterProcessor(
-                                                    new FilefinderFetcherProcessor(
-                                                            new FilePropertiesIdentifierProcessor(
-                                                                    new ClipFinderProcessor(
-                                                                            new CoverageAnalyserProcessor(
-                                                                                    new ProgramStructureUpdaterProcessor(
-                                                                                            new StructureFixerProcessor(
-                                                                                                    new TranscoderDispatcherProcessor())))))))))));
-            chain.processIteratively(request, context);
+            ProcessorChainElement structureFetcher = new DomsTranscodingStructureFetcher();
+            ProcessorChainElement programFetcher = new ProgramMetadataFetcherProcessor();
+            ProcessorChainElement filedataFetcher    = new FileMetadataFetcherProcessor();
+            ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
+            ProcessorChainElement fileFinderFetcher = new FilefinderFetcherProcessor();
+            ProcessorChainElement identifier = new FilePropertiesIdentifierProcessor();
+            ProcessorChainElement clipper = new ClipFinderProcessor();
+            ProcessorChainElement coverage = new CoverageAnalyserProcessor();
+            ProcessorChainElement updater = new ProgramStructureUpdaterProcessor();
+            ProcessorChainElement fixer = new StructureFixerProcessor();
+            ProcessorChainElement firstChain = makeChain(
+                    structureFetcher,
+                    programFetcher,
+                    filedataFetcher,
+                    sorter,
+                    fileFinderFetcher,
+                    identifier,
+                    clipper,
+                    coverage,
+                    updater,
+                    fixer);
+            firstChain.processIteratively(request, context);
+            if (request.isGoForTranscoding()) {
+                ProcessorChainElement secondChain = null;
+                ProcessorChainElement pider = new PidExtractorProcessor();
+                ProcessorChainElement waver = new WavTranscoderProcessor();
+                ProcessorChainElement tser = new MediestreamTransportStreamTranscoderProcessor();
+                ProcessorChainElement pser = new ProgramStreamTranscoderProcessor();
+                ProcessorChainElement previewer = new PreviewClipperProcessor();
+                ProcessorChainElement snapshotter = new SnapshotExtractorProcessor();
+                switch (request.getFileFormat()) {
+                    case MULTI_PROGRAM_MUX:
+                        secondChain = makeChain(pider, tser, previewer, snapshotter);
+                        break;
+                    case SINGLE_PROGRAM_VIDEO_TS:
+                        secondChain = makeChain(pider, tser, previewer, snapshotter);
+                        break;
+                    case SINGLE_PROGRAM_AUDIO_TS:
+                        secondChain = makeChain(pider, tser, previewer);
+                        break;
+                    case MPEG_PS:
+                        secondChain = makeChain(pider, pser, previewer, snapshotter);
+                        break;
+                    case AUDIO_WAV:
+                        secondChain = makeChain(waver, previewer);
+                        break;
+                }
+                secondChain.processIteratively(request, context);
+                context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
+            } else {
+                logger.info("No transcoding required for " + context.getProgrampid() + ". Exiting.");
+            }
         } finally {
             boolean deleted = lockFile.delete();
             if (!deleted) {

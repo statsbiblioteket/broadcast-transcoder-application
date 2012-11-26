@@ -83,34 +83,6 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
             logger.warn("Process '" + commandLine + "' timed out.");
             throw new ProcessorException("Process Timed out for "+context.getProgrampid(),e);
         }
-        //persist(request, context, commandLine);
-    }
-
-    private void persist(final TranscodeRequest request, final Context context, String commandLine) {
-        File snapshotOutputDir = FileUtils.getSnapshotOutputDir(request, context);
-        FilenameFilter filter = new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                String pid = context.getProgrampid().replace("uuid:","");
-                return name.startsWith(pid) && name.endsWith(".png");
-            }
-        } ;
-        File[] outputFiles = snapshotOutputDir.listFiles(filter);
-        for (File outputFile: outputFiles) {
-            logger.info("Creating persistent entry for " + outputFile.getAbsolutePath());
-            SnapshotMediaInfo info = new SnapshotMediaInfo();
-            info.setFileExists(true);
-            info.setFilename(outputFile.getName());
-            info.setFileSizeByte(outputFile.length());
-            info.setFileTimestamp(new Date(outputFile.lastModified()));
-            info.setLastTouched(new Date());
-            info.setShardUuid(context.getProgrampid());
-            info.setNote("shardUuid is actually programUuid");
-            info.setTranscodeCommandLine(commandLine);
-            SnapshotMediaInfoDAO dao = new SnapshotMediaInfoDAO(HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath()));
-            dao.create(info);
-        }
-
     }
 
 }

@@ -43,7 +43,6 @@ public class WavTranscoderProcessor extends ProcessorChainElement {
             outputFile.delete();
             throw new ProcessorException("transcoding timeout for '" + context.getProgrampid(),e);
         }
-        this.setChildElement(new PreviewClipperProcessor());
     }
 
     private String getMultiClipCommand(TranscodeRequest request, Context context) {

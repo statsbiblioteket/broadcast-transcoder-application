@@ -80,4 +80,6 @@ public class PropertyNames {
     public static final String SNAPSHOT_TIMEOUT_DIVISOR = "snapshotTimeoutDivisor";
 
     public static final String SOX_TRANSCODE_PARAMS = "soxTranscodeParams";
+
+    public static final String DEFAULT_TIMESTAMP= "defaultTranscodingTimestamp";
 }

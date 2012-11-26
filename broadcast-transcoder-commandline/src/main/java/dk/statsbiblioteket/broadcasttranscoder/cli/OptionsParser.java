@@ -1,6 +1,8 @@
 package dk.statsbiblioteket.broadcasttranscoder.cli;
 
 import dk.statsbiblioteket.broadcasttranscoder.BroadcastTranscoderApplication;
+import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
+import dk.statsbiblioteket.broadcasttranscoder.util.persistence.TranscodingTimestampRecordDAO;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -21,7 +23,7 @@ import static dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.*;
 public class OptionsParser extends AbstractOptionsParser{
 
     protected static final Option PID_OPTION = new Option("programpid", true, "The DOMS pid of the program to be transcoded");
-    protected static final Option TIMESTAMP_OPTION = new Option("timestamp",true,"The timestamp of the doms object to be transcoded");
+    protected static final Option TIMESTAMP_OPTION = new Option("timestamp", true, "The timestamp (milliseconds) for which transcoding is required");
     protected static final Option INFRASTRUCTURE_CONFIG_FILE_OPTION = new Option("infrastructure_configfile", true, "The infrastructure config file");
     protected static final Option BEHAVIOURAL_CONFIG_FILE_OPTION = new Option("behavioural_configfile", true, "The behavioural config file");
     protected static final Option HIBERNATE_CFG_OPTION = new Option("hibernate_configfile", true, "The hibernate config file");
@@ -58,7 +60,7 @@ public class OptionsParser extends AbstractOptionsParser{
         parseBehaviouralConfigFileOption(cmd);
         parseHibernateConfigFileOption(cmd);
         parseProgramPid(cmd);
-        parseTimestamp(cmd);
+        parseTimestampOption(cmd);
         try {
             readInfrastructureProperties(context);
             readBehaviouralProperties(context);
@@ -68,21 +70,8 @@ public class OptionsParser extends AbstractOptionsParser{
         return context;
     }
 
-    private void parseTimestamp(CommandLine cmd) throws OptionParseException {
-        String timestampString
-                = cmd.getOptionValue(TIMESTAMP_OPTION.getOpt());
-        if (timestampString == null) {
-            parseError(TIMESTAMP_OPTION.toString());
-            throw new OptionParseException(TIMESTAMP_OPTION.toString());
-        }
-        long timeStampLong;
-        try {
-            timeStampLong = Long.parseLong(timestampString);
-        } catch (NumberFormatException e) {
-            throw new OptionParseException(TIMESTAMP_OPTION.toString());
-        }
-        context.setTimestampOfNewTranscoding(timeStampLong);
-    }
+
+
 
     protected void parseUsageOption(CommandLine cmd) {
          if (cmd.hasOption(USAGE_OPTION.getOpt())) {
@@ -135,6 +124,7 @@ public class OptionsParser extends AbstractOptionsParser{
         context.setSnapshotTargetNumerator(readIntegerProperty(SNAPSHOT_TARGET_NUMERATOR, props));
         context.setSnapshotTimeoutDivisor(readIntegerProperty(SNAPSHOT_TIMEOUT_DIVISOR, props));
         context.setSoxTranscodeParams(readStringProperty(SOX_TRANSCODE_PARAMS, props));
+        context.setDefaultTranscodingTimestamp(readLongProperty(DEFAULT_TIMESTAMP, props));
     }
 
 
@@ -176,6 +166,8 @@ public class OptionsParser extends AbstractOptionsParser{
                 throw new OptionParseException(configFile.getAbsolutePath() + " is not a file.");
             }
             context.setHibernateConfigFile(configFile);
+            HibernateUtil util = HibernateUtil.getInstance(configFile.getAbsolutePath());
+            context.setTimestampPersister(new TranscodingTimestampRecordDAO(util));
         }
 
 
@@ -186,6 +178,17 @@ public class OptionsParser extends AbstractOptionsParser{
             throw new OptionParseException(PID_OPTION.toString());
         } else {
             context.setProgrampid(programPid);
+        }
+    }
+
+
+    protected void parseTimestampOption(CommandLine cmd) throws OptionParseException {
+        String timestampString = cmd.getOptionValue(TIMESTAMP_OPTION.getOpt());
+        if (timestampString == null) {
+            parseError(TIMESTAMP_OPTION.toString());
+            throw new OptionParseException(TIMESTAMP_OPTION.toString());
+        } else {
+            context.setTranscodingTimestamp(Long.parseLong(timestampString));
         }
     }
 

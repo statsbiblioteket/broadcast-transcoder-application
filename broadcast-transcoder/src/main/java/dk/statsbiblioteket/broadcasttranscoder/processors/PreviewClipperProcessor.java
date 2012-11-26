@@ -54,58 +54,6 @@ public class PreviewClipperProcessor extends ProcessorChainElement {
             outputFile.delete();
             throw new ProcessorException("Process timed out for "+context.getProgrampid(),e);
         }
-        //persist(request, context, command);
-        switch (request.getFileFormat()) {
-            case MULTI_PROGRAM_MUX:
-                this.setChildElement(new SnapshotExtractorProcessor());
-                break;
-            case MPEG_PS:
-                this.setChildElement(new SnapshotExtractorProcessor());
-                break;
-            case SINGLE_PROGRAM_VIDEO_TS:
-                this.setChildElement(new SnapshotExtractorProcessor());
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void persist(TranscodeRequest request, Context context, String commandLine) {
-        PreviewMediaInfo info = new PreviewMediaInfo();
-        File outputFile =  FileUtils.getPreviewOutputDir(request, context);
-        switch (request.getFileFormat()) {
-                    case MULTI_PROGRAM_MUX:
-                        info.setBroadcastType(BroadcastTypeEnum.TV);
-                        break;
-                    case MPEG_PS:
-                        info.setBroadcastType(BroadcastTypeEnum.TV);
-                        break;
-                    case SINGLE_PROGRAM_VIDEO_TS:
-                         info.setBroadcastType(BroadcastTypeEnum.TV);
-                        break;
-                    case AUDIO_WAV:
-                         info.setBroadcastType(BroadcastTypeEnum.RADIO);
-                        break;
-                    case SINGLE_PROGRAM_AUDIO_TS:
-                          info.setBroadcastType(BroadcastTypeEnum.RADIO);
-                        break;
-                }
-        info.setEndOffset(request.getEndOffsetUsed());
-        info.setExpectedFileSizeByte(context.getPreviewLength()*request.getBitrate());
-        info.setFileExists(outputFile.exists());
-        info.setFileSizeByte(outputFile.length());
-        info.setFileTimestamp(new Date(outputFile.lastModified()));
-        info.setLastTouched(new Date());
-        info.setLengthInSeconds(context.getPreviewLength());
-        if (outputFile.getAbsolutePath().endsWith("mp3")) {
-                    info.setMediaType(MediaTypeEnum.MP3);
-                } else if (outputFile.getAbsolutePath().endsWith("flv")) {
-                    info.setMediaType(MediaTypeEnum.FLV);
-                }
-        info.setNote("shardUuid is programUuid");
-        info.setTranscodeCommandLine(commandLine);
-        new PreviewMediaInfoDAO(HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath())).create(info);
-
     }
 
 }

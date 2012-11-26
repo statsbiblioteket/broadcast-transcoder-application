@@ -68,10 +68,6 @@ public class ProgramStreamTranscoderProcessor extends ProcessorChainElement {
             outputFile.delete();
             throw new ProcessorException("External process timed out for " + context.getProgrampid(),e);
         }
-        final PreviewClipperProcessor previewClipperProcessor = new PreviewClipperProcessor();
-        //final TranscoderPersistenceProcessor persister = new TranscoderPersistenceProcessor();
-        //persister.setChildElement(previewClipperProcessor);
-        this.setChildElement(previewClipperProcessor);
     }
 
        private String getMultiClipCommand(TranscodeRequest request, Context context) {

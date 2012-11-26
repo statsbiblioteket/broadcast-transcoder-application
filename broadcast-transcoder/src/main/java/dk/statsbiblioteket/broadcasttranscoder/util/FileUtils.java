@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FilenameFilter;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,6 +18,22 @@ import java.io.File;
 public class FileUtils {
 
     private static Logger logger = LoggerFactory.getLogger(FileUtils.class);
+
+    public static boolean hasMediaOutputFile(TranscodeRequest request, Context context) {
+        File dir = getMediaOutputDir(request, context);
+        final String filenamePrefix = context.getProgrampid().replace("uuid:","");
+        FilenameFilter filter = new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.startsWith(filenamePrefix);
+            }
+        };
+        final File[] files = dir.listFiles(filter);
+        if (files.length > 0) {
+            logger.trace("Found output file " + files[0].getAbsolutePath());
+        }
+        return files.length > 0;
+    }
 
     public static File getMediaOutputFile(TranscodeRequest request, Context context) {
         File dir = getMediaOutputDir(request, context);

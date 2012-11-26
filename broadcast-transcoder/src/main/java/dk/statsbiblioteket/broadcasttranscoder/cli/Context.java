@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.cli;
 
+import dk.statsbiblioteket.broadcasttranscoder.util.persistence.TimestampPersister;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 
 import java.io.File;
@@ -329,27 +330,38 @@ public class Context {
         this.soxTranscodeParams = soxTranscodeParams;
     }
 
-    public long getTimestampOfExistingTranscoding() {
-        return timestampOfExistingTranscoding;
+    public long getTranscodingTimestamp() {
+        return transcodingTimestamp;
     }
 
-    public void setTimestampOfExistingTranscoding(long timestampOfExistingTranscoding) {
-        this.timestampOfExistingTranscoding = timestampOfExistingTranscoding;
+    public void setTranscodingTimestamp(long transcodingTimestamp) {
+        this.transcodingTimestamp = transcodingTimestamp;
     }
 
-    public long getTimestampOfNewTranscoding() {
-        return timestampOfNewTranscoding;
+    public long getDefaultTranscodingTimestamp() {
+        return defaultTranscodingTimestamp;
     }
 
-    public void setTimestampOfNewTranscoding(long timestampOfNewTranscoding) {
-        this.timestampOfNewTranscoding = timestampOfNewTranscoding;
+    public void setDefaultTranscodingTimestamp(long defaultTranscodingTimestamp) {
+        this.defaultTranscodingTimestamp = defaultTranscodingTimestamp;
     }
+
+
 
     private String programpid;
     private File infrastructuralConfigFile;
     private File behaviourConfigFile;
 
     private String domsEndpoint;
+
+    public TimestampPersister getTimestampPersister() {
+        return timestampPersister;
+    }
+
+    public void setTimestampPersister(TimestampPersister timestampPersister) {
+        this.timestampPersister = timestampPersister;
+    }
+
     private String domsUsername;
     private String domsPassword;
 
@@ -399,8 +411,11 @@ public class Context {
     private long timestampOfExistingTranscoding;
     private long timestampOfNewTranscoding;
 
+    private long transcodingTimestamp;
 
+    private long defaultTranscodingTimestamp;
 
+    private TimestampPersister timestampPersister;
 
     private CentralWebservice domsApi = null;
 

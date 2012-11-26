@@ -42,8 +42,6 @@ public class ProgramStructureUpdaterProcessor extends ProcessorChainElement {
                 !areSemanticallyEqual(domsProgramStructure, localProgramStructure)) {
             logger.debug("Writing new program structure for " + context.getProgrampid() + " to DOMS");
             writeStructureToDoms(request, context);
-            //this.setChildElement(null);
-            //logger.debug("Not transcoding " + context.getProgrampid() + " because of new program structure.");
         } else {
             return;
         }
