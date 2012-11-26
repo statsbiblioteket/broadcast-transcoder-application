@@ -25,6 +25,12 @@ public class PersistentMetadataExtractorProcessor extends ProcessorChainElement 
 
     private static Logger logger = LoggerFactory.getLogger(PersistentMetadataExtractorProcessor.class);
 
+    public PersistentMetadataExtractorProcessor() {
+    }
+
+    public PersistentMetadataExtractorProcessor(ProcessorChainElement childElement) {
+        super(childElement);
+    }
 
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {

@@ -22,6 +22,13 @@ public class ProgramStreamTranscoderProcessor extends ProcessorChainElement {
 
     private static Logger log = LoggerFactory.getLogger(ProgramStreamTranscoderProcessor.class);
 
+    public ProgramStreamTranscoderProcessor() {
+    }
+
+    public ProgramStreamTranscoderProcessor(ProcessorChainElement childElement) {
+        super(childElement);
+    }
+
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
          mpegClip(request, context);

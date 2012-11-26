@@ -28,6 +28,13 @@ public class ProgramMetadataFetcherProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(ProgramMetadataFetcherProcessor.class);
 
+    public ProgramMetadataFetcherProcessor() {
+    }
+
+    public ProgramMetadataFetcherProcessor(ProcessorChainElement childElement) {
+        super(childElement);
+    }
+
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         ProgramBroadcast programBroadcast = getProgramBroadcast(context);

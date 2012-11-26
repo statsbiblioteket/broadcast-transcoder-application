@@ -19,6 +19,13 @@ public class StructureFixerProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(StructureFixerProcessor.class);
 
+    public StructureFixerProcessor() {
+    }
+
+    public StructureFixerProcessor(ProcessorChainElement childElement) {
+        super(childElement);
+    }
+
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         handleMissingStart(request, context);

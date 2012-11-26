@@ -3,6 +3,7 @@ package dk.statsbiblioteket.broadcasttranscoder;
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionsParser;
+import dk.statsbiblioteket.broadcasttranscoder.fetcher.DomsTranscodingStructureFetcher;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import org.slf4j.Logger;
@@ -37,19 +38,23 @@ public class BroadcastTranscoderApplication {
             logger.warn("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
             System.exit(3);
         }
+
+
         try {
-            ProcessorChainElement chain = makeChain(
-                    new ProgramMetadataFetcherProcessor(),
-                    //new PersistentMetadataExtractorProcessor(),
-                    new FileMetadataFetcherProcessor(),
-                    new BroadcastMetadataSorterProcessor(),
-                    new FilefinderFetcherProcessor(),
-                    new FilePropertiesIdentifierProcessor(),
-                    new ClipFinderProcessor(),
-                    new CoverageAnalyserProcessor(),
-                    new ProgramStructureUpdaterProcessor(),
-                    new StructureFixerProcessor(),
-                    new TranscoderDispatcherProcessor());
+            ProcessorChainElement chain;
+            chain = new ExistingTranscodingFileProcessor(
+                    new DomsTranscodingStructureFetcher(
+                            new ProgramMetadataFetcherProcessor(
+                                    //new PersistentMetadataExtractorProcessor(
+                                    new FileMetadataFetcherProcessor(
+                                            new BroadcastMetadataSorterProcessor(
+                                                    new FilefinderFetcherProcessor(
+                                                            new FilePropertiesIdentifierProcessor(
+                                                                    new ClipFinderProcessor(
+                                                                            new CoverageAnalyserProcessor(
+                                                                                    new ProgramStructureUpdaterProcessor(
+                                                                                            new StructureFixerProcessor(
+                                                                                                    new TranscoderDispatcherProcessor())))))))))));
             chain.processIteratively(request, context);
         } finally {
             boolean deleted = lockFile.delete();

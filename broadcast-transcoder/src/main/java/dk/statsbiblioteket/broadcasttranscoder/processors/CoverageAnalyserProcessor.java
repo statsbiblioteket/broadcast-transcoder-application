@@ -25,6 +25,13 @@ public class CoverageAnalyserProcessor extends ProcessorChainElement {
     private static Logger logger = LoggerFactory.getLogger(CoverageAnalyserProcessor.class);
     private static int gapToleranceSeconds;
 
+    public CoverageAnalyserProcessor() {
+    }
+
+    public CoverageAnalyserProcessor(ProcessorChainElement childElement) {
+        super(childElement);
+    }
+
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         gapToleranceSeconds = context.getGapToleranceSeconds();

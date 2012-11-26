@@ -20,6 +20,14 @@ public class ClipFinderProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(ClipFinderProcessor.class);
 
+
+    public ClipFinderProcessor() {
+    }
+
+    public ClipFinderProcessor(ProcessorChainElement childElement) {
+        super(childElement);
+    }
+
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         Integer programNumber = null;

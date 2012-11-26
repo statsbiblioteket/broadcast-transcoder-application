@@ -28,6 +28,13 @@ public class PreviewClipperProcessor extends ProcessorChainElement {
     private static Logger logger = LoggerFactory.getLogger(PreviewClipperProcessor.class);
 
 
+    public PreviewClipperProcessor() {
+    }
+
+    public PreviewClipperProcessor(ProcessorChainElement childElement) {
+        super(childElement);
+    }
+
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         long programLength = MetadataUtils.findProgramLengthMillis(request);

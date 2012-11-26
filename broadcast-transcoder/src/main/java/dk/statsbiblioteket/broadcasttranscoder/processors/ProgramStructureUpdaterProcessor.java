@@ -27,6 +27,13 @@ public class ProgramStructureUpdaterProcessor extends ProcessorChainElement {
 
     private static final Logger logger = LoggerFactory.getLogger(ProgramStructureUpdaterProcessor.class);
 
+    public ProgramStructureUpdaterProcessor() {
+    }
+
+    public ProgramStructureUpdaterProcessor(ProcessorChainElement childElement) {
+        super(childElement);
+    }
+
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         ProgramStructure domsProgramStructure = request.getDomsProgramStructure();

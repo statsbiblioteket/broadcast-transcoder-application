@@ -19,6 +19,14 @@ public class WavTranscoderProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(WavTranscoderProcessor.class);
 
+
+    public WavTranscoderProcessor() {
+    }
+
+    public WavTranscoderProcessor(ProcessorChainElement childElement) {
+        super(childElement);
+    }
+
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         String command = getMultiClipCommand(request, context);

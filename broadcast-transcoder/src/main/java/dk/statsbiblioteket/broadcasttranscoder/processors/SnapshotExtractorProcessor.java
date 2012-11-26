@@ -32,6 +32,13 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
 
     private static final Logger logger = LoggerFactory.getLogger(SnapshotExtractorProcessor.class);
 
+    public SnapshotExtractorProcessor() {
+    }
+
+    public SnapshotExtractorProcessor(ProcessorChainElement childElement) {
+        super(childElement);
+    }
+
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         int targetNumerator = context.getSnapshotTargetNumerator();

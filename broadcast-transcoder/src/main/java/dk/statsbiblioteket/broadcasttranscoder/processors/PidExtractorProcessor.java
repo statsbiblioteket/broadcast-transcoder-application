@@ -21,6 +21,12 @@ public class PidExtractorProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(PidExtractorProcessor.class);
 
+    public PidExtractorProcessor() {
+    }
+
+    public PidExtractorProcessor(ProcessorChainElement childElement) {
+        super(childElement);
+    }
 
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {

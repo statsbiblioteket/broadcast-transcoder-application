@@ -16,6 +16,13 @@ public class FilePropertiesIdentifierProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(FilePropertiesIdentifierProcessor.class);
 
+    public FilePropertiesIdentifierProcessor() {
+    }
+
+    public FilePropertiesIdentifierProcessor(ProcessorChainElement childElement) {
+        super(childElement);
+    }
+
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         //Assume all files have same format and bitrate or we've lost before we start.

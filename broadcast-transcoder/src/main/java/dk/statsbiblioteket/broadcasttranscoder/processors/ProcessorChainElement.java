@@ -25,4 +25,10 @@ public abstract class ProcessorChainElement {
 
     protected abstract void processThis(TranscodeRequest request, Context context) throws ProcessorException;
 
+    protected ProcessorChainElement() {
+    }
+
+    protected ProcessorChainElement(ProcessorChainElement childElement) {
+        this.childElement = childElement;
+    }
 }

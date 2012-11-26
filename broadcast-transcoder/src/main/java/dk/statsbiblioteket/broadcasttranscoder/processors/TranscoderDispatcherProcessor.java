@@ -6,6 +6,14 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
  *
  */
 public class TranscoderDispatcherProcessor extends ProcessorChainElement {
+
+    public TranscoderDispatcherProcessor() {
+    }
+
+    public TranscoderDispatcherProcessor(ProcessorChainElement childElement) {
+        super(childElement);
+    }
+
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         switch (request.getFileFormat()) {

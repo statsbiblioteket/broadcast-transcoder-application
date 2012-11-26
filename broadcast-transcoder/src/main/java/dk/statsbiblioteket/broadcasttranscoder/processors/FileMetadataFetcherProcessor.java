@@ -27,6 +27,12 @@ public class FileMetadataFetcherProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(FileMetadataFetcherProcessor.class);
 
+    public FileMetadataFetcherProcessor() {
+    }
+
+    public FileMetadataFetcherProcessor(ProcessorChainElement childElement) {
+        super(childElement);
+    }
 
     private static final String HAS_FILE_RELATION = "http://doms.statsbiblioteket.dk/relations/default/0/1/#hasFile";
     @Override

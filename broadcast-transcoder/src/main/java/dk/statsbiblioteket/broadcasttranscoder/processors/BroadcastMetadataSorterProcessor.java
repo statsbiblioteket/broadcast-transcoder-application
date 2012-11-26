@@ -12,6 +12,13 @@ import java.util.List;
 public class BroadcastMetadataSorterProcessor extends ProcessorChainElement {
 
 
+    public BroadcastMetadataSorterProcessor() {
+    }
+
+    public BroadcastMetadataSorterProcessor(ProcessorChainElement childElement) {
+        super(childElement);
+    }
+
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         List<BroadcastMetadata> broadcastMetadata = request.getBroadcastMetadata();

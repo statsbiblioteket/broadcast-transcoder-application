@@ -20,6 +20,14 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class TranscoderPersistenceProcessor extends ProcessorChainElement {
+
+    public TranscoderPersistenceProcessor() {
+    }
+
+    public TranscoderPersistenceProcessor(ProcessorChainElement childElement) {
+        super(childElement);
+    }
+
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         ProgramMediaInfo info = new ProgramMediaInfo();

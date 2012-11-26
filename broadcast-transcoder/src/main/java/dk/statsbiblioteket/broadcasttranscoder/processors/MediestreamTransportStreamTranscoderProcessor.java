@@ -16,6 +16,13 @@ import java.io.File;
  */
 public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChainElement {
 
+    public MediestreamTransportStreamTranscoderProcessor() {
+    }
+
+    public MediestreamTransportStreamTranscoderProcessor(ProcessorChainElement childElement) {
+        super(childElement);
+    }
+
     public static int getHeight(TranscodeRequest request, Context context) {
         return context.getVideoHeight();
     }

@@ -1,22 +1,17 @@
 package dk.statsbiblioteket.broadcasttranscoder.fetcher;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
-import dk.statsbiblioteket.broadcasttranscoder.fetcher.cli.FetcherContext;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.doms.central.*;
-import dk.statsbiblioteket.util.xml.DOM;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
-import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
@@ -36,6 +31,13 @@ public class DomsTranscodingStructureFetcher extends ProcessorChainElement {
     private TransformerFactory transFact = TransformerFactory.newInstance();
 
 
+    public DomsTranscodingStructureFetcher() {
+    }
+
+    public DomsTranscodingStructureFetcher(ProcessorChainElement childElement) {
+        super(childElement);
+    }
+
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
 
@@ -53,8 +55,11 @@ public class DomsTranscodingStructureFetcher extends ProcessorChainElement {
         }
 
         //TODO timestamp
-        long oldTranscodingTimestamp = 0;
-        long timeStampOfNewChange = 0;
+        long oldTranscodingTimestamp = context.getTimestampOfExistingTranscoding();
+        if (oldTranscodingTimestamp < 0){//file doesnt exist, so check is redundant
+            return;
+        }
+        long timeStampOfNewChange = context.getTimestampOfNewTranscoding();
 
         String bundleString = bundle.getContents();
         String oldStructure;
@@ -68,6 +73,8 @@ public class DomsTranscodingStructureFetcher extends ProcessorChainElement {
 
         XMLUnit.setIgnoreWhitespace(true);
         try {
+
+            //TODO sort order of file objects?
             Diff smallDiff = new Diff(oldStructure, newStructure);
             if (smallDiff.similar()){
                 //Kill the transcoding chain
