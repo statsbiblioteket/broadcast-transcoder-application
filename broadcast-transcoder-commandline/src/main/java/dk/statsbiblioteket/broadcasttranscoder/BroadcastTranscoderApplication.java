@@ -38,28 +38,19 @@ public class BroadcastTranscoderApplication {
             System.exit(3);
         }
         try {
-            ProcessorChainElement programFetcher = new ProgramMetadataFetcherProcessor();
-            //ProcessorChainElement metadataExtractor = new PersistentMetadataExtractorProcessor();
-            ProcessorChainElement filedataFetcher    = new FileMetadataFetcherProcessor();
-            ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
-            ProcessorChainElement fileFinderFetcher = new FilefinderFetcherProcessor();
-            ProcessorChainElement identifier = new FilePropertiesIdentifierProcessor();
-            ProcessorChainElement clipper = new ClipFinderProcessor();
-            ProcessorChainElement coverage = new CoverageAnalyserProcessor();
-            ProcessorChainElement updater = new ProgramStructureUpdaterProcessor();
-            ProcessorChainElement fixer = new StructureFixerProcessor();
-            ProcessorChainElement dispatcher = new TranscoderDispatcherProcessor();
-            programFetcher.setChildElement(filedataFetcher);
-            //metadataExtractor.setChildElement(filedataFetcher);
-            filedataFetcher.setChildElement(sorter);
-            sorter.setChildElement(fileFinderFetcher);
-            fileFinderFetcher.setChildElement(identifier);
-            identifier.setChildElement(clipper);
-            clipper.setChildElement(coverage);
-            coverage.setChildElement(updater);
-            updater.setChildElement(fixer);
-            fixer.setChildElement(dispatcher);
-            programFetcher.processIteratively(request, context);
+            ProcessorChainElement chain = makeChain(
+                    new ProgramMetadataFetcherProcessor(),
+                    //new PersistentMetadataExtractorProcessor(),
+                    new FileMetadataFetcherProcessor(),
+                    new BroadcastMetadataSorterProcessor(),
+                    new FilefinderFetcherProcessor(),
+                    new FilePropertiesIdentifierProcessor(),
+                    new ClipFinderProcessor(),
+                    new CoverageAnalyserProcessor(),
+                    new ProgramStructureUpdaterProcessor(),
+                    new StructureFixerProcessor(),
+                    new TranscoderDispatcherProcessor());
+            chain.processIteratively(request, context);
         } finally {
             boolean deleted = lockFile.delete();
             if (!deleted) {
@@ -67,6 +58,20 @@ public class BroadcastTranscoderApplication {
                 System.exit(4);
             }
         }
+    }
+
+
+    private static ProcessorChainElement makeChain(ProcessorChainElement... elements) {
+
+        ProcessorChainElement previous = null;
+        for (ProcessorChainElement element : elements) {
+            if (previous != null) {
+                previous.setChildElement(element);
+            }
+            previous = element;
+        }
+        return elements[0];
+
     }
 
 }
