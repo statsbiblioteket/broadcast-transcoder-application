@@ -21,9 +21,11 @@ import static dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.*;
 public class OptionsParser extends AbstractOptionsParser{
 
     protected static final Option PID_OPTION = new Option("programpid", true, "The DOMS pid of the program to be transcoded");
+    protected static final Option TIMESTAMP_OPTION = new Option("timestamp",true,"The timestamp of the doms object to be transcoded");
     protected static final Option INFRASTRUCTURE_CONFIG_FILE_OPTION = new Option("infrastructure_configfile", true, "The infrastructure config file");
     protected static final Option BEHAVIOURAL_CONFIG_FILE_OPTION = new Option("behavioural_configfile", true, "The behavioural config file");
     protected static final Option HIBERNATE_CFG_OPTION = new Option("hibernate_configfile", true, "The hibernate config file");
+
     protected static final Option USAGE_OPTION = new Option("u", false, "Usage");
 
     protected static Options options;
@@ -34,6 +36,7 @@ public class OptionsParser extends AbstractOptionsParser{
         context = new Context();
         options = new Options();
         options.addOption(PID_OPTION);
+        options.addOption(TIMESTAMP_OPTION);
         options.addOption(INFRASTRUCTURE_CONFIG_FILE_OPTION);
         options.addOption(BEHAVIOURAL_CONFIG_FILE_OPTION);
         options.addOption(HIBERNATE_CFG_OPTION);
@@ -55,6 +58,7 @@ public class OptionsParser extends AbstractOptionsParser{
         parseBehaviouralConfigFileOption(cmd);
         parseHibernateConfigFileOption(cmd);
         parseProgramPid(cmd);
+        parseTimestamp(cmd);
         try {
             readInfrastructureProperties(context);
             readBehaviouralProperties(context);
@@ -62,6 +66,22 @@ public class OptionsParser extends AbstractOptionsParser{
             throw new OptionParseException("Error reading properties.", e);
         }
         return context;
+    }
+
+    private void parseTimestamp(CommandLine cmd) throws OptionParseException {
+        String timestampString
+                = cmd.getOptionValue(TIMESTAMP_OPTION.getOpt());
+        if (timestampString == null) {
+            parseError(TIMESTAMP_OPTION.toString());
+            throw new OptionParseException(TIMESTAMP_OPTION.toString());
+        }
+        long timeStampLong;
+        try {
+            timeStampLong = Long.parseLong(timestampString);
+        } catch (NumberFormatException e) {
+            throw new OptionParseException(TIMESTAMP_OPTION.toString());
+        }
+        context.setTimestampOfNewTranscoding(timeStampLong);
     }
 
     protected void parseUsageOption(CommandLine cmd) {

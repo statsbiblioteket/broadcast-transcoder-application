@@ -329,6 +329,22 @@ public class Context {
         this.soxTranscodeParams = soxTranscodeParams;
     }
 
+    public long getTimestampOfExistingTranscoding() {
+        return timestampOfExistingTranscoding;
+    }
+
+    public void setTimestampOfExistingTranscoding(long timestampOfExistingTranscoding) {
+        this.timestampOfExistingTranscoding = timestampOfExistingTranscoding;
+    }
+
+    public long getTimestampOfNewTranscoding() {
+        return timestampOfNewTranscoding;
+    }
+
+    public void setTimestampOfNewTranscoding(long timestampOfNewTranscoding) {
+        this.timestampOfNewTranscoding = timestampOfNewTranscoding;
+    }
+
     private String programpid;
     private File infrastructuralConfigFile;
     private File behaviourConfigFile;
@@ -379,6 +395,9 @@ public class Context {
     private int snapshotTimeoutDivisor;
 
     private String soxTranscodeParams;
+
+    private long timestampOfExistingTranscoding;
+    private long timestampOfNewTranscoding;
 
 
 
