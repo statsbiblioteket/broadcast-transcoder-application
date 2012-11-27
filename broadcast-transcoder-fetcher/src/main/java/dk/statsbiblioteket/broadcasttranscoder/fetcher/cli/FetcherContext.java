@@ -19,6 +19,8 @@ public class FetcherContext extends Context {
     private String state;
     private int batchSize;
 
+    private long since;
+
     public void setViewAngle(String viewAngle) {
         this.viewAngle = viewAngle;
     }
@@ -49,5 +51,14 @@ public class FetcherContext extends Context {
 
     public int getBatchSize() {
         return batchSize;
+    }
+
+
+    public long getSince() {
+        return since;
+    }
+
+    public void setSince(long since) {
+        this.since = since;
     }
 }

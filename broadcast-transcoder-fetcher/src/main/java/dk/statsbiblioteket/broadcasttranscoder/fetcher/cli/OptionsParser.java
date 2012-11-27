@@ -16,7 +16,7 @@ import java.util.Properties;
  */
 public class OptionsParser extends AbstractOptionsParser{
 
-    protected static final Option PID_OPTION = new Option("programpid", true, "The DOMS pid of the program to be transcoded");
+    protected static final Option SINCE = new Option("since", true, "The timestamp to start from");
     protected static final Option INFRASTRUCTURE_CONFIG_FILE_OPTION = new Option("infrastructure_configfile", true, "The infrastructure config file");
     protected static final Option BEHAVIOURAL_CONFIG_FILE_OPTION = new Option("behavioural_configfile", true, "The behavioural config file");
     protected static final Option USAGE_OPTION = new Option("u", false, "Usage");
@@ -28,7 +28,7 @@ public class OptionsParser extends AbstractOptionsParser{
     public OptionsParser() {
         context = new FetcherContext();
         options = new Options();
-        options.addOption(PID_OPTION);
+        options.addOption(SINCE);
         options.addOption(INFRASTRUCTURE_CONFIG_FILE_OPTION);
         options.addOption(BEHAVIOURAL_CONFIG_FILE_OPTION);
 
@@ -46,6 +46,7 @@ public class OptionsParser extends AbstractOptionsParser{
             throw new OptionParseException(e.getMessage(), e);
         }
         parseUsageOption(cmd);
+        parseSince(cmd);
         parseInfrastructureConfigFileOption(cmd);
         parseBehaviouralConfigFileOption(cmd);
         try {
@@ -55,6 +56,17 @@ public class OptionsParser extends AbstractOptionsParser{
             throw new OptionParseException("Error reading properties.", e);
         }
         return context;
+    }
+
+    private void parseSince(CommandLine cmd) throws OptionParseException {
+        String timestampString = cmd.getOptionValue(SINCE.getOpt());
+        if (timestampString == null) {
+            parseError(SINCE.toString());
+            throw new OptionParseException(SINCE.toString());
+        } else {
+            context.setSince(Long.parseLong(timestampString));
+        }
+
     }
 
     protected void parseUsageOption(CommandLine cmd) {

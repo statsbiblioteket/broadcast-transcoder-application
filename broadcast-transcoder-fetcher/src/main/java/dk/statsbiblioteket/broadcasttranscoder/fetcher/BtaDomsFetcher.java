@@ -39,7 +39,7 @@ public class BtaDomsFetcher {
             CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);
             List<RecordDescription> records = requestInBatches(doms, context);
             for (RecordDescription record : records) {
-                System.out.println(record.getPid()+":"+record.getDate());
+                System.out.println(record.getPid()+" "+record.getDate());
             }
         } catch (Exception e){
             e.printStackTrace();
