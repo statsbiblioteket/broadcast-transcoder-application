@@ -120,6 +120,6 @@ public class BtaDomsFetcher {
     }
 
     private static long getSince(FetcherContext context) {
-        return 0;  //To change body of created methods use File | Settings | File Templates.
+        return context.getSince();
     }
 }
