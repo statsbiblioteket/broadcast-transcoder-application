@@ -49,6 +49,7 @@ public class BroadcastTranscoderApplication {
             ProcessorChainElement coverage = new CoverageAnalyserProcessor();
             ProcessorChainElement updater = new ProgramStructureUpdaterProcessor();
             ProcessorChainElement fixer = new StructureFixerProcessor();
+            ProcessorChainElement concatenator = new ClipConcatenatorProcessor();
             ProcessorChainElement firstChain = makeChain(
                     structureFetcher,
                     programFetcher,
@@ -59,28 +60,30 @@ public class BroadcastTranscoderApplication {
                     clipper,
                     coverage,
                     updater,
-                    fixer);
+                    fixer,
+                    concatenator);
             firstChain.processIteratively(request, context);
             if (request.isGoForTranscoding()) {
                 ProcessorChainElement secondChain = null;
                 ProcessorChainElement pider = new PidExtractorProcessor();
                 ProcessorChainElement waver = new WavTranscoderProcessor();
-                ProcessorChainElement tser = new MediestreamTransportStreamTranscoderProcessor();
-                ProcessorChainElement pser = new ProgramStreamTranscoderProcessor();
+                ProcessorChainElement multistreamer = new MultistreamVideoTranscoderProcessor();
+                ProcessorChainElement unistreamvideoer = new UnistreamVideoTranscoderProcessor();
+                ProcessorChainElement unistreamaudioer = new UnistreamAudioTranscoderProcessor();
                 ProcessorChainElement previewer = new PreviewClipperProcessor();
                 ProcessorChainElement snapshotter = new SnapshotExtractorProcessor();
                 switch (request.getFileFormat()) {
                     case MULTI_PROGRAM_MUX:
-                        secondChain = makeChain(pider, tser, previewer, snapshotter);
+                        secondChain = makeChain(pider, multistreamer, previewer, snapshotter);
                         break;
                     case SINGLE_PROGRAM_VIDEO_TS:
-                        secondChain = makeChain(pider, tser, previewer, snapshotter);
+                        secondChain = makeChain(pider, unistreamvideoer, previewer, snapshotter);
                         break;
                     case SINGLE_PROGRAM_AUDIO_TS:
-                        secondChain = makeChain(pider, tser, previewer);
+                        secondChain = makeChain(pider, unistreamaudioer, previewer);
                         break;
                     case MPEG_PS:
-                        secondChain = makeChain(pider, pser, previewer, snapshotter);
+                        secondChain = makeChain(pider, unistreamvideoer, previewer, snapshotter);
                         break;
                     case AUDIO_WAV:
                         secondChain = makeChain(waver, previewer);
@@ -101,7 +104,7 @@ public class BroadcastTranscoderApplication {
     }
 
 
-    private static ProcessorChainElement makeChain(ProcessorChainElement... elements) {
+    public static ProcessorChainElement makeChain(ProcessorChainElement... elements) {
 
         ProcessorChainElement previous = null;
         for (ProcessorChainElement element : elements) {

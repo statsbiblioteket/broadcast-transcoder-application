@@ -4,10 +4,13 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramBroadcast;
+import dk.statsbiblioteket.broadcasttranscoder.processors.ClipConcatenatorProcessor;
+import dk.statsbiblioteket.broadcasttranscoder.processors.PidExtractorProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscoderDispatcherProcessor;
+import dk.statsbiblioteket.broadcasttranscoder.processors.UnistreamVideoTranscoderProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -64,8 +67,17 @@ public class SingleFileClipper {
         pb.setTimeStart(xmlcalstart);
         pb.setTimeStop(xmlcalend);
         request.setProgramBroadcast(pb);
-        ProcessorChainElement dispatcher = new TranscoderDispatcherProcessor();
-        dispatcher.processIteratively(request, context);
+        ProcessorChainElement pider = new PidExtractorProcessor();
+        ProcessorChainElement concatenator = new ClipConcatenatorProcessor();
+        ProcessorChainElement video = new UnistreamVideoTranscoderProcessor();
+        ProcessorChainElement audio = new UnistreamVideoTranscoderProcessor();
+        ProcessorChainElement chain = null;
+        if (format.equals(FileFormatEnum.SINGLE_PROGRAM_AUDIO_TS)) {
+            chain = BroadcastTranscoderApplication.makeChain(pider, concatenator, audio);
+        } else {
+            chain = BroadcastTranscoderApplication.makeChain(pider, concatenator, video);
+        }
+        chain.processIteratively(request, context);
     }
 
 }

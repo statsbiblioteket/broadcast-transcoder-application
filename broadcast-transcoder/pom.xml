@@ -19,7 +19,6 @@
             <groupId>dk.statsbiblioteket.doms.central</groupId>
             <artifactId>centralWebservice-interface</artifactId>
         </dependency>
-
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

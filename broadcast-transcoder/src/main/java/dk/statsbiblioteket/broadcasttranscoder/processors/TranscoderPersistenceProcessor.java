@@ -62,7 +62,7 @@ public class TranscoderPersistenceProcessor extends ProcessorChainElement {
         } else if (mediaOutputFile.getAbsolutePath().endsWith("flv")) {
             info.setMediaType(MediaTypeEnum.FLV);
         }
-        info.setTranscodeCommandLine(request.getClipperCommand());
+        info.setTranscodeCommandLine(request.getTranscoderCommand());
         info.setShardUuid(context.getProgrampid());
         info.setNote("shardUuid is actually programUuid");
         new ProgramMediaInfoDAO(HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath())).create(info);

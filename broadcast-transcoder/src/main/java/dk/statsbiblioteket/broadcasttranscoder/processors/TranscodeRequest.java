@@ -159,12 +159,12 @@ public class TranscodeRequest {
         this.localProgramStructure = localProgramStructure;
     }
 
-    public String getClipperCommand() {
-        return clipperCommand;
+    public String getTranscoderCommand() {
+        return transcoderCommand;
     }
 
-    public void setClipperCommand(String clipperCommand) {
-        this.clipperCommand = clipperCommand;
+    public void setTranscoderCommand(String transcoderCommand) {
+        this.transcoderCommand = transcoderCommand;
     }
 
     public int getStartOffsetUsed() {
@@ -191,6 +191,14 @@ public class TranscodeRequest {
         this.goForTranscoding = goForTranscoding;
     }
 
+    public String getClipperCommand() {
+        return clipperCommand;
+    }
+
+    public void setClipperCommand(String clipperCommand) {
+        this.clipperCommand = clipperCommand;
+    }
+
     private ProgramBroadcast programBroadcast;
     private ProgramStructure domsProgramStructure;
     private ProgramStructure localProgramStructure;
@@ -210,9 +218,11 @@ public class TranscodeRequest {
     private Double displayAspectRatio;
     private String displayAspectRatioString;
 
-    private String clipperCommand;
+    private String transcoderCommand;
     private int startOffsetUsed;
     private int endOffsetUsed;
+
+    private String clipperCommand;
 
     private boolean goForTranscoding;
 

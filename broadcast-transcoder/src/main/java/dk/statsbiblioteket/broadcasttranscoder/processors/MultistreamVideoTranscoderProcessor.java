@@ -14,12 +14,12 @@ import java.io.File;
  * Time: 3:03 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChainElement {
+public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
 
-    public MediestreamTransportStreamTranscoderProcessor() {
+    public MultistreamVideoTranscoderProcessor() {
     }
 
-    public MediestreamTransportStreamTranscoderProcessor(ProcessorChainElement childElement) {
+    public MultistreamVideoTranscoderProcessor(ProcessorChainElement childElement) {
         super(childElement);
     }
 
@@ -38,63 +38,20 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
         }
     }
 
-    private static Logger logger = LoggerFactory.getLogger(MediestreamTransportStreamTranscoderProcessor.class);
+    private static Logger logger = LoggerFactory.getLogger(MultistreamVideoTranscoderProcessor.class);
 
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
-        Long blocksize = 1880L;
-        Long offsetBytes = 0L;
-        String processSubstitutionFileList = "";
-        final int clipSize = request.getClips().size();
         int programNumber = 0;
-        for (int iclip = 0; iclip < clipSize; iclip++ ) {
-            TranscodeRequest.FileClip clip = request.getClips().get(iclip);
-            Long clipLength = clip.getClipLength();
-            if (iclip == 0) {
-                if (request.getFileFormat().equals(FileFormatEnum.MULTI_PROGRAM_MUX)) {
-                    Integer programNumberObject = clip.getProgramId();
-                    if (programNumberObject == null) {
-                        throw new ProcessorException("Cannot transcode multi-program transport stream because no program number specified: " + context.getProgrampid());
-                    } else {
-                        programNumber = programNumberObject;
-                    }
-                }
-                if (clip.getStartOffsetBytes() == null) {
-                    offsetBytes = 0L;
-                } else {
-                    offsetBytes = clip.getStartOffsetBytes();
-                }
-                if (offsetBytes == null || offsetBytes < 0) offsetBytes = 0L;
-                if (clipLength != null && clipSize == 1) {
-                    Long totalLengthBytes = clipLength;   //Program contained within file
-                    processSubstitutionFileList += " <(dd if=" + clip.getFilepath() + " bs="+blocksize + " skip=" + offsetBytes/blocksize
-                            + " count=" + totalLengthBytes/blocksize + ") " ;
-                } else {         //Otherwise always go to end of file
-                    processSubstitutionFileList += " <(dd if=" + clip.getFilepath() + " bs="+blocksize + " skip=" + offsetBytes/blocksize + ") " ;
-                }
-
-            } else if (iclip == clipSize - 1 && clipSize != 1) {   //last clip in multiclip program
-                String skipString = "";
-                if (clip.getStartOffsetBytes() != null && clip.getStartOffsetBytes() != 0L) {
-                    logger.warn("Found non-zero offset outside first clip for '" + context.getProgrampid());
-                    skipString = " skip=" + (clip.getStartOffsetBytes())/blocksize + " ";
-                }
-                if (clipLength != null) {
-                    processSubstitutionFileList +=" <(dd if=" + clip.getFilepath() + " bs=" + blocksize + skipString +  " count=" + clipLength/blocksize + ") ";
-                } else {
-                    processSubstitutionFileList +=" <(dd if=" + clip.getFilepath() + " bs=" + blocksize + skipString  + ") ";
-                }
-                //processSubstitutionFileList +=" <(dd if=" + clip.getFilepath() + " bs=" + blocksize + skipString +  " count=" + clipLength/blocksize + ") ";
-            } else {   //A file in the middle of a program so take the whole file
-                String skipString = "";
-                if (clip.getStartOffsetBytes() != null && clip.getStartOffsetBytes() != 0L) {
-                    logger.warn("Found non-zero offset outside first clip for '" + context.getProgrampid());
-                    skipString = " skip=" + clip.getStartOffsetBytes()/blocksize + " ";
-                }
-                processSubstitutionFileList += " <(dd if=" + clip.getFilepath() + " bs=" + blocksize + skipString + ") ";
+        if (request.getFileFormat().equals(FileFormatEnum.MULTI_PROGRAM_MUX)) {
+            Integer programNumberObject = request.getClips().get(0).getProgramId();
+            if (programNumberObject == null) {
+                throw new ProcessorException("Cannot transcode multi-program transport stream because no program number specified: " + context.getProgrampid());
+            } else {
+                programNumber = programNumberObject;
             }
         }
-
+        String processSubstitutionFileList = request.getClipperCommand();
         File outputDir = FileUtils.getMediaOutputDir(request, context);
         outputDir.mkdirs();
 
@@ -113,7 +70,7 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
             long programLength = MetadataUtils.findProgramLengthMillis(request);
             long timeout = programLength/context.getTranscodingTimeoutDivisor();
             logger.debug("Setting transcoding timeout for '" + context.getProgrampid() + "' to " + timeout + "ms" );
-            request.setClipperCommand(clipperCommand);
+            request.setTranscoderCommand(clipperCommand);
             ExternalJobRunner.runClipperCommand(timeout, clipperCommand);
         } catch (ExternalProcessTimedOutException e) {
             File outputFile =  FileUtils.getMediaOutputFile(request, context);
@@ -146,6 +103,11 @@ public class MediestreamTransportStreamTranscoderProcessor extends ProcessorChai
                     + ":std{access=file,mux=ts,dst=-}\""
                     + programSelectString + "' | "
                     + "ffmpeg -i -  -async 2 -vcodec copy -ac 2 -acodec libmp3lame -ar 44100 -ab " + context.getAudioBitrate() + "000 -y -f flv " + FileUtils.getMediaOutputFile(request, context);
+        /*
+        For yousee ts files, change this to something like
+        ffmpeg -i  ~/scratch/BTA-unittest/ANIMAL_20121008_120000_20121008_130000.mux -vcodec libx264 -preset superfast -profile:v High -level 3.0 -ab 96000 -vb 400000 -acodec libmp3lame -async 2 -ac 2 -ar 44100 -s 512x288  -f flv temp.flv
+         */
+
         } else {
             String programSelector = " --program=1010 --sout-all --ts-extra-pmt=1010:1010=" + request.getVideoPid() + ":video=" + request.getVideoFcc()
                     + "," + request.getMinimumAudioPid() + ":audio=" + request.getAudioFcc();

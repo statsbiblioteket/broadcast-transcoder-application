@@ -36,7 +36,7 @@ public class WavTranscoderProcessor extends ProcessorChainElement {
             long programLength = MetadataUtils.findProgramLengthMillis(request);
             long timeout = programLength/context.getTranscodingTimeoutDivisor();
             logger.debug("Setting transcoding timeout for '" + context.getProgrampid() + "' to " + timeout + "ms");
-            request.setClipperCommand(command);
+            request.setTranscoderCommand(command);
             ExternalJobRunner.runClipperCommand(timeout, command);
         } catch (ExternalProcessTimedOutException e) {
             logger.warn("Deleting '" + outputFile.getAbsolutePath() + "'", e);
