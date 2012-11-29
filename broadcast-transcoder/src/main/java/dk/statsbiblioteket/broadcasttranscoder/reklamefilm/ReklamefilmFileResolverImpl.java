@@ -1,6 +1,5 @@
 package dk.statsbiblioteket.broadcasttranscoder.reklamefilm;
 
-import com.sun.javafx.binding.StringFormatter;
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
