@@ -31,6 +31,7 @@ public class ReklamefilmFileResolverProcessor extends ProcessorChainElement {
         logger.info("Resolved " + pid + " to " + request.getClipperCommand());
         final long nominalDurationSeconds = 300L;
         request.setBitrate(mediafile.length()/nominalDurationSeconds);
+        request.setTimeoutMilliseconds(nominalDurationSeconds*1000L/context.getTranscodingTimeoutDivisor());
         request.setFileFormat(FileFormatEnum.MPEG_PS);
         TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip(mediafile.getAbsolutePath());
         List<TranscodeRequest.FileClip> clips = new ArrayList<TranscodeRequest.FileClip>();

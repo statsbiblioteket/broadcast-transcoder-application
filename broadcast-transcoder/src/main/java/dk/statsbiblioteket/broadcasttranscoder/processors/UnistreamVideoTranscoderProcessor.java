@@ -39,8 +39,13 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
         outputDir.mkdirs();
         File outputFile = FileUtils.getMediaOutputFile(request, context);
         try {
-            long programLength = MetadataUtils.findProgramLengthMillis(request);
-            long timeout = programLength/context.getTranscodingTimeoutDivisor();
+            long timeout;
+            if (request.getTimeoutMilliseconds() != 0l) {
+                long programLength = MetadataUtils.findProgramLengthMillis(request);
+                timeout = programLength/context.getTranscodingTimeoutDivisor();
+            } else {
+                timeout = request.getTimeoutMilliseconds();
+            }
             log.debug("Setting transcoding timeout for '" + context.getProgrampid() + "' to " + timeout + "ms");
             request.setTranscoderCommand(command);
             ExternalJobRunner.runClipperCommand(timeout, command);

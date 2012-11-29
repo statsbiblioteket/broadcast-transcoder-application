@@ -199,6 +199,14 @@ public class TranscodeRequest {
         this.clipperCommand = clipperCommand;
     }
 
+    public long getTimeoutMilliseconds() {
+        return timeoutMilliseconds;
+    }
+
+    public void setTimeoutMilliseconds(long timeoutMilliseconds) {
+        this.timeoutMilliseconds = timeoutMilliseconds;
+    }
+
     private ProgramBroadcast programBroadcast;
     private ProgramStructure domsProgramStructure;
     private ProgramStructure localProgramStructure;
@@ -225,6 +233,8 @@ public class TranscodeRequest {
     private String clipperCommand;
 
     private boolean goForTranscoding;
+
+    private long timeoutMilliseconds;
 
     /**
        * Class representing the absolute minimum information needed to clip data from a file
@@ -275,19 +285,19 @@ public class TranscodeRequest {
               return filepath;
           }
 
-          public Integer getProgramId() {
-              return programId;
-          }
+        public Integer getProgramId() {
+            return programId;
+        }
 
-          public Long getStartOffsetBytes() {
-              return startOffsetBytes;
-          }
+        public Long getStartOffsetBytes() {
+            return startOffsetBytes;
+        }
 
-          public Long getClipLength() {
-              return clipLength;
-          }
+        public Long getClipLength() {
+            return clipLength;
+        }
 
-          @Override
+        @Override
           public String toString() {
               return "FileClip{" +
                       "filepath='" + filepath + '\'' +
