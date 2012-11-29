@@ -8,7 +8,7 @@ import java.util.Date;
  * Persistent entity recording information about a successful transcoding.
  */
 @Entity
-public class ReklamefileTranscodingRecord {
+public class ReklamefilmTranscodingRecord {
 
     @Id
     public String getDomsPid() {

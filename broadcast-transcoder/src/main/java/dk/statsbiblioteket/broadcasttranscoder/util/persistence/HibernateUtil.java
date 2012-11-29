@@ -29,7 +29,7 @@ public class HibernateUtil implements HibernateUtilIF {
             File file = new File(configFilePath);
             AnnotationConfiguration configure = (new AnnotationConfiguration()).configure(file);
             configure.addAnnotatedClass(BroadcastTranscodingRecord.class);
-            configure.addAnnotatedClass(ReklamefileTranscodingRecord.class);
+            configure.addAnnotatedClass(ReklamefilmTranscodingRecord.class);
             factory = configure.buildSessionFactory();
         }
         return instance;

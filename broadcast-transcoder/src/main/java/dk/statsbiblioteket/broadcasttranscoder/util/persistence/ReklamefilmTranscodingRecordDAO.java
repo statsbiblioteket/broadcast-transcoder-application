@@ -5,10 +5,10 @@ import java.util.Date;
 /**
  *
  */
-public class ReklamefilmTranscodingRecordDAO extends GenericHibernateDAO<ReklamefileTranscodingRecord, String> implements TimestampPersister {
+public class ReklamefilmTranscodingRecordDAO extends GenericHibernateDAO<ReklamefilmTranscodingRecord, String> implements TimestampPersister {
 
     public ReklamefilmTranscodingRecordDAO(HibernateUtilIF util) {
-        super(ReklamefileTranscodingRecord.class, util);
+        super(ReklamefilmTranscodingRecord.class, util);
     }
 
     @Override
@@ -18,9 +18,9 @@ public class ReklamefilmTranscodingRecordDAO extends GenericHibernateDAO<Reklame
 
     @Override
     public void setTimestamp(String programpid, long timestamp) {
-        ReklamefileTranscodingRecord record = read(programpid);
+        ReklamefilmTranscodingRecord record = read(programpid);
         if (record == null) {
-            record = new ReklamefileTranscodingRecord();
+            record = new ReklamefilmTranscodingRecord();
             record.setDomsPid(programpid);
             record.setTranscodingTimestamp(timestamp);
             record.setTranscodingDate(new Date(timestamp));

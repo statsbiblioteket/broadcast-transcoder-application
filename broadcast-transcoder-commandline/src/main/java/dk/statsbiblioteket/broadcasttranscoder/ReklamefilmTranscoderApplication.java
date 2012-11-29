@@ -5,8 +5,8 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.GoNoGoProcessor;
+import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmFileResolverProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmPersistentRecordEnricherProcessor;
-import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefileFileResolverProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmFileResolverImpl;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
@@ -20,9 +20,9 @@ import java.io.IOException;
 /**
  *
  */
-public class ReklamefileTranscoderApplication {
+public class ReklamefilmTranscoderApplication {
 
-    private static Logger logger = LoggerFactory.getLogger(ReklamefileTranscoderApplication.class);
+    private static Logger logger = LoggerFactory.getLogger(ReklamefilmTranscoderApplication.class);
 
     public static void main(String[] args) throws OptionParseException, ProcessorException {
         logger.debug("Entered main method.");
@@ -51,7 +51,7 @@ public class ReklamefileTranscoderApplication {
             ProcessorChainElement firstChain = ProcessorChainElement.makeChain(gonogoer);
             firstChain.processIteratively(request, context);
             if (request.isGoForTranscoding()) {
-                ProcessorChainElement resolver = new ReklamefileFileResolverProcessor();
+                ProcessorChainElement resolver = new ReklamefilmFileResolverProcessor();
                 ProcessorChainElement aspecter = new PidAndAsepctRatioExtractorProcessor();
                 ProcessorChainElement transcoder = new UnistreamVideoTranscoderProcessor();
                 ProcessorChainElement secondChain = ProcessorChainElement.makeChain(

@@ -14,9 +14,9 @@ import java.io.File;
  * This processor resolves the input pid to a locally mounted mediafile and store it in the
  * clipperCommand field of the request (since we always just clip the whole file).
  */
-public class ReklamefileFileResolverProcessor extends ProcessorChainElement {
+public class ReklamefilmFileResolverProcessor extends ProcessorChainElement {
 
-    private static Logger logger = LoggerFactory.getLogger(ReklamefileFileResolverProcessor.class);
+    private static Logger logger = LoggerFactory.getLogger(ReklamefilmFileResolverProcessor.class);
 
 
     @Override
