@@ -92,6 +92,11 @@ public class OptionsParser extends AbstractOptionsParser{
         context.setDomsUsername(readStringProperty(DOMS_USER, props));
         context.setDomsPassword(readStringProperty(DOMS_PASSWORD, props));
         context.setDomsViewAngle(readStringProperty(DOMS_VIEWANGLE,props));
+        try {
+            context.setReklamefileRootDirectories(readStringProperty(REKLAMEFILM_ROOT_DIRECTORY_LIST, props).split(","));
+        } catch (OptionParseException e) {
+            context.setReklamefileRootDirectories(new String[]{});
+        }
     }
 
     protected void readBehaviouralProperties(Context context) throws IOException, OptionParseException {

@@ -69,7 +69,7 @@ public class BroadcastTranscoderApplication {
             firstChain.processIteratively(request, context);
             if (request.isGoForTranscoding()) {
                 ProcessorChainElement secondChain = null;
-                ProcessorChainElement pider = new PidExtractorProcessor();
+                ProcessorChainElement pider = new PidAndAsepctRatioExtractorProcessor();
                 ProcessorChainElement waver = new WavTranscoderProcessor();
                 ProcessorChainElement multistreamer = new MultistreamVideoTranscoderProcessor();
                 ProcessorChainElement unistreamvideoer = new UnistreamVideoTranscoderProcessor();

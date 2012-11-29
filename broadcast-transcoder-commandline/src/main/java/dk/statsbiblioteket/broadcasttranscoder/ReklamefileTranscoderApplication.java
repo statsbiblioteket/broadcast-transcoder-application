@@ -5,8 +5,9 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.GoNoGoProcessor;
+import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmPersistentRecordEnricherProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefileFileResolverProcessor;
-import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmFileResolver;
+import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmFileResolverImpl;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.ReklamefilmTranscodingRecordDAO;
@@ -28,12 +29,7 @@ public class ReklamefileTranscoderApplication {
         Context context = new OptionsParser().parseOptions(args);
         HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
         context.setTimestampPersister(new ReklamefilmTranscodingRecordDAO(util));
-        context.setReklamefilmFileResolver(new ReklamefilmFileResolver() {
-            @Override
-            public File resolverPidToLocalFile(String domsReklamePid) {
-                throw new RuntimeException("no resolver implemented");
-            }
-        });
+        context.setReklamefilmFileResolver(new ReklamefilmFileResolverImpl(context));
         TranscodeRequest request = new TranscodeRequest();
         File lockFile = FileUtils.getLockFile(request, context);
         if (lockFile.exists()) {
@@ -56,7 +52,7 @@ public class ReklamefileTranscoderApplication {
             firstChain.processIteratively(request, context);
             if (request.isGoForTranscoding()) {
                 ProcessorChainElement resolver = new ReklamefileFileResolverProcessor();
-                ProcessorChainElement aspecter = new PidExtractorProcessor();
+                ProcessorChainElement aspecter = new PidAndAsepctRatioExtractorProcessor();
                 ProcessorChainElement transcoder = new UnistreamVideoTranscoderProcessor();
                 ProcessorChainElement secondChain = ProcessorChainElement.makeChain(
                         resolver,
@@ -65,6 +61,7 @@ public class ReklamefileTranscoderApplication {
                         );
                 secondChain.processIteratively(request, context);
                 context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
+                (new ReklamefilmPersistentRecordEnricherProcessor()).processIteratively(request, context);
             }
         } finally {
             boolean deleted = lockFile.delete();

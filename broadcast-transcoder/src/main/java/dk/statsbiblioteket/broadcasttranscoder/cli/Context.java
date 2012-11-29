@@ -424,6 +424,8 @@ public class Context {
 
     private ReklamefilmFileResolver reklamefilmFileResolver;
 
+    private String[] reklamefileRootDirectories;
+
     public CentralWebservice getDomsApi() {
         return domsApi;
     }
@@ -446,5 +448,29 @@ public class Context {
 
     public void setReklamefilmFileResolver(ReklamefilmFileResolver reklamefilmFileResolver) {
         this.reklamefilmFileResolver = reklamefilmFileResolver;
+    }
+
+    public long getTimestampOfExistingTranscoding() {
+        return timestampOfExistingTranscoding;
+    }
+
+    public void setTimestampOfExistingTranscoding(long timestampOfExistingTranscoding) {
+        this.timestampOfExistingTranscoding = timestampOfExistingTranscoding;
+    }
+
+    public String[] getReklamefileRootDirectories() {
+        return reklamefileRootDirectories;
+    }
+
+    public void setReklamefileRootDirectories(String[] reklamefileRootDirectories) {
+        this.reklamefileRootDirectories = reklamefileRootDirectories;
+    }
+
+    public long getTimestampOfNewTranscoding() {
+        return timestampOfNewTranscoding;
+    }
+
+    public void setTimestampOfNewTranscoding(long timestampOfNewTranscoding) {
+        this.timestampOfNewTranscoding = timestampOfNewTranscoding;
     }
 }

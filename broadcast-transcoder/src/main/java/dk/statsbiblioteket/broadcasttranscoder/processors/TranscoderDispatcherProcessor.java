@@ -18,16 +18,16 @@ public class TranscoderDispatcherProcessor extends ProcessorChainElement {
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         switch (request.getFileFormat()) {
             case MULTI_PROGRAM_MUX:
-                this.setChildElement(new PidExtractorProcessor());
+                this.setChildElement(new PidAndAsepctRatioExtractorProcessor());
                 break;
             case SINGLE_PROGRAM_VIDEO_TS:
-                this.setChildElement(new PidExtractorProcessor());
+                this.setChildElement(new PidAndAsepctRatioExtractorProcessor());
                 break;
             case SINGLE_PROGRAM_AUDIO_TS:
-                this.setChildElement(new PidExtractorProcessor());
+                this.setChildElement(new PidAndAsepctRatioExtractorProcessor());
                 break;
             case MPEG_PS:
-                this.setChildElement(new PidExtractorProcessor());
+                this.setChildElement(new PidAndAsepctRatioExtractorProcessor());
                 break;
             case AUDIO_WAV:
                 final WavTranscoderProcessor childElement1 = new WavTranscoderProcessor();

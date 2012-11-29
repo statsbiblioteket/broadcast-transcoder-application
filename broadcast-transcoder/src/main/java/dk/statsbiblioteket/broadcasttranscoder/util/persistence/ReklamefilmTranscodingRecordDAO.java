@@ -1,11 +1,11 @@
 package dk.statsbiblioteket.broadcasttranscoder.util.persistence;
 
+import java.util.Date;
+
 /**
  *
  */
 public class ReklamefilmTranscodingRecordDAO extends GenericHibernateDAO<ReklamefileTranscodingRecord, String> implements TimestampPersister {
-
-    //TODO implement the methods
 
     public ReklamefilmTranscodingRecordDAO(HibernateUtilIF util) {
         super(ReklamefileTranscodingRecord.class, util);
@@ -13,11 +13,22 @@ public class ReklamefilmTranscodingRecordDAO extends GenericHibernateDAO<Reklame
 
     @Override
     public Long getTimestamp(String programpid) {
-        throw new RuntimeException("not implemented") ;
+        return read(programpid).getTranscodingTimestamp();
     }
 
     @Override
     public void setTimestamp(String programpid, long timestamp) {
-        throw new RuntimeException("not implemented");
+        ReklamefileTranscodingRecord record = read(programpid);
+        if (record == null) {
+            record = new ReklamefileTranscodingRecord();
+            record.setDomsPid(programpid);
+            record.setTranscodingTimestamp(timestamp);
+            record.setTranscodingDate(new Date(timestamp));
+            create(record);
+        } else {
+            record.setTranscodingTimestamp(timestamp);
+            record.setTranscodingDate(new Date(timestamp));
+            update(record);
+        }
     }
 }

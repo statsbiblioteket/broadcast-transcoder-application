@@ -83,4 +83,9 @@ public class PropertyNames {
     public static final String SOX_TRANSCODE_PARAMS = "soxTranscodeParams";
 
     public static final String DEFAULT_TIMESTAMP= "defaultTranscodingTimestamp";
+
+    /**
+     * Properties relating to reklamefilm
+     */
+    public static final String REKLAMEFILM_ROOT_DIRECTORY_LIST = "reklamefileRootDirectories";
 }

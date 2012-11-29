@@ -17,14 +17,14 @@ import java.util.regex.Pattern;
  * Time: 1:43 PM
  * To change this template use File | Settings | File Templates.
  */
-public class PidExtractorProcessor extends ProcessorChainElement {
+public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
 
-    private static Logger logger = LoggerFactory.getLogger(PidExtractorProcessor.class);
+    private static Logger logger = LoggerFactory.getLogger(PidAndAsepctRatioExtractorProcessor.class);
 
-    public PidExtractorProcessor() {
+    public PidAndAsepctRatioExtractorProcessor() {
     }
 
-    public PidExtractorProcessor(ProcessorChainElement childElement) {
+    public PidAndAsepctRatioExtractorProcessor(ProcessorChainElement childElement) {
         super(childElement);
     }
 
