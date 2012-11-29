@@ -7,15 +7,15 @@ package dk.statsbiblioteket.broadcasttranscoder.util.persistence;
  * Time: 10:48 AM
  * To change this template use File | Settings | File Templates.
  */
-public class TranscodingTimestampRecordDAO extends GenericHibernateDAO<TranscodingTimestampRecord, String> implements TimestampPersister {
+public class BroadcastTranscodingRecordDAO extends GenericHibernateDAO<BroadcastTranscodingRecord, String> implements TimestampPersister {
 
-    public TranscodingTimestampRecordDAO(HibernateUtilIF util) {
-        super(TranscodingTimestampRecord.class, util);
+    public BroadcastTranscodingRecordDAO(HibernateUtilIF util) {
+        super(BroadcastTranscodingRecord.class, util);
     }
 
     @Override
     public Long getTimestamp(String programpid) {
-        TranscodingTimestampRecord record = read(programpid);
+        BroadcastTranscodingRecord record = read(programpid);
         if (record == null) {
             return null;
         } else {
@@ -25,12 +25,12 @@ public class TranscodingTimestampRecordDAO extends GenericHibernateDAO<Transcodi
 
     @Override
     public void setTimestamp(String programpid, long timestamp) {
-        TranscodingTimestampRecord record = read(programpid);
+        BroadcastTranscodingRecord record = read(programpid);
         if (record != null) {
             record.setLastTranscodedTimestamp(timestamp);
             update(record);
         } else {
-            record = new TranscodingTimestampRecord();
+            record = new BroadcastTranscodingRecord();
             record.setDomsProgramPid(programpid);
             record.setLastTranscodedTimestamp(timestamp);
             create(record);

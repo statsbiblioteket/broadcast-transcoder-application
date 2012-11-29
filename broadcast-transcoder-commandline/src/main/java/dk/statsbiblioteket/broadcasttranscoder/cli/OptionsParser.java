@@ -1,8 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.cli;
 
 import dk.statsbiblioteket.broadcasttranscoder.BroadcastTranscoderApplication;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.TranscodingTimestampRecordDAO;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -167,8 +165,6 @@ public class OptionsParser extends AbstractOptionsParser{
                 throw new OptionParseException(configFile.getAbsolutePath() + " is not a file.");
             }
             context.setHibernateConfigFile(configFile);
-            HibernateUtil util = HibernateUtil.getInstance(configFile.getAbsolutePath());
-            context.setTimestampPersister(new TranscodingTimestampRecordDAO(util));
         }
 
 

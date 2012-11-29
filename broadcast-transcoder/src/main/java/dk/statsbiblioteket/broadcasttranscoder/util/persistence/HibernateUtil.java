@@ -1,6 +1,5 @@
 package dk.statsbiblioteket.broadcasttranscoder.util.persistence;
 
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.HibernateSessionFactoryFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
@@ -29,7 +28,8 @@ public class HibernateUtil implements HibernateUtilIF {
             instance = new HibernateUtil();
             File file = new File(configFilePath);
             AnnotationConfiguration configure = (new AnnotationConfiguration()).configure(file);
-            configure.addAnnotatedClass(TranscodingTimestampRecord.class);
+            configure.addAnnotatedClass(BroadcastTranscodingRecord.class);
+            configure.addAnnotatedClass(ReklamefileTranscodingRecord.class);
             factory = configure.buildSessionFactory();
         }
         return instance;

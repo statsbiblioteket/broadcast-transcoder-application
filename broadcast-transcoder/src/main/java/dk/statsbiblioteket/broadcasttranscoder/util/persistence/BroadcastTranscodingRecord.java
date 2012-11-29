@@ -7,8 +7,9 @@ import javax.persistence.Id;
  *
  */
 @Entity
-public class TranscodingTimestampRecord {
+public class BroadcastTranscodingRecord {
 
+    //TODO add things we need to persist, such as offsets
     @Id
     public String getDomsProgramPid() {
         return domsProgramPid;

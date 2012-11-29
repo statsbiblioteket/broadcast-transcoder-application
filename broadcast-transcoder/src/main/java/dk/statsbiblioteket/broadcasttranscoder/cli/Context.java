@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.cli;
 
+import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmFileResolver;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.TimestampPersister;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 
@@ -421,6 +422,8 @@ public class Context {
 
     private CentralWebservice domsApi = null;
 
+    private ReklamefilmFileResolver reklamefilmFileResolver;
+
     public CentralWebservice getDomsApi() {
         return domsApi;
     }
@@ -435,5 +438,13 @@ public class Context {
 
     public void setDomsViewAngle(String domsViewAngle) {
         this.domsViewAngle = domsViewAngle;
+    }
+
+    public ReklamefilmFileResolver getReklamefilmFileResolver() {
+        return reklamefilmFileResolver;
+    }
+
+    public void setReklamefilmFileResolver(ReklamefilmFileResolver reklamefilmFileResolver) {
+        this.reklamefilmFileResolver = reklamefilmFileResolver;
     }
 }

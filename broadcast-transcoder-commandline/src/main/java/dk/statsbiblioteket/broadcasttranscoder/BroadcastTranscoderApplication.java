@@ -6,6 +6,8 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.OptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.fetcher.DomsTranscodingStructureFetcher;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
+import dk.statsbiblioteket.broadcasttranscoder.util.persistence.BroadcastTranscodingRecordDAO;
+import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,8 @@ public class BroadcastTranscoderApplication {
     public static void main(String[] args) throws OptionParseException, ProcessorException {
         logger.debug("Entered main method.");
         Context context = new OptionsParser().parseOptions(args);
+        HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
+        context.setTimestampPersister(new BroadcastTranscodingRecordDAO(util));
         TranscodeRequest request = new TranscodeRequest();
         File lockFile = FileUtils.getLockFile(request, context);
         if (lockFile.exists()) {
@@ -50,7 +54,7 @@ public class BroadcastTranscoderApplication {
             ProcessorChainElement updater = new ProgramStructureUpdaterProcessor();
             ProcessorChainElement fixer = new StructureFixerProcessor();
             ProcessorChainElement concatenator = new ClipConcatenatorProcessor();
-            ProcessorChainElement firstChain = makeChain(
+            ProcessorChainElement firstChain = ProcessorChainElement.makeChain(
                     structureFetcher,
                     programFetcher,
                     filedataFetcher,
@@ -74,19 +78,19 @@ public class BroadcastTranscoderApplication {
                 ProcessorChainElement snapshotter = new SnapshotExtractorProcessor();
                 switch (request.getFileFormat()) {
                     case MULTI_PROGRAM_MUX:
-                        secondChain = makeChain(pider, multistreamer, previewer, snapshotter);
+                        secondChain = ProcessorChainElement.makeChain(pider, multistreamer, previewer, snapshotter);
                         break;
                     case SINGLE_PROGRAM_VIDEO_TS:
-                        secondChain = makeChain(pider, unistreamvideoer, previewer, snapshotter);
+                        secondChain = ProcessorChainElement.makeChain(pider, unistreamvideoer, previewer, snapshotter);
                         break;
                     case SINGLE_PROGRAM_AUDIO_TS:
-                        secondChain = makeChain(pider, unistreamaudioer, previewer);
+                        secondChain = ProcessorChainElement.makeChain(pider, unistreamaudioer, previewer);
                         break;
                     case MPEG_PS:
-                        secondChain = makeChain(pider, unistreamvideoer, previewer, snapshotter);
+                        secondChain = ProcessorChainElement.makeChain(pider, unistreamvideoer, previewer, snapshotter);
                         break;
                     case AUDIO_WAV:
-                        secondChain = makeChain(waver, previewer);
+                        secondChain = ProcessorChainElement.makeChain(waver, previewer);
                         break;
                 }
                 secondChain.processIteratively(request, context);
@@ -103,18 +107,5 @@ public class BroadcastTranscoderApplication {
         }
     }
 
-
-    public static ProcessorChainElement makeChain(ProcessorChainElement... elements) {
-
-        ProcessorChainElement previous = null;
-        for (ProcessorChainElement element : elements) {
-            if (previous != null) {
-                previous.setChildElement(element);
-            }
-            previous = element;
-        }
-        return elements[0];
-
-    }
 
 }

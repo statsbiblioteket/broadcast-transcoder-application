@@ -12,6 +12,19 @@ public abstract class ProcessorChainElement {
     private static Logger logger = LoggerFactory.getLogger(ProcessorChainElement.class);
     private ProcessorChainElement childElement;
 
+    public static ProcessorChainElement makeChain(ProcessorChainElement... elements) {
+
+        ProcessorChainElement previous = null;
+        for (ProcessorChainElement element : elements) {
+            if (previous != null) {
+                previous.setChildElement(element);
+            }
+            previous = element;
+        }
+        return elements[0];
+
+    }
+
 
     public void setChildElement(ProcessorChainElement childElement) {
         this.childElement = childElement;
