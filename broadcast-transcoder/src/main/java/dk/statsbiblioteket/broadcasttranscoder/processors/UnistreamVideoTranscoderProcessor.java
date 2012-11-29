@@ -40,7 +40,7 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
         File outputFile = FileUtils.getMediaOutputFile(request, context);
         try {
             long timeout;
-            if (request.getTimeoutMilliseconds() != 0l) {
+            if (request.getTimeoutMilliseconds() == 0l) {
                 long programLength = MetadataUtils.findProgramLengthMillis(request);
                 timeout = programLength/context.getTranscodingTimeoutDivisor();
             } else {
