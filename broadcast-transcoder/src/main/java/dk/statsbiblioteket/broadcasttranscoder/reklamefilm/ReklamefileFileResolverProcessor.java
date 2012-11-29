@@ -4,6 +4,7 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
+import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,5 +26,8 @@ public class ReklamefileFileResolverProcessor extends ProcessorChainElement {
         File mediafile = resolver.resolverPidToLocalFile(pid);
         request.setClipperCommand(mediafile.getAbsolutePath());
         logger.info("Resolved " + pid + " to " + request.getClipperCommand());
-    }
+        final long nominalDurationSeconds = 300L;
+        request.setBitrate(mediafile.length()/nominalDurationSeconds);
+        request.setFileFormat(FileFormatEnum.MPEG_PS);
+      }
 }
