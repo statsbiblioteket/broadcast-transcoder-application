@@ -87,5 +87,5 @@ public class PropertyNames {
     /**
      * Properties relating to reklamefilm
      */
-    public static final String REKLAMEFILM_ROOT_DIRECTORY_LIST = "reklamefileRootDirectories";
+    public static final String REKLAMEFILM_ROOT_DIRECTORY_LIST = "reklamefilmRootDirectories";
 }

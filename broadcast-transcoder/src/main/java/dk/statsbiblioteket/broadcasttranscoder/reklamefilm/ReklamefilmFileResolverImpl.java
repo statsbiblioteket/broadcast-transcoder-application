@@ -40,7 +40,7 @@ public class ReklamefilmFileResolverImpl implements ReklamefilmFileResolver {
         String fileObjectPid = null;
         List<Relation> relations = null;
         try {
-            relations = domsApi.getRelations(context.getProgrampid());
+            relations = domsApi.getRelations(domsReklamePid);
         } catch (Exception e) {
              throw new RuntimeException("", e);
         }
