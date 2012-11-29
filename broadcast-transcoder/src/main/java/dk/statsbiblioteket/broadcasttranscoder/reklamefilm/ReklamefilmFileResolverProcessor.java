@@ -8,7 +8,10 @@ import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sound.sampled.Clip;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This processor resolves the input pid to a locally mounted mediafile and store it in the
@@ -29,5 +32,9 @@ public class ReklamefilmFileResolverProcessor extends ProcessorChainElement {
         final long nominalDurationSeconds = 300L;
         request.setBitrate(mediafile.length()/nominalDurationSeconds);
         request.setFileFormat(FileFormatEnum.MPEG_PS);
+        TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip(mediafile.getAbsolutePath());
+        List<TranscodeRequest.FileClip> clips = new ArrayList<TranscodeRequest.FileClip>();
+        clips.add(clip);
+        request.setClips(clips);
       }
 }
