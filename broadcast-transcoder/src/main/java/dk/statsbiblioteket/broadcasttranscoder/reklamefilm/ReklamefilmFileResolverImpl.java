@@ -2,6 +2,7 @@ package dk.statsbiblioteket.broadcasttranscoder.reklamefilm;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
+import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 import dk.statsbiblioteket.doms.central.DatastreamProfile;
 import dk.statsbiblioteket.doms.central.ObjectProfile;
@@ -36,7 +37,7 @@ public class ReklamefilmFileResolverImpl implements ReklamefilmFileResolver {
     @Override
     public File resolverPidToLocalFile(String domsReklamePid) {
         logger.debug("Resolving pid " + domsReklamePid + " to a file.");
-        CentralWebservice domsApi = context.getDomsApi();
+        CentralWebservice domsApi = CentralWebserviceFactory.getServiceInstance(context);
         String fileObjectPid = null;
         List<Relation> relations = null;
         try {
