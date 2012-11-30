@@ -1,9 +1,6 @@
-package dk.statsbiblioteket.broadcasttranscoder.fetcher;
+package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
-import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.TimestampPersister;
@@ -50,7 +47,7 @@ public class DomsTranscodingStructureFetcher extends ProcessorChainElement {
     }
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    public void processThis(TranscodeRequest request, Context context) throws ProcessorException {
 
         final String pid = context.getProgrampid();
 
@@ -137,7 +134,7 @@ public class DomsTranscodingStructureFetcher extends ProcessorChainElement {
 
     }
 
-    String killNewerVersions(String bundleString, long timestamp) throws TransformerException {
+    public String killNewerVersions(String bundleString, long timestamp) throws TransformerException {
 
         String timeString = getTimeString(timestamp);
         javax.xml.transform.Source xmlSource =

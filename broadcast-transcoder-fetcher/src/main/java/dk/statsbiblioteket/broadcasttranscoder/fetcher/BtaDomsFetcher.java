@@ -1,3 +1,4 @@
+
 package dk.statsbiblioteket.broadcasttranscoder.fetcher;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;

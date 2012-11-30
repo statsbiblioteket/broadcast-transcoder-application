@@ -1,15 +1,12 @@
 package dk.statsbiblioteket.broadcasttranscoder.fetcher;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
-import dk.statsbiblioteket.broadcasttranscoder.fetcher.cli.FetcherContext;
+import dk.statsbiblioteket.broadcasttranscoder.processors.DomsTranscodingStructureFetcher;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
-import dk.statsbiblioteket.doms.central.RecordDescription;
 import dk.statsbiblioteket.util.Streams;
-import dk.statsbiblioteket.util.xml.DOM;
 import junit.framework.TestCase;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
-import org.w3c.dom.Document;
 
 /**
  * Created with IntelliJ IDEA.
