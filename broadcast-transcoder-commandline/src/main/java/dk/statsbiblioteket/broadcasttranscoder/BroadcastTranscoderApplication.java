@@ -3,7 +3,7 @@ package dk.statsbiblioteket.broadcasttranscoder;
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionsParser;
-import dk.statsbiblioteket.broadcasttranscoder.fetcher.DomsTranscodingStructureFetcher;
+import dk.statsbiblioteket.broadcasttranscoder.processors.DomsTranscodingStructureFetcher;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.BroadcastTranscodingRecordDAO;
