@@ -1,11 +1,14 @@
 #!/bin/bash
 
-SCRIPT_PATH=$(pwd) #TODO
+SCRIPT_PATH=$(dirname $(readlink -f $0))
+CLASSPATH="$SCRIPT_PATH/../lib/*"
+
 
 timestamp=$1
 
-java dk.statsbiblioteket.broadcasttranscoder.fetcher.BtaDomsFetcher \
- --infrastructure_configfile=$SCRIPT_PATH/../bta.infrastructure.properties \
- --behavioural_configfile=$SCRIPT_PATH/../bta.behaviour.properties \
+
+java -cp "$CLASSPATH" dk.statsbiblioteket.broadcasttranscoder.fetcher.BtaDomsFetcher \
+ --infrastructure_configfile=$SCRIPT_PATH/../conf/bta.infrastructure.properties \
+ --behavioural_configfile=$SCRIPT_PATH/../conf/bta.fetcher.properties \
  --since=$timestamp
 

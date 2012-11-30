@@ -1,33 +1,35 @@
 #!/bin/bash
 
+SCRIPT_PATH=$(dirname $(readlink -f $0))
+WORKERS=5
 
-SCRIPT_PATH=$(pwd) #TODO
+pid=$1
+time=$2
 
-#get list of changes from queryChanges with progress timestamp as input
-timestamp=$(cat $SCRIPT_PATH/../progress | tail -1)
-if [ -z "$timestamp" ]; then
-    timestamp="0"
-fi
-changes=$(mktemp)
-$SCRIPT_PATH/queryChanges.sh $timestamp > $changes
 
-#cut list into pid/timestamp sets
-#iterate through list, write timestamp back into progress file
+#TODO: this in some locking mechanish
 
-while read line; do
-    time=$(echo $line | cut -d' ' -f2)
-    pid=$(echo $line | cut -d' ' -f1)
+while [ 1 ]; do
+        for ((i=0;i<$WORKERS;i++)); do
+            workerfile="${i}workerFile"
+            if [ -e $workerfile ]; then
+                pid=$(cat $workerfile)
+                ps ax | grep -v grep | cut -d' ' -f1 | grep $pid
+                found=$?
+                if [ $found != 0 ]; then
+                    rm $workerfile
+                fi
+            fi
+            if [ ! -e $workerfile ]; then
+                touch $workerfile
+                $SCRIPT_PATH/transcodeFile.sh $pid $time
+                echo $! > $workerfile
+                break 2
+            fi
+        done
+        sleep 10
+        echo
+done 
 
-    $SCRIPT_PATH/transcodeFile.sh $pid $time
-    returncode=$?
-    echo $time > $SCRIPT_PATH/../progress
-
-    if [ $returncode -ne 0 ]; then
-        # if file fails, write pid/timestamp combo to fails
-        echo $line >> $SCRIPT_PATH/../fails
-    fi
-done < $changes
-
-rm $changes
 
 
