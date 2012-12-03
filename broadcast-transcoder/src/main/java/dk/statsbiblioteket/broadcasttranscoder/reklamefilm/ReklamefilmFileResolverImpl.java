@@ -82,14 +82,14 @@ public class ReklamefilmFileResolverImpl implements ReklamefilmFileResolver {
             ExternalJobRunner runner = null;
             try {
                 runner = new ExternalJobRunner(30000L, "find", rootDir, "-name", filenameEscaped);
+                String output = runner.getOutput();
+                if (output != null && !output.trim().equals("")) {
+                    final File file = new File(output.trim());
+                    logger.info("Resolved " + domsReklamePid + " to " + file.getAbsolutePath());
+                    return file;
+                }
             } catch (Exception e) {
                 logger.warn("Attempt to find file with find command failed.", e);
-            }
-            String output = runner.getOutput();
-            if (output != null && !output.trim().equals("")) {
-                final File file = new File(output.trim());
-                logger.info("Resolved " + domsReklamePid + " to " + file.getAbsolutePath());
-                return file;
             }
         }
 

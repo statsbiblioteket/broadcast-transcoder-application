@@ -21,6 +21,9 @@ public class FileUtils {
 
     public static boolean hasMediaOutputFile(TranscodeRequest request, Context context) {
         File dir = getMediaOutputDir(request, context);
+        if (!dir.exists()) {
+            return false;
+        }
         final String filenamePrefix = context.getProgrampid().replace("uuid:","");
         FilenameFilter filter = new FilenameFilter() {
             @Override

@@ -2,6 +2,7 @@ package dk.statsbiblioteket.broadcasttranscoder.util.persistence;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import java.util.Date;
 
 /**
@@ -43,6 +44,7 @@ public class ReklamefilmTranscodingRecord {
         this.transcodingDate = transcodingDate;
     }
 
+    @Lob
     public String getTranscodingCommand() {
         return transcodingCommand;
     }
