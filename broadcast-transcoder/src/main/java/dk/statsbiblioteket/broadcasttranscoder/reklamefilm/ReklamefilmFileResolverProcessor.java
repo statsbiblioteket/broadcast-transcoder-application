@@ -27,13 +27,13 @@ public class ReklamefilmFileResolverProcessor extends ProcessorChainElement {
         ReklamefilmFileResolver resolver = context.getReklamefilmFileResolver();
         String pid = context.getProgrampid();
         File mediafile = resolver.resolverPidToLocalFile(pid);
-        request.setClipperCommand(mediafile.getAbsolutePath());
+        request.setClipperCommand("'" + mediafile.getAbsolutePath() + "'");
         logger.info("Resolved " + pid + " to " + request.getClipperCommand());
         final long nominalDurationSeconds = 300L;
         request.setBitrate(mediafile.length()/nominalDurationSeconds);
         request.setTimeoutMilliseconds(nominalDurationSeconds*1000L/context.getTranscodingTimeoutDivisor());
         request.setFileFormat(FileFormatEnum.MPEG_PS);
-        TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip(mediafile.getAbsolutePath());
+        TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip("'" + mediafile.getAbsolutePath() + "'");
         List<TranscodeRequest.FileClip> clips = new ArrayList<TranscodeRequest.FileClip>();
         clips.add(clip);
         request.setClips(clips);

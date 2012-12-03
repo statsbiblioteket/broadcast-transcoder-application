@@ -4,6 +4,7 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
+import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.FfprobeFetcherProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.GoNoGoProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmFileResolverProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmPersistentRecordEnricherProcessor;
@@ -24,7 +25,7 @@ public class ReklamefilmTranscoderApplication {
 
     private static Logger logger = LoggerFactory.getLogger(ReklamefilmTranscoderApplication.class);
 
-    public static void main(String[] args) throws OptionParseException, ProcessorException {
+    public static void main(String[] args) throws Exception {
         logger.debug("Entered main method.");
         Context context = new OptionsParser().parseOptions(args);
         HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
@@ -54,15 +55,24 @@ public class ReklamefilmTranscoderApplication {
                 ProcessorChainElement resolver = new ReklamefilmFileResolverProcessor();
                 ProcessorChainElement aspecter = new PidAndAsepctRatioExtractorProcessor();
                 ProcessorChainElement transcoder = new UnistreamVideoTranscoderProcessor();
+                ProcessorChainElement ffprober = new FfprobeFetcherProcessor();
+                ProcessorChainElement snapshotter = new SnapshotExtractorProcessor();
                 ProcessorChainElement secondChain = ProcessorChainElement.makeChain(
                         resolver,
                         aspecter,
-                        transcoder
+                        transcoder,
+                        ffprober,
+                        snapshotter
                         );
                 secondChain.processIteratively(request, context);
                 context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
                 (new ReklamefilmPersistentRecordEnricherProcessor()).processIteratively(request, context);
             }
+        } catch (Exception e) {
+            //Fault barrier. This is necessary because an uncaught RuntimeException will otherwise not log the pid it
+            //failed on.
+            logger.error("Error processing " + context.getProgrampid(), e);
+            throw(e);
         } finally {
             boolean deleted = lockFile.delete();
             if (!deleted) {

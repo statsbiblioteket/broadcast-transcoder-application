@@ -43,6 +43,8 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
             if (request.getTimeoutMilliseconds() == 0l) {
                 long programLength = MetadataUtils.findProgramLengthMillis(request);
                 timeout = programLength/context.getTranscodingTimeoutDivisor();
+            } else if (request.getFfprobeDurationSeconds() != null) {
+                timeout = Math.round(request.getFfprobeDurationSeconds()*1000L)/context.getTranscodingTimeoutDivisor();
             } else {
                 timeout = request.getTimeoutMilliseconds();
             }

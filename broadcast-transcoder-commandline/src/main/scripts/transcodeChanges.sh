@@ -25,6 +25,7 @@ while read line; do
     returncode=$?
     echo $time > $SCRIPT_PATH/../progress
 
+##TODO This doesn't work. Move this to transcodeFile.
     if [ $returncode -ne 0 ]; then
         # if file fails, write pid/timestamp combo to fails
         echo $line >> $SCRIPT_PATH/../fails

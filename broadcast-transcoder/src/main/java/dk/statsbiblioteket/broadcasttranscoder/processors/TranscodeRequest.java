@@ -207,6 +207,14 @@ public class TranscodeRequest {
         this.timeoutMilliseconds = timeoutMilliseconds;
     }
 
+    public Float getFfprobeDurationSeconds() {
+        return ffprobeDurationSeconds;
+    }
+
+    public void setFfprobeDurationSeconds(Float ffprobeDurationSeconds) {
+        this.ffprobeDurationSeconds = ffprobeDurationSeconds;
+    }
+
     private ProgramBroadcast programBroadcast;
     private ProgramStructure domsProgramStructure;
     private ProgramStructure localProgramStructure;
@@ -235,6 +243,7 @@ public class TranscodeRequest {
     private boolean goForTranscoding;
 
     private long timeoutMilliseconds;
+    private Float ffprobeDurationSeconds;
 
     /**
        * Class representing the absolute minimum information needed to clip data from a file

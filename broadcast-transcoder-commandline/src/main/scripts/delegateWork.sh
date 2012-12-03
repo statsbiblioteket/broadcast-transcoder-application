@@ -22,7 +22,7 @@ while [ 1 ]; do
             fi
             if [ ! -e $workerfile ]; then
                 touch $workerfile
-                $SCRIPT_PATH/transcodeFile.sh $pid $time
+                $SCRIPT_PATH/transcodeFile.sh $pid $time &
                 echo $! > $workerfile
                 break 2
             fi

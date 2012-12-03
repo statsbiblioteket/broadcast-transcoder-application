@@ -71,17 +71,29 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
             geometry = " -s " + N + "x" + Mprime +
                     " -vf 'pad="  + N + ":" + M + ":0:" + delta + ":black' ";
         }
-
-        int length = (int) (MetadataUtils.findProgramLengthMillis(request)/1000L);
+        int length;
+        if (request.getFfprobeDurationSeconds() != null) {
+          length = Math.round(request.getFfprobeDurationSeconds());
+        } else {
+          length = (int) (MetadataUtils.findProgramLengthMillis(request)/1000L);
+        }
         int modLength = length - 2*paddingSeconds;
-        String rate = nframes + "/" + modLength;
+        String rate = (nframes - 1) + "/" + modLength;
         commandLine = commandLine + " -ss " + paddingSeconds + " -t " + modLength + " -r "  + rate + geometry
-                + " -an -y " + FileUtils.getSnapshotOutputFileStringTemplate(request, context);
+                + " -an -y -vframes " + (nframes + 1) + " " + FileUtils.getSnapshotOutputFileStringTemplate(request, context);
         try {
             ExternalJobRunner.runClipperCommand(1000L*length/timeoutDivisor, commandLine);
         } catch (ExternalProcessTimedOutException e) {
             logger.warn("Process '" + commandLine + "' timed out.");
             throw new ProcessorException("Process Timed out for "+context.getProgrampid(),e);
+        }
+        // This is a dirty fix because ffmpeg generates 2 snapshots close together at the start
+        String fileTemplate = FileUtils.getSnapshotOutputFileStringTemplate(request, context);
+        String firstFile = fileTemplate.replace("%d", "1");
+        try {
+            (new File(firstFile)).delete();
+        } catch (Exception e) {
+            logger.warn("Could not delete " + firstFile);
         }
     }
 

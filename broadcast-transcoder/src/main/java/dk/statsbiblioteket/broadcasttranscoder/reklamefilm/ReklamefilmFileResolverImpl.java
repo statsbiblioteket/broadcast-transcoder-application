@@ -3,10 +3,13 @@ package dk.statsbiblioteket.broadcasttranscoder.reklamefilm;
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
+import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
+import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutException;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 import dk.statsbiblioteket.doms.central.DatastreamProfile;
 import dk.statsbiblioteket.doms.central.ObjectProfile;
 import dk.statsbiblioteket.doms.central.Relation;
+import dk.statsbiblioteket.util.Files;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.NameFileFilter;
@@ -15,8 +18,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.List;
 
@@ -70,6 +75,24 @@ public class ReklamefilmFileResolverImpl implements ReklamefilmFileResolver {
         }
         String[] pathElements = url.getPath().split(File.separator);
         String filename = pathElements[pathElements.length -1];
+        filename = URLDecoder.decode(filename);
+        String filenameEscaped = filename.replaceAll("\\?", "\\?").replaceAll("\\*", "\\*").replaceAll("\\[","\\[").replaceAll("\\]","\\]");
+        for (String rootDir: context.getReklamefileRootDirectories()) {
+            String cmd = "bash -c \"find " + rootDir + " -name " + "'" + filenameEscaped + "'\"";
+            ExternalJobRunner runner = null;
+            try {
+                runner = new ExternalJobRunner(30000L, "find", rootDir, "-name", filenameEscaped);
+            } catch (Exception e) {
+                logger.warn("Attempt to find file with find command failed.", e);
+            }
+            String output = runner.getOutput();
+            if (output != null && !output.trim().equals("")) {
+                final File file = new File(output.trim());
+                logger.info("Resolved " + domsReklamePid + " to " + file.getAbsolutePath());
+                return file;
+            }
+        }
+
         for (String rootDir: context.getReklamefileRootDirectories()) {
             logger.debug("Looking for " + filename + " in " + rootDir);
             IOFileFilter nameFilter = new NameFileFilter(filename);
