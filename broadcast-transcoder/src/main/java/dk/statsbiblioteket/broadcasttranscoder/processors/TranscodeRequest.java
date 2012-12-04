@@ -215,6 +215,14 @@ public class TranscodeRequest {
         this.ffprobeDurationSeconds = ffprobeDurationSeconds;
     }
 
+    public boolean isTvmeter() {
+        return isTvmeter;
+    }
+
+    public void setTvmeter(boolean tvmeter) {
+        isTvmeter = tvmeter;
+    }
+
     private ProgramBroadcast programBroadcast;
     private ProgramStructure domsProgramStructure;
     private ProgramStructure localProgramStructure;
@@ -244,6 +252,8 @@ public class TranscodeRequest {
 
     private long timeoutMilliseconds;
     private Float ffprobeDurationSeconds;
+
+    private boolean isTvmeter;
 
     /**
        * Class representing the absolute minimum information needed to clip data from a file

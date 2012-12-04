@@ -55,12 +55,14 @@ public class ReklamefilmTranscoderApplication {
                 ProcessorChainElement resolver = new ReklamefilmFileResolverProcessor();
                 ProcessorChainElement aspecter = new PidAndAsepctRatioExtractorProcessor();
                 ProcessorChainElement transcoder = new UnistreamVideoTranscoderProcessor();
+                ProcessorChainElement zeroChecker = new ZeroLengthCheckerProcessor();
                 ProcessorChainElement ffprober = new FfprobeFetcherProcessor();
                 ProcessorChainElement snapshotter = new SnapshotExtractorProcessor();
                 ProcessorChainElement secondChain = ProcessorChainElement.makeChain(
                         resolver,
                         aspecter,
                         transcoder,
+                        zeroChecker,
                         ffprober,
                         snapshotter
                         );

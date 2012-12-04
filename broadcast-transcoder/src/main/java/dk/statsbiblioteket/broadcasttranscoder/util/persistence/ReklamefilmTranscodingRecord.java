@@ -53,10 +53,14 @@ public class ReklamefilmTranscodingRecord {
         this.transcodingCommand = transcodingCommand;
     }
 
+
+
     private String domsPid;
     private Long transcodingTimestamp;
     private Date transcodingDate;
     private String inputFile;
     private String transcodingCommand;
+
+
 
 }
