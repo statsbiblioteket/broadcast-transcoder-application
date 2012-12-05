@@ -3,6 +3,7 @@
 SCRIPT_PATH=$(dirname $(readlink -f $0))
 WORKERS=5
 
+#TODO Surely this pid is the uuid of the program but the pid defined below is the process id of the transcoding job!!!
 pid=$1
 time=$2
 
