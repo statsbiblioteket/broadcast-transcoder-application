@@ -111,8 +111,12 @@ public class OptionsParser extends AbstractOptionsParser{
         context.setAnalysisClipLength(readLongProperty(ANALYSIS_CLIP_LENGTH, props));
         context.setStartOffsetTS(readIntegerProperty(START_OFFSET_TS, props));
         context.setEndOffsetTS(readIntegerProperty(END_OFFSET_TS, props));
+        context.setStartOffsetTSWithTVMeter(readIntegerProperty(START_OFFSET_TS_WITH_TVMETER, props));
+        context.setEndOffsetTSWithTVMeter(readIntegerProperty(END_OFFSET_TS_WITH_TVMETER, props));
         context.setStartOffsetPS(readIntegerProperty(START_OFFSET_PS, props));
         context.setEndOffsetPS(readIntegerProperty(END_OFFSET_PS, props));
+        context.setStartOffsetPSWithTVMeter(readIntegerProperty(START_OFFSET_PS_WITH_TVMETER, props));
+        context.setEndOffsetPSWithTVMeter(readIntegerProperty(END_OFFSET_PS_WITH_TVMETER, props));
         context.setStartOffsetWAV(readIntegerProperty(START_OFFSET_WAV, props));
         context.setEndOffsetWAV(readIntegerProperty(END_OFFSET_WAV, props));
         context.setMaxMissingStart(readIntegerProperty(MAX_MISSING_START, props));

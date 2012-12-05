@@ -89,4 +89,8 @@ public class PbcoreMetadataExtractorProcessorTest extends TestCase {
         assertFalse((new PbcoreMetadataExtractorProcessor()).hasTvmeter(test3));
     }
 
+    public void testGetTitle() {
+        assertTrue((new PbcoreMetadataExtractorProcessor()).getTitle(test3).contains("kylling"));
+    }
+
 }

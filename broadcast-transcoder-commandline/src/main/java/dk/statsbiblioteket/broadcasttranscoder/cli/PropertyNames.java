@@ -48,6 +48,10 @@ public class PropertyNames {
     public static final String END_OFFSET_PS = "endOffsetPS";
     public static final String START_OFFSET_WAV = "startOffsetWAV";
     public static final String END_OFFSET_WAV = "endOffsetWAV";
+    public static final String START_OFFSET_TS_WITH_TVMETER = "startOffsetTSWithTVMeter";
+    public static final String END_OFFSET_TS_WITH_TVMETER = "endOffsetTSWithTVMeter";
+    public static final String START_OFFSET_PS_WITH_TVMETER = "startOffsetPSWithTVMeter";
+    public static final String END_OFFSET_PS_WITH_TVMETER = "endOffsetPSWithTVMeter";
 
     /*
     Properties relating to handling of missing data

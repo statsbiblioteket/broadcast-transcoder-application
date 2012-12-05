@@ -1,6 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.util.MetadataUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.BroadcastTranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.BroadcastTranscodingRecordDAO;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
@@ -19,6 +20,13 @@ public class BroadcastTranscodingRecordEnricherProcessor extends ProcessorChainE
         BroadcastTranscodingRecordDAO dao = new BroadcastTranscodingRecordDAO(util);
         BroadcastTranscodingRecord record = dao.read(context.getProgrampid());
         record.setTvmeter(request.isTvmeter());
+        record.setBroadtcastStartTime(MetadataUtils.getProgramStart(request));
+        record.setBroadcastEndTime(MetadataUtils.getProgramEnd(request));
+        record.setChannel(request.getProgramBroadcast().getChannelId());
+        record.setEndOffset(request.getEndOffsetUsed());
+        record.setStartOffset(request.getStartOffsetUsed());
+        record.setTitle(request.getTitle());
+
         //TODO etc.
         dao.update(record);
     }

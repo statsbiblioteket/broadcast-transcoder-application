@@ -45,16 +45,26 @@ public class ClipFinderProcessor extends ProcessorChainElement {
         //TODO special logic for dealing with tvmeter case
         switch (request.getFileFormat()) {
             case MPEG_PS:
-                startOffset = context.getStartOffsetPS();
-                endOffset = context.getEndOffsetPS();
+                if (request.isTvmeter()) {
+                    startOffset = context.getStartOffsetPSWithTVMeter();
+                    endOffset = context.getEndOffsetPSWithTVMeter();
+                } else {
+                    startOffset = context.getStartOffsetPS();
+                    endOffset = context.getEndOffsetPS();
+                }
                 break;
             case AUDIO_WAV:
                 startOffset = context.getStartOffsetWAV();
                 endOffset = context.getEndOffsetWAV();
                 break;
             default:
-                startOffset = context.getStartOffsetTS();
-                endOffset = context.getEndOffsetTS();
+                if (request.isTvmeter()) {
+                    startOffset = context.getStartOffsetTSWithTVMeter();
+                    endOffset = context.getEndOffsetTSWithTVMeter();
+                } else {
+                    startOffset = context.getStartOffsetTS();
+                    endOffset = context.getEndOffsetTS();
+                }
                 break;
         }
         programStart += startOffset*1000L;

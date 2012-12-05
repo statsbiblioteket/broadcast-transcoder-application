@@ -393,6 +393,10 @@ public class Context {
     private int endOffsetPS;
     private int startOffsetWAV;
     private int endOffsetWAV;
+    private int startOffsetTSWithTVMeter;
+    private int endOffsetTSWithTVMeter;
+    private int startOffsetPSWithTVMeter;
+    private int endOffsetPSWithTVMeter;
 
     private String fileFinderUrl;
     private int maxFilesFetched;
@@ -425,6 +429,38 @@ public class Context {
     private ReklamefilmFileResolver reklamefilmFileResolver;
 
     private String[] reklamefileRootDirectories;
+
+    public int getStartOffsetTSWithTVMeter() {
+        return startOffsetTSWithTVMeter;
+    }
+
+    public void setStartOffsetTSWithTVMeter(int startOffsetTSWithTVMeter) {
+        this.startOffsetTSWithTVMeter = startOffsetTSWithTVMeter;
+    }
+
+    public int getEndOffsetPSWithTVMeter() {
+        return endOffsetPSWithTVMeter;
+    }
+
+    public void setEndOffsetPSWithTVMeter(int endOffsetPSWithTVMeter) {
+        this.endOffsetPSWithTVMeter = endOffsetPSWithTVMeter;
+    }
+
+    public int getStartOffsetPSWithTVMeter() {
+        return startOffsetPSWithTVMeter;
+    }
+
+    public void setStartOffsetPSWithTVMeter(int startOffsetPSWithTVMeter) {
+        this.startOffsetPSWithTVMeter = startOffsetPSWithTVMeter;
+    }
+
+    public int getEndOffsetTSWithTVMeter() {
+        return endOffsetTSWithTVMeter;
+    }
+
+    public void setEndOffsetTSWithTVMeter(int endOffsetTSWithTVMeter) {
+        this.endOffsetTSWithTVMeter = endOffsetTSWithTVMeter;
+    }
 
     public CentralWebservice getDomsApi() {
         return domsApi;

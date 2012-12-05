@@ -223,6 +223,14 @@ public class TranscodeRequest {
         isTvmeter = tvmeter;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     private ProgramBroadcast programBroadcast;
     private ProgramStructure domsProgramStructure;
     private ProgramStructure localProgramStructure;
@@ -254,6 +262,7 @@ public class TranscodeRequest {
     private Float ffprobeDurationSeconds;
 
     private boolean isTvmeter;
+    private String title;
 
     /**
        * Class representing the absolute minimum information needed to clip data from a file

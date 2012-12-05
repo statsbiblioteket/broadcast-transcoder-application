@@ -30,6 +30,7 @@ public class PbcoreMetadataExtractorProcessor extends ProcessorChainElement {
             throw new ProcessorException("Failed to get PBCORE for "+context.getProgrampid(),e);
         }
         request.setTvmeter(hasTvmeter(structureXmlString));
+        request.setTitle(getTitle(structureXmlString));
     }
 
     boolean hasTvmeter(String structureXmlString) {
@@ -37,5 +38,11 @@ public class PbcoreMetadataExtractorProcessor extends ProcessorChainElement {
         Document doc = DOM.stringToDOM(structureXmlString, true);
         String tvmeterMetadata = xpath.selectString(doc, "/pb:PBCoreDescriptionDocument/pb:pbcoreIdentifier[pb:identifierSource='tvmeter']/pb:identifier");
         return ( (tvmeterMetadata != null) && (tvmeterMetadata.trim().length() > 100));
+    }
+
+    String getTitle(String structureXmlString) {
+        XPathSelector xpath = DOM.createXPathSelector("pb", "http://www.pbcore.org/PBCore/PBCoreNamespace.html");
+        Document doc = DOM.stringToDOM(structureXmlString, true);
+        return xpath.selectString(doc, "/pb:PBCoreDescriptionDocument/pb:pbcoreTitle[pb:titleType='titel']/pb:title");
     }
 }
