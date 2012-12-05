@@ -42,7 +42,6 @@ public class ClipFinderProcessor extends ProcessorChainElement {
         long programEnd = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStop());
         int startOffset;
         int endOffset;
-        //TODO special logic for dealing with tvmeter case
         switch (request.getFileFormat()) {
             case MPEG_PS:
                 if (request.isTvmeter()) {
