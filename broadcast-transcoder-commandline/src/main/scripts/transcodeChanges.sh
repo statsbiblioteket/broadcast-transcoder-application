@@ -4,36 +4,60 @@
 SCRIPT_PATH=$(dirname $(readlink -f $0))
 CLASSPATH="$SCRIPT_PATH/../lib/*"
 
-#TODO start by looking for hanging workfiles from a previous run, and from these parse the uuids into "fails"
+## This is 2012-04-01
+INITIAL_TIMESTAMP=1333231200000
+
+#The number of worker processes. If this is changed from a previous run then the
+#cleanup loop needs to be executed by hand.
+WORKERS=5
+
+#Cleanup from previous run
+for ((i=0;i<$WORKERS;i++)); do
+            workerfile="${i}workerFile"
+            if [ -e  $workerfile ]; then
+              uuid=$(cat $workerfile|cut -d ' ' -f2)
+              timestamp=$(cat $workerfile|cut -d ' ' -f3)
+              echo "$uuid   $timestamp" >> $SCRIPT_PATH/../fails
+              rm $workerfile
+              $SCRIPT_PATH/cleanupUnfinished.sh $uuid $timestamp
+            fi
+done
+
+if ![ -e "$SCRIPT_PATH/../progress" ]; then
+    echo $INITIAL_TIMESTAMP > $SCRIPT_PATH/../progress
+fi
 
 #get list of changes from queryChanges with progress timestamp as input
-if [ -r "$SCRIPT_PATH/../progress" ]; then
-    timestamp=$(cat $SCRIPT_PATH/../progress | tail -1)
-fi
-if [ -z "$timestamp" ]; then
-    timestamp="0"
-fi
+timestamp=$(cat $SCRIPT_PATH/../progress | tail -1)
 changes=$(mktemp)
 $SCRIPT_PATH/queryChanges.sh $timestamp > $changes
 
 #cut list into pid/timestamp sets
-#iterate through list, write timestamp back into progress file
-
+#iterate through list,
 while read line; do
     time=$(echo $line | cut -d' ' -f2)
-    pid=$(echo $line | cut -d' ' -f1)
-
-    $SCRIPT_PATH/delegateWork.sh $pid $time
-    returncode=$?
-##TODO Does this work? The concurrent programs finish in random order so this program is not necessarily later than the
-##time currently in "progress".[csr]
-    echo $time > $SCRIPT_PATH/../progress
-
-##TODO This doesn't work. Move this to transcodeFile.
-    if [ $returncode -ne 0 ]; then
-        # if file fails, write pid/timestamp combo to fails
-        echo $line >> $SCRIPT_PATH/../fails
-    fi
+    uuid=$(echo $line | cut -d' ' -f1)
+while [ 1 ]; do
+        for ((i=0;i<$WORKERS;i++)); do
+            workerfile="${i}workerFile"
+            if [ -e $workerfile ]; then
+                pid=$(cat $workerfile|cut -d ' ' -f1)
+                ps ax | grep -v grep | cut -d' ' -f1 | grep $pid
+                found=$?
+                if [ $found != 0 ]; then
+                    rm $workerfile
+                fi
+            fi
+            if [ ! -e $workerfile ]; then
+                touch $workerfile
+                $SCRIPT_PATH/transcodeFile.sh $uuid $time &
+                echo "$! $uuid $time" > $workerfile
+                break 2
+            fi
+        done
+        sleep 10
+        echo
+done
 done < $changes
 
 rm $changes
