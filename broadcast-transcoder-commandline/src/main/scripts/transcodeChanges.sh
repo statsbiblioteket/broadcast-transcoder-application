@@ -4,6 +4,11 @@
 SCRIPT_PATH=$(dirname $(readlink -f $0))
 CLASSPATH="$SCRIPT_PATH/../lib/*"
 
+collection=$1
+if [ "$collection" = "" ]; then
+    collection="broadcast"
+fi
+
 ## This is 2012-04-01
 INITIAL_TIMESTAMP=1333231200000
 
@@ -42,7 +47,7 @@ fi
 #get list of changes from queryChanges with progress timestamp as input
 timestamp=$(cat $SCRIPT_PATH/../progress | tail -1)
 changes=$(mktemp)
-$SCRIPT_PATH/queryChanges.sh $timestamp > $changes
+$SCRIPT_PATH/queryChanges.sh $collection $timestamp > $changes
 
 #cut list into pid/timestamp sets
 #iterate through list,
@@ -81,7 +86,7 @@ while read line; do
                         machine=${machines[$machineIndex]}
                         [ $debug = 1 ] && echo "$uuid: Did not find found '$pid' among the running processes"
                         [ $debug = 1 ] && echo "$uuid: Starting transcoding for $uuid and $time on $machine"
-                        $SCRIPT_PATH/transcodeFile.sh $uuid $time $machine &
+                        $SCRIPT_PATH/transcodeFile.sh $collection $uuid $time $machine &
                         echo "$! $uuid $time $machine" > $workerfile
 
                             #increment the machine index

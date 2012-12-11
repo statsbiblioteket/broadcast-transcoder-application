@@ -3,11 +3,12 @@
 SCRIPT_PATH=$(dirname $(readlink -f $0))
 CLASSPATH="$SCRIPT_PATH/../lib/*"
 
-uuid=$1
-timestamp=$2
-machine=$3
+collection=${1^}
+uuid=$2
+timestamp=$3
+machine=$4
 
-java -cp "$CLASSPATH" dk.statsbiblioteket.broadcasttranscoder.BroadcastTranscoderApplication \
+java -cp "$CLASSPATH" dk.statsbiblioteket.broadcasttranscoder.${collection}TranscoderApplication \
  --hibernate_configfile=$SCRIPT_PATH/../conf/bta.iapetus.hibernate.cfg.xml\
  --infrastructure_configfile=$SCRIPT_PATH/../conf/bta.infrastructure.properties \
  --behavioural_configfile=$SCRIPT_PATH/../conf/bta.behaviour.properties \
