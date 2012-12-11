@@ -16,12 +16,17 @@ java -cp "$CLASSPATH" dk.statsbiblioteket.broadcasttranscoder.BroadcastTranscode
 returncode=$?
 
 if [ $returncode -eq 0 ]; then
-   progress_timestamp=$(cat $SCRIPT_PATH/../progress | tail -1)
-   if [ $timestamp -gt $progress_timestamp ]; then
-      echo $timestamp > $SCRIPT_PATH/../progress
-   fi
+   progressFile="$SCRIPT_PATH/../progress.lock"
+   lockfile "$progressFile.lock"
+       progress_timestamp=$(cat "$progressFile" | tail -1)
+       if [ $timestamp -gt $progress_timestamp ]; then
+          echo $timestamp > $progressFile
+       fi
+   rm -f "$progressFile.lock"
 else
-   echo "$uuid   $timestamp" >> $SCRIPT_PATH/../fails
+    lockfile "$SCRIPT_PATH/../fails.lock"
+        echo "$uuid   $timestamp" >> $SCRIPT_PATH/../fails
+    rm -f "$SCRIPT_PATH/../fails.lock"
 fi
 
 exit $returncode
