@@ -5,10 +5,11 @@ CLASSPATH="$SCRIPT_PATH/../lib/*"
 
 
 timestamp=$1
+collection=$2
 
 
-java -cp "$CLASSPATH" dk.statsbiblioteket.broadcasttranscoder.fetcher.BtaDomsFetcher \
- --infrastructure_configfile=$SCRIPT_PATH/../conf/bta.infrastructure.properties \
- --behavioural_configfile=$SCRIPT_PATH/../conf/bta.fetcher.properties \
+java -Dlogback.configurationFile=$SCRIPT_PATH/../config/logback.xml  -cp "$CLASSPATH" dk.statsbiblioteket.broadcasttranscoder.fetcher.BtaDomsFetcher \
+ --infrastructure_configfile=$SCRIPT_PATH/../config/bta.infrastructure.properties \
+ --behavioural_configfile=$SCRIPT_PATH/../config/bta.fetcher.${2}.properties \
  --since=$timestamp
 

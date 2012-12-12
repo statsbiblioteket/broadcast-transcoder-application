@@ -1,5 +1,6 @@
 #!/bin/bash
 
+collection=${1}
 
 SCRIPT_PATH=$(dirname $(readlink -f $0))
 CLASSPATH="$SCRIPT_PATH/../lib/*"
@@ -11,15 +12,16 @@ debug=1
 
 #The number of worker processes. If this is changed from a previous run then the
 #cleanup loop needs to be executed by hand.
-WORKERS=4
+WORKERS=2
 
+
+#These are external machines on which to run the transcoding process by ssh eg user1@encoder1 ....
+#This feature is not currently used
 machines=( "machine1" "machine2" )
-
-
 
 #Cleanup from previous run
 for ((i=0;i<$WORKERS;i++)); do
-            workerfile="${i}workerFile"
+            workerfile="${i}.$collection.workerFile"
             if [ -e  $workerfile ]; then
               uuid=$(cat $workerfile|cut -d ' ' -f2)
               timestamp=$(cat $workerfile|cut -d ' ' -f3)
@@ -30,19 +32,21 @@ for ((i=0;i<$WORKERS;i++)); do
               rm -f "$SCRIPT_PATH/../fails.lock"
 
               rm $workerfile
+              ##TODO do we need a $machine parameter to this call?
               $SCRIPT_PATH/cleanupUnfinished.sh $uuid $timestamp $machine
             fi
 done
 rm -f $SCRIPT_PATH/../*.lock *.lock *workerFile
 
-if [ ! -e "$SCRIPT_PATH/../progress" ]; then
-    echo $INITIAL_TIMESTAMP > $SCRIPT_PATH/../progress
+progressFile="$SCRIPT_PATH/../$collection.progress"
+if [ ! -e $progressFile ]; then
+    echo $INITIAL_TIMESTAMP > $progressFile
 fi
 
 #get list of changes from queryChanges with progress timestamp as input
-timestamp=$(cat $SCRIPT_PATH/../progress | tail -1)
+timestamp=$(cat $progressFile | tail -1)
 changes=$(mktemp)
-$SCRIPT_PATH/queryChanges.sh $timestamp > $changes
+$SCRIPT_PATH/queryChanges.sh $timestamp $collection > $collection.$changes
 
 #cut list into pid/timestamp sets
 #iterate through list,
@@ -60,7 +64,7 @@ while read line; do
     while [ 1 ]; do
             [ $debug = 1 ] && echo "$uuid: Starting allocation to worker for uuid $uuid"
             for ((i=0;i<$WORKERS;i++)); do
-                    workerfile="${i}workerFile"
+                    workerfile="${i}$collection.workerFile"
                     [ $debug = 1 ] && echo "$uuid: Attempting to get lock on $workerfile"
                     lockfile "$workerfile.lock"
                     if [ ! -e $workerfile ]; then
@@ -81,9 +85,17 @@ while read line; do
                         machine=${machines[$machineIndex]}
                         [ $debug = 1 ] && echo "$uuid: Did not find found '$pid' among the running processes"
                         [ $debug = 1 ] && echo "$uuid: Starting transcoding for $uuid and $time on $machine"
-                        $SCRIPT_PATH/transcodeFile.sh $uuid $time $machine &
+                        ##TODO logic for either transcodeProgram or transcodeReklame here
+                        if [ $collection == "radiotv" ]
+                        then
+                          $SCRIPT_PATH/transcodeFile.sh $uuid $time $machine &
+                        elif [ $collection == "reklamer ]
+                          $SCRIPT_PATH/transcodeReklame.sh $uuid $time $machine &
+                        else
+                          echo "Unknown collection $collection"
+                          exit 4
+                        fi
                         echo "$! $uuid $time $machine" > $workerfile
-
                             #increment the machine index
                             ((machineIndex++))
                             max=${#machines[*]}
