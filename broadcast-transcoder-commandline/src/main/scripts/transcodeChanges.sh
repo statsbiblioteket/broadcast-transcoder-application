@@ -27,15 +27,16 @@ machines=( "machine1" "machine2" )
 
 #Cleanup from previous run
 for ((i=0;i<$WORKERS;i++)); do
-    workerfile="${i}.$collection.workerFile"
-    if [ -e  $workerfile ]; then
-        uuid=$(cat $workerfile|cut -d ' ' -f2)
-        timestamp=$(cat $workerfile|cut -d ' ' -f3)
-        machine=$(cat $workerfile|cut -d ' ' -f4)
+            workerfile="${i}.$collection.workerFile"
+            failureFile=  "$SCRIPT_PATH/../$collection.failures"
+            if [ -e  $workerfile ]; then
+              uuid=$(cat $workerfile|cut -d ' ' -f2)
+              timestamp=$(cat $workerfile|cut -d ' ' -f3)
+              machine=$(cat $workerfile|cut -d ' ' -f4)
 
-        lockfile "$SCRIPT_PATH/../fails.lock"
-              echo "$uuid $timestamp" >> $SCRIPT_PATH/../fails
-        rm -f "$SCRIPT_PATH/../fails.lock"
+              lockfile "$failureFile.lock"
+                      echo "$uuid   $timestamp" >> $failureFile
+              rm -f "$failureFile.lock"
 
         rm $workerfile
         ##TODO do we need a $machine parameter to this call?
