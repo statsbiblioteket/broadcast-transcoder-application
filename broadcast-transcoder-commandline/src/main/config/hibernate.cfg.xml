@@ -30,9 +30,9 @@
         <!--
         TO BE CUSTOMISED PER MACHINE
         -->
-        <property name="connection.url">jdbc:postgresql://localhots:5432/bta</property>
-        <property name="connection.username">yousee</property>
-        <property name="connection.password">HbdtrVZ6</property>
+        <property name="connection.url">jdbc:postgresql://localhost:5432/bta-devel</property>
+        <property name="connection.username">bta</property>
+        <property name="connection.password">NfLhsW3R</property>
 
 
         <!-- THIS PROPERTY MUST BE SET TO "VALIDATE" OR LEFT UNSET IN PRODUCTIONS -->
@@ -47,7 +47,7 @@
 
 
         <property name="connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.cglib.use_reflection_optimizer">false</property>
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
         <property name="transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
         <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 

@@ -8,8 +8,8 @@ uuid=$2
 timestamp=$3
 machine=$4
 
-java -cp "$CLASSPATH" dk.statsbiblioteket.broadcasttranscoder.${collection}TranscoderApplication \
- --hibernate_configfile=$SCRIPT_PATH/../conf/bta.iapetus.hibernate.cfg.xml\
+java -Dlogback.configurationFile=$SCRIPT_PATH/../conf/logback.xml  -cp "$CLASSPATH" dk.statsbiblioteket.broadcasttranscoder.BroadcastTranscoderApplication \
+ --hibernate_configfile=$SCRIPT_PATH/../conf/hibernate.cfg.xml\
  --infrastructure_configfile=$SCRIPT_PATH/../conf/bta.infrastructure.properties \
  --behavioural_configfile=$SCRIPT_PATH/../conf/bta.behaviour.properties \
  --programpid=$uuid \
@@ -17,18 +17,20 @@ java -cp "$CLASSPATH" dk.statsbiblioteket.broadcasttranscoder.${collection}Trans
 
 returncode=$?
 
+## Consider placing progress, successes, failures outside deploy directory so they don't get nuked by deploy.
+
 if [ $returncode -eq 0 ]; then
-   progressFile="$SCRIPT_PATH/../progress.lock"
+   progressFile="$SCRIPT_PATH/../progress"
    lockfile "$progressFile.lock"
        progress_timestamp=$(cat "$progressFile" | tail -1)
        if [ $timestamp -gt $progress_timestamp ]; then
           echo $timestamp > $progressFile
        fi
-       echo "$uuid   $timestamp $machine" >> $SCRIPT_PATH/../succeses
+       echo "$uuid   $timestamp $machine" >> $SCRIPT_PATH/../successes
    rm -f "$progressFile.lock"
 else
     lockfile "$SCRIPT_PATH/../fails.lock"
-        echo "$uuid   $timestamp $machine" >> $SCRIPT_PATH/../fails
+        echo "$uuid   $timestamp $machine" >> $SCRIPT_PATH/../failures
     rm -f "$SCRIPT_PATH/../fails.lock"
 fi
 
