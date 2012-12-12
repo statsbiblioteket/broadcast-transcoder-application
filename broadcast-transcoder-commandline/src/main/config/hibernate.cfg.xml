@@ -30,7 +30,7 @@
         <!--
         TO BE CUSTOMISED PER MACHINE
         -->
-        <property name="connection.url">jdbc:postgresql://canopus:5432/bta-devel</property>
+        <property name="connection.url">jdbc:postgresql://localhost:5432/bta-devel</property>
         <property name="connection.username">bta</property>
         <property name="connection.password">NfLhsW3R</property>
 
