@@ -47,7 +47,7 @@
 
 
         <property name="connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.cglib.use_reflection_optimizer">false</property>
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
         <property name="transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
         <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 
