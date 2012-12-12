@@ -6,7 +6,7 @@ CLASSPATH="$SCRIPT_PATH/../lib/*"
 
 collection=$1
 if [ "$collection" = "" ]; then
-    collection="broadcast"
+    collection="Broadcast"
 fi
 
 ## This is 2012-04-01
@@ -16,38 +16,43 @@ debug=1
 
 #The number of worker processes. If this is changed from a previous run then the
 #cleanup loop needs to be executed by hand.
-WORKERS=4
+WORKERS=2
 
+
+#These are external machines on which to run the transcoding process by ssh eg user1@encoder1 ....
+#This feature is not currently used
 machines=( "machine1" "machine2" )
 
 
 
 #Cleanup from previous run
 for ((i=0;i<$WORKERS;i++)); do
-            workerfile="${i}workerFile"
-            if [ -e  $workerfile ]; then
-              uuid=$(cat $workerfile|cut -d ' ' -f2)
-              timestamp=$(cat $workerfile|cut -d ' ' -f3)
-              machine=$(cat $workerfile|cut -d ' ' -f4)
+    workerfile="${i}.$collection.workerFile"
+    if [ -e  $workerfile ]; then
+        uuid=$(cat $workerfile|cut -d ' ' -f2)
+        timestamp=$(cat $workerfile|cut -d ' ' -f3)
+        machine=$(cat $workerfile|cut -d ' ' -f4)
 
-              lockfile "$SCRIPT_PATH/../fails.lock"
-                      echo "$uuid   $timestamp" >> $SCRIPT_PATH/../fails
-              rm -f "$SCRIPT_PATH/../fails.lock"
+        lockfile "$SCRIPT_PATH/../fails.lock"
+              echo "$uuid $timestamp" >> $SCRIPT_PATH/../fails
+        rm -f "$SCRIPT_PATH/../fails.lock"
 
-              rm $workerfile
-              $SCRIPT_PATH/cleanupUnfinished.sh $uuid $timestamp $machine
-            fi
+        rm $workerfile
+        ##TODO do we need a $machine parameter to this call?
+        $SCRIPT_PATH/cleanupUnfinished.sh $uuid $timestamp $machine
+    fi
 done
 rm -f $SCRIPT_PATH/../*.lock *.lock *workerFile
 
-if [ ! -e "$SCRIPT_PATH/../progress" ]; then
-    echo $INITIAL_TIMESTAMP > $SCRIPT_PATH/../progress
+progressFile="$SCRIPT_PATH/../$collection.progress"
+if [ ! -e $progressFile ]; then
+    echo $INITIAL_TIMESTAMP > $progressFile
 fi
 
 #get list of changes from queryChanges with progress timestamp as input
-timestamp=$(cat $SCRIPT_PATH/../progress | tail -1)
+timestamp=$(cat $progressFile | tail -1)
 changes=$(mktemp)
-$SCRIPT_PATH/queryChanges.sh $collection $timestamp > $changes
+$SCRIPT_PATH/queryChanges.sh  $collection $timestamp > $changes
 
 #cut list into pid/timestamp sets
 #iterate through list,
@@ -65,7 +70,7 @@ while read line; do
     while [ 1 ]; do
             [ $debug = 1 ] && echo "$uuid: Starting allocation to worker for uuid $uuid"
             for ((i=0;i<$WORKERS;i++)); do
-                    workerfile="${i}workerFile"
+                    workerfile="${i}$collection.workerFile"
                     [ $debug = 1 ] && echo "$uuid: Attempting to get lock on $workerfile"
                     lockfile "$workerfile.lock"
                     if [ ! -e $workerfile ]; then
@@ -88,7 +93,6 @@ while read line; do
                         [ $debug = 1 ] && echo "$uuid: Starting transcoding for $uuid and $time on $machine"
                         $SCRIPT_PATH/transcodeFile.sh $collection $uuid $time $machine &
                         echo "$! $uuid $time $machine" > $workerfile
-
                             #increment the machine index
                             ((machineIndex++))
                             max=${#machines[*]}
