@@ -7,7 +7,7 @@ uuid=$1
 timestamp=$2
 machine=$3
 
-java -cp "$CLASSPATH" dk.statsbiblioteket.broadcasttranscoder.BroadcastTranscoderApplication \
+java -Dlogback.configurationFile=$SCRIPT_PATH/../config/logback.xml  -cp "$CLASSPATH" dk.statsbiblioteket.broadcasttranscoder.BroadcastTranscoderApplication \
  --hibernate_configfile=$SCRIPT_PATH/../conf/bta.iapetus.hibernate.cfg.xml\
  --infrastructure_configfile=$SCRIPT_PATH/../conf/bta.infrastructure.properties \
  --behavioural_configfile=$SCRIPT_PATH/../conf/bta.behaviour.properties \
