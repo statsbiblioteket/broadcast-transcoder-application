@@ -46,4 +46,15 @@ public  abstract class AbstractOptionsParser {
             throw new OptionParseException("Cannot parse " + prop + " as a long.");
         }
     }
+
+    protected boolean readBooleanProperty(String propName, Properties props) throws OptionParseException {
+        String prop = props.getProperty(propName);
+        try {
+            boolean result = Boolean.parseBoolean(prop);
+            return result;
+        } catch (NumberFormatException e) {
+            throw new OptionParseException("Cannot parse " + prop + " as a boolean.");
+        }
+    }
+
 }

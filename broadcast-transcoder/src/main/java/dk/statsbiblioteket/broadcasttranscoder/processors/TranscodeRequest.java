@@ -264,6 +264,37 @@ public class TranscodeRequest {
     private boolean isTvmeter;
     private String title;
 
+    @Override
+    public String toString() {
+        return "TranscodeRequest{" +
+                "audioPids=" + audioPids +
+                ", programBroadcast=" + programBroadcast +
+                ", domsProgramStructure=" + domsProgramStructure +
+                ", localProgramStructure=" + localProgramStructure +
+                ", broadcastMetadata=" + broadcastMetadata +
+                ", fileMap=" + fileMap +
+                ", pidMap=" + pidMap +
+                ", bitrate=" + bitrate +
+                ", fileFormat=" + fileFormat +
+                ", clips=" + clips +
+                ", dvbsubPid='" + dvbsubPid + '\'' +
+                ", videoPid='" + videoPid + '\'' +
+                ", videoFcc='" + videoFcc + '\'' +
+                ", audioFcc='" + audioFcc + '\'' +
+                ", displayAspectRatio=" + displayAspectRatio +
+                ", displayAspectRatioString='" + displayAspectRatioString + '\'' +
+                ", transcoderCommand='" + transcoderCommand + '\'' +
+                ", startOffsetUsed=" + startOffsetUsed +
+                ", endOffsetUsed=" + endOffsetUsed +
+                ", clipperCommand='" + clipperCommand + '\'' +
+                ", goForTranscoding=" + goForTranscoding +
+                ", timeoutMilliseconds=" + timeoutMilliseconds +
+                ", ffprobeDurationSeconds=" + ffprobeDurationSeconds +
+                ", isTvmeter=" + isTvmeter +
+                ", title='" + title + '\'' +
+                '}';
+    }
+
     /**
        * Class representing the absolute minimum information needed to clip data from a file
        */
@@ -326,15 +357,17 @@ public class TranscodeRequest {
         }
 
         @Override
-          public String toString() {
-              return "FileClip{" +
-                      "filepath='" + filepath + '\'' +
-                      ", programId=" + programId +
-                      ", startOffsetBytes=" + startOffsetBytes +
-                      ", clipLength=" + clipLength +
-                      '}';
-          }
-      }
+        public String toString() {
+            return "FileClip{" +
+                    "filepath='" + filepath + '\'' +
+                    ", programId=" + programId +
+                    ", startOffsetBytes=" + startOffsetBytes +
+                    ", clipLength=" + clipLength +
+                    ", fileStartTime=" + fileStartTime +
+                    ", fileEndTime=" + fileEndTime +
+                    '}';
+        }
+    }
 
 
 }

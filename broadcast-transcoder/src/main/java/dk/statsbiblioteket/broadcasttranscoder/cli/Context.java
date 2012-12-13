@@ -5,6 +5,7 @@ import dk.statsbiblioteket.broadcasttranscoder.util.persistence.TimestampPersist
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * Holder for parameters from the command line.
@@ -12,6 +13,7 @@ import java.io.File;
 public class Context {
 
     private String domsViewAngle;
+    private boolean overwrite;
 
     public String getProgrampid() {
         return programpid;
@@ -508,5 +510,73 @@ public class Context {
 
     public void setTimestampOfNewTranscoding(long timestampOfNewTranscoding) {
         this.timestampOfNewTranscoding = timestampOfNewTranscoding;
+    }
+
+    public void setOverwrite(boolean overwrite) {
+        this.overwrite = overwrite;
+    }
+
+    public boolean isOverwrite() {
+        return overwrite;
+    }
+
+    @Override
+    public String toString() {
+        return "Context{" +
+                "domsViewAngle='" + domsViewAngle + '\'' +
+                ", overwrite=" + overwrite +
+                ", programpid='" + programpid + '\'' +
+                ", infrastructuralConfigFile=" + infrastructuralConfigFile +
+                ", behaviourConfigFile=" + behaviourConfigFile +
+                ", domsEndpoint='" + domsEndpoint + '\'' +
+                ", domsUsername='" + domsUsername + '\'' +
+                ", domsPassword='" + domsPassword + '\'' +
+                ", fileOutputRootdir=" + fileOutputRootdir +
+                ", previewOutputRootdir=" + previewOutputRootdir +
+                ", snapshotOutputRootdir=" + snapshotOutputRootdir +
+                ", lockDir=" + lockDir +
+                ", fileDepth=" + fileDepth +
+                ", videoBitrate=" + videoBitrate +
+                ", audioBitrate=" + audioBitrate +
+                ", videoHeight=" + videoHeight +
+                ", x264VlcParams='" + x264VlcParams + '\'' +
+                ", x264FfmpegParams='" + x264FfmpegParams + '\'' +
+                ", transcodingTimeoutDivisor=" + transcodingTimeoutDivisor +
+                ", analysisClipLength=" + analysisClipLength +
+                ", maxMissingStart=" + maxMissingStart +
+                ", maxMissingEnd=" + maxMissingEnd +
+                ", maxHole=" + maxHole +
+                ", gapToleranceSeconds=" + gapToleranceSeconds +
+                ", startOffsetTS=" + startOffsetTS +
+                ", endOffsetTS=" + endOffsetTS +
+                ", startOffsetPS=" + startOffsetPS +
+                ", endOffsetPS=" + endOffsetPS +
+                ", startOffsetWAV=" + startOffsetWAV +
+                ", endOffsetWAV=" + endOffsetWAV +
+                ", startOffsetTSWithTVMeter=" + startOffsetTSWithTVMeter +
+                ", endOffsetTSWithTVMeter=" + endOffsetTSWithTVMeter +
+                ", startOffsetPSWithTVMeter=" + startOffsetPSWithTVMeter +
+                ", endOffsetPSWithTVMeter=" + endOffsetPSWithTVMeter +
+                ", fileFinderUrl='" + fileFinderUrl + '\'' +
+                ", maxFilesFetched=" + maxFilesFetched +
+                ", hibernateConfigFile=" + hibernateConfigFile +
+                ", previewLength=" + previewLength +
+                ", previewTimeout=" + previewTimeout +
+                ", snapshotScale=" + snapshotScale +
+                ", snapshotTargetNumerator=" + snapshotTargetNumerator +
+                ", snapshotTargetDenominator=" + snapshotTargetDenominator +
+                ", snapshotFrames=" + snapshotFrames +
+                ", snapshotPaddingSeconds=" + snapshotPaddingSeconds +
+                ", snapshotTimeoutDivisor=" + snapshotTimeoutDivisor +
+                ", soxTranscodeParams='" + soxTranscodeParams + '\'' +
+                ", timestampOfExistingTranscoding=" + timestampOfExistingTranscoding +
+                ", timestampOfNewTranscoding=" + timestampOfNewTranscoding +
+                ", transcodingTimestamp=" + transcodingTimestamp +
+                ", defaultTranscodingTimestamp=" + defaultTranscodingTimestamp +
+                ", timestampPersister=" + timestampPersister +
+                ", domsApi=" + domsApi +
+                ", reklamefilmFileResolver=" + reklamefilmFileResolver +
+                ", reklamefileRootDirectories=" + (reklamefileRootDirectories == null ? null : Arrays.asList(reklamefileRootDirectories)) +
+                '}';
     }
 }
