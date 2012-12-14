@@ -91,7 +91,7 @@ while read line; do
                         machine=${machines[$machineIndex]}
                         [ $debug = 1 ] && echo "$uuid: Did not find found '$pid' among the running processes"
                         [ $debug = 1 ] && echo "$uuid: Starting transcoding for $uuid and $time on $machine"
-                        $SCRIPT_PATH/transcodeFile.sh $collection $uuid $time $machine &
+                        $SCRIPT_PATH/transcodeWorker.sh $collection $uuid $time $machine &
                         echo "$! $uuid $time $machine" > $workerfile
                             #increment the machine index
                             ((machineIndex++))
