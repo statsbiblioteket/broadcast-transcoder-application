@@ -53,6 +53,7 @@
 
     <logger name="org.hibernate.SQL" level="INFO"/>
     <logger name="org.hibernate.type" level="INFO"/>
+    <logger name="org.hibernate" level="INFO"/>
 
     <root level="debug">
         <appender-ref ref="STDERR"/>

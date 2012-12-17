@@ -44,7 +44,6 @@ public class BroadcastTranscoderApplication {
         }
         try {
             runChain(request,context);
-            context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
             (new BroadcastTranscodingRecordEnricherProcessor()).processIteratively(request, context);
         } finally {
             boolean deleted = lockFile.delete();
@@ -65,9 +64,10 @@ public class BroadcastTranscoderApplication {
                 structureFetcher);
         preChain.processIteratively(request, context);
         if (!request.isGoForTranscoding()) {
+            context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
+            logger.info("No transcoding required for " + context.getProgrampid() + ". Exiting.");
             return;
         }
-
         ProcessorChainElement programFetcher = new ProgramMetadataFetcherProcessor();
         ProcessorChainElement pbcorer = new PbcoreMetadataExtractorProcessor();
         ProcessorChainElement filedataFetcher    = new FileMetadataFetcherProcessor();
@@ -93,9 +93,8 @@ public class BroadcastTranscoderApplication {
                 concatenator);
         firstChain.processIteratively(request, context);
         if (!request.isGoForTranscoding()) {
-            return;
-        } else {
             logger.info("No transcoding required for " + context.getProgrampid() + ". Exiting.");
+            return;
         }
         ProcessorChainElement secondChain;
         ProcessorChainElement pider = new PidAndAsepctRatioExtractorProcessor();
@@ -126,7 +125,7 @@ public class BroadcastTranscoderApplication {
                 return;
         }
         secondChain.processIteratively(request, context);
-
+        context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
     }
 
 

@@ -10,7 +10,12 @@ if [ "$collection" = "" ]; then
 fi
 
 ## This is 2012-04-01
-INITIAL_TIMESTAMP=1333231200000
+##INITIAL_TIMESTAMP=1333231200000
+
+
+## This is 2012-12-16
+INITIAL_TIMESTAMP=1355612400000
+
 
 debug=1
 
@@ -91,7 +96,7 @@ while read line; do
                         machine=${machines[$machineIndex]}
                         [ $debug = 1 ] && echo "$uuid: Did not find found '$pid' among the running processes"
                         [ $debug = 1 ] && echo "$uuid: Starting transcoding for $uuid and $time on $machine"
-                        $SCRIPT_PATH/transcodeWorker.sh $collection $uuid $time $machine &
+                        $SCRIPT_PATH/transcoderWorker.sh $collection $uuid $time $machine &
                         echo "$! $uuid $time $machine" > $workerfile
                             #increment the machine index
                             ((machineIndex++))

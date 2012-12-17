@@ -43,6 +43,9 @@ public class FileMetadataFetcherProcessor extends ProcessorChainElement {
         } catch (Exception e) {
            throw new ProcessorException("Failed to find file objects for "+context.getProgrampid(),e);
         }
+        if (fileObjectPids.isEmpty()) {
+            throw new ProcessorException("No file-object relations for program " + context.getProgrampid());
+        }
         List<BroadcastMetadata> broadcastMetadata = getBroadcastMetadata(fileObjectPids, context, request);
         request.setBroadcastMetadata(broadcastMetadata);
     }

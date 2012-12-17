@@ -9,8 +9,6 @@ timestamp=$3
 logDir=$4
 confDir=$5
 
-[ -z "$logDir" ] && logDir="$SCRIPT_PATH/.."
-[ -z "$confDir" ] && confDir="$SCRIPT_PATH/../conf"
 
 java \
   -Dlogback.configurationFile=$confDir/logback.xml  \
