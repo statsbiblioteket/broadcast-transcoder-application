@@ -11,6 +11,9 @@ logDir=$5
 confDir=$6
 
 
+[ -z "$logDir" ] && logDir="$SCRIPT_PATH/.."
+[ -z "$confDir" ] && confDir="$SCRIPT_PATH/../config"
+
 #use machine here to ssh to a machine to run this on
 $SCRIPT_PATH/transcodeFile.sh "$collection" "$uuid" "$timestamp" "$logDir" "$confDir"
 

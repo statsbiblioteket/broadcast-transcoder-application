@@ -77,6 +77,9 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         } else {
           length = (int) (MetadataUtils.findProgramLengthMillis(request)/1000L);
         }
+        if (length < 3*paddingSeconds) {   //quick fix for very short programs
+            paddingSeconds = 0;
+        }
         int modLength = length - 2*paddingSeconds;
         String rate = (nframes - 1) + "/" + modLength;
         commandLine = commandLine + " -ss " + paddingSeconds + " -t " + modLength + " -r "  + rate + geometry
