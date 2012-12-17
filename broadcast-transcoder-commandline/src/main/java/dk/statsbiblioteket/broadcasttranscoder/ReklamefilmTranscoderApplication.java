@@ -52,23 +52,25 @@ public class ReklamefilmTranscoderApplication {
             ProcessorChainElement firstChain = ProcessorChainElement.makeChain(gonogoer);
             firstChain.processIteratively(request, context);
             if (request.isGoForTranscoding()) {
+                context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
+
                 ProcessorChainElement resolver = new ReklamefilmFileResolverProcessor();
                 ProcessorChainElement aspecter = new PidAndAsepctRatioExtractorProcessor();
                 ProcessorChainElement transcoder = new UnistreamVideoTranscoderProcessor();
                 ProcessorChainElement zeroChecker = new ZeroLengthCheckerProcessor();
                 ProcessorChainElement ffprober = new FfprobeFetcherProcessor();
                 ProcessorChainElement snapshotter = new SnapshotExtractorProcessor();
+                ProcessorChainElement reklamePersistenceEnricher = new ReklamefilmPersistentRecordEnricherProcessor();
                 ProcessorChainElement secondChain = ProcessorChainElement.makeChain(
                         resolver,
                         aspecter,
                         transcoder,
                         zeroChecker,
                         ffprober,
-                        snapshotter
+                        snapshotter,
+                        reklamePersistenceEnricher
                         );
                 secondChain.processIteratively(request, context);
-                context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
-                (new ReklamefilmPersistentRecordEnricherProcessor()).processIteratively(request, context);
             }
         } catch (Exception e) {
             //Fault barrier. This is necessary because an uncaught RuntimeException will otherwise not log the pid it
