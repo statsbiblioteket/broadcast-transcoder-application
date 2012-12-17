@@ -43,8 +43,7 @@ public class BroadcastTranscoderApplication {
             System.exit(3);
         }
         try {
-            runChain(request,context);
-            (new BroadcastTranscodingRecordEnricherProcessor()).processIteratively(request, context);
+            runChain(request, context);
         } finally {
             boolean deleted = lockFile.delete();
             if (!deleted) {
@@ -68,13 +67,22 @@ public class BroadcastTranscoderApplication {
             logger.info("No transcoding required for " + context.getProgrampid() + ". Exiting.");
             return;
         }
+
+        /*First one getting stuff for the persistence layer*/
         ProcessorChainElement programFetcher = new ProgramMetadataFetcherProcessor();
+
+        /*Next one getting for the persistence layer*/
         ProcessorChainElement pbcorer = new PbcoreMetadataExtractorProcessor();
+
+
         ProcessorChainElement filedataFetcher    = new FileMetadataFetcherProcessor();
         ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
         ProcessorChainElement fileFinderFetcher = new FilefinderFetcherProcessor();
         ProcessorChainElement identifier = new FilePropertiesIdentifierProcessor();
+
+        /*Find the offsets*/
         ProcessorChainElement clipper = new ClipFinderProcessor();
+
         ProcessorChainElement coverage = new CoverageAnalyserProcessor();
         ProcessorChainElement updater = new ProgramStructureUpdaterProcessor();
         ProcessorChainElement fixer = new StructureFixerProcessor();
@@ -105,21 +113,45 @@ public class BroadcastTranscoderApplication {
         ProcessorChainElement previewer = new PreviewClipperProcessor();
         ProcessorChainElement snapshotter = new SnapshotExtractorProcessor();
         ProcessorChainElement zeroChecker = new ZeroLengthCheckerProcessor();
+        ProcessorChainElement persistenceEnricher = new BroadcastTranscodingRecordEnricherProcessor();
+
         switch (request.getFileFormat()) {
             case MULTI_PROGRAM_MUX:
-                secondChain = ProcessorChainElement.makeChain(pider, multistreamer, zeroChecker, previewer, snapshotter);
+                secondChain = ProcessorChainElement.makeChain(pider,
+                        multistreamer,
+                        zeroChecker,
+                        previewer,
+                        snapshotter,
+                        persistenceEnricher);
                 break;
             case SINGLE_PROGRAM_VIDEO_TS:
-                secondChain = ProcessorChainElement.makeChain(pider, unistreamvideoer, zeroChecker, previewer, snapshotter);
+                secondChain = ProcessorChainElement.makeChain(pider,
+                        unistreamvideoer,
+                        zeroChecker,
+                        previewer,
+                        snapshotter,
+                        persistenceEnricher);
                 break;
             case SINGLE_PROGRAM_AUDIO_TS:
-                secondChain = ProcessorChainElement.makeChain(pider, unistreamaudioer, zeroChecker, previewer);
+                secondChain = ProcessorChainElement.makeChain(pider,
+                        unistreamaudioer,
+                        zeroChecker,
+                        previewer,
+                        persistenceEnricher);
                 break;
             case MPEG_PS:
-                secondChain = ProcessorChainElement.makeChain(pider, unistreamvideoer, zeroChecker, previewer, snapshotter);
+                secondChain = ProcessorChainElement.makeChain(pider,
+                        unistreamvideoer,
+                        zeroChecker,
+                        previewer,
+                        snapshotter,
+                        persistenceEnricher);
                 break;
             case AUDIO_WAV:
-                secondChain = ProcessorChainElement.makeChain(waver, zeroChecker, previewer);
+                secondChain = ProcessorChainElement.makeChain(waver,
+                        zeroChecker,
+                        previewer,
+                        persistenceEnricher);
                 break;
             default:
                 return;
