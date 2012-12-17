@@ -9,6 +9,8 @@ import junit.framework.TestCase;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.File;
+import java.sql.DriverManager;
+import java.sql.SQLNonTransientConnectionException;
 import java.util.Date;
 
 /**
@@ -20,13 +22,19 @@ import java.util.Date;
  */
 public class BroadcastTranscodingRecordDAOTest extends TestCase {
 
-    Context context = new Context();
-    TranscodeRequest request = new TranscodeRequest();
-
+    Context context;
+    TranscodeRequest request;
+    HibernateUtil util;
 
     public void setUp() throws Exception {
         super.setUp();    //To change body of overridden methods use File | Settings | File Templates.
+
+        context = new Context();
         context.setHibernateConfigFile(new File(Thread.currentThread().getContextClassLoader().getResource("hibernate-derby.xml").toURI()));
+        util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
+        util.getSession().clear();
+        request = new TranscodeRequest();
+
         context.setProgrampid("uuid:test1");
         request.setTvmeter(false);
         request.setEndOffsetUsed(0);
@@ -43,11 +51,20 @@ public class BroadcastTranscodingRecordDAOTest extends TestCase {
         startCal.setHour(13);
         endCal.setHour(14);
         request.setProgramBroadcast(programBroadcast);
+    }
 
+    @Override
+    public void tearDown() throws Exception {
+        super.tearDown();    //To change body of overridden methods use File | Settings | File Templates.
+        try {
+            DriverManager.getConnection("jdbc:derby:memory:bta;drop=true");
+        } catch (SQLNonTransientConnectionException e){
+            util.reload();
+        }
     }
 
     public void testSetTimestamp() throws Exception {
-        HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
+
         context.setTimestampPersister(new BroadcastTranscodingRecordDAO(util));
         TimestampPersister persister = context.getTimestampPersister();
         long timestamp = new Date().getTime();
@@ -58,14 +75,13 @@ public class BroadcastTranscodingRecordDAOTest extends TestCase {
         persister.setTimestamp(context.getProgrampid(),timestamp);
 
         Long retrieved = persister.getTimestamp(context.getProgrampid());
-        assertTrue("timestamps not equal after save",timestamp ==retrieved );
-
+        assertTrue("timestamps not equal after save", timestamp == retrieved);
     }
 
     public void testSomthing(){
 
 
-        HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
+
         BroadcastTranscodingRecordDAO dao = new BroadcastTranscodingRecordDAO(util);
         Long temp = dao.getTimestamp(context.getProgrampid());
         assertNull("Database is not empty",temp);
