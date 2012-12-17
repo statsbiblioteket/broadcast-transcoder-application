@@ -62,10 +62,16 @@ $SCRIPT_PATH/queryChanges.sh  $collection $timestamp > $changes
 #cut list into pid/timestamp sets
 #iterate through list,
 
-echo "number of programs to transcode is $(cat $changes | wc -l)"
+programs=$(cat $changes | wc -l)
+echo "number of programs to transcode is $programs"
 
 machineIndex=0
+counter=0
 while read line; do
+    echo "trancoding program $counter of $programs"
+    ((counter++))
+
+
     uuid=$(echo $line | cut -d' ' -f1)
     time=$(echo $line | cut -d' ' -f2)
         #Skip until a line starts with uuid
