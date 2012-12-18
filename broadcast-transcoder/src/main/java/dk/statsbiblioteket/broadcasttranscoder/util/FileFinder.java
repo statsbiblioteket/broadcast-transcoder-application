@@ -17,4 +17,5 @@ import java.util.Map;
  */
 public interface FileFinder {
     Map<BroadcastMetadata, File> findAndBringOnline(TranscodeRequest request, Context context) throws ProcessorException;
+    boolean isAllFilesOnline(TranscodeRequest request, Context context) throws ProcessorException;
 }

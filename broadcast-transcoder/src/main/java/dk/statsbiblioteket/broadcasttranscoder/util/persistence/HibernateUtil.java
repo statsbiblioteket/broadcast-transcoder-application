@@ -18,12 +18,14 @@ public class HibernateUtil implements HibernateUtilIF {
     private static SessionFactory factory;
 
     private static HibernateUtil instance;
+    private static String configFilePath;
 
     private HibernateUtil() {
 
     }
 
     public static synchronized HibernateUtil getInstance(String configFilePath) {
+        HibernateUtil.configFilePath = configFilePath;
         if (instance == null) {
             instance = new HibernateUtil();
             File file = new File(configFilePath);
@@ -43,5 +45,10 @@ public class HibernateUtil implements HibernateUtilIF {
     @Override
     public Session getSession() {
         return factory.openSession();
+    }
+
+    public void reload(){
+        instance = null;
+        instance = getInstance(configFilePath);
     }
 }

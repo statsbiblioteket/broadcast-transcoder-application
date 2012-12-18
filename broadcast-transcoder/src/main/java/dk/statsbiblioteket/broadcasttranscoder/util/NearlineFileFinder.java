@@ -41,6 +41,7 @@ public class NearlineFileFinder implements FileFinder {
 
         Map<BroadcastMetadata, File> result = new HashMap<BroadcastMetadata, File>();
         if (metadatas.size() > max_files) {
+            //TODO how about paging the stuff instead?
             throw new ProcessorException("Tried to fetch " + metadatas.size() + " at a time. Disallowed.");
         }
         String query = "";
@@ -84,4 +85,37 @@ public class NearlineFileFinder implements FileFinder {
         return result;
     }
 
+    /**
+     * Given a list of files to bring online, bring them online and return a map listing their local locations.
+     * @return
+     */
+    @Override
+    public boolean isAllFilesOnline(TranscodeRequest request, Context context) throws ProcessorException {
+        String finderBaseUrl = context.getFileFinderUrl();
+        List<BroadcastMetadata> metadatas = request.getBroadcastMetadata();
+
+        boolean allIsOnline = true;
+
+        for (BroadcastMetadata metadata : metadatas) {
+            String filename = metadata.getFilename();
+            String url = finderBaseUrl + "?" + "*"+filename;
+            try {
+                InputStream is = new URL(url).openStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+                int lines = 0;
+                while (bufferedReader.readLine() != null){
+                    lines++;
+                }
+                is.close();
+                if (lines == 0){
+                    allIsOnline = false;
+                    break;
+                }
+            } catch (IOException e) {
+                throw new ProcessorException("Failed to open URL "+url,e);
+            }
+
+        }
+        return allIsOnline;
+    }
 }

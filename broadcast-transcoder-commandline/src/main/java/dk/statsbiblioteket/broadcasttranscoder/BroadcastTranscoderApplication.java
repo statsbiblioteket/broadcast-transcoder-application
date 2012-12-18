@@ -43,65 +43,7 @@ public class BroadcastTranscoderApplication {
             System.exit(3);
         }
         try {
-            ProcessorChainElement structureFetcher = new DomsTranscodingStructureFetcher();
-            ProcessorChainElement programFetcher = new ProgramMetadataFetcherProcessor();
-            ProcessorChainElement pbcorer = new PbcoreMetadataExtractorProcessor();
-            ProcessorChainElement filedataFetcher    = new FileMetadataFetcherProcessor();
-            ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
-            ProcessorChainElement fileFinderFetcher = new FilefinderFetcherProcessor();
-            ProcessorChainElement identifier = new FilePropertiesIdentifierProcessor();
-            ProcessorChainElement clipper = new ClipFinderProcessor();
-            ProcessorChainElement coverage = new CoverageAnalyserProcessor();
-            ProcessorChainElement updater = new ProgramStructureUpdaterProcessor();
-            ProcessorChainElement fixer = new StructureFixerProcessor();
-            ProcessorChainElement concatenator = new ClipConcatenatorProcessor();
-            ProcessorChainElement firstChain = ProcessorChainElement.makeChain(
-                    structureFetcher,
-                    programFetcher,
-                    pbcorer,
-                    filedataFetcher,
-                    sorter,
-                    fileFinderFetcher,
-                    identifier,
-                    clipper,
-                    coverage,
-                    updater,
-                    fixer,
-                    concatenator);
-            firstChain.processIteratively(request, context);
-            if (request.isGoForTranscoding()) {
-                ProcessorChainElement secondChain = null;
-                ProcessorChainElement pider = new PidAndAsepctRatioExtractorProcessor();
-                ProcessorChainElement waver = new WavTranscoderProcessor();
-                ProcessorChainElement multistreamer = new MultistreamVideoTranscoderProcessor();
-                ProcessorChainElement unistreamvideoer = new UnistreamVideoTranscoderProcessor();
-                ProcessorChainElement unistreamaudioer = new UnistreamAudioTranscoderProcessor();
-                ProcessorChainElement previewer = new PreviewClipperProcessor();
-                ProcessorChainElement snapshotter = new SnapshotExtractorProcessor();
-                ProcessorChainElement zeroChecker = new ZeroLengthCheckerProcessor();
-                switch (request.getFileFormat()) {
-                    case MULTI_PROGRAM_MUX:
-                        secondChain = ProcessorChainElement.makeChain(pider, multistreamer, zeroChecker, previewer, snapshotter);
-                        break;
-                    case SINGLE_PROGRAM_VIDEO_TS:
-                        secondChain = ProcessorChainElement.makeChain(pider, unistreamvideoer, zeroChecker, previewer, snapshotter);
-                        break;
-                    case SINGLE_PROGRAM_AUDIO_TS:
-                        secondChain = ProcessorChainElement.makeChain(pider, unistreamaudioer, zeroChecker, previewer);
-                        break;
-                    case MPEG_PS:
-                        secondChain = ProcessorChainElement.makeChain(pider, unistreamvideoer, zeroChecker, previewer, snapshotter);
-                        break;
-                    case AUDIO_WAV:
-                        secondChain = ProcessorChainElement.makeChain(waver, zeroChecker, previewer);
-                        break;
-                }
-                secondChain.processIteratively(request, context);
-                context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
-                (new BroadcastTranscodingRecordEnricherProcessor()).processIteratively(request, context);
-            } else {
-                logger.info("No transcoding required for " + context.getProgrampid() + ". Exiting.");
-            }
+            runChain(request, context);
         } finally {
             boolean deleted = lockFile.delete();
             if (!deleted) {
@@ -109,6 +51,113 @@ public class BroadcastTranscoderApplication {
                 System.exit(4);
             }
         }
+
+    }
+
+
+    public static void runChain(TranscodeRequest request, Context context) throws ProcessorException {
+        ProcessorChainElement overwriter = new OverwriterProcessor();
+        ProcessorChainElement structureFetcher = new DomsTranscodingStructureFetcher();
+        ProcessorChainElement preChain = ProcessorChainElement.makeChain(
+                overwriter,
+                structureFetcher);
+        preChain.processIteratively(request, context);
+        if (!request.isGoForTranscoding()) {
+            context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
+            logger.info("No transcoding required for " + context.getProgrampid() + ". Exiting.");
+            return;
+        }
+
+        /*First one getting stuff for the persistence layer*/
+        ProcessorChainElement programFetcher = new ProgramMetadataFetcherProcessor();
+
+        /*Next one getting for the persistence layer*/
+        ProcessorChainElement pbcorer = new PbcoreMetadataExtractorProcessor();
+
+
+        ProcessorChainElement filedataFetcher    = new FileMetadataFetcherProcessor();
+        ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
+        ProcessorChainElement fileFinderFetcher = new FilefinderFetcherProcessor();
+        ProcessorChainElement identifier = new FilePropertiesIdentifierProcessor();
+
+        /*Find the offsets*/
+        ProcessorChainElement clipper = new ClipFinderProcessor();
+
+        ProcessorChainElement coverage = new CoverageAnalyserProcessor();
+        ProcessorChainElement updater = new ProgramStructureUpdaterProcessor();
+        ProcessorChainElement fixer = new StructureFixerProcessor();
+        ProcessorChainElement concatenator = new ClipConcatenatorProcessor();
+        ProcessorChainElement firstChain = ProcessorChainElement.makeChain(
+                programFetcher,
+                pbcorer,
+                filedataFetcher,
+                sorter,
+                fileFinderFetcher,
+                identifier,
+                clipper,
+                coverage,
+                updater,
+                fixer,
+                concatenator);
+        firstChain.processIteratively(request, context);
+        if (!request.isGoForTranscoding()) {
+            logger.info("No transcoding required for " + context.getProgrampid() + ". Exiting.");
+            return;
+        }
+        ProcessorChainElement secondChain;
+        ProcessorChainElement pider = new PidAndAsepctRatioExtractorProcessor();
+        ProcessorChainElement waver = new WavTranscoderProcessor();
+        ProcessorChainElement multistreamer = new MultistreamVideoTranscoderProcessor();
+        ProcessorChainElement unistreamvideoer = new UnistreamVideoTranscoderProcessor();
+        ProcessorChainElement unistreamaudioer = new UnistreamAudioTranscoderProcessor();
+        ProcessorChainElement previewer = new PreviewClipperProcessor();
+        ProcessorChainElement snapshotter = new SnapshotExtractorProcessor();
+        ProcessorChainElement zeroChecker = new ZeroLengthCheckerProcessor();
+        ProcessorChainElement persistenceEnricher = new BroadcastTranscodingRecordEnricherProcessor();
+
+        switch (request.getFileFormat()) {
+            case MULTI_PROGRAM_MUX:
+                secondChain = ProcessorChainElement.makeChain(pider,
+                        multistreamer,
+                        zeroChecker,
+                        previewer,
+                        snapshotter,
+                        persistenceEnricher);
+                break;
+            case SINGLE_PROGRAM_VIDEO_TS:
+                secondChain = ProcessorChainElement.makeChain(pider,
+                        unistreamvideoer,
+                        zeroChecker,
+                        previewer,
+                        snapshotter,
+                        persistenceEnricher);
+                break;
+            case SINGLE_PROGRAM_AUDIO_TS:
+                secondChain = ProcessorChainElement.makeChain(pider,
+                        unistreamaudioer,
+                        zeroChecker,
+                        previewer,
+                        persistenceEnricher);
+                break;
+            case MPEG_PS:
+                secondChain = ProcessorChainElement.makeChain(pider,
+                        unistreamvideoer,
+                        zeroChecker,
+                        previewer,
+                        snapshotter,
+                        persistenceEnricher);
+                break;
+            case AUDIO_WAV:
+                secondChain = ProcessorChainElement.makeChain(waver,
+                        zeroChecker,
+                        previewer,
+                        persistenceEnricher);
+                break;
+            default:
+                return;
+        }
+        secondChain.processIteratively(request, context);
+        context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
     }
 
 

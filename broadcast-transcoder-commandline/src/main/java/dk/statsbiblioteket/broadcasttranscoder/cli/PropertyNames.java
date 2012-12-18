@@ -88,6 +88,8 @@ public class PropertyNames {
 
     public static final String DEFAULT_TIMESTAMP= "defaultTranscodingTimestamp";
 
+    public static final String OVERWRITE = "overwrite";
+
     /**
      * Properties relating to reklamefilm
      */
