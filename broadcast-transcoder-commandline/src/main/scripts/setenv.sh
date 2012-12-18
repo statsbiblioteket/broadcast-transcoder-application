@@ -6,7 +6,7 @@
 SCRIPT_PATH=$(dirname $(readlink -f $0))
 CLASSPATH="$SCRIPT_PATH/../lib/*"
 logDir="$SCRIPT_PATH/.."
-confDir="$SCRIPT_PATH/../config
+confDir="$SCRIPT_PATH/../config"
 
 
 #
