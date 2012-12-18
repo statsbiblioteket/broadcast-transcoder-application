@@ -28,7 +28,7 @@ rm -f $SCRIPT_PATH/../*.lock *.lock *workerFile
 #get list of changes from queryChanges with progress timestamp as input
 timestamp=$(cat $progressFile | tail -1)
 changes=$(mktemp)
-$SCRIPT_PATH/queryChanges.sh  $collection $timestamp > $changes
+$SCRIPT_PATH/queryChanges.sh  $collection $timestamp | grep uuid > $changes
 
 #cut list into pid/timestamp sets
 #iterate through list,

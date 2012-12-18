@@ -51,3 +51,4 @@ WORKERS=2
 #This feature is not currently used
 machines=( "machine1" "machine2" )
 
+hibernate_log_config=" -Dcom.mchange.v2.log.MLog=com.mchange.v2.log.FallbackMLog  -Dcom.mchange.v2.log.FallbackMLog.DEFAULT_CUTOFF_LEVEL=WARNING "
