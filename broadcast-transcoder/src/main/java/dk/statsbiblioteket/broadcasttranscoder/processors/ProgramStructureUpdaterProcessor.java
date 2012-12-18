@@ -184,7 +184,7 @@ public class ProgramStructureUpdaterProcessor extends ProcessorChainElement {
                     Overlap overlap1 = overlaps1.get(j);
                     Overlap overlap2 = overlaps2.get(j);
                     if (!(
-                            overlap1.getFile1UUId().equals(overlap2.getFile1UUId())
+                            overlap1.getFile1UUID().equals(overlap2.getFile1UUID())
                                     &&    overlap1.getFile2UUID().equals(overlap2.getFile2UUID())
                                     &&    overlap1.getOverlapLength() == overlap2.getOverlapLength()
                                     &&    overlap1.getOverlapType() == overlap2.getOverlapType()

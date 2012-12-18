@@ -49,7 +49,7 @@ public class StructureFixerProcessor extends ProcessorChainElement {
     }
 
     private void handleSingleOverlap(TranscodeRequest request, Overlap overlap) throws ProcessorException {
-        BroadcastMetadata bmd1 = request.getPidMap().get(overlap.getFile1UUId());
+        BroadcastMetadata bmd1 = request.getPidMap().get(overlap.getFile1UUID());
         BroadcastMetadata bmd2 = request.getPidMap().get(overlap.getFile2UUID());
         File file1 = request.getFileMap().get(bmd1);
         File file2 = request.getFileMap().get(bmd2);

@@ -96,7 +96,7 @@ public class CoverageAnalyserProcessor extends ProcessorChainElement {
                 if (overlapLength > gapToleranceSeconds) {
                     Overlap overlap = new Overlap();
                     overlap.setOverlapLength(overlapLength);
-                    overlap.setFile1UUId(firstEntry.getKey());
+                    overlap.setFile1UUID(firstEntry.getKey());
                     overlap.setFile2UUID(secondEntry.getKey());
                     long programStartTime = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStart())/1000L;
                     long programEndTime = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStop())/1000L;

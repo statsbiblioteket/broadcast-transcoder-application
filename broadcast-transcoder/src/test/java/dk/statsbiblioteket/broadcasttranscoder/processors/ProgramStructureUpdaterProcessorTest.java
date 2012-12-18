@@ -105,7 +105,7 @@ public class ProgramStructureUpdaterProcessorTest extends TestCase {
         assertTrue(processor.areSemanticallyEqual(s1, s2));
 
         Overlap overlap1 = new Overlap();
-        overlap1.setFile1UUId("foobar");
+        overlap1.setFile1UUID("foobar");
         overlap1.setFile2UUID("barfoo");
         overlap1.setOverlapLength(300);
         overlap1.setOverlapType(0);
@@ -117,7 +117,7 @@ public class ProgramStructureUpdaterProcessorTest extends TestCase {
         assertFalse(processor.areSemanticallyEqual(s1, s2));
 
         Overlap overlap2 = new Overlap();
-        overlap2.setFile1UUId("foobar");
+        overlap2.setFile1UUID("foobar");
         overlap2.setFile2UUID("barfoo");
         overlap2.setOverlapLength(300);
         overlap2.setOverlapType(0);
