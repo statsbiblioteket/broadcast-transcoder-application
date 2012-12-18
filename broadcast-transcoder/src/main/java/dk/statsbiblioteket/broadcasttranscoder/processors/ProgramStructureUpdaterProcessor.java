@@ -73,7 +73,8 @@ public class ProgramStructureUpdaterProcessor extends ProcessorChainElement {
                 doms.markPublishedObject(pids, "Updated PROGRAM_STRUCTURE with " +
                         "result from analysis by Broadcast Transcoded Application");
             } catch (Exception e) {
-               logger.error("Problem republishing object " + context.getProgrampid(), e);
+                logger.error("Problem republishing object " + context.getProgrampid(), e);
+                throw new ProcessorException("Problem republishing object " + context.getProgrampid(), e);
             }
         }
     }

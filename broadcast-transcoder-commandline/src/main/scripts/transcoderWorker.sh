@@ -7,15 +7,12 @@ collection=${1}
 uuid=$2
 timestamp=$3
 machine=$4
-logDir=$5
-confDir=$6
 
+source $SCRIPT_PATH/setenv.sh $collection
 
-[ -z "$logDir" ] && logDir="$SCRIPT_PATH/.."
-[ -z "$confDir" ] && confDir="$SCRIPT_PATH/../config"
 
 #use machine here to ssh to a machine to run this on
-$SCRIPT_PATH/transcodeFile.sh "$collection" "$uuid" "$timestamp" "$logDir" "$confDir"
+$SCRIPT_PATH/transcodeFile.sh "$collection" "$uuid" "$timestamp"
 
 returncode=$?
 
@@ -28,11 +25,11 @@ if [ $returncode -eq 0 ]; then
        if [ $timestamp -gt $progress_timestamp ]; then
           echo $timestamp > $progressFile
        fi
-       echo "$uuid   $timestamp $machine" >> $logDir/$collection.successes
+       echo  "$collection" "$uuid" "$timestamp"  >> $logDir/$collection.successes
    rm -f "$progressFile.lock"
 else
     lockfile "$logDir/fails.lock"
-        echo "$uuid   $timestamp $machine" >> $logDir/$collection.failures
+        echo "$collection" "$uuid" "$timestamp"  >> $logDir/$collection.failures
     rm -f "$logDir/fails.lock"
 fi
 

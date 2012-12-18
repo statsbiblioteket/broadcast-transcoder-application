@@ -121,43 +121,44 @@ public class BroadcastTranscoderApplication {
                         multistreamer,
                         zeroChecker,
                         previewer,
-                        snapshotter,
-                        persistenceEnricher);
+                        snapshotter);
                 break;
             case SINGLE_PROGRAM_VIDEO_TS:
                 secondChain = ProcessorChainElement.makeChain(pider,
                         unistreamvideoer,
                         zeroChecker,
                         previewer,
-                        snapshotter,
-                        persistenceEnricher);
+                        snapshotter);
                 break;
             case SINGLE_PROGRAM_AUDIO_TS:
                 secondChain = ProcessorChainElement.makeChain(pider,
                         unistreamaudioer,
                         zeroChecker,
-                        previewer,
-                        persistenceEnricher);
+                        previewer);
                 break;
             case MPEG_PS:
                 secondChain = ProcessorChainElement.makeChain(pider,
                         unistreamvideoer,
                         zeroChecker,
                         previewer,
-                        snapshotter,
-                        persistenceEnricher);
+                        snapshotter);
                 break;
             case AUDIO_WAV:
                 secondChain = ProcessorChainElement.makeChain(waver,
                         zeroChecker,
-                        previewer,
-                        persistenceEnricher);
+                        previewer);
                 break;
             default:
                 return;
         }
         secondChain.processIteratively(request, context);
         context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
+        ProcessorChainElement thirdChain = ProcessorChainElement.makeChain(persistenceEnricher);
+        try {
+            thirdChain.processIteratively(request, context);
+        } catch (ProcessorException e) {
+            logger.warn("Persistence Enrichment failed for " + context.getProgrampid(), e);
+        }
     }
 
 

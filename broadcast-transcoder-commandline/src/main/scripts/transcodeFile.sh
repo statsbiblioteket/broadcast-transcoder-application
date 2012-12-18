@@ -6,9 +6,8 @@ CLASSPATH="$SCRIPT_PATH/../lib/*"
 collection=${1}
 uuid=$2
 timestamp=$3
-logDir=$4
-confDir=$5
 
+source $SCRIPT_PATH/setenv.sh $collection
 
 java \
   -Dlogback.configurationFile=$confDir/logback.xml  \

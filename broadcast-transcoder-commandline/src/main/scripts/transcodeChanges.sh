@@ -1,46 +1,19 @@
 #!/bin/bash
 
-
 SCRIPT_PATH=$(dirname $(readlink -f $0))
-CLASSPATH="$SCRIPT_PATH/../lib/*"
 
-collection=$1
-if [ "$collection" = "" ]; then
-    collection="Broadcast"
-fi
-
-## This is 2012-04-01
-##INITIAL_TIMESTAMP=1333231200000
-
-
-## This is 2012-12-16
-INITIAL_TIMESTAMP=1355612400000
-
-
-debug=1
-
-#The number of worker processes. If this is changed from a previous run then the
-#cleanup loop needs to be executed by hand.
-WORKERS=2
-
-
-#These are external machines on which to run the transcoding process by ssh eg user1@encoder1 ....
-#This feature is not currently used
-machines=( "machine1" "machine2" )
-
-
+source $SCRIPT_PATH/setenv.sh $1
 
 #Cleanup from previous run
 for ((i=0;i<$WORKERS;i++)); do
             workerfile="${i}.$collection.workerFile"
-            failureFile=  "$SCRIPT_PATH/../$collection.failures"
             if [ -e  $workerfile ]; then
               uuid=$(cat $workerfile|cut -d ' ' -f2)
               timestamp=$(cat $workerfile|cut -d ' ' -f3)
               machine=$(cat $workerfile|cut -d ' ' -f4)
 
               lockfile "$failureFile.lock"
-                      echo "$uuid   $timestamp" >> $failureFile
+                      echo "$collection $uuid $timestamp" >> $failureFile
               rm -f "$failureFile.lock"
 
         rm $workerfile
@@ -50,10 +23,7 @@ for ((i=0;i<$WORKERS;i++)); do
 done
 rm -f $SCRIPT_PATH/../*.lock *.lock *workerFile
 
-progressFile="$SCRIPT_PATH/../$collection.progress"
-if [ ! -e $progressFile ]; then
-    echo $INITIAL_TIMESTAMP > $progressFile
-fi
+
 
 #get list of changes from queryChanges with progress timestamp as input
 timestamp=$(cat $progressFile | tail -1)
@@ -125,5 +95,6 @@ while read line; do
 done < $changes
 
 rm $changes
+rm *workerFile
 
 
