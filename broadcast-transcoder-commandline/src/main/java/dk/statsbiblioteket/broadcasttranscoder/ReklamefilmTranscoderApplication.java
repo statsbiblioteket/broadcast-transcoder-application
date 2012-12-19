@@ -48,6 +48,7 @@ public class ReklamefilmTranscoderApplication {
             System.exit(3);
         }
         try {
+            request.setGoForTranscoding(true);
             ProcessorChainElement gonogoer = new GoNoGoProcessor();
             ProcessorChainElement firstChain = ProcessorChainElement.makeChain(gonogoer);
             firstChain.processIteratively(request, context);

@@ -1,9 +1,8 @@
 package dk.statsbiblioteket.broadcasttranscoder;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
-import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionsParser;
-import dk.statsbiblioteket.broadcasttranscoder.processors.DomsTranscodingStructureFetcher;
+import dk.statsbiblioteket.broadcasttranscoder.processors.DomsAndOverwriteExaminerProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.BroadcastTranscodingRecordDAO;
@@ -61,12 +60,14 @@ public class BroadcastTranscoderApplication {
 
 
     public static void runChain(TranscodeRequest request, Context context) throws ProcessorException {
-            ProcessorChainElement overwriter = new OverwriterProcessor();
-            ProcessorChainElement structureFetcher = new DomsTranscodingStructureFetcher();
+
+            request.setGoForTranscoding(true);
+
+            ProcessorChainElement structureFetcher = new DomsAndOverwriteExaminerProcessor();
             ProcessorChainElement preChain = ProcessorChainElement.makeChain(
-                    overwriter,
                     structureFetcher);
             preChain.processIteratively(request, context);
+
             if (!request.isGoForTranscoding()) {
                 context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
                 logger.info("No transcoding required for " + context.getProgrampid() + ". Exiting.");
