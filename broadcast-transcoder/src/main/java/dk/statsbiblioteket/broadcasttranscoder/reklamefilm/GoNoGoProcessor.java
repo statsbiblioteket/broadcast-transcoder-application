@@ -10,14 +10,14 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Sets the "isGoForTranscoding" flag in the request on the basis of whether or not the output file
- * already exists (and any other criteria we might think of later).
+ * already exists and whether or not overwrite flag is set.
  */
 public class GoNoGoProcessor extends ProcessorChainElement {
     private static Logger logger = LoggerFactory.getLogger(GoNoGoProcessor.class);
 
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
-         if (FileUtils.hasMediaOutputFile(request, context)) {
+         if (FileUtils.hasMediaOutputFile(request, context) && !context.isOverwrite()) {
              logger.info("Transcoded file already found. No transcoding necessary.");
              request.setGoForTranscoding(false);
          } else {

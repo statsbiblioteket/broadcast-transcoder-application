@@ -89,7 +89,7 @@ public class ReklamefilmFileResolverImpl implements ReklamefilmFileResolver {
                     return file;
                 }
             } catch (Exception e) {
-                logger.warn("Attempt to find file with find command failed.", e);
+                logger.warn("Attempt to find file with find command '" + runner.toString() + " / " + cmd + "' failed.", e);
             }
         }
 

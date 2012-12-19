@@ -46,11 +46,18 @@ public class DomsTranscodingStructureFetcher extends ProcessorChainElement {
         super(childElement);
     }
 
+    /**
+     *
+     * @param request
+     * @param context
+     * @throws ProcessorException
+     */
     @Override
     public void processThis(TranscodeRequest request, Context context) throws ProcessorException {
 
         final String pid = context.getProgrampid();
 
+        request.setGoForTranscoding(false);
         if (!FileUtils.hasMediaOutputFile(request, context)) {
             logger.info("Output file for " + pid + " does not exist so transcoding is forced.");
             request.setGoForTranscoding(true);

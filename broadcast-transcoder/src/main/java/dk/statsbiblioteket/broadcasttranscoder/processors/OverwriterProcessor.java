@@ -26,10 +26,11 @@ public class OverwriterProcessor extends ProcessorChainElement {
 
         File file = FileUtils.findMediaOutputFile(request, context);
 
-        //TODO I DO NOT KNOW IF THIS IS THE CORRECT LOGICAL COMBO
         if ( ! context.isOverwrite() && file != null && file.exists()){
         //if file exists and overwrite false, setGoForTranscoding = false
             request.setGoForTranscoding(false);
+        } else {
+            request.setGoForTranscoding(true);
         }
 
 
