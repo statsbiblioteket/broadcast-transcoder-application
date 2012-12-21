@@ -33,7 +33,7 @@ public class FilePropertiesIdentifierProcessor extends ProcessorChainElement {
         Long bitrate = fileLength/(duration/1000L) ;
         logger.info("Setting bitrate for " + context.getProgrampid() + " to " + bitrate + " bytes/second");
         request.setBitrate(bitrate);
-        String filename = entry.getKey().getFilename();
+        String filename = entry.getValue().getName();
         FileFormatEnum format = null;
         if (filename.endsWith("wav")) {
             format = FileFormatEnum.AUDIO_WAV;
@@ -41,7 +41,7 @@ public class FilePropertiesIdentifierProcessor extends ProcessorChainElement {
             format = FileFormatEnum.MPEG_PS;
         } else if (filename.startsWith("mux") && filename.endsWith("ts")) {
             format = FileFormatEnum.MULTI_PROGRAM_MUX;
-        } else if (filename.endsWith("mux")) {
+        } else if (filename.endsWith("ts")) {
             if (bitrate > 100000l) {
                 format = FileFormatEnum.SINGLE_PROGRAM_VIDEO_TS;
             } else {

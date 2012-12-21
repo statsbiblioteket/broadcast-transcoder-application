@@ -82,6 +82,7 @@ public class BroadcastTranscoderApplication {
 
 
             ProcessorChainElement filedataFetcher    = new FileMetadataFetcherProcessor();
+            ProcessorChainElement sanitiser = new SanitiseBroadcastMetadataProcessor();
             ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
             ProcessorChainElement fileFinderFetcher = new FilefinderFetcherProcessor();
             ProcessorChainElement identifier = new FilePropertiesIdentifierProcessor();
@@ -97,6 +98,7 @@ public class BroadcastTranscoderApplication {
                     programFetcher,
                     pbcorer,
                     filedataFetcher,
+                    sanitiser,
                     sorter,
                     fileFinderFetcher,
                     identifier,
