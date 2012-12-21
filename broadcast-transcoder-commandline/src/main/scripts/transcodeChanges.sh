@@ -36,10 +36,14 @@ $SCRIPT_PATH/queryChanges.sh  $collection $timestamp | grep uuid > $changes
 programs=$(cat $changes | wc -l)
 echo "number of programs to transcode is $programs"
 
+IFS_OLD=$IFS
+IFS=$(echo)
+
 machineIndex=0
 counter=0
-while read line; do
+cat $changes | while read line; do
     echo "trancoding program $counter of $programs"
+    echo "Processing $line"
     ((counter++))
 
 
@@ -49,7 +53,9 @@ while read line; do
     if [[ $uuid != uuid:* ]]; then
         continue
     fi
-    while [ 1 ]; do
+    started=0
+
+    while [ $started -eq 0 ]; do
             [ $debug = 1 ] && echo "$uuid: Starting allocation to worker for uuid $uuid"
             for ((i=0;i<$WORKERS;i++)); do
                     workerfile="${i}$collection.workerFile"
@@ -79,20 +85,22 @@ while read line; do
                             ((machineIndex++))
                             max=${#machines[*]}
                             [ $machineIndex -ge $max ] && machineIndex=0
-
-                        [ $debug = 1 ] && echo "$uuid: writing info to $workerfile"
-                        [ $debug = 1 ] && echo "$uuid: releasing lock on $workerfile and go to next line"
-                        rm -f "$workerfile.lock"
-                        break 2
+                         started=1
                     fi
                     [ $debug = 1 ] && echo "$uuid: releasing lock on $workerfile"
                     rm -f "$workerfile.lock"
+                    if [ $started -gt 0 ]; then
+                        [ $debug = 1 ] && echo "$uuid: Allocated to worker, moving to next entity"
+                        break 1
+                    fi
             done
-            sleep 10s
-            echo
+            sleep 2
+            echo ""
     done
-    echo
-done < $changes
+    echo ""
+done
+
+IFS=$IFS_OLD
 
 rm $changes
 rm *workerFile

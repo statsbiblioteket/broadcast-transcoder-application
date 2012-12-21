@@ -10,9 +10,18 @@ machine=$4
 
 source $SCRIPT_PATH/setenv.sh $collection
 
+if [ "$machine" = "local" ]
+then
+   SSH_COMMAND=""
+else
+   SSH_COMMAND="ssh $machine "
+fi
+
 
 #use machine here to ssh to a machine to run this on
-$SCRIPT_PATH/transcodeFile.sh "$collection" "$uuid" "$timestamp"
+transcoderOutput=$(mktemp)
+
+$SSH_COMMAND $SCRIPT_PATH/transcodeFile.sh "$collection" "$uuid" "$timestamp" "$machine" &> $transcoderOutput
 
 returncode=$?
 
@@ -30,7 +39,10 @@ if [ $returncode -eq 0 ]; then
 else
     lockfile "$logDir/fails.lock"
         echo "$collection" "$uuid" "$timestamp"  >> $logDir/$collection.failures
+        #possibly cat the transcoderOutput
     rm -f "$logDir/fails.lock"
 fi
+
+rm -f $transcoderOutput
 
 exit $returncode

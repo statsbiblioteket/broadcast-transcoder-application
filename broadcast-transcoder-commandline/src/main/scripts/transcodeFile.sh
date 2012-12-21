@@ -7,7 +7,11 @@ collection=${1}
 uuid=$2
 timestamp=$3
 
+
+
 source $SCRIPT_PATH/setenv.sh $collection
+
+
 
 java \
   -Dlogback.configurationFile=$confDir/logback.xml  \
@@ -19,6 +23,8 @@ java \
  --behavioural_configfile=$confDir/bta.behaviour.properties \
  --programpid=$uuid \
  --timestamp=$timestamp
+
+
 
 returncode=$?
 

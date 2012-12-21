@@ -1,5 +1,18 @@
 #!/bin/bash
 
+#The number of worker processes. If this is changed from a previous run then the
+#cleanup loop needs to be executed by hand.
+WORKERS=2
+
+#These are external machines on which to run the transcoding process by ssh eg user1@encoder1 ....
+#The special value "local" means "do the transcoding locally as the current user without ssh"
+#
+#It is a requirement that the installation directory for bta on the remote machine has the same absolute
+#path as the local installation where the scripts run.
+#
+machines=( "bta@iapetus" )
+
+
 #
 # This sets the SCRIPT_PATH to the directory where this script is found
 #
@@ -43,12 +56,5 @@ fi
 
 debug=1
 
-#The number of worker processes. If this is changed from a previous run then the
-#cleanup loop needs to be executed by hand.
-WORKERS=2
-
-#These are external machines on which to run the transcoding process by ssh eg user1@encoder1 ....
-#This feature is not currently used
-machines=( "machine1" "machine2" )
 
 hibernate_log_config=" -Dcom.mchange.v2.log.MLog=com.mchange.v2.log.FallbackMLog  -Dcom.mchange.v2.log.FallbackMLog.DEFAULT_CUTOFF_LEVEL=WARNING "

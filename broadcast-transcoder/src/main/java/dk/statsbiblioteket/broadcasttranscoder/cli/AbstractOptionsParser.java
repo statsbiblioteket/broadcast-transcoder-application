@@ -7,6 +7,14 @@ public  abstract class AbstractOptionsParser {
     public AbstractOptionsParser() {
     }
 
+    protected File readFileProperty(String propName, Properties props)  throws OptionParseException {
+        String prop = props.getProperty(propName);
+        if (prop == null || "".equals(prop)) {
+            throw new OptionParseException("Property " + propName + " not set.");
+        }
+        return new File(prop);
+    }
+
     protected File readExistingDirectoryProperty(String propName, Properties props) throws OptionParseException {
         String prop = props.getProperty(propName);
         if (prop == null || "".equals(prop)) {

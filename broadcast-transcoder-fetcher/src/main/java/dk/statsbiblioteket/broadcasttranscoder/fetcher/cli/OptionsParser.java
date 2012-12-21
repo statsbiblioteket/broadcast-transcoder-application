@@ -91,10 +91,10 @@ public class OptionsParser extends AbstractOptionsParser{
         Properties props = new Properties();
         props.load(new FileInputStream(context.getInfrastructuralConfigFile()));
 
-        context.setFileOutputRootdir(readExistingDirectoryProperty(PropertyNames.FILE_DIR, props));
-        context.setPreviewOutputRootdir(readExistingDirectoryProperty(PropertyNames.PREVIEW_DIR, props));
-        context.setSnapshotOutputRootdir(readExistingDirectoryProperty(PropertyNames.SNAPSHOT_DIR, props));
-        context.setLockDir(readExistingDirectoryProperty(PropertyNames.LOCK_DIR, props));
+        context.setFileOutputRootdir(readFileProperty(PropertyNames.FILE_DIR, props));
+        context.setPreviewOutputRootdir(readFileProperty(PropertyNames.PREVIEW_DIR, props));
+        context.setSnapshotOutputRootdir(readFileProperty(PropertyNames.SNAPSHOT_DIR, props));
+        context.setLockDir(readFileProperty(PropertyNames.LOCK_DIR, props));
         context.setFileDepth(readIntegerProperty(PropertyNames.FILE_DEPTH, props));
         context.setFileFinderUrl(readStringProperty(PropertyNames.FILE_FINDER, props));
         context.setMaxFilesFetched(readIntegerProperty(PropertyNames.MAX_FILES_FETCHED, props));
