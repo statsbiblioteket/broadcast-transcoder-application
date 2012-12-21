@@ -10,7 +10,8 @@ WORKERS=2
 #It is a requirement that the installation directory for bta on the remote machine has the same absolute
 #path as the local installation where the scripts run.
 #
-machines=( "bta@iapetus" )
+machines=( "local" )
+# machines=( "bta@iapetus" )
 
 
 #
