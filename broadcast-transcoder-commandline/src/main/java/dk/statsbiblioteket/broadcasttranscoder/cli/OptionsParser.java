@@ -1,7 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.cli;
 
 import dk.statsbiblioteket.broadcasttranscoder.BroadcastTranscoderApplication;
-import dk.statsbiblioteket.broadcasttranscoder.processors.OverwriterProcessor;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;

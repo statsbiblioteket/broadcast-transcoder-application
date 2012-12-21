@@ -32,17 +32,17 @@ import java.util.Date;
  * difference: go
  * otherwise: no-go
  */
-public class DomsTranscodingStructureFetcher extends ProcessorChainElement {
+public class DomsAndOverwriteExaminerProcessor extends ProcessorChainElement {
 
-    private static final Logger logger = LoggerFactory.getLogger(DomsTranscodingStructureFetcher.class);
+    private static final Logger logger = LoggerFactory.getLogger(DomsAndOverwriteExaminerProcessor.class);
 
     private TransformerFactory transFact = TransformerFactory.newInstance();
 
 
-    public DomsTranscodingStructureFetcher() {
+    public DomsAndOverwriteExaminerProcessor() {
     }
 
-    public DomsTranscodingStructureFetcher(ProcessorChainElement childElement) {
+    public DomsAndOverwriteExaminerProcessor(ProcessorChainElement childElement) {
         super(childElement);
     }
 
@@ -57,12 +57,20 @@ public class DomsTranscodingStructureFetcher extends ProcessorChainElement {
 
         final String pid = context.getProgrampid();
 
-        request.setGoForTranscoding(false);
-        if (!FileUtils.hasMediaOutputFile(request, context)) {
-            logger.info("Output file for " + pid + " does not exist so transcoding is forced.");
+
+        if (FileUtils.hasMediaOutputFile(request, context)) { //file exists
+            if ( context.isOverwrite()){ // we overwrite the existing file
+
+            } else { //File exists and we cannot overwrite. Get out now
+                request.setGoForTranscoding(false);
+                return;
+            }
+        } else { //no file
+            //skip the test if something have changed, we should definitely transcode
             request.setGoForTranscoding(true);
             return;
         }
+
 
         long timeStampOfNewChange = context.getTranscodingTimestamp();
         logger.info("Transcode doms record for " + pid + " timestamp " + timeStampOfNewChange + "=" + new Date(timeStampOfNewChange));

@@ -1,7 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder.fetcher;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
-import dk.statsbiblioteket.broadcasttranscoder.processors.DomsTranscodingStructureFetcher;
+import dk.statsbiblioteket.broadcasttranscoder.processors.DomsAndOverwriteExaminerProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import dk.statsbiblioteket.util.Streams;
 import junit.framework.TestCase;
@@ -27,14 +27,14 @@ public class DomsTranscodingStructureFetcherTest extends TestCase {
         context.setDomsUsername("fedoraAdmin");
         context.setDomsEndpoint("http://alhena:7480/centralWebservice-service/central/");
         context.setProgrampid("uuid:a3d19569-07c9-480f-8561-6dbf5e11d144");
-        DomsTranscodingStructureFetcher thing = new DomsTranscodingStructureFetcher();
+        DomsAndOverwriteExaminerProcessor thing = new DomsAndOverwriteExaminerProcessor();
         thing.processThis(new TranscodeRequest(),context);
         //TODO finish this test
     }
 
 
     public void testKillNewVersions() throws Exception {
-        DomsTranscodingStructureFetcher thing = new DomsTranscodingStructureFetcher();
+        DomsAndOverwriteExaminerProcessor thing = new DomsAndOverwriteExaminerProcessor();
         String bundleString = Streams.getUTF8Resource("xslt/sampleObject.xml");
 
         String result = thing.killNewerVersions(bundleString, 14000000000002L);
