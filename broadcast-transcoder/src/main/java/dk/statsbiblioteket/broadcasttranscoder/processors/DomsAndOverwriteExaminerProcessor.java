@@ -59,18 +59,18 @@ public class DomsAndOverwriteExaminerProcessor extends ProcessorChainElement {
 
 
         if (FileUtils.hasMediaOutputFile(request, context)) { //file exists
-            if ( context.isOverwrite()){ // we overwrite the existing file
-
-            } else { //File exists and we cannot overwrite. Get out now
+            if ( !context.isOverwrite()){
+                logger.info("Context is no-overwrite and media file exists so no need to transcode for " + context.getProgrampid());
                 request.setGoForTranscoding(false);
                 return;
             }
         } else { //no file
             //skip the test if something have changed, we should definitely transcode
+            logger.info("No existing media file was found, so transcoding will be instantiated for " + context.getProgrampid());
             request.setGoForTranscoding(true);
             return;
         }
-
+        logger.debug("Media file exists, checking whether program record in DOMS has significant changes for " + context.getProgrampid());
 
         long timeStampOfNewChange = context.getTranscodingTimestamp();
         logger.info("Transcode doms record for " + pid + " timestamp " + timeStampOfNewChange + "=" + new Date(timeStampOfNewChange));

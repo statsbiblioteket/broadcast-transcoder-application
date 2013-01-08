@@ -55,7 +55,7 @@ public class BroadcastTranscoderApplication {
                 System.exit(4);
             }
         }
-
+        logger.info("All processing finished for " + context.getProgrampid());
     }
 
 
