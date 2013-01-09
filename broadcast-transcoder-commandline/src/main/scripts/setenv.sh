@@ -13,6 +13,25 @@ WORKERS=2
 machines=( "local" )
 # machines=( "bta@iapetus" )
 
+#
+# if progressFile does not exist, it will be created using the value in INITIAL_TIMESTAMP
+#
+## This is 2012-04-01
+##INITIAL_TIMESTAMP=1333231200000
+
+## This is 2012-12-16
+INITIAL_TIMESTAMP=1355612400000
+
+#
+# Set debug=1 for debugging output from scripts, debug=0 for minimal output.
+#
+debug=1
+
+
+
+#
+# Nothing on or below this line should need to be changed for configuration purposes.
+#
 
 #
 # This sets the SCRIPT_PATH to the directory where this script is found
@@ -54,8 +73,6 @@ INITIAL_TIMESTAMP=1355612400000
 if [ ! -e $progressFile ]; then
     echo $INITIAL_TIMESTAMP > $progressFile
 fi
-
-debug=1
 
 
 hibernate_log_config=" -Dcom.mchange.v2.log.MLog=com.mchange.v2.log.FallbackMLog  -Dcom.mchange.v2.log.FallbackMLog.DEFAULT_CUTOFF_LEVEL=WARNING "

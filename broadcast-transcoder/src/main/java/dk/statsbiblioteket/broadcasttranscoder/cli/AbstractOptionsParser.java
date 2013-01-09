@@ -45,6 +45,16 @@ public  abstract class AbstractOptionsParser {
         }
     }
 
+    protected float readFloatProperty(String propName, Properties props) throws OptionParseException {
+        String prop = props.getProperty(propName);
+        try {
+            Float result = Float.parseFloat(prop);
+            return result;
+        } catch (NumberFormatException e) {
+            throw new OptionParseException("Cannot parse " + prop + " as a float.");
+        }
+    }
+
     protected long readLongProperty(String propName, Properties props) throws OptionParseException {
         String prop = props.getProperty(propName);
         try {

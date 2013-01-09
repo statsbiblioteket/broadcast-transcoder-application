@@ -127,11 +127,11 @@ public class Context {
         this.x264VlcParams = x264VlcParams;
     }
 
-    public int getTranscodingTimeoutDivisor() {
+    public float getTranscodingTimeoutDivisor() {
         return transcodingTimeoutDivisor;
     }
 
-    public void setTranscodingTimeoutDivisor(int transcodingTimeoutDivisor) {
+    public void setTranscodingTimeoutDivisor(float transcodingTimeoutDivisor) {
         this.transcodingTimeoutDivisor = transcodingTimeoutDivisor;
     }
 
@@ -319,11 +319,11 @@ public class Context {
         this.snapshotPaddingSeconds = snapshotPaddingSeconds;
     }
 
-    public int getSnapshotTimeoutDivisor() {
+    public float getSnapshotTimeoutDivisor() {
         return snapshotTimeoutDivisor;
     }
 
-    public void setSnapshotTimeoutDivisor(int snapshotTimeoutDivisor) {
+    public void setSnapshotTimeoutDivisor(float snapshotTimeoutDivisor) {
         this.snapshotTimeoutDivisor = snapshotTimeoutDivisor;
     }
 
@@ -381,7 +381,7 @@ public class Context {
     private int videoHeight;
     private String x264VlcParams;
     private String x264FfmpegParams;
-    private int transcodingTimeoutDivisor;
+    private float transcodingTimeoutDivisor;
     private long analysisClipLength;
 
     private int maxMissingStart;
@@ -413,7 +413,7 @@ public class Context {
     private int snapshotTargetDenominator;
     private int snapshotFrames;
     private int snapshotPaddingSeconds;
-    private int snapshotTimeoutDivisor;
+    private float snapshotTimeoutDivisor;
 
     private String soxTranscodeParams;
 

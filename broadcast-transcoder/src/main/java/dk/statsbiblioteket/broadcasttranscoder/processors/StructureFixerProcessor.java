@@ -94,17 +94,21 @@ public class StructureFixerProcessor extends ProcessorChainElement {
 
     private void handleMissingStart(TranscodeRequest request, Context context) throws ProcessorException {
         MissingStart missingStart = request.getLocalProgramStructure().getMissingStart();
-        if (missingStart != null) {
-                logger.warn("Ignoring " + missingStart.getMissingSeconds() + " missing seconds at start for " +
-                        context.getProgrampid());
+        if (missingStart != null && missingStart.getMissingSeconds() > context.getMaxMissingStart()) {
+            final String s = missingStart.getMissingSeconds() + " missing seconds at start for " +
+                    context.getProgrampid() + " is more than permitted. Exiting.";
+            logger.warn(s);
+            throw new ProcessorException(s);
         }
     }
 
     private void handleMissingEnd(TranscodeRequest request, Context context) throws ProcessorException {
         MissingEnd missingEnd = request.getLocalProgramStructure().getMissingEnd();
-        if (missingEnd != null) {
-             logger.warn("Ignoring  " + missingEnd.getMissingSeconds() + " missing seconds at end for " +
-                        context.getProgrampid());
+        if (missingEnd != null && missingEnd.getMissingSeconds() > context.getMaxMissingEnd()) {
+            final String s = missingEnd.getMissingSeconds() + " missing seconds at end for " +
+                    context.getProgrampid() + " is more than permitted. Exiting.";
+            logger.warn(s);
+            throw new ProcessorException(s);
         }
     }
 
@@ -118,7 +122,11 @@ public class StructureFixerProcessor extends ProcessorChainElement {
             return;
         } else {
             for (Hole hole: holeList) {
-                logger.warn("Ignoring a hole of length " + hole.getHoleLength() + " seconds in the recording of " + context.getProgrampid());
+                 if (hole.getHoleLength() > context.getMaxHole()) {
+                     String s = "Hole length for " + hole.toString() + " is greater than maximum permitted. Exiting.";
+                     logger.warn(s);
+                     throw new ProcessorException(s);
+                 }
             }
         }
     }

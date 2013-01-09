@@ -29,16 +29,17 @@ public class BroadcastTranscoderApplication {
         File lockFile = FileUtils.getLockFile(request, context);
         if (lockFile.exists()) {
             logger.warn("Lockfile " + lockFile.getAbsolutePath() + " already exists. Exiting.");
-            System.exit(2);
+            System.exit(0);
         }
         try {
+            logger.debug("Creating lockfile " + lockFile.getAbsolutePath());
             boolean created = lockFile.createNewFile();
             if (!created) {
-                logger.warn("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
+                logger.error("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
                 System.exit(3);
             }
         } catch (IOException e) {
-            logger.warn("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
+            logger.error("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
             System.exit(3);
         }
         try {
@@ -47,12 +48,12 @@ public class BroadcastTranscoderApplication {
             //Final fault barrier is necessary for logging
             logger.error("Processing failed for " + context.getProgrampid(), e);
             throw(e);
-        }
-        finally {
+        } finally {
+            logger.debug("Deleting lockfile " + lockFile.getAbsolutePath());
             boolean deleted = lockFile.delete();
             if (!deleted) {
                 logger.error("Could not delete lockfile: " + lockFile.getAbsolutePath());
-                System.exit(4);
+                System.exit(0);
             }
         }
         logger.info("All processing finished for " + context.getProgrampid());

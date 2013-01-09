@@ -34,7 +34,7 @@ public class MetadataUtils {
         long timeout;
         if (request.getTimeoutMilliseconds() == 0l) {
             long programLength = findProgramLengthMillis(request);
-            timeout = programLength/context.getTranscodingTimeoutDivisor();
+            timeout = (long) (programLength/context.getTranscodingTimeoutDivisor());
         } else {
             timeout = request.getTimeoutMilliseconds();
         }

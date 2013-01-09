@@ -47,16 +47,16 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         double targetAspectRatio = (targetNumerator*1.)/(targetDenominator*1.);
         int paddingSeconds = context.getSnapshotPaddingSeconds();
         int nframes = context.getSnapshotFrames();
-        int timeoutDivisor = context.getSnapshotTimeoutDivisor();
+        float timeoutDivisor = context.getSnapshotTimeoutDivisor();
         File fullMediaFile = FileUtils.getMediaOutputFile(request, context);
         File snapshotOutputDir = FileUtils.getSnapshotOutputDir(request, context);
         snapshotOutputDir.mkdirs();
         String commandLine = "ffmpeg -i " + fullMediaFile.getAbsolutePath();
         Double aspectRatio = request.getDisplayAspectRatio();
-        logger.debug("Creating snapshot for video with display aspect ratio '" + aspectRatio + "'");
+        logger.debug("Creating snapshot for video with display aspect ratio '" + aspectRatio + "' for " + context.getProgrampid());
         int N = targetNumerator * scale;
         int M = targetDenominator * scale;
-        logger.debug("Required aspect ratio is '" + N + "/" + M + "'");
+        logger.debug("Required aspect ratio is '" + N + "/" + M + "' for " + context.getProgrampid());
         String geometry = "";
         if (Math.abs(aspectRatio - targetAspectRatio) < 0.01) {
             geometry = " -s " + N + "x" + M;
@@ -84,11 +84,12 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         String rate = (nframes - 1) + "/" + modLength;
         commandLine = commandLine + " -ss " + paddingSeconds + " -t " + modLength + " -r "  + rate + geometry
                 + " -an -y -vframes " + (nframes + 1) + " " + FileUtils.getSnapshotOutputFileStringTemplate(request, context);
+        final long timeout = (long) (1000.0 * (float) length / timeoutDivisor);
         try {
-            ExternalJobRunner.runClipperCommand(1000L*length/timeoutDivisor, commandLine);
+            ExternalJobRunner.runClipperCommand(timeout, commandLine);
         } catch (ExternalProcessTimedOutException e) {
-            logger.warn("Process '" + commandLine + "' timed out.");
-            throw new ProcessorException("Process Timed out for "+context.getProgrampid(),e);
+            logger.warn("Process '" + commandLine + "' timed out after " + timeout + "ms.");
+            throw new ProcessorException("Process Timed out for " + context.getProgrampid() + " after " + timeout + "ms.",e);
         }
         // This is a dirty fix because ffmpeg generates 2 snapshots close together at the start
         String fileTemplate = FileUtils.getSnapshotOutputFileStringTemplate(request, context);

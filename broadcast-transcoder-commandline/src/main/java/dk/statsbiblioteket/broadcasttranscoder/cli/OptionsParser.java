@@ -91,7 +91,6 @@ public class OptionsParser extends AbstractOptionsParser{
         context.setDomsEndpoint(readStringProperty(DOMS_ENDPOINT, props));
         context.setDomsUsername(readStringProperty(DOMS_USER, props));
         context.setDomsPassword(readStringProperty(DOMS_PASSWORD, props));
-        context.setDomsViewAngle(readStringProperty(DOMS_VIEWANGLE,props));
         try {
             context.setReklamefileRootDirectories(readStringProperty(REKLAMEFILM_ROOT_DIRECTORY_LIST, props).split(","));
         } catch (OptionParseException e) {
@@ -107,7 +106,7 @@ public class OptionsParser extends AbstractOptionsParser{
         context.setVideoHeight(readIntegerProperty(HEIGHT, props));
         context.setX264VlcParams(readStringProperty(X264_VLC_PARAMS, props));
         context.setX264FfmpegParams(readStringProperty(X264_FFMPEG_PARAMS, props));
-        context.setTranscodingTimeoutDivisor(readIntegerProperty(TRANSCODING_DIVISOR, props));
+        context.setTranscodingTimeoutDivisor(readFloatProperty(TRANSCODING_DIVISOR, props));
         context.setAnalysisClipLength(readLongProperty(ANALYSIS_CLIP_LENGTH, props));
         context.setStartOffsetTS(readIntegerProperty(START_OFFSET_TS, props));
         context.setEndOffsetTS(readIntegerProperty(END_OFFSET_TS, props));
@@ -130,10 +129,11 @@ public class OptionsParser extends AbstractOptionsParser{
         context.setSnapshotScale(readIntegerProperty(SNAPSHOT_SCALE, props));
         context.setSnapshotTargetDenominator(readIntegerProperty(SNAPSHOT_TARGET_DENOMINATIOR, props));
         context.setSnapshotTargetNumerator(readIntegerProperty(SNAPSHOT_TARGET_NUMERATOR, props));
-        context.setSnapshotTimeoutDivisor(readIntegerProperty(SNAPSHOT_TIMEOUT_DIVISOR, props));
+        context.setSnapshotTimeoutDivisor(readFloatProperty(SNAPSHOT_TIMEOUT_DIVISOR, props));
         context.setSoxTranscodeParams(readStringProperty(SOX_TRANSCODE_PARAMS, props));
         context.setDefaultTranscodingTimestamp(readLongProperty(DEFAULT_TIMESTAMP, props));
         context.setOverwrite(readBooleanProperty(OVERWRITE,props));
+        context.setDomsViewAngle(readStringProperty(DOMS_VIEWANGLE,props));
     }
 
 
