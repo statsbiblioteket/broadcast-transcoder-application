@@ -1,8 +1,19 @@
 #!/bin/bash
 
-SCRIPT_PATH=$(dirname $(readlink -f $0))
+ENVIRONMENT=$1
 
-source $SCRIPT_PATH/setenv.sh $1
+globalLockfile=transcodeChanges.${ENVIRONMENT}.lock
+if [ -e $globalLockfile ]; then
+   echo Lockfile $globalLockfile exists. Exiting.
+   exit 0
+else
+  touch $globalLockfile
+fi
+
+SCRIPT_PATH=$(dirname $(readlink -f $0))
+ENVIRONMENT=$1
+
+source $SCRIPT_PATH/setenv.sh $ENVIRONMENT
 
 #Cleanup from previous run
 for ((i=0;i<$WORKERS;i++)); do
@@ -104,5 +115,5 @@ IFS=$IFS_OLD
 
 rm $changes
 rm *workerFile
-
+rm $globalLockfile
 
