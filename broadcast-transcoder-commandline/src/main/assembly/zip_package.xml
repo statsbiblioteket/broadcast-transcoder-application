@@ -16,6 +16,8 @@
                 <include>dbschema.sql</include>
                 <include>hibernate.cfg.xml</include>
                 <include>logback.xml</include>
+                <include>bta.fetcher.Broadcast.properties</include>
+                <include>bta.fetcher.Reklamefilm.properties</include>
             </includes>
             <filtered>false</filtered>
         </fileSet>
