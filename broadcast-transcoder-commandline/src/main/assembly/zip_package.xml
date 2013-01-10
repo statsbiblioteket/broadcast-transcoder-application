@@ -21,6 +21,10 @@
             <includes>
                 <include>*.jar</include>
             </includes>
+            <excludes>
+                <exclude>*dependencies*.jar</exclude>
+                <exclude>*tests*.jar</exclude>
+            </excludes>
         </fileSet>
         <fileSet>
             <directory>src/main/scripts/</directory>

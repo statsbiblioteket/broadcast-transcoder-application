@@ -12,26 +12,18 @@
       <unpack>false</unpack>
       <scope>runtime</scope>
       <outputDirectory>lib</outputDirectory>
-        <excludes>
-            <exclude>
-                  *with-dependencies.jar
-            </exclude>
-            <exclude>
-                *tests.jar
-            </exclude>
-        </excludes>
     </dependencySet>
   </dependencySets>
-  <fileSets>
-    <fileSet>
-      <directory>src/main/config</directory>
-      <outputDirectory>conf</outputDirectory>
-      <filtered>true</filtered>
-    </fileSet>
-    <fileSet>
-      <directory>src/main/scripts</directory>
-      <outputDirectory>bin</outputDirectory>
-      <filtered>true</filtered>
-    </fileSet>
-  </fileSets>
+    <fileSets>
+        <fileSet>
+            <directory>src/main/config</directory>
+            <outputDirectory>conf</outputDirectory>
+            <filtered>true</filtered>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/scripts</directory>
+            <outputDirectory>bin</outputDirectory>
+            <filtered>true</filtered>
+        </fileSet>
+    </fileSets>
 </assembly>
