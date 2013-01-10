@@ -12,6 +12,14 @@
       <unpack>false</unpack>
       <scope>runtime</scope>
       <outputDirectory>lib</outputDirectory>
+        <excludes>
+            <exclude>
+                  *with-dependencies.jar
+            </exclude>
+            <exclude>
+                *tests.jar
+            </exclude>
+        </excludes>
     </dependencySet>
   </dependencySets>
   <fileSets>
