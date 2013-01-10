@@ -1,6 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.processors.DomsAndOverwriteExaminerProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
@@ -22,11 +23,19 @@ public class BroadcastTranscoderApplication {
 
     public static void main(String[] args) throws Exception {
         logger.debug("Entered main method.");
-        Context context = new OptionsParser().parseOptions(args);
-        HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
-        context.setTimestampPersister(new BroadcastTranscodingRecordDAO(util));
-        TranscodeRequest request = new TranscodeRequest();
-        File lockFile = FileUtils.getLockFile(request, context);
+        Context context = null;
+        TranscodeRequest request = null;
+        File lockFile = null;
+        try {
+            context = new OptionsParser().parseOptions(args);
+            HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
+            context.setTimestampPersister(new BroadcastTranscodingRecordDAO(util));
+            request = new TranscodeRequest();
+            lockFile = FileUtils.getLockFile(request, context);
+        } catch (Exception e) {
+            logger.error("Error in initial environment", e);
+            System.exit(5);
+        }
         if (lockFile.exists()) {
             logger.warn("Lockfile " + lockFile.getAbsolutePath() + " already exists. Exiting.");
             System.exit(0);
