@@ -11,7 +11,11 @@
             <directory>${basedir}/src/main/config</directory>
             <outputDirectory>config</outputDirectory>
             <includes>
-                <include>*</include>
+                <include>bta.behaviour.properties</include>
+                <include>bta.infrastructure.properties</include>
+                <include>dbschema.sql</include>
+                <include>hibernate.cfg.xml</include>
+                <include>logback.xml</include>
             </includes>
             <filtered>false</filtered>
         </fileSet>
@@ -28,6 +32,9 @@
         </fileSet>
         <fileSet>
             <directory>src/main/scripts/</directory>
+            <excludes>
+                <exclude>transcodeReklame.sh</exclude>
+            </excludes>
             <outputDirectory>bin</outputDirectory>
             <fileMode>0755</fileMode>
             <directoryMode>0755</directoryMode>
