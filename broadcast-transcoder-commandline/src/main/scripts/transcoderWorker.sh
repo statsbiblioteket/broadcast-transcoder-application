@@ -21,7 +21,7 @@ fi
 trap 'rm -f $transcoderOutput' 0 1 2 3 15
 
 # Worker output goes here
-transcoderOutput=$(mktemp --tmpdir=$workDir)
+transcoderOutput=$(mktemp -p $workDir)
 
 # Run transcode
 $SSH_COMMAND $SCRIPT_PATH/transcodeFile.sh "$collection" "$uuid" "$timestamp" "$machine" &> $transcoderOutput

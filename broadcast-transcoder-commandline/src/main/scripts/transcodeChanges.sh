@@ -10,6 +10,7 @@ source $SCRIPT_PATH/setenv.sh $collection
 globalLock=$workDir/transcodeChanges.${collection}.lockdir
 if mkdir transcodeChanges.${collection}.lock 2>/dev/null; then
     # We're good
+    echo -n
 else
     # Fail, another copy is running
     echo "$(basename $0): ERROR this script is already running for collection $collection"
@@ -40,7 +41,7 @@ rm -f $workDir/*${collection}*.lock
 
 # Get list of changes from queryChanges with progress timestamp as input
 timestamp=$(cat $progressFile)
-changes=$(mktemp --tmpdir=$workDir)
+changes=$( mktemp -p $workDir )
 $SCRIPT_PATH/queryChanges.sh $collection $timestamp | grep "^uuid" > $changes
 
 # Cut list into pid/timestamp sets
