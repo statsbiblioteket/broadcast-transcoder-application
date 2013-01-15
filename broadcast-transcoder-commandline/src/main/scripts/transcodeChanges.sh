@@ -10,7 +10,7 @@ source $SCRIPT_PATH/setenv.sh $collection
 globalLock=$workDir/transcodeChanges.${collection}.lockdir
 if mkdir transcodeChanges.${collection}.lock 2>/dev/null; then
     # We're good
-    echo -n
+    true
 else
     # Fail, another copy is running
     echo "$(basename $0): ERROR this script is already running for collection $collection"
