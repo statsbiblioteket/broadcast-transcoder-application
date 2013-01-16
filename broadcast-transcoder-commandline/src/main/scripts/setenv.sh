@@ -44,6 +44,9 @@ workDir=$HOME/var/work
 # stateDir, this holds permanent state, such as the various progress files
 stateDir=$HOME/var/state
 
+[ $debug = 1 ] && echo "confDir: $confDir"
+[ $debug = 1 ] && echo "workDir: $workDir"
+[ $debug = 1 ] && echo "stateDir: $stateDir"
 ###############################################################################
 # Nothing on or below this line should need to be changed for configuration purposes.
 

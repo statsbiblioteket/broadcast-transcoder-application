@@ -8,7 +8,7 @@ source $SCRIPT_PATH/setenv.sh $collection
 
 # Ensure only one copy of this script runs for a given collection
 globalLock=$workDir/transcodeChanges.${collection}.lockdir
-if mkdir transcodeChanges.${collection}.lock 2>/dev/null; then
+if mkdir $globalLock 2>/dev/null; then
     # We're good
     true
 else

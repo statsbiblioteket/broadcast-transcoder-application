@@ -125,6 +125,10 @@ public class BroadcastTranscoderApplication {
                 logger.info("No transcoding required for " + context.getProgrampid() + ". Exiting.");
                 return;
             }
+            if (request.isRejected()) {
+                logger.info("Transcoding rejected for " + context.getProgrampid() + ". Exiting.");
+                return;
+            }
             ProcessorChainElement secondChain;
             ProcessorChainElement pider = new PidAndAsepctRatioExtractorProcessor();
             ProcessorChainElement waver = new WavTranscoderProcessor();
@@ -175,14 +179,12 @@ public class BroadcastTranscoderApplication {
         secondChain.processIteratively(request, context);
         context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
         ProcessorChainElement thirdChain = ProcessorChainElement.makeChain(persistenceEnricher);
-        if (!request.isRejected()) {
             try {
                 thirdChain.processIteratively(request, context);
             } catch (ProcessorException e) {
                 //This is only a warning. Enrichment is only a nice-to-have.
                 logger.warn("Persistence Enrichment failed for " + context.getProgrampid(), e);
             }
-        }
     }
 
 
