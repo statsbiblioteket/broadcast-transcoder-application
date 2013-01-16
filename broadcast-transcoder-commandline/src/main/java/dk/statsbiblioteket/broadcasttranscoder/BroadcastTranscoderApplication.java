@@ -53,6 +53,9 @@ public class BroadcastTranscoderApplication {
         }
         try {
             runChain(request, context);
+            if (request.isRejected()) {
+                System.exit(111);
+            }
         } catch (Exception e) {
             //Final fault barrier is necessary for logging
             logger.error("Processing failed for " + context.getProgrampid(), e);
@@ -169,15 +172,17 @@ public class BroadcastTranscoderApplication {
                 default:
                     return;
             }
-            secondChain.processIteratively(request, context);
-            context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
-            ProcessorChainElement thirdChain = ProcessorChainElement.makeChain(persistenceEnricher);
+        secondChain.processIteratively(request, context);
+        context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
+        ProcessorChainElement thirdChain = ProcessorChainElement.makeChain(persistenceEnricher);
+        if (!request.isRejected()) {
             try {
                 thirdChain.processIteratively(request, context);
             } catch (ProcessorException e) {
                 //This is only a warning. Enrichment is only a nice-to-have.
                 logger.warn("Persistence Enrichment failed for " + context.getProgrampid(), e);
             }
+        }
     }
 
 

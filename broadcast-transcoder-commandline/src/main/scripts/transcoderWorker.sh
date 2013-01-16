@@ -35,6 +35,10 @@ if [ $returncode -eq 0 ]; then
    fi
    echo  "$collection" "$uuid" "$timestamp"  >> $stateDir/$collection.successes
    rm -f "$progressFile.lock"
+elif [  $returncode -eq 111 ]; then
+   lockfile "$logDir/rejects.lock"
+    echo "$collection" "$uuid" "$timestamp"  >> $stateDir/$collection.rejects
+    rm -f "$logDir/rejects.lock"
 else
     lockfile "$logDir/fails.lock"
     echo "$collection" "$uuid" "$timestamp"  >> $failureFile

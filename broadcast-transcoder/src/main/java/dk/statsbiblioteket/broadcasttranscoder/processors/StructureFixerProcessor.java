@@ -97,8 +97,9 @@ public class StructureFixerProcessor extends ProcessorChainElement {
         if (missingStart != null && missingStart.getMissingSeconds() > context.getMaxMissingStart()) {
             final String s = missingStart.getMissingSeconds() + " missing seconds at start for " +
                     context.getProgrampid() + " is more than permitted. Exiting.";
-            logger.warn(s);
-            throw new ProcessorException(s);
+            logger.info(s);
+            request.setRejected(true);
+            this.setChildElement(null);
         }
     }
 
@@ -107,8 +108,9 @@ public class StructureFixerProcessor extends ProcessorChainElement {
         if (missingEnd != null && missingEnd.getMissingSeconds() > context.getMaxMissingEnd()) {
             final String s = missingEnd.getMissingSeconds() + " missing seconds at end for " +
                     context.getProgrampid() + " is more than permitted. Exiting.";
-            logger.warn(s);
-            throw new ProcessorException(s);
+            logger.info(s);
+            request.setRejected(true);
+            this.setChildElement(null);
         }
     }
 
@@ -124,8 +126,9 @@ public class StructureFixerProcessor extends ProcessorChainElement {
             for (Hole hole: holeList) {
                  if (hole.getHoleLength() > context.getMaxHole()) {
                      String s = "Hole length for " + hole.toString() + " is greater than maximum permitted. Exiting.";
-                     logger.warn(s);
-                     throw new ProcessorException(s);
+                     logger.info(s);
+                     request.setRejected(true);
+                     this.setChildElement(null);
                  }
             }
         }

@@ -264,6 +264,16 @@ public class TranscodeRequest {
     private boolean isTvmeter;
     private String title;
 
+    private boolean isRejected = false;
+
+    public boolean isRejected() {
+        return isRejected;
+    }
+
+    public void setRejected(boolean rejected) {
+        isRejected = rejected;
+    }
+
     @Override
     public String toString() {
         return "TranscodeRequest{" +
