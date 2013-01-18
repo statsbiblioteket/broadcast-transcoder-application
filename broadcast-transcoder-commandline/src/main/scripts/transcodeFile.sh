@@ -18,5 +18,5 @@ java -Dlogback.configurationFile=$confDir/logback.xml $hibernate_log_config \
  --timestamp=$timestamp
 
 returncode=$?
-
+[ $debug = 1 ] && echo jvm exited with return code $returncode
 exit $returncode

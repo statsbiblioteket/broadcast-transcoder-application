@@ -18,22 +18,32 @@ else
 fi
 
 # Cleanup from previous run
+
+function cleanup {
+[ $debug = 1 ] && echo Cleaning Up
 for ((i=0;i<$WORKERS;i++)); do
-    workerfile="$workDir/$i.$collection.workerFile"
-    if [ -e  $workerfile ]; then
+    workerfile="$workDir/$i$collection.workerFile"
+    if [ -e  "$workerfile" ]; then
+    [ $debug = 1 ] && echo Cleaning from $workerfile
+    pid=$(cat $workerfile|cut -d' ' -f1)
 	uuid=$(cat $workerfile|cut -d ' ' -f2)
 	timestamp=$(cat $workerfile|cut -d ' ' -f3)
 	machine=$(cat $workerfile|cut -d ' ' -f4)
-
+	[ $debug = 1 ] && echo Cleaning up after $uuid
+    kill $pid
 	lockfile "$failureFile.lock"
 	echo "$collection $uuid $timestamp" >> $failureFile
 	rm -f "$failureFile.lock"
-
 	rm $workerfile
 	##TODO do we need a $machine parameter to this call?
 	$SCRIPT_PATH/cleanupUnfinished.sh $uuid $timestamp $machine
     fi
 done
+}
+
+cleanup;
+trap 'cleanup; rmdir $globalLock; rm -r $changes; exit 1' INT TERM
+
 ##
 # This is probably not necessary, unless we have an unusual race condition that leaves lockfiles behind from a
 # previous run.
@@ -103,4 +113,4 @@ done < $changes
 
 rm $changes
 rm $workDir/*${collection}.workerFile
-rm -rf $globalLock
+rmdir $globalLock

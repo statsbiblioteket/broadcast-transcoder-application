@@ -26,6 +26,8 @@ transcoderOutput=$(mktemp -p $workDir)
 # Run transcode
 $SSH_COMMAND $SCRIPT_PATH/transcodeFile.sh "$collection" "$uuid" "$timestamp" "$machine" &> $transcoderOutput
 returncode=$?
+[ $debug = 1 ] && echo transcodeFile.sh returned with exit code $returncode
+
 
 if [ $returncode -eq 0 ]; then
    lockfile "$progressFile.lock"

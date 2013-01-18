@@ -60,6 +60,14 @@ collection=$1
 case $collection in
     Broadcast|Reklamefilm)
 	# A valid collection given
+	# If it exists, the progress file contains the last-modified timestamp of the last-transcoded program.
+	progressFile="$stateDir/$collection.progress"
+	# File where failed transcodings are written in a format suitable for retranscoding with transcodeFile.sh
+	failureFile="$stateDir/$collection.failures"
+	# Initialize progressfile if it does not exist
+	if [ ! -e $progressFile ]; then
+	    echo $INITIAL_TIMESTAMP > $progressFile
+	fi
 	;;
     cleanup)
 	# call came from cleanupUnfinished.sh, no collection is okay
@@ -69,17 +77,6 @@ case $collection in
 	exit 1
 	;;
 esac
-
-# If it exists, the progress file contains the last-modified timestamp of the last-transcoded program.
-progressFile="$stateDir/$collection.progress"
-
-# File where failed transcodings are written in a format suitable for retranscoding with transcodeFile.sh
-failureFile="$stateDir/$collection.failures"
-
-# Initialize progressfile if it does not exist
-if [ ! -e $progressFile ]; then
-    echo $INITIAL_TIMESTAMP > $progressFile
-fi
 
 # Log configuration for hibernate passed as parameters to the JVM
 hibernate_log_config="-Dcom.mchange.v2.log.MLog=com.mchange.v2.log.FallbackMLog -Dcom.mchange.v2.log.FallbackMLog.DEFAULT_CUTOFF_LEVEL=WARNING"
