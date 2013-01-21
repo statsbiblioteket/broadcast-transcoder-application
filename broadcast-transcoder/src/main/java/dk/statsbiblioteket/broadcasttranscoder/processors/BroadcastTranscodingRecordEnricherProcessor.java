@@ -30,6 +30,7 @@ public class BroadcastTranscodingRecordEnricherProcessor extends ProcessorChainE
         record.setEndOffset(request.getEndOffsetUsed());
         record.setStartOffset(request.getStartOffsetUsed());
         record.setTitle(request.getTitle());
+        record.setTranscodingCommand(request.getTranscoderCommand());
         dao.update(record);
     }
 }
