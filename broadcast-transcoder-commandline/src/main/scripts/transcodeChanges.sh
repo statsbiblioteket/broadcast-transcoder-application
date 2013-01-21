@@ -35,8 +35,18 @@ for ((i=0;i<$WORKERS;i++)); do
 	echo "$collection $uuid $timestamp" >> $failureFile
 	rm -f "$failureFile.lock"
 	rm $workerfile
-	##TODO do we need a $machine parameter to this call?
 	$SCRIPT_PATH/cleanupUnfinished.sh $uuid $timestamp $machine
+	lockfile "$progressFile.lock"
+    current_progress_timestamp=$(cat $progressFile)
+    #
+    # Check whether the process to be cleaned up is from an earlier timestamp and,
+    # if necessary, set the clock of progress back.
+    #
+    if [ $timestamp -lt $current_progress_timestamp ]; then
+       echo $(( $timestamp - 1)) > $progressFile
+    fi
+    echo  "$collection" "$uuid" "$timestamp"  >> $stateDir/$collection.successes
+    rm -f "$progressFile.lock"
     fi
 done
 }
