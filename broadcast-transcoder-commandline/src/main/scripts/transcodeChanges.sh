@@ -111,6 +111,26 @@ while read uuid time; do
     echo
 done < $changes
 
+all_finished=$(false)
+while ( !all_finished ); do
+   sleep 2
+   workerFiles="$workDir/*$collection.workerFile"
+   set $workerFiles
+   if [ $# -eq 0 ]; then
+       all_finished=$(true)
+   else
+      for workerfile in $workerFiles; do
+         pid=$(cat $workerfile|cut -d' ' -f1)
+         kill -0 $pid &> /dev/null
+	     found=$?
+	     if [ $found != 0 ]; then
+	         [ $debug = 1 ] && echo "$uuid: Did not find '$pid' among the running processes"
+             [ $debug = 1 ] && echo "Deleting worker file $workerfile"
+             rm $workerfile
+	     fi
+      done
+   fi
+done
+echo "All transcoding finished. Exiting normally."
 rm $changes
-rm $workDir/*${collection}.workerFile
 rmdir $globalLock
