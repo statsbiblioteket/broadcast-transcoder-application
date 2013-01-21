@@ -35,9 +35,9 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
 
     private void mpegClip(TranscodeRequest request, Context context) throws ProcessorException {
         String command = "cat " + request.getClipperCommand() + " | " + getFfmpegCommandLine(request, context);
-        File outputDir = FileUtils.getMediaOutputDir(request, context);
+        File outputDir = FileUtils.getTemporaryMediaOutputDir(request, context);
         outputDir.mkdirs();
-        File outputFile = FileUtils.getMediaOutputFile(request, context);
+        File outputFile = FileUtils.getTemporaryMediaOutputFile(request, context);
         try {
             long timeout;
             if (request.getTimeoutMilliseconds() == 0l) {
@@ -59,7 +59,7 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
     }
 
     public static String getFfmpegCommandLine(TranscodeRequest request, Context context) {
-           File outputFile = FileUtils.getMediaOutputFile(request, context);
+           File outputFile = FileUtils.getTemporaryMediaOutputFile(request, context);
            String line = "ffmpeg -i - " + context.getX264FfmpegParams()
                    + " -b:v " + context.getVideoBitrate() + "000"
                    + " -b:a " + context.getAudioBitrate() + "000 -y "

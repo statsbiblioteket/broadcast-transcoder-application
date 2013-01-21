@@ -50,7 +50,7 @@ public class TranscoderPersistenceProcessor extends ProcessorChainElement {
         }
         info.setEndOffset(request.getEndOffsetUsed());
         info.setStartOffset(request.getStartOffsetUsed());
-        final File mediaOutputFile = FileUtils.getMediaOutputFile(request, context);
+        final File mediaOutputFile = FileUtils.getFinalMediaOutputFile(request, context);
         info.setFileExists(mediaOutputFile.exists());
         info.setFileSizeByte(mediaOutputFile.length());
         long programLength = MetadataUtils.findProgramLengthMillis(request)/1000  - request.getStartOffsetUsed() + request.getEndOffsetUsed();

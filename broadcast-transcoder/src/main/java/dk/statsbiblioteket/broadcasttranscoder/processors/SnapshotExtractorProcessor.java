@@ -48,7 +48,7 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         int paddingSeconds = context.getSnapshotPaddingSeconds();
         int nframes = context.getSnapshotFrames();
         float timeoutDivisor = context.getSnapshotTimeoutDivisor();
-        File fullMediaFile = FileUtils.getMediaOutputFile(request, context);
+        File fullMediaFile = FileUtils.getFinalMediaOutputFile(request, context);
         File snapshotOutputDir = FileUtils.getSnapshotOutputDir(request, context);
         snapshotOutputDir.mkdirs();
         String commandLine = "ffmpeg -i " + fullMediaFile.getAbsolutePath();

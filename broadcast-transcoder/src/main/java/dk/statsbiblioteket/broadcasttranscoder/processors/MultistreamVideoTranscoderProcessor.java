@@ -52,7 +52,7 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
             }
         }
         String processSubstitutionFileList = request.getClipperCommand();
-        File outputDir = FileUtils.getMediaOutputDir(request, context);
+        File outputDir = FileUtils.getTemporaryMediaOutputDir(request, context);
         outputDir.mkdirs();
 
         //The odd logic here is that we prefer to use custom-PMT if we have all three pids, but because of a bug in vlc we
@@ -73,7 +73,7 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
             request.setTranscoderCommand(clipperCommand);
             ExternalJobRunner.runClipperCommand(timeout, clipperCommand);
         } catch (ExternalProcessTimedOutException e) {
-            File outputFile =  FileUtils.getMediaOutputFile(request, context);
+            File outputFile =  FileUtils.getTemporaryMediaOutputFile(request, context);
             logger.warn("Deleting '" + outputFile.getAbsolutePath() + "'");
             outputFile.delete();
             throw new ProcessorException("Process timed out for "+context.getProgrampid(),e);
@@ -83,7 +83,7 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
     private String findAudioClipperCommand(TranscodeRequest request, Context context, String processSubstitutionFileList) {
         return "cat " + processSubstitutionFileList + "| "
                 + "ffmpeg -i - -acodec libmp3lame -ar 44100 -ab "
-                + context.getAudioBitrate() + "000 -y " + FileUtils.getMediaOutputFile(request, context);
+                + context.getAudioBitrate() + "000 -y " + FileUtils.getTemporaryMediaOutputDir(request, context);
     }
 
     private String findVideoClipperCommand(TranscodeRequest request, Context context, String processSubstitutionFileList, int programNumber, boolean useCustomPMT) {
@@ -102,7 +102,7 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
                     + ",height=" + getHeight(request, context) +",threads=0}"
                     + ":std{access=file,mux=ts,dst=-}\""
                     + programSelectString + "' | "
-                    + "ffmpeg -i -  -async 2 -vcodec copy -ac 2 -acodec libmp3lame -ar 44100 -ab " + context.getAudioBitrate() + "000 -y -f flv " + FileUtils.getMediaOutputFile(request, context);
+                    + "ffmpeg -i -  -async 2 -vcodec copy -ac 2 -acodec libmp3lame -ar 44100 -ab " + context.getAudioBitrate() + "000 -y -f flv " + FileUtils.getTemporaryMediaOutputFile(request, context);
         /*
         For yousee ts files, change this to something like
         ffmpeg -i  ~/scratch/BTA-unittest/ANIMAL_20121008_120000_20121008_130000.mux -vcodec libx264 -preset superfast -profile:v High -level 3.0 -ab 96000 -vb 400000 -acodec libmp3lame -async 2 -ac 2 -ar 44100 -s 512x288  -f flv temp.flv
@@ -122,7 +122,7 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
                     + ",height=" + getHeight(request, context) +",threads=0}"
                     + ":std{access=file,mux=ts,dst=-}' |" +
                     "ffmpeg -i -  -async 2 -vcodec copy -acodec libmp3lame -ac 2 -ar 44100 -ab " + context.getAudioBitrate()
-                    + "000 -y -f flv " + FileUtils.getMediaOutputFile(request, context);
+                    + "000 -y -f flv " + FileUtils.getTemporaryMediaOutputFile(request, context);
         }
         return clipperCommand;
     }

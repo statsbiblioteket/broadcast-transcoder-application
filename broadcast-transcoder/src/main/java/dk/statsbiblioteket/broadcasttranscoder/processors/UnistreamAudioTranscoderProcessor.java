@@ -25,9 +25,9 @@ public class UnistreamAudioTranscoderProcessor extends ProcessorChainElement {
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         String command = "cat " + request.getClipperCommand() + " | " + getFfmpegCommandLine(request, context);
-                File outputDir = FileUtils.getMediaOutputDir(request, context);
+                File outputDir = FileUtils.getTemporaryMediaOutputDir(request, context);
                 outputDir.mkdirs();
-                File outputFile = FileUtils.getMediaOutputFile(request, context);
+                File outputFile = FileUtils.getTemporaryMediaOutputFile(request, context);
                 try {
                     long programLength = MetadataUtils.findProgramLengthMillis(request);
                     long timeout = (long) (programLength/context.getTranscodingTimeoutDivisor());
@@ -42,7 +42,7 @@ public class UnistreamAudioTranscoderProcessor extends ProcessorChainElement {
     }
 
      public static String getFfmpegCommandLine(TranscodeRequest request, Context context) {
-           File outputFile = FileUtils.getMediaOutputFile(request, context);
+           File outputFile = FileUtils.getTemporaryMediaOutputFile(request, context);
            String line = "ffmpeg -i - -acodec libmp3lame -ar 44100 "
                    + " -b:a " + context.getAudioBitrate() + "000 -y "
                    + outputFile.getAbsolutePath();

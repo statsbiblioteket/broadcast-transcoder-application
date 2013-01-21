@@ -30,8 +30,8 @@ public class WavTranscoderProcessor extends ProcessorChainElement {
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         String command = getMultiClipCommand(request, context);
-        File outputFile = FileUtils.getMediaOutputFile(request, context);
-        FileUtils.getMediaOutputDir(request, context).mkdirs();
+        File outputFile = FileUtils.getTemporaryMediaOutputFile(request, context);
+        FileUtils.getTemporaryMediaOutputDir(request, context).mkdirs();
         try {
             long programLength = MetadataUtils.findProgramLengthMillis(request);
             long timeout = (long) (programLength/context.getTranscodingTimeoutDivisor());
@@ -77,7 +77,7 @@ public class WavTranscoderProcessor extends ProcessorChainElement {
         }
         command += "| ffmpeg -f s16le -i - "
                 + " -ab " + context.getAudioBitrate() + "000 -y "
-                + FileUtils.getMediaOutputFile(request, context).getAbsolutePath();
+                + FileUtils.getTemporaryMediaOutputFile(request, context).getAbsolutePath();
         return command;
     }
 

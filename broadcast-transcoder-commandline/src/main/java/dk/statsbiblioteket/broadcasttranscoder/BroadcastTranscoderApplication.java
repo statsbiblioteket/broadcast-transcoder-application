@@ -135,6 +135,7 @@ public class BroadcastTranscoderApplication {
             ProcessorChainElement multistreamer = new MultistreamVideoTranscoderProcessor();
             ProcessorChainElement unistreamvideoer = new UnistreamVideoTranscoderProcessor();
             ProcessorChainElement unistreamaudioer = new UnistreamAudioTranscoderProcessor();
+            ProcessorChainElement renamer = new FinalMediaFileRenamerProcessor();
             ProcessorChainElement previewer = new PreviewClipperProcessor();
             ProcessorChainElement snapshotter = new SnapshotExtractorProcessor();
             ProcessorChainElement zeroChecker = new ZeroLengthCheckerProcessor();
@@ -144,6 +145,7 @@ public class BroadcastTranscoderApplication {
                 case MULTI_PROGRAM_MUX:
                     secondChain = ProcessorChainElement.makeChain(pider,
                             multistreamer,
+                            renamer,
                             zeroChecker,
                             previewer,
                             snapshotter);
@@ -151,6 +153,7 @@ public class BroadcastTranscoderApplication {
                 case SINGLE_PROGRAM_VIDEO_TS:
                     secondChain = ProcessorChainElement.makeChain(pider,
                             unistreamvideoer,
+                            renamer,
                             zeroChecker,
                             previewer,
                             snapshotter);
@@ -158,18 +161,21 @@ public class BroadcastTranscoderApplication {
                 case SINGLE_PROGRAM_AUDIO_TS:
                     secondChain = ProcessorChainElement.makeChain(pider,
                             unistreamaudioer,
+                            renamer,
                             zeroChecker,
                             previewer);
                     break;
                 case MPEG_PS:
                     secondChain = ProcessorChainElement.makeChain(pider,
                             unistreamvideoer,
+                            renamer,
                             zeroChecker,
                             previewer,
                             snapshotter);
                     break;
                 case AUDIO_WAV:
                     secondChain = ProcessorChainElement.makeChain(waver,
+                            renamer,
                             zeroChecker,
                             previewer);
                     break;

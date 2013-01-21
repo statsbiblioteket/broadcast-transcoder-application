@@ -38,7 +38,7 @@ public class PreviewClipperProcessor extends ProcessorChainElement {
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
         long programLength = MetadataUtils.findProgramLengthMillis(request);
-        File sourceFile = FileUtils.getMediaOutputFile(request, context);
+        File sourceFile = FileUtils.getFinalMediaOutputFile(request, context);
         File outputDir = FileUtils.getPreviewOutputDir(request, context);
         outputDir.mkdirs();
         File outputFile = FileUtils.getPreviewOutputFile(request, context);

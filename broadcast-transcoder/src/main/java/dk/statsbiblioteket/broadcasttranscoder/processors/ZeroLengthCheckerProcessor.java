@@ -21,7 +21,7 @@ public class ZeroLengthCheckerProcessor extends ProcessorChainElement {
 
     @Override
     protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
-        File outputFile = FileUtils.getMediaOutputFile(request, context);
+        File outputFile = FileUtils.getFinalMediaOutputFile(request, context);
         if (outputFile == null) {
             final String message = "null output file found for " + context.getProgrampid();
             logger.error(message);

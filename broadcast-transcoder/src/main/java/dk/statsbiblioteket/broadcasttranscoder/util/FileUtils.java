@@ -20,7 +20,7 @@ public class FileUtils {
     private static Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
     public static boolean hasMediaOutputFile(TranscodeRequest request, Context context) {
-        File dir = getMediaOutputDir(request, context);
+        File dir = getFinalMediaOutputDir(request, context);
         if (!dir.exists()) {
             return false;
         }
@@ -38,7 +38,7 @@ public class FileUtils {
         return files.length > 0;
     }
     public static File findMediaOutputFile(TranscodeRequest request, Context context) {
-        File dir = getMediaOutputDir(request, context);
+        File dir = getFinalMediaOutputDir(request, context);
         if (!dir.exists()) {
             return null;
         }
@@ -57,9 +57,8 @@ public class FileUtils {
         return null;
     }
 
-
-    public static File getMediaOutputFile(TranscodeRequest request, Context context) {
-        File dir = getMediaOutputDir(request, context);
+    public static File getFinalMediaOutputFile(TranscodeRequest request, Context context) {
+        File dir = getFinalMediaOutputDir(request, context);
         String filename = context.getProgrampid().replace("uuid:","");
         switch (request.getFileFormat()) {
             case SINGLE_PROGRAM_AUDIO_TS:
@@ -74,6 +73,21 @@ public class FileUtils {
         return new File(dir, filename);
     }
 
+    public static File getTemporaryMediaOutputFile(TranscodeRequest request, Context context) {
+        File dir = getTemporaryMediaOutputDir(request, context);
+        String filename = context.getProgrampid().replace("uuid:","");
+        switch (request.getFileFormat()) {
+            case SINGLE_PROGRAM_AUDIO_TS:
+                filename += ".mp3";
+                break;
+            case AUDIO_WAV:
+                filename += ".mp3";
+                break;
+            default:
+                filename += ".flv";
+        }
+        return new File(dir, filename);
+    }
     public static File getPreviewOutputFile(TranscodeRequest request, Context context) {
         File dir = getPreviewOutputDir(request, context);
         String filename = context.getProgrampid().replace("uuid:","");
@@ -103,11 +117,15 @@ public class FileUtils {
             return getOutputSubdirectory(context, rootDir, depth);
         }
 
-    public static File getMediaOutputDir(TranscodeRequest request, Context context) {
+    public static File getFinalMediaOutputDir(TranscodeRequest request, Context context) {
         File rootDir = context.getFileOutputRootdir();
         int depth = context.getFileDepth();
         logger.trace("Output directory is relative to '" + rootDir + "'");
         return getOutputSubdirectory(context, rootDir, depth);
+    }
+
+    public static File getTemporaryMediaOutputDir(TranscodeRequest request, Context context) {
+        return new File(getFinalMediaOutputDir(request, context), "temp");
     }
 
     public static File getPreviewOutputDir(TranscodeRequest request, Context context) {
