@@ -12,19 +12,10 @@ WORKERS=2
 # machines=( "bta@iapetus" )
 machines=( "local" )
 
-# If progressFile does not exist, it will be created using the value in INITIAL_TIMESTAMP
-#
-# This is 2012-04-01
-#INITIAL_TIMESTAMP=1333231200000
-# This is 2012-12-16
-INITIAL_TIMESTAMP=1355612400000
-
 #
 # Set debug=1 for debugging output from scripts, debug=0 for minimal output.
 #
 debug=0
-
-
 
 # This script expects SCRIPT_PATH to be defined, if it is not then notify
 # and error out
@@ -44,9 +35,6 @@ workDir=$HOME/var/work
 # stateDir, this holds permanent state, such as the various progress files
 stateDir=$HOME/var/state
 
-[ $debug = 1 ] && echo "confDir: $confDir"
-[ $debug = 1 ] && echo "workDir: $workDir"
-[ $debug = 1 ] && echo "stateDir: $stateDir"
 ###############################################################################
 # Nothing on or below this line should need to be changed for configuration purposes.
 
@@ -58,19 +46,8 @@ done
 # collection can have values "Broadcast" or "Reklamefilm"
 collection=$1
 case $collection in
-    Broadcast|Reklamefilm)
+    Broadcast|Reklamefilm|cleanup)
 	# A valid collection given
-	# If it exists, the progress file contains the last-modified timestamp of the last-transcoded program.
-	progressFile="$stateDir/$collection.progress"
-	# File where failed transcodings are written in a format suitable for retranscoding with transcodeFile.sh
-	failureFile="$stateDir/$collection.failures"
-	# Initialize progressfile if it does not exist
-	if [ ! -e $progressFile ]; then
-	    echo $INITIAL_TIMESTAMP > $progressFile
-	fi
-	;;
-    cleanup)
-	# call came from cleanupUnfinished.sh, no collection is okay
 	;;
     *)
 	echo "ERROR: $collection is not a valid collection name"
