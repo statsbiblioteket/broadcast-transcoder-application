@@ -58,6 +58,7 @@ public class ReklamefilmTranscoderApplication {
                 ProcessorChainElement resolver = new ReklamefilmFileResolverProcessor();
                 ProcessorChainElement aspecter = new PidAndAsepctRatioExtractorProcessor();
                 ProcessorChainElement transcoder = new UnistreamVideoTranscoderProcessor();
+                ProcessorChainElement renamer = new FinalMediaFileRenamerProcessor();
                 ProcessorChainElement zeroChecker = new ZeroLengthCheckerProcessor();
                 ProcessorChainElement ffprober = new FfprobeFetcherProcessor();
                 ProcessorChainElement snapshotter = new SnapshotExtractorProcessor();
@@ -66,6 +67,7 @@ public class ReklamefilmTranscoderApplication {
                         resolver,
                         aspecter,
                         transcoder,
+                        renamer,
                         zeroChecker,
                         ffprober,
                         snapshotter,

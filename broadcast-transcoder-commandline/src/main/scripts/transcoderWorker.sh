@@ -4,6 +4,7 @@ collection=$1
 uuid=$2
 timestamp=$3
 machine=$4
+workerID=$5
 
 # Get settings
 SCRIPT_PATH=$(dirname $(readlink -f $0))
@@ -18,7 +19,7 @@ else
 fi
 
 # Setup up a trap that cleans out temporary files on exit
-trap 'rm -f $transcoderOutput' 0 1 2 3 15
+trap 'rm -f $transcoderOutput;  exit 1' 0 1 2 3 15
 
 # Worker output goes here
 transcoderOutput=$(mktemp -p $workDir)
@@ -30,22 +31,20 @@ returncode=$?
 
 
 if [ $returncode -eq 0 ]; then
-   lockfile "$progressFile.lock"
+    progressFile=$stateDir/$workerID.$collection.progress
    progress_timestamp=$(cat $progressFile)
    if [ $timestamp -gt $progress_timestamp ]; then
+        [ $debug = 1 ] && echo transcodeFile.sh wrote timestamp $timestamp to $progressFile
        echo $timestamp > $progressFile
    fi
-   echo  "$collection" "$uuid" "$timestamp"  >> $stateDir/$collection.successes
-   rm -f "$progressFile.lock"
+   echo  "$collection" "$uuid" "$timestamp"  >> $stateDir/$workerID.$collection.successes
 elif [  $returncode -eq 111 ]; then
-   lockfile "$logDir/rejects.lock"
-    echo "$collection" "$uuid" "$timestamp"  >> $stateDir/$collection.rejects
-    rm -f "$logDir/rejects.lock"
+    echo "$collection" "$uuid" "$timestamp"  >> $stateDir/$workerID.$collection.rejects
 else
-    lockfile "$logDir/fails.lock"
-    echo "$collection" "$uuid" "$timestamp"  >> $failureFile
+    echo "$collection" "$uuid" "$timestamp"  >> $stateDir/$workerID.$collection.failures
     ##TODO: possibly cat the transcoderOutput
-    rm -f "$logDir/fails.lock"
 fi
+#when we have categorized the file, mark is as complete
+rm $workDir/$workerID$collection.workerFile
 
 exit $returncode
