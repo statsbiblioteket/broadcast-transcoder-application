@@ -1,7 +1,5 @@
 package dk.statsbiblioteket.broadcasttranscoder.util.persistence;
 
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.db.Metadata;
-
 import java.util.List;
 
 /**

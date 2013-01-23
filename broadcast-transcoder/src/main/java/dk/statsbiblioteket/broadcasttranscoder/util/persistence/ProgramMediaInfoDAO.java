@@ -1,7 +1,5 @@
 package dk.statsbiblioteket.broadcasttranscoder.util.persistence;
 
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.db.ProgramMediaInfo;
-
 /**
  * Created with IntelliJ IDEA.
  * User: csr

@@ -1,4 +1,4 @@
-package dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.db;
+package dk.statsbiblioteket.broadcasttranscoder.util.persistence;
 
 import java.util.Date;
 
@@ -6,9 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.BroadcastTypeEnum;
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.extraction.model.MediaTypeEnum;
 
 @Entity
 public class ProgramMediaInfo {

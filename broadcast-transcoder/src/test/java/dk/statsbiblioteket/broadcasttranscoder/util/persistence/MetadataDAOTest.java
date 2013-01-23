@@ -1,6 +1,5 @@
 package dk.statsbiblioteket.broadcasttranscoder.util.persistence;
 
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.db.Metadata;
 import junit.framework.TestCase;
 
 import java.util.Date;

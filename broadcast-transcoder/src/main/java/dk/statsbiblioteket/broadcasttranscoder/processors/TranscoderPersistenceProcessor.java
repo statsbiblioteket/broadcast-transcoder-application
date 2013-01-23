@@ -5,9 +5,9 @@ import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.MetadataUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.ProgramMediaInfoDAO;
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.BroadcastTypeEnum;
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.db.ProgramMediaInfo;
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.extraction.model.MediaTypeEnum;
+import dk.statsbiblioteket.broadcasttranscoder.util.persistence.BroadcastTypeEnum;
+import dk.statsbiblioteket.broadcasttranscoder.util.persistence.ProgramMediaInfo;
+import dk.statsbiblioteket.broadcasttranscoder.util.persistence.MediaTypeEnum;
 
 import java.io.File;
 import java.util.Date;

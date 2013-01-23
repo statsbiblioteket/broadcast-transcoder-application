@@ -1,4 +1,4 @@
-package dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.db;
+package dk.statsbiblioteket.broadcasttranscoder.util.persistence;
 
 import java.util.Date;
 
