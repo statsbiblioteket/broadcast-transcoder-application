@@ -24,12 +24,14 @@ if [ "x$SCRIPT_PATH" = "x" ]; then
     exit 1
 fi
 
+INSTALL_FOLDER="$SCRIPT_PATH/../.."
+
 # Set CLASSPATH for the JVM
-CLASSPATH="$SCRIPT_PATH/../../lib/*"
+CLASSPATH="$INSTALL_FOLDER/lib/*"
 # Logs go here
 logDir="$HOME/logs"
 # Config is here
-confDir="$SCRIPT_PATH/../config"
+confDir="$INSTALL_FOLDER/config"
 # work-in-progress logs and other temporary files like .lock files go here
 workDir=$HOME/var/work
 # stateDir, this holds permanent state, such as the various progress files
