@@ -57,8 +57,8 @@ for ((i=0;i<$WORKERS;i++)); do
         if [ -e $seedFile ]; then
             progress_timestamp=$(cat $seedFile)
         else
-          echo "No seedfile $seedFile found. Exiting."
-         exit 1;
+            echo "No seedfile $seedFile found. Exiting."
+            exit 1;
         fi
     fi
     if [ $progress_timestamp -lt $timestamp ]; then
@@ -70,7 +70,7 @@ for ((i=0;i<$WORKERS;i++)); do
     echo $timestamp > $progressFile
 done
 if [ -e $seedFile ]; then
-   rm ${seedFile}
+    rm ${seedFile}
 fi
 
 # Get list of changes from queryChanges with progress timestamp as input
@@ -143,13 +143,13 @@ while read uuid time; do
 done < $changes
 
 while ( true ); do
-   sleep 2
-   workerFiles=$(ls -1 $workDir/*$collection.workerFile 2>/dev/null | wc -l)
-   if [  $workerFiles -eq 0 ]; then
-       break 1
-   else
-     [ $debug = 1 ] && echo "Waiting for $workerFiles"
-   fi
+    sleep 2
+    workerFiles=$(ls -1 $workDir/*$collection.workerFile 2>/dev/null | wc -l)
+    if [  $workerFiles -eq 0 ]; then
+        break 1
+    else
+        [ $debug = 1 ] && echo "Waiting for $workerFiles"
+    fi
 done
 
 # TODO find incompletes in successes and remove them from incompletes
