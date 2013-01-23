@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutException;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
@@ -23,7 +23,7 @@ public class UnistreamAudioTranscoderProcessor extends ProcessorChainElement {
 
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         String command = "cat " + request.getClipperCommand() + " | " + getFfmpegCommandLine(request, context);
                 File outputDir = FileUtils.getTemporaryMediaOutputDir(request, context);
                 outputDir.mkdirs();
@@ -41,7 +41,7 @@ public class UnistreamAudioTranscoderProcessor extends ProcessorChainElement {
                 }
     }
 
-     public static String getFfmpegCommandLine(TranscodeRequest request, Context context) {
+     public static String getFfmpegCommandLine(TranscodeRequest request, SingleTranscodingContext context) {
            File outputFile = FileUtils.getTemporaryMediaOutputFile(request, context);
            String line = "ffmpeg -i - -acodec libmp3lame -ar 44100 "
                    + " -b:a " + context.getAudioBitrate() + "000 -y "

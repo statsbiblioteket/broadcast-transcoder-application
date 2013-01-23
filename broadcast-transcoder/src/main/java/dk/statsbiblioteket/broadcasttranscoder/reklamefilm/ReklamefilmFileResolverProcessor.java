@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.reklamefilm;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
@@ -8,7 +8,6 @@ import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sound.sampled.Clip;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ public class ReklamefilmFileResolverProcessor extends ProcessorChainElement {
 
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         ReklamefilmFileResolver resolver = context.getReklamefilmFileResolver();
         String pid = context.getProgrampid();
         File mediafile = resolver.resolverPidToLocalFile(pid);

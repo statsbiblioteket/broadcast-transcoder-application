@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.util;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
@@ -16,6 +16,6 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public interface FileFinder {
-    Map<BroadcastMetadata, File> findAndBringOnline(TranscodeRequest request, Context context) throws ProcessorException;
-    boolean isAllFilesOnline(TranscodeRequest request, Context context) throws ProcessorException;
+    Map<BroadcastMetadata, File> findAndBringOnline(TranscodeRequest request, InfrastructureContext context) throws ProcessorException;
+    boolean isAllFilesOnline(TranscodeRequest request, InfrastructureContext context) throws ProcessorException;
 }

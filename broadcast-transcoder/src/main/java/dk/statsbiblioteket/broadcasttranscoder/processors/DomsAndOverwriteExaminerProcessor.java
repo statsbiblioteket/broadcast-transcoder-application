@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.TimestampPersister;
@@ -53,7 +53,7 @@ public class DomsAndOverwriteExaminerProcessor extends ProcessorChainElement {
      * @throws ProcessorException
      */
     @Override
-    public void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    public void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
 
         final String pid = context.getProgrampid();
 

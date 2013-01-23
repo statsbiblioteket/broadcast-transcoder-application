@@ -1,9 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
-import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
-import dk.statsbiblioteket.broadcasttranscoder.cli.OptionsParser;
-import dk.statsbiblioteket.broadcasttranscoder.processors.DomsAndOverwriteExaminerProcessor;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.BroadcastTranscodingRecordDAO;
@@ -23,11 +21,11 @@ public class BroadcastTranscoderApplication {
 
     public static void main(String[] args) throws Exception {
         logger.debug("Entered main method.");
-        Context context = null;
+        SingleTranscodingContext context = null;
         TranscodeRequest request = null;
         File lockFile = null;
         try {
-            context = new OptionsParser().parseOptions(args);
+            context = new SingleTranscodingOptionsParser().parseOptions(args);
             HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
             context.setTimestampPersister(new BroadcastTranscodingRecordDAO(util));
             request = new TranscodeRequest();
@@ -72,7 +70,7 @@ public class BroadcastTranscoderApplication {
     }
 
 
-    public static void runChain(TranscodeRequest request, Context context) throws ProcessorException {
+    public static void runChain(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
 
             request.setGoForTranscoding(true);
 

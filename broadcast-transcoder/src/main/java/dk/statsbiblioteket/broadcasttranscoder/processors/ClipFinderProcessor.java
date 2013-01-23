@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.Channel;
 import dk.statsbiblioteket.broadcasttranscoder.util.CalendarUtils;
@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,7 +28,7 @@ public class ClipFinderProcessor extends ProcessorChainElement {
     }
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         Integer programNumber = null;
         final boolean isMultiMux = request.getFileFormat().equals(FileFormatEnum.MULTI_PROGRAM_MUX);
         if (isMultiMux) {

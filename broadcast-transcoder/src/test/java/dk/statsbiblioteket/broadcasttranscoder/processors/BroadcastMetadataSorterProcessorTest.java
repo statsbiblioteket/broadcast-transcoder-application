@@ -1,12 +1,11 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
 import dk.statsbiblioteket.broadcasttranscoder.util.CalendarUtils;
 import junit.framework.TestCase;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,7 +82,7 @@ public class BroadcastMetadataSorterProcessorTest extends TestCase {
     }
 
     public void testSort() throws ProcessorException {
-        Context context = new Context();
+        SingleTranscodingContext context = new SingleTranscodingContext();
         context.setProgrampid("uuid:d82107be-20cf-4524-b611-07d8534b97f8");
         context.setDomsEndpoint("http://carme:7880/centralWebservice-service/central/");
         context.setDomsUsername("fedoraAdmin");

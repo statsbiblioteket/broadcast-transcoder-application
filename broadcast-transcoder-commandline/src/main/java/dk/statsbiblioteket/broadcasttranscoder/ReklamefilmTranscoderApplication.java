@@ -1,8 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
-import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
-import dk.statsbiblioteket.broadcasttranscoder.cli.OptionsParser;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.FfprobeFetcherProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.GoNoGoProcessor;
@@ -27,7 +26,7 @@ public class ReklamefilmTranscoderApplication {
 
     public static void main(String[] args) throws Exception {
         logger.debug("Entered main method.");
-        Context context = new OptionsParser().parseOptions(args);
+        SingleTranscodingContext context = new SingleTranscodingOptionsParser().parseOptions(args);
         HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
         context.setTimestampPersister(new ReklamefilmTranscodingRecordDAO(util));
         context.setReklamefilmFileResolver(new ReklamefilmFileResolverImpl(context));

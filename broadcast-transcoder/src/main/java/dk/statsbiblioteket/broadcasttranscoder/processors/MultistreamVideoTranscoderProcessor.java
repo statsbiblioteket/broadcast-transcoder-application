@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +23,11 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
         super(childElement);
     }
 
-    public static int getHeight(TranscodeRequest request, Context context) {
+    public static int getHeight(TranscodeRequest request, SingleTranscodingContext context) {
         return context.getVideoHeight();
     }
 
-    public static int getWidth(TranscodeRequest request, Context context) {
+    public static int getWidth(TranscodeRequest request, SingleTranscodingContext context) {
         Double aspectRatio = request.getDisplayAspectRatio();
         if (aspectRatio != null) {
             long width = 2*Math.round(aspectRatio*getHeight(request, context)/2);
@@ -41,7 +41,7 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
     private static Logger logger = LoggerFactory.getLogger(MultistreamVideoTranscoderProcessor.class);
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         int programNumber = 0;
         if (request.getFileFormat().equals(FileFormatEnum.MULTI_PROGRAM_MUX)) {
             Integer programNumberObject = request.getClips().get(0).getProgramId();
@@ -80,13 +80,13 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
         }
     }
 
-    private String findAudioClipperCommand(TranscodeRequest request, Context context, String processSubstitutionFileList) {
+    private String findAudioClipperCommand(TranscodeRequest request, SingleTranscodingContext context, String processSubstitutionFileList) {
         return "cat " + processSubstitutionFileList + "| "
                 + "ffmpeg -i - -acodec libmp3lame -ar 44100 -ab "
                 + context.getAudioBitrate() + "000 -y " + FileUtils.getTemporaryMediaOutputDir(request, context);
     }
 
-    private String findVideoClipperCommand(TranscodeRequest request, Context context, String processSubstitutionFileList, int programNumber, boolean useCustomPMT) {
+    private String findVideoClipperCommand(TranscodeRequest request, SingleTranscodingContext context, String processSubstitutionFileList, int programNumber, boolean useCustomPMT) {
         String clipperCommand;
         if (!useCustomPMT) {
             String programString = "";

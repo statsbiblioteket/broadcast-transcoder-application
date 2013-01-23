@@ -1,8 +1,8 @@
 package dk.statsbiblioteket.broadcasttranscoder.fetcher.cli;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.GetJobsContext;
 
-import java.util.Properties;
+import java.io.File;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,15 +11,16 @@ import java.util.Properties;
  * Time: 2:39 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FetcherContext extends Context {
+public class FetcherContext extends GetJobsContext {
 
 
     private String viewAngle;
     private String collection;
-    private String state;
+    private String fedoraState;
     private int batchSize;
 
     private long since;
+    private File fetcherFile;
 
     public void setViewAngle(String viewAngle) {
         this.viewAngle = viewAngle;
@@ -29,9 +30,6 @@ public class FetcherContext extends Context {
         this.collection = collection;
     }
 
-    public void setState(String state) {
-        this.state = state;
-    }
 
     public void setBatchSize(int batchSize) {
         this.batchSize = batchSize;
@@ -45,10 +43,6 @@ public class FetcherContext extends Context {
         return collection;
     }
 
-    public String getState() {
-        return state;
-    }
-
     public int getBatchSize() {
         return batchSize;
     }
@@ -60,5 +54,21 @@ public class FetcherContext extends Context {
 
     public void setSince(long since) {
         this.since = since;
+    }
+
+    public String getFedoraState() {
+        return fedoraState;
+    }
+
+    public void setFedoraState(String fedoraState) {
+        this.fedoraState = fedoraState;
+    }
+
+    public File getFetcherFile() {
+        return fetcherFile;
+    }
+
+    public void setFetcherFile(File fetcherFile) {
+        this.fetcherFile = fetcherFile;
     }
 }

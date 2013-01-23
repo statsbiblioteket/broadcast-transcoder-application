@@ -1,5 +1,12 @@
 package dk.statsbiblioteket.broadcasttranscoder.util.persistence;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
+
+import java.util.Date;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: csr
@@ -36,4 +43,45 @@ public class BroadcastTranscodingRecordDAO extends GenericHibernateDAO<Broadcast
             create(record);
         }
     }
+
+    public List<BroadcastTranscodingRecord> getAllTranscodings(long since, TranscodingState state){
+        Session session = getSession();
+        Transaction tx = session.beginTransaction();
+        List jobs = session.createCriteria(BroadcastTranscodingRecord.class)
+                .add(Restrictions.ge("domsLatestTimestamp", since))
+                .add(Restrictions.eq("transcodingState", state))
+                .list();
+        tx.commit();
+        session.close();
+        return jobs;
+    }
+
+    public void markAsChangedInDoms(String programpid,long timestamp){
+        BroadcastTranscodingRecord record = read(programpid);
+        record.setDomsLatestTimestamp(timestamp);
+        record.setTranscodingState(TranscodingState.PENDING);
+        update(record);
+    }
+
+    public void markAsAlreadyTranscoded(String programpid){
+        BroadcastTranscodingRecord record = read(programpid);
+        record.setTranscodingState(TranscodingState.COMPLETE);
+        record.setLastTranscodedTimestamp(record.getDomsLatestTimestamp());
+        update(record);
+    }
+
+    public void markAsFailed(String programpid,String message){
+        BroadcastTranscodingRecord record = read(programpid);
+        record.setTranscodingState(TranscodingState.FAILED);
+        record.setFailureMessage(message);
+        update(record);
+    }
+
+    public void markAsRejected(String programpid,String message){
+        BroadcastTranscodingRecord record = read(programpid);
+        record.setTranscodingState(TranscodingState.REJECTED);
+        record.setFailureMessage(message);
+        update(record);
+    }
+
 }

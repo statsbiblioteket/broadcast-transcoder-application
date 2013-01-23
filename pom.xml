@@ -13,7 +13,7 @@
         <module>broadcast-transcoder</module>
         <module>broadcast-transcoder-commandline</module>
         <module>broadcast-transcoder-fetcher</module>
-        <module>bes-media-file-status-log</module>
+
         <module>broadcast-transcoder-persistence</module>
     </modules>
 

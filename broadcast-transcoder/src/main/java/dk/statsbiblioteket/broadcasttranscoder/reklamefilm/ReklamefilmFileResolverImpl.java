@@ -1,15 +1,13 @@
 package dk.statsbiblioteket.broadcasttranscoder.reklamefilm;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
-import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutException;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 import dk.statsbiblioteket.doms.central.DatastreamProfile;
 import dk.statsbiblioteket.doms.central.ObjectProfile;
 import dk.statsbiblioteket.doms.central.Relation;
-import dk.statsbiblioteket.util.Files;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.NameFileFilter;
@@ -18,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -33,9 +30,9 @@ public class ReklamefilmFileResolverImpl implements ReklamefilmFileResolver {
     private static Logger logger = LoggerFactory.getLogger(ReklamefilmFileResolverImpl.class);
     private static final String HAS_FILE_RELATION = "http://doms.statsbiblioteket.dk/relations/default/0/1/#hasFile";
 
-    private Context context;
+    private InfrastructureContext context;
 
-    public ReklamefilmFileResolverImpl(Context context) {
+    public ReklamefilmFileResolverImpl(SingleTranscodingContext context) {
         this.context = context;
     }
 

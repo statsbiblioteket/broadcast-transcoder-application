@@ -1,19 +1,13 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.*;
-import dk.statsbiblioteket.broadcasttranscoder.util.JaxbWrapper;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
-import dk.statsbiblioteket.doms.central.InvalidCredentialsException;
-import dk.statsbiblioteket.doms.central.InvalidResourceException;
-import dk.statsbiblioteket.doms.central.MethodFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +29,7 @@ public class ProgramStructureUpdaterProcessor extends ProcessorChainElement {
     }
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         ProgramStructure domsProgramStructure = request.getDomsProgramStructure();
         ProgramStructure localProgramStructure = request.getLocalProgramStructure();
         if (isDummy(domsProgramStructure) ||
@@ -47,7 +41,7 @@ public class ProgramStructureUpdaterProcessor extends ProcessorChainElement {
         }
     }
 
-    protected void writeStructureToDoms(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void writeStructureToDoms(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         CentralWebservice doms = context.getDomsApi();
         ProgramStructure structure = request.getLocalProgramStructure();
         ObjectFactory objectFactory = new ObjectFactory();

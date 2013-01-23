@@ -7,8 +7,11 @@
  */
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
-import dk.statsbiblioteket.broadcasttranscoder.util.*;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
+import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutException;
+import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
+import dk.statsbiblioteket.broadcasttranscoder.util.MetadataUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +31,7 @@ public class WavTranscoderProcessor extends ProcessorChainElement {
     }
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         String command = getMultiClipCommand(request, context);
         File outputFile = FileUtils.getTemporaryMediaOutputFile(request, context);
         FileUtils.getTemporaryMediaOutputDir(request, context).mkdirs();
@@ -45,7 +48,7 @@ public class WavTranscoderProcessor extends ProcessorChainElement {
         }
     }
 
-    private String getMultiClipCommand(TranscodeRequest request, Context context) {
+    private String getMultiClipCommand(TranscodeRequest request, SingleTranscodingContext context) {
         String command = "cat ";
         List<TranscodeRequest.FileClip> clips = request.getClips();
         long bitrate = request.getBitrate();

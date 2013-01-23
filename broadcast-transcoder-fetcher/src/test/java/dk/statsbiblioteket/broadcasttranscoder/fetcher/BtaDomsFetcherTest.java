@@ -34,7 +34,7 @@ public class BtaDomsFetcherTest extends TestCase {
         FetcherContext context = new FetcherContext();
         context.setBatchSize(100);
         context.setCollection("doms:RadioTV_Collection");
-        context.setState("Published");
+        context.setFedoraState("Published");
         context.setViewAngle("SummaVisible");
         context.setDomsPassword("fedoraAdminPass");
         context.setDomsUsername("fedoraAdmin");

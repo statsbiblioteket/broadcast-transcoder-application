@@ -1,7 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.fetcher.cli;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.AbstractOptionsParser;
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.fetcher.BtaDomsFetcher;
 import org.apache.commons.cli.*;
@@ -78,24 +77,22 @@ public class OptionsParser extends AbstractOptionsParser{
 
     protected void readFetcherProperties(FetcherContext context) throws IOException, OptionParseException {
         Properties props = new Properties();
-        props.load(new FileInputStream(context.getBehaviourConfigFile()));
+        props.load(new FileInputStream(context.getFetcherFile()));
         context.setViewAngle(readStringProperty(PropertyNames.VIEW_ANGLE,props));
         context.setCollection(readStringProperty(PropertyNames.COLLECTION, props));
-        context.setState(readStringProperty(PropertyNames.STATE, props));
+        context.setFedoraState(readStringProperty(PropertyNames.STATE, props));
         context.setBatchSize(readIntegerProperty(PropertyNames.BATCH_SIZE, props));
     }
 
 
 
-    protected void readInfrastructureProperties(Context context) throws IOException, OptionParseException {
+    protected void readInfrastructureProperties(FetcherContext context) throws IOException, OptionParseException {
         Properties props = new Properties();
         props.load(new FileInputStream(context.getInfrastructuralConfigFile()));
 
         context.setFileOutputRootdir(readFileProperty(PropertyNames.FILE_DIR, props));
         context.setPreviewOutputRootdir(readFileProperty(PropertyNames.PREVIEW_DIR, props));
         context.setSnapshotOutputRootdir(readFileProperty(PropertyNames.SNAPSHOT_DIR, props));
-        context.setLockDir(readFileProperty(PropertyNames.LOCK_DIR, props));
-        context.setFileDepth(readIntegerProperty(PropertyNames.FILE_DEPTH, props));
         context.setFileFinderUrl(readStringProperty(PropertyNames.FILE_FINDER, props));
         context.setMaxFilesFetched(readIntegerProperty(PropertyNames.MAX_FILES_FETCHED, props));
 
@@ -129,7 +126,7 @@ public class OptionsParser extends AbstractOptionsParser{
         if (!configFile.exists() || configFile.isDirectory()) {
             throw new OptionParseException(configFile.getAbsolutePath() + " is not a file.");
         }
-        context.setBehaviourConfigFile(configFile);
+        context.setFetcherFile(configFile);
     }
 
 

@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.MetadataDAO;
@@ -33,7 +33,7 @@ public class PersistentMetadataExtractorProcessor extends ProcessorChainElement 
     }
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         Metadata metadata = getPersistentMedata(request, context);
         MetadataDAO dao = new MetadataDAO(HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath()));
         dao.create(metadata);
@@ -41,7 +41,7 @@ public class PersistentMetadataExtractorProcessor extends ProcessorChainElement 
 
     }
 
-    private Metadata getPersistentMedata (TranscodeRequest request, Context context) throws ProcessorException {
+    private Metadata getPersistentMedata (TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
           Metadata metadata = new Metadata();
           CentralWebservice domsAPI = CentralWebserviceFactory.getServiceInstance(context);
           String structureXmlString = null;

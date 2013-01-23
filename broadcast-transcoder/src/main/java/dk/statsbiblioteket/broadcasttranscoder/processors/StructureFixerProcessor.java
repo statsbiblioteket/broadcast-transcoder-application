@@ -7,7 +7,7 @@
  */
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,14 +27,14 @@ public class StructureFixerProcessor extends ProcessorChainElement {
     }
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         handleMissingStart(request, context);
         handleMissingEnd(request, context);
         handleHoles(request, context);
         handleOverlaps(request, context);
     }
 
-    private void handleOverlaps(TranscodeRequest request, Context context) throws ProcessorException {
+    private void handleOverlaps(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         ProgramStructure.Overlaps overlaps = request.getLocalProgramStructure().getOverlaps();
         if (overlaps == null) {
             return;
@@ -92,7 +92,7 @@ public class StructureFixerProcessor extends ProcessorChainElement {
         }
     }
 
-    private void handleMissingStart(TranscodeRequest request, Context context) throws ProcessorException {
+    private void handleMissingStart(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         MissingStart missingStart = request.getLocalProgramStructure().getMissingStart();
         if (missingStart != null && missingStart.getMissingSeconds() > context.getMaxMissingStart()) {
             final String s = missingStart.getMissingSeconds() + " missing seconds at start for " +
@@ -103,7 +103,7 @@ public class StructureFixerProcessor extends ProcessorChainElement {
         }
     }
 
-    private void handleMissingEnd(TranscodeRequest request, Context context) throws ProcessorException {
+    private void handleMissingEnd(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         MissingEnd missingEnd = request.getLocalProgramStructure().getMissingEnd();
         if (missingEnd != null && missingEnd.getMissingSeconds() > context.getMaxMissingEnd()) {
             final String s = missingEnd.getMissingSeconds() + " missing seconds at end for " +
@@ -114,7 +114,7 @@ public class StructureFixerProcessor extends ProcessorChainElement {
         }
     }
 
-    private void handleHoles(TranscodeRequest request, Context context) throws ProcessorException {
+    private void handleHoles(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         ProgramStructure.Holes holes = request.getLocalProgramStructure().getHoles();
         if (holes == null) {
             return;

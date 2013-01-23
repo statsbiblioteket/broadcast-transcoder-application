@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.reklamefilm;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
@@ -13,7 +13,7 @@ import dk.statsbiblioteket.broadcasttranscoder.util.persistence.ReklamefilmTrans
  */
 public class ReklamefilmPersistentRecordEnricherProcessor extends ProcessorChainElement {
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
         ReklamefilmTranscodingRecordDAO reklamefilmTranscodingRecordDAO = new ReklamefilmTranscodingRecordDAO(util);
         ReklamefilmTranscodingRecord record = reklamefilmTranscodingRecordDAO.read(context.getProgrampid());

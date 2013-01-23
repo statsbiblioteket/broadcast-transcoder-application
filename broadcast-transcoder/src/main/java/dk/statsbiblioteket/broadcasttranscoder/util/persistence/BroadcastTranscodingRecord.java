@@ -1,15 +1,34 @@
 package dk.statsbiblioteket.broadcasttranscoder.util.persistence;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
- *
+ *  Persistent record detailing the state of a transcoding
  */
 @Entity
 public class BroadcastTranscodingRecord {
+
+
+    private String domsProgramPid;
+    private Long lastTranscodedTimestamp;
+    private Long domsLatestTimestamp;
+
+    @Enumerated(EnumType.STRING)
+    private TranscodingState transcodingState;
+
+
+
+    private String transcodingCommand;
+    private boolean isTvmeter;
+    private int startOffset;
+    private int endOffset;
+    private Date broadtcastStartTime;
+    private Date broadcastEndTime;
+    private String title;
+    private String channel;
+    private String failureMessage;
+
 
     @Lob
     public String getTranscodingCommand() {
@@ -93,20 +112,22 @@ public class BroadcastTranscodingRecord {
         this.lastTranscodedTimestamp = lastTranscodedTimestamp;
     }
 
-    private String domsProgramPid;
-    private Long lastTranscodedTimestamp;
 
+    public Long getDomsLatestTimestamp() {
+        return domsLatestTimestamp;
+    }
 
+    public void setDomsLatestTimestamp(Long domsLatestTimestamp) {
+        this.domsLatestTimestamp = domsLatestTimestamp;
+    }
 
-       private String transcodingCommand;
-       private boolean isTvmeter;
-       private int startOffset;
-       private int endOffset;
-       private Date broadtcastStartTime;
-       private Date broadcastEndTime;
-       private String title;
-       private String channel;
+    public TranscodingState getTranscodingState() {
+        return transcodingState;
+    }
 
+    public void setTranscodingState(TranscodingState transcodingState) {
+        this.transcodingState = transcodingState;
+    }
 
     @Override
     public String toString() {
@@ -164,5 +185,13 @@ public class BroadcastTranscodingRecord {
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (channel != null ? channel.hashCode() : 0);
         return result;
+    }
+
+    public void setFailureMessage(String failureMessage) {
+        this.failureMessage = failureMessage;
+    }
+
+    public String getFailureMessage() {
+        return failureMessage;
     }
 }

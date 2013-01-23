@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +12,7 @@ public class ClipConcatenatorProcessor extends ProcessorChainElement  {
     private static Logger logger = LoggerFactory.getLogger(ClipConcatenatorProcessor.class);
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         Long blocksize = 1880L;
         Long offsetBytes = 0L;
         String processSubstitutionFileList = "";

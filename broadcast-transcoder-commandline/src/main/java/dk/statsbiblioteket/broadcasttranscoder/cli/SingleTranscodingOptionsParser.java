@@ -18,7 +18,7 @@ import static dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.*;
 /**
  *
  */
-public class OptionsParser extends AbstractOptionsParser{
+public class SingleTranscodingOptionsParser extends AbstractOptionsParser{
 
     protected static final Option PID_OPTION = new Option("programpid", true, "The DOMS pid of the program to be transcoded");
     protected static final Option TIMESTAMP_OPTION = new Option("timestamp", true, "The timestamp (milliseconds) for which transcoding is required");
@@ -30,10 +30,10 @@ public class OptionsParser extends AbstractOptionsParser{
 
     protected static Options options;
 
-    private Context context;
+    private SingleTranscodingContext context;
 
-    public OptionsParser() {
-        context = new Context();
+    public SingleTranscodingOptionsParser() {
+        context = new SingleTranscodingContext();
         options = new Options();
         options.addOption(PID_OPTION);
         options.addOption(TIMESTAMP_OPTION);
@@ -44,7 +44,7 @@ public class OptionsParser extends AbstractOptionsParser{
     }
 
 
-    public Context parseOptions(String[] args) throws OptionParseException {
+    public SingleTranscodingContext parseOptions(String[] args) throws OptionParseException {
         CommandLineParser parser = new PosixParser();
         CommandLine cmd;
         try {
@@ -78,7 +78,7 @@ public class OptionsParser extends AbstractOptionsParser{
          }
     }
 
-    protected void readInfrastructureProperties(Context context) throws IOException, OptionParseException {
+    protected void readInfrastructureProperties(SingleTranscodingContext context) throws IOException, OptionParseException {
         Properties props = new Properties();
         props.load(new FileInputStream(context.getInfrastructuralConfigFile()));
         context.setFileOutputRootdir(readExistingDirectoryProperty(FILE_DIR, props));
@@ -98,7 +98,7 @@ public class OptionsParser extends AbstractOptionsParser{
         }
     }
 
-    protected void readBehaviouralProperties(Context context) throws IOException, OptionParseException {
+    protected void readBehaviouralProperties(SingleTranscodingContext context) throws IOException, OptionParseException {
         Properties props = new Properties();
         props.load(new FileInputStream(context.getBehaviourConfigFile()));
         context.setVideoBitrate(readIntegerProperty(VIDEO_BITRATE, props));
@@ -133,7 +133,6 @@ public class OptionsParser extends AbstractOptionsParser{
         context.setSoxTranscodeParams(readStringProperty(SOX_TRANSCODE_PARAMS, props));
         context.setDefaultTranscodingTimestamp(readLongProperty(DEFAULT_TIMESTAMP, props));
         context.setOverwrite(readBooleanProperty(OVERWRITE,props));
-        context.setDomsViewAngle(readStringProperty(DOMS_VIEWANGLE,props));
     }
 
 

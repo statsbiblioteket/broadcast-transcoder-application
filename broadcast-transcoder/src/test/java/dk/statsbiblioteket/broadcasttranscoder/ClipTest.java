@@ -1,13 +1,8 @@
 package dk.statsbiblioteket.broadcasttranscoder;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramBroadcast;
-import dk.statsbiblioteket.broadcasttranscoder.processors.CoverageAnalyserProcessor;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
-import dk.statsbiblioteket.broadcasttranscoder.processors.StructureFixerProcessor;
-import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
-import dk.statsbiblioteket.broadcasttranscoder.processors.TranscoderDispatcherProcessor;
+import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
 import junit.framework.TestCase;
 
@@ -28,7 +23,7 @@ import java.util.List;
  */
 public class ClipTest extends TestCase {
 
-    Context context = new Context();
+    SingleTranscodingContext context = new SingleTranscodingContext();
 
     String scratchDir="/home/csr/old_home/yousee_scratch/";
     String scratchWriteDir="target/";

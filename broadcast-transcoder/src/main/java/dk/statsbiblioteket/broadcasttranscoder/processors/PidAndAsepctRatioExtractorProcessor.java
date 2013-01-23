@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
     }
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         Long blocksize = 1880L;
         Long blockcount = context.getAnalysisClipLength()/blocksize;
         String filename = null;
@@ -72,7 +72,7 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
         }
     }
 
-    private void validateFoundData(TranscodeRequest request, Context context) throws ProcessorException {
+    private void validateFoundData(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         if (request.getAudioPids().isEmpty()) {
             throw new ProcessorException("No audio stream discovered for " + context.getProgrampid());
         }
@@ -83,14 +83,14 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
         }
     }
 
-    private void findPidsSingleMuxOrMpeg(String[] commandOutput, TranscodeRequest request, Context context) {
+    private void findPidsSingleMuxOrMpeg(String[] commandOutput, TranscodeRequest request, SingleTranscodingContext context) {
         boolean foundProgram = false;
         for (String line: commandOutput) {
             findPidInLine(line, request, context);
         }
     }
 
-    private void findPidsMultiMux(String[] commandOutput, TranscodeRequest request, Context context) {
+    private void findPidsMultiMux(String[] commandOutput, TranscodeRequest request, SingleTranscodingContext context) {
         boolean foundProgram = false;
         Pattern thisProgramPattern = Pattern.compile(".*Program\\s"+request.getClips().get(0).getProgramId()+".*");
         Pattern programPattern = Pattern.compile(".*Program.*");
@@ -112,7 +112,7 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
         }
     }
 
-    private void findPidInLine(String line, TranscodeRequest request, Context context) {
+    private void findPidInLine(String line, TranscodeRequest request, SingleTranscodingContext context) {
         Pattern dvbsubPattern = Pattern.compile(".*Stream.*\\[(0x[0-9a-f]*)\\].*dvb.*sub.*");
         Pattern videoPattern = Pattern.compile(".*Stream.*\\[(0x[0-9a-f]*)\\].*Video.*DAR\\s(([0-9]*):([0-9]*)).*");
         Pattern audioPattern1 = Pattern.compile(".*Stream.*\\[(0x[0-9a-f]*)\\].*Audio.*");

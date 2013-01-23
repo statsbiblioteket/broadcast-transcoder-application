@@ -1,13 +1,13 @@
 
 package dk.statsbiblioteket.broadcasttranscoder.fetcher;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
-
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.fetcher.cli.FetcherContext;
 import dk.statsbiblioteket.broadcasttranscoder.fetcher.cli.OptionsParser;
-import dk.statsbiblioteket.broadcasttranscoder.processors.*;
+import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
+import dk.statsbiblioteket.broadcasttranscoder.util.persistence.BroadcastTranscodingRecordDAO;
+import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 import dk.statsbiblioteket.doms.central.InvalidCredentialsException;
 import dk.statsbiblioteket.doms.central.MethodFailedException;
@@ -15,8 +15,6 @@ import dk.statsbiblioteket.doms.central.RecordDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -39,8 +37,11 @@ public class BtaDomsFetcher {
 
             CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);
             List<RecordDescription> records = requestInBatches(doms, context);
+
+            HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
+            BroadcastTranscodingRecordDAO dao = new BroadcastTranscodingRecordDAO(util);
             for (RecordDescription record : records) {
-                System.out.println(record.getPid()+" "+record.getDate());
+                dao.markAsChangedInDoms(record.getPid(),record.getDate());
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -108,7 +109,7 @@ public class BtaDomsFetcher {
     }
 
     private static String getState(FetcherContext context) {
-        return context.getState();
+        return context.getFedoraState();
 
     }
 

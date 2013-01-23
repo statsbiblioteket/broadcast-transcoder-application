@@ -1,12 +1,10 @@
 package dk.statsbiblioteket.broadcasttranscoder;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
-import dk.statsbiblioteket.broadcasttranscoder.cli.OptionsParser;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.BroadcastTranscodingRecordDAO;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +24,7 @@ public class Cleanup {
 
     public static void main(String[] args) throws OptionParseException {
         logger.debug("Entered main method.");
-        Context context = new OptionsParser().parseOptions(args);
+        SingleTranscodingContext context = new SingleTranscodingOptionsParser().parseOptions(args);
         TranscodeRequest request = new TranscodeRequest();
         File lockFile = FileUtils.getLockFile(request, context);
         if (lockFile.exists()) {

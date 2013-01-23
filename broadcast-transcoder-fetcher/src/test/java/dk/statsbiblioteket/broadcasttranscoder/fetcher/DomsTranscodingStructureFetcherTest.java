@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.fetcher;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.processors.DomsAndOverwriteExaminerProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import dk.statsbiblioteket.util.Streams;
@@ -21,7 +21,7 @@ public class DomsTranscodingStructureFetcherTest extends TestCase {
 
 
     public void testProcessThis() throws Exception {
-        Context context = new Context();
+        SingleTranscodingContext context = new SingleTranscodingContext();
         context.setDomsViewAngle("GUI");
         context.setDomsPassword("fedoraAdminPass");
         context.setDomsUsername("fedoraAdmin");
