@@ -8,6 +8,7 @@ import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.BroadcastTranscodingRecordDAO;
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
+import dk.statsbiblioteket.broadcasttranscoder.util.persistence.TranscodingProcessInterface;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 import dk.statsbiblioteket.doms.central.InvalidCredentialsException;
 import dk.statsbiblioteket.doms.central.MethodFailedException;
@@ -39,7 +40,7 @@ public class BtaDomsFetcher {
             List<RecordDescription> records = requestInBatches(doms, context);
 
             HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
-            BroadcastTranscodingRecordDAO dao = new BroadcastTranscodingRecordDAO(util);
+            TranscodingProcessInterface dao = new BroadcastTranscodingRecordDAO(util);
             for (RecordDescription record : records) {
                 dao.markAsChangedInDoms(record.getPid(),record.getDate());
             }

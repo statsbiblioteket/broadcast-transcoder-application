@@ -1,11 +1,12 @@
 package dk.statsbiblioteket.broadcasttranscoder.util.persistence;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  *
  */
-public class ReklamefilmTranscodingRecordDAO extends GenericHibernateDAO<ReklamefilmTranscodingRecord, String> implements TimestampPersister {
+public class ReklamefilmTranscodingRecordDAO extends GenericHibernateDAO<ReklamefilmTranscodingRecord, String> implements TranscodingProcessInterface<ReklamefilmTranscodingRecord> {
 
     public ReklamefilmTranscodingRecordDAO(HibernateUtilIF util) {
         super(ReklamefilmTranscodingRecord.class, util);
@@ -30,5 +31,30 @@ public class ReklamefilmTranscodingRecordDAO extends GenericHibernateDAO<Reklame
             record.setTranscodingDate(new Date(timestamp));
             update(record);
         }
+    }
+
+    @Override
+    public List<BroadcastTranscodingRecord> getAllTranscodings(long since, TranscodingState state) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void markAsChangedInDoms(String programpid, long timestamp) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void markAsAlreadyTranscoded(String programpid) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void markAsFailed(String programpid, String message) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void markAsRejected(String programpid, String message) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

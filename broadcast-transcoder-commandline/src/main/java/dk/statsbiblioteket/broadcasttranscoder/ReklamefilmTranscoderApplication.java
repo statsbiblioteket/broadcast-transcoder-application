@@ -28,7 +28,7 @@ public class ReklamefilmTranscoderApplication {
         logger.debug("Entered main method.");
         SingleTranscodingContext context = new SingleTranscodingOptionsParser().parseOptions(args);
         HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
-        context.setTimestampPersister(new ReklamefilmTranscodingRecordDAO(util));
+        context.setTranscodingProcessInterface(new ReklamefilmTranscodingRecordDAO(util));
         context.setReklamefilmFileResolver(new ReklamefilmFileResolverImpl(context));
         TranscodeRequest request = new TranscodeRequest();
         File lockFile = FileUtils.getLockFile(request, context);
@@ -52,7 +52,7 @@ public class ReklamefilmTranscoderApplication {
             ProcessorChainElement firstChain = ProcessorChainElement.makeChain(gonogoer);
             firstChain.processIteratively(request, context);
             if (request.isGoForTranscoding()) {
-                context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
+                context.getTranscodingProcessInterface().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
 
                 ProcessorChainElement resolver = new ReklamefilmFileResolverProcessor();
                 ProcessorChainElement aspecter = new PidAndAsepctRatioExtractorProcessor();

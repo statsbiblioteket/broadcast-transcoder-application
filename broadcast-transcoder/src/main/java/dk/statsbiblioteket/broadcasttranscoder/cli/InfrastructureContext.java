@@ -1,6 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder.cli;
 
 import dk.statsbiblioteket.broadcasttranscoder.util.persistence.TimestampPersister;
+import dk.statsbiblioteket.broadcasttranscoder.util.persistence.TranscodingProcessInterface;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 
 import java.io.File;
@@ -18,7 +19,7 @@ public class InfrastructureContext {
 
     private File hibernateConfigFile;
 
-    private TimestampPersister timestampPersister;
+    private TranscodingProcessInterface transcodingProcessInterface;
 
     private File fileOutputRootdir;
     private File previewOutputRootdir;
@@ -31,10 +32,10 @@ public class InfrastructureContext {
 
 
     private String domsEndpoint;
-       private String domsUsername;
-       private String domsPassword;
+    private String domsUsername;
+    private String domsPassword;
 
-       private CentralWebservice domsApi = null;
+    private CentralWebservice domsApi = null;
 
 
     public InfrastructureContext() {
@@ -56,13 +57,7 @@ public class InfrastructureContext {
         this.hibernateConfigFile = hibernateConfigFile;
     }
 
-    public TimestampPersister getTimestampPersister() {
-        return timestampPersister;
-    }
 
-    public void setTimestampPersister(TimestampPersister timestampPersister) {
-        this.timestampPersister = timestampPersister;
-    }
 
     public String getDomsEndpoint() {
         return domsEndpoint;
@@ -143,5 +138,13 @@ public class InfrastructureContext {
 
     public void setReklamefileRootDirectories(String[] reklamefileRootDirectories) {
         this.reklamefileRootDirectories = reklamefileRootDirectories;
+    }
+
+    public TranscodingProcessInterface getTranscodingProcessInterface() {
+        return transcodingProcessInterface;
+    }
+
+    public void setTranscodingProcessInterface(TranscodingProcessInterface transcodingProcessInterface) {
+        this.transcodingProcessInterface = transcodingProcessInterface;
     }
 }

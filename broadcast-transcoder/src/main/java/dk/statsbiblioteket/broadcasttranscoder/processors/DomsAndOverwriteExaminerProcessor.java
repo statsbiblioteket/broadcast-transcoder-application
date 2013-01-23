@@ -74,7 +74,7 @@ public class DomsAndOverwriteExaminerProcessor extends ProcessorChainElement {
 
         long timeStampOfNewChange = context.getTranscodingTimestamp();
         logger.info("Transcode doms record for " + pid + " timestamp " + timeStampOfNewChange + "=" + new Date(timeStampOfNewChange));
-        TimestampPersister persister = context.getTimestampPersister();
+        TimestampPersister persister = context.getTranscodingProcessInterface();
         Long oldTranscodingTimestamp = persister.getTimestamp( pid);
         if (oldTranscodingTimestamp == null) {
             logger.info("No previous transcoding timestamp set for " + pid);

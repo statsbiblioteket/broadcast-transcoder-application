@@ -14,7 +14,7 @@ import java.util.List;
  * Time: 10:48 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BroadcastTranscodingRecordDAO extends GenericHibernateDAO<BroadcastTranscodingRecord, String> implements TimestampPersister {
+public class BroadcastTranscodingRecordDAO extends GenericHibernateDAO<BroadcastTranscodingRecord, String> implements TranscodingProcessInterface<BroadcastTranscodingRecord> {
 
     public BroadcastTranscodingRecordDAO(HibernateUtilIF util) {
         super(BroadcastTranscodingRecord.class, util);
@@ -44,6 +44,7 @@ public class BroadcastTranscodingRecordDAO extends GenericHibernateDAO<Broadcast
         }
     }
 
+    @Override
     public List<BroadcastTranscodingRecord> getAllTranscodings(long since, TranscodingState state){
         Session session = getSession();
         Transaction tx = session.beginTransaction();
@@ -56,13 +57,15 @@ public class BroadcastTranscodingRecordDAO extends GenericHibernateDAO<Broadcast
         return jobs;
     }
 
-    public void markAsChangedInDoms(String programpid,long timestamp){
+    @Override
+    public void markAsChangedInDoms(String programpid, long timestamp){
         BroadcastTranscodingRecord record = read(programpid);
         record.setDomsLatestTimestamp(timestamp);
         record.setTranscodingState(TranscodingState.PENDING);
         update(record);
     }
 
+    @Override
     public void markAsAlreadyTranscoded(String programpid){
         BroadcastTranscodingRecord record = read(programpid);
         record.setTranscodingState(TranscodingState.COMPLETE);
@@ -70,14 +73,16 @@ public class BroadcastTranscodingRecordDAO extends GenericHibernateDAO<Broadcast
         update(record);
     }
 
-    public void markAsFailed(String programpid,String message){
+    @Override
+    public void markAsFailed(String programpid, String message){
         BroadcastTranscodingRecord record = read(programpid);
         record.setTranscodingState(TranscodingState.FAILED);
         record.setFailureMessage(message);
         update(record);
     }
 
-    public void markAsRejected(String programpid,String message){
+    @Override
+    public void markAsRejected(String programpid, String message){
         BroadcastTranscodingRecord record = read(programpid);
         record.setTranscodingState(TranscodingState.REJECTED);
         record.setFailureMessage(message);

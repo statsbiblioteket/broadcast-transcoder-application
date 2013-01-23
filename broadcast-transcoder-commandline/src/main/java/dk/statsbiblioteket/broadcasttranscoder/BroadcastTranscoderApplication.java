@@ -27,7 +27,7 @@ public class BroadcastTranscoderApplication {
         try {
             context = new SingleTranscodingOptionsParser().parseOptions(args);
             HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
-            context.setTimestampPersister(new BroadcastTranscodingRecordDAO(util));
+            context.setTranscodingProcessInterface(new BroadcastTranscodingRecordDAO(util));
             request = new TranscodeRequest();
             lockFile = FileUtils.getLockFile(request, context);
         } catch (Exception e) {
@@ -80,7 +80,7 @@ public class BroadcastTranscoderApplication {
             preChain.processIteratively(request, context);
 
             if (!request.isGoForTranscoding()) {
-                context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
+                context.getTranscodingProcessInterface().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
                 logger.info("No transcoding required for " + context.getProgrampid() + ". Exiting.");
                 return;
             }
@@ -181,7 +181,7 @@ public class BroadcastTranscoderApplication {
                     return;
             }
         secondChain.processIteratively(request, context);
-        context.getTimestampPersister().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
+        context.getTranscodingProcessInterface().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
         ProcessorChainElement thirdChain = ProcessorChainElement.makeChain(persistenceEnricher);
             try {
                 thirdChain.processIteratively(request, context);
