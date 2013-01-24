@@ -1,7 +1,11 @@
-package dk.statsbiblioteket.broadcasttranscoder.persistence;
+package dk.statsbiblioteket.broadcasttranscoder.persistence.dao;
 
+import dk.statsbiblioteket.broadcasttranscoder.persistence.*;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
@@ -47,9 +51,14 @@ public class BroadcastTranscodingRecordDAO extends GenericHibernateDAO<Broadcast
     public List<BroadcastTranscodingRecord> getAllTranscodings(long since, TranscodingState state){
         Session session = getSession();
         Transaction tx = session.beginTransaction();
-        List jobs = session.createCriteria(BroadcastTranscodingRecord.class)
+
+        Criteria criteria = session.createCriteria(BroadcastTranscodingRecord.class)
                 .add(Restrictions.ge("domsLatestTimestamp", since))
-                .add(Restrictions.eq("transcodingState", state))
+                .addOrder(Order.asc("domsLatestTimestamp"));
+        if (state!= null){
+            criteria = criteria.add(Restrictions.eq("transcodingState",state));
+        }
+        List jobs = criteria
                 .list();
         tx.commit();
         session.close();

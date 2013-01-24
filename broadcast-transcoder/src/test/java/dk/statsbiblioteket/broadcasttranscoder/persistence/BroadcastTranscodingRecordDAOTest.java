@@ -2,6 +2,9 @@ package dk.statsbiblioteket.broadcasttranscoder.persistence;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramBroadcast;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.BroadcastTranscodingRecordDAO;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import dk.statsbiblioteket.broadcasttranscoder.util.CalendarUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.MetadataUtils;

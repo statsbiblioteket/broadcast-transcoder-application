@@ -1,4 +1,4 @@
-package dk.statsbiblioteket.broadcasttranscoder.persistence;
+package dk.statsbiblioteket.broadcasttranscoder.persistence.dao;
 
 
 public interface GenericDAO<T, PK extends java.io.Serializable>   {

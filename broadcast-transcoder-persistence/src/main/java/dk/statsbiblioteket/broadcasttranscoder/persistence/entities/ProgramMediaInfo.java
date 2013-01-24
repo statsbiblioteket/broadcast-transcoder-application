@@ -1,4 +1,7 @@
-package dk.statsbiblioteket.broadcasttranscoder.persistence;
+package dk.statsbiblioteket.broadcasttranscoder.persistence.entities;
+
+import dk.statsbiblioteket.broadcasttranscoder.persistence.BroadcastTypeEnum;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.MediaTypeEnum;
 
 import java.util.Date;
 

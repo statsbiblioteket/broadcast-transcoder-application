@@ -1,4 +1,6 @@
-package dk.statsbiblioteket.broadcasttranscoder.persistence;
+package dk.statsbiblioteket.broadcasttranscoder.persistence.entities;
+
+import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingState;
 
 import javax.persistence.*;
 import java.util.Date;

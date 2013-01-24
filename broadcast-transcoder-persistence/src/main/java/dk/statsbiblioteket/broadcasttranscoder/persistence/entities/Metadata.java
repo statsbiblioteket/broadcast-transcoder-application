@@ -1,4 +1,4 @@
-package dk.statsbiblioteket.broadcasttranscoder.persistence;
+package dk.statsbiblioteket.broadcasttranscoder.persistence.entities;
 
 import java.util.Date;
 

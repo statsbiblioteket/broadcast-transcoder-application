@@ -1,12 +1,19 @@
 package dk.statsbiblioteket.broadcasttranscoder.persistence;
 
-import junit.framework.TestCase;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.MetadataDAO;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.Metadata;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
+import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 /**
  *
@@ -23,9 +30,11 @@ public class MetadataDAOTest {
 
     @Test
     @Ignore
-    public void testCreate() {
-        String hibernateConfig = "src/test/config/hibernate.in-memory_unittest.cfg.xml";
-        util = HibernateUtil.getInstance(hibernateConfig);
+    public void testCreate() throws URISyntaxException {
+        String configFile = new File(Thread.currentThread().getContextClassLoader().getResource("hibernate.cfg.xml").toURI()).getAbsolutePath();
+
+
+        util = HibernateUtil.getInstance(configFile);
 
         Metadata md = new Metadata();
         md.setChannelID("dr1");
@@ -40,8 +49,8 @@ public class MetadataDAOTest {
         md.setLastChangedDate(new Date(now + 10000L));
         dao.create(md);
         List<Metadata> mds = dao.getByProgramPid("foobar");
-        /*assertEquals(2, mds.size());
-        assertTrue(mds.get(0).getLastChangedDate().after(mds.get(1).getLastChangedDate()));*/
+        assertEquals(2, mds.size());
+        assertTrue(mds.get(0).getLastChangedDate().after(mds.get(1).getLastChangedDate()));
     }
 
 }

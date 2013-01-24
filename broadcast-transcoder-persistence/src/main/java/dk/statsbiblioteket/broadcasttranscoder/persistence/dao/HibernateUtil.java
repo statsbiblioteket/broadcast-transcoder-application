@@ -1,5 +1,6 @@
-package dk.statsbiblioteket.broadcasttranscoder.persistence;
+package dk.statsbiblioteket.broadcasttranscoder.persistence.dao;
 
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
@@ -32,6 +33,10 @@ public class HibernateUtil implements HibernateUtilIF {
             AnnotationConfiguration configure = (new AnnotationConfiguration()).configure(file);
             configure.addAnnotatedClass(BroadcastTranscodingRecord.class);
             configure.addAnnotatedClass(ReklamefilmTranscodingRecord.class);
+            configure.addAnnotatedClass(Metadata.class);
+            configure.addAnnotatedClass(PreviewMediaInfo.class);
+            configure.addAnnotatedClass(ProgramMediaInfo.class);
+            configure.addAnnotatedClass(SnapshotMediaInfo.class);
             factory = configure.buildSessionFactory();
         }
         return instance;

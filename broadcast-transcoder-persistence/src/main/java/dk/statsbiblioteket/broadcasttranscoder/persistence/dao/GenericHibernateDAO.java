@@ -5,14 +5,11 @@
  *
  *
  */
-package dk.statsbiblioteket.broadcasttranscoder.persistence;
+package dk.statsbiblioteket.broadcasttranscoder.persistence.dao;
 
-import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Criterion;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class GenericHibernateDAO<T, PK extends Serializable> implements GenericDAO<T, PK> {
 
@@ -68,18 +65,6 @@ public class GenericHibernateDAO<T, PK extends Serializable> implements GenericD
 
     public void flush() {
         getSession().flush();
-    }
-
-    /**
-     * Use this inside subclasses as a convenience method.
-     */
-    @SuppressWarnings("unchecked")
-    protected List<T> findByCriteria(Criterion... criterion) {
-        Criteria crit = getSession().createCriteria(type);
-        for (Criterion c : criterion) {
-            crit.add(c);
-        }
-        return crit.list();
     }
 
 

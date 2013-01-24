@@ -1,4 +1,4 @@
-package dk.statsbiblioteket.broadcasttranscoder.persistence;
+package dk.statsbiblioteket.broadcasttranscoder.persistence.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
