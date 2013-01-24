@@ -2,9 +2,9 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.MetadataUtils;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.BroadcastTranscodingRecord;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.BroadcastTranscodingRecordDAO;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.BroadcastTranscodingRecord;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.BroadcastTranscodingRecordDAO;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.HibernateUtil;
 
 /**
  * Created with IntelliJ IDEA.

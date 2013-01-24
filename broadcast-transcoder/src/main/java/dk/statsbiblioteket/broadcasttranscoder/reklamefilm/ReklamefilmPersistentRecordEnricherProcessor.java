@@ -4,9 +4,9 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.ReklamefilmTranscodingRecord;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.ReklamefilmTranscodingRecordDAO;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.HibernateUtil;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.ReklamefilmTranscodingRecord;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.ReklamefilmTranscodingRecordDAO;
 
 /**
  *

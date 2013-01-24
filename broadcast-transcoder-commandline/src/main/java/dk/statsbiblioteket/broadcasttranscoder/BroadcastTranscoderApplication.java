@@ -4,10 +4,10 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.BroadcastTranscodingRecord;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.BroadcastTranscodingRecordDAO;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.TranscodingState;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.BroadcastTranscodingRecord;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.BroadcastTranscodingRecordDAO;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.HibernateUtil;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

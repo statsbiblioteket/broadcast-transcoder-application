@@ -9,8 +9,8 @@ import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmFileResolv
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmPersistentRecordEnricherProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmFileResolverImpl;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.ReklamefilmTranscodingRecordDAO;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.HibernateUtil;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.ReklamefilmTranscodingRecordDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

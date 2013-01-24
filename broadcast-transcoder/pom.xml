@@ -16,37 +16,19 @@
 
     <dependencies>
         <dependency>
-            <groupId>dk.statsbiblioteket.doms.central</groupId>
-            <artifactId>centralWebservice-interface</artifactId>
+            <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>
+            <artifactId>broadcast-transcoder-persistence</artifactId>
+            <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>
+            <artifactId>broadcast-transcoder-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch</groupId>
-            <artifactId>bes-media-file-status-log</artifactId>
-            <version>1.3-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <!-- Ant project: 3.3.0.SP1 -->
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <!-- Same as ant project -->
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-c3p0</artifactId>
-            <!-- New -->
-        </dependency>
-        <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

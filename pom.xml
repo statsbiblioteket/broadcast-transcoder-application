@@ -13,6 +13,8 @@
         <module>broadcast-transcoder</module>
         <module>broadcast-transcoder-commandline</module>
         <module>broadcast-transcoder-fetcher</module>
+        <module>broadcast-transcoder-persistence</module>
+        <module>broadcast-transcoder-common</module>
     </modules>
 
     <repositories>

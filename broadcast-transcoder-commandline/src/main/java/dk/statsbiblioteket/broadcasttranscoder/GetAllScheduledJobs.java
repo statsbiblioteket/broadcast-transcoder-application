@@ -2,10 +2,10 @@ package dk.statsbiblioteket.broadcasttranscoder;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.GetJobsContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.GetJobsOptionsParser;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.BroadcastTranscodingRecord;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.BroadcastTranscodingRecordDAO;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.TranscodingProcessInterface;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.BroadcastTranscodingRecord;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.BroadcastTranscodingRecordDAO;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.HibernateUtil;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingProcessInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

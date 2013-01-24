@@ -3,7 +3,7 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.TimestampPersister;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.TimestampPersister;
 import dk.statsbiblioteket.doms.central.*;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
