@@ -83,45 +83,13 @@ public class BtaDomsFetcher {
         String state = getState(context);
         int batchSize = getBatchSize(context);
 
-
-        int start = 0;
-        List<RecordDescription> records = doms.getIDsModified(since, collection, viewAngle, state,start,batchSize);
+        List<RecordDescription> records = doms.getIDsModified(since, collection, viewAngle, state,0,batchSize);
         int size = records.size();
-        start += size;
         while (size == batchSize){
-            List<RecordDescription> temp = doms.getIDsModified(since, collection, viewAngle, state, start, batchSize);
+            RecordDescription lastObject = records.get(records.size() - 1);
+            List<RecordDescription> temp = doms.getIDsModified(lastObject.getDate(), collection, viewAngle, state, 0, batchSize);
             size = temp.size();
-            start += size;
             records.addAll(temp);
-        }
-        return records;
-    }
-
-
-    static List<RecordDescription> requestInBatches(CentralWebservice doms,FetcherContext context, int max) throws InvalidCredentialsException, MethodFailedException {
-        long since = getSince(context);
-        String collection = getCollection(context);
-        String viewAngle = getViewAngle(context);
-        String state = getState(context);
-        int batchSize = getBatchSize(context);
-        if (batchSize < max){
-            batchSize = max;
-        }
-
-
-        int start = 0;
-        List<RecordDescription> records = doms.getIDsModified(since, collection, viewAngle, state,start,batchSize);
-        int size = records.size();
-        start += size;
-
-        while (size == batchSize && start < max){
-            List<RecordDescription> temp = doms.getIDsModified(since, collection, viewAngle, state, start, batchSize);
-            size = temp.size();
-            start += size;
-            records.addAll(temp);
-        }
-        if (records.size() > max){
-            records = records.subList(0,max);
         }
         return records;
     }
