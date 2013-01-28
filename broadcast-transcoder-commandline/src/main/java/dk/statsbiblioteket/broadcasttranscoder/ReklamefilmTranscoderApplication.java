@@ -2,6 +2,7 @@ package dk.statsbiblioteket.broadcasttranscoder;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingOptionsParser;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.ReklamefilmTranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.FfprobeFetcherProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.GoNoGoProcessor;
@@ -20,13 +21,13 @@ import java.io.IOException;
 /**
  *
  */
-public class ReklamefilmTranscoderApplication {
+public class ReklamefilmTranscoderApplication extends TranscoderApplication {
 
     private static Logger logger = LoggerFactory.getLogger(ReklamefilmTranscoderApplication.class);
 
     public static void main(String[] args) throws Exception {
         logger.debug("Entered main method.");
-        SingleTranscodingContext context = new SingleTranscodingOptionsParser().parseOptions(args);
+        SingleTranscodingContext<ReklamefilmTranscodingRecord> context = new SingleTranscodingOptionsParser<ReklamefilmTranscodingRecord>().parseOptions(args);
         HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
         context.setTranscodingProcessInterface(new ReklamefilmTranscodingRecordDAO(util));
         context.setReklamefilmFileResolver(new ReklamefilmFileResolverImpl(context));
@@ -52,8 +53,6 @@ public class ReklamefilmTranscoderApplication {
             ProcessorChainElement firstChain = ProcessorChainElement.makeChain(gonogoer);
             firstChain.processIteratively(request, context);
             if (request.isGoForTranscoding()) {
-                context.getTranscodingProcessInterface().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
-
                 ProcessorChainElement resolver = new ReklamefilmFileResolverProcessor();
                 ProcessorChainElement aspecter = new PidAndAsepctRatioExtractorProcessor();
                 ProcessorChainElement transcoder = new UnistreamVideoTranscoderProcessor();
@@ -75,9 +74,11 @@ public class ReklamefilmTranscoderApplication {
                 secondChain.processIteratively(request, context);
             }
         } catch (Exception e) {
+            transcodingFailed(request,context,e);
             //Fault barrier. This is necessary because an uncaught RuntimeException will otherwise not log the pid it
             //failed on.
             logger.error("Error processing " + context.getProgrampid(), e);
+
             throw(e);
         } finally {
             boolean deleted = lockFile.delete();
@@ -86,6 +87,7 @@ public class ReklamefilmTranscoderApplication {
                 System.exit(4);
             }
         }
+        transcodingComplete(request,context);
 
 
     }

@@ -9,24 +9,7 @@ import java.util.Date;
  * Persistent entity recording information about a successful transcoding.
  */
 @Entity
-public class ReklamefilmTranscodingRecord {
-
-    @Id
-    public String getDomsPid() {
-        return domsPid;
-    }
-
-    public void setDomsPid(String domsPid) {
-        this.domsPid = domsPid;
-    }
-
-    public Long getTranscodingTimestamp() {
-        return transcodingTimestamp;
-    }
-
-    public void setTranscodingTimestamp(Long transcodingTimestamp) {
-        this.transcodingTimestamp = transcodingTimestamp;
-    }
+public class ReklamefilmTranscodingRecord extends TranscodingRecord{
 
     public String getInputFile() {
         return inputFile;
@@ -36,13 +19,7 @@ public class ReklamefilmTranscodingRecord {
         this.inputFile = inputFile;
     }
 
-    public Date getTranscodingDate() {
-        return transcodingDate;
-    }
 
-    public void setTranscodingDate(Date transcodingDate) {
-        this.transcodingDate = transcodingDate;
-    }
 
     @Lob
     public String getTranscodingCommand() {
@@ -53,11 +30,6 @@ public class ReklamefilmTranscodingRecord {
         this.transcodingCommand = transcodingCommand;
     }
 
-
-
-    private String domsPid;
-    private Long transcodingTimestamp;
-    private Date transcodingDate;
     private String inputFile;
     private String transcodingCommand;
 

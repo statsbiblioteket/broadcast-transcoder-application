@@ -7,7 +7,7 @@ package dk.statsbiblioteket.broadcasttranscoder.persistence;
  * Time: 2:55 PM
  * To change this template use File | Settings | File Templates.
  */
-public enum TranscodingState {
+public enum TranscodingStateEnum {
 
     PENDING,REJECTED,FAILED,COMPLETE
 }

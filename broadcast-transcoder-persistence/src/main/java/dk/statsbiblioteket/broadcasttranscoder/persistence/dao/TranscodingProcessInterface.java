@@ -1,7 +1,6 @@
-package dk.statsbiblioteket.broadcasttranscoder.persistence;
+package dk.statsbiblioteket.broadcasttranscoder.persistence.dao;
 
-import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.GenericDAO;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingStateEnum;
 
 import java.util.List;
 
@@ -12,8 +11,8 @@ import java.util.List;
  * Time: 4:49 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface TranscodingProcessInterface<T> extends GenericDAO<T, String>, TimestampPersister {
-    List<T> getAllTranscodings(long since, TranscodingState state);
+public interface TranscodingProcessInterface<T> extends GenericDAO<T, String> {
+    List<T> getAllTranscodings(long since, TranscodingStateEnum state);
 
     void markAsChangedInDoms(String programpid, long timestamp);
 
@@ -22,4 +21,8 @@ public interface TranscodingProcessInterface<T> extends GenericDAO<T, String>, T
     void markAsFailed(String programpid, String message);
 
     void markAsRejected(String programpid, String message);
+
+    long getLatestTranscodingTimestamp(String programPid);
+
+    long getLatestChangeInDomsTimestamp(String programPid);
 }

@@ -1,6 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder.cli;
 
 import dk.statsbiblioteket.broadcasttranscoder.BroadcastTranscoderApplication;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import org.apache.commons.cli.*;
 
 import java.io.File;
@@ -13,7 +14,7 @@ import static dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.*;
 /**
  *
  */
-public class GetJobsOptionsParser extends AbstractOptionsParser{
+public class GetJobsOptionsParser<T> extends AbstractOptionsParser{
 
 
     protected static final Option TIMESTAMP_OPTION = new Option("timestamp", true, "The timestamp (milliseconds) for which transcoding is required");
@@ -23,11 +24,12 @@ public class GetJobsOptionsParser extends AbstractOptionsParser{
     protected static final Option USAGE_OPTION = new Option("u", false, "Usage");
 
     protected static Options options;
+    private static final String DOMS_COLLECTION = "collection";
 
-    private GetJobsContext context;
+    private GetJobsContext<T> context;
 
     public GetJobsOptionsParser() {
-        context = new GetJobsContext();
+        context = new GetJobsContext<T>();
         options = new Options();
         options.addOption(TIMESTAMP_OPTION);
         options.addOption(INFRASTRUCTURE_CONFIG_FILE_OPTION);
@@ -36,7 +38,7 @@ public class GetJobsOptionsParser extends AbstractOptionsParser{
     }
 
 
-    public GetJobsContext parseOptions(String[] args) throws OptionParseException {
+    public GetJobsContext<T> parseOptions(String[] args) throws OptionParseException {
         CommandLineParser parser = new PosixParser();
         CommandLine cmd;
         try {
@@ -68,7 +70,7 @@ public class GetJobsOptionsParser extends AbstractOptionsParser{
          }
     }
 
-    protected void readInfrastructureProperties(GetJobsContext context) throws IOException, OptionParseException {
+    protected void readInfrastructureProperties(GetJobsContext<T> context) throws IOException, OptionParseException {
         Properties props = new Properties();
         props.load(new FileInputStream(context.getInfrastructuralConfigFile()));
         context.setDomsEndpoint(readStringProperty(DOMS_ENDPOINT, props));
@@ -76,10 +78,11 @@ public class GetJobsOptionsParser extends AbstractOptionsParser{
         context.setDomsPassword(readStringProperty(DOMS_PASSWORD, props));
     }
 
-    protected void readBehaviouralProperties(GetJobsContext context) throws IOException, OptionParseException {
+    protected void readBehaviouralProperties(GetJobsContext<T> context) throws IOException, OptionParseException {
         Properties props = new Properties();
         //props.load(new FileInputStream(context.getBehaviourConfigFile()));
         context.setDomsViewAngle(readStringProperty(DOMS_VIEWANGLE,props));
+        context.setCollection(readStringProperty(DOMS_COLLECTION,props));
     }
 
 

@@ -2,12 +2,12 @@ package dk.statsbiblioteket.broadcasttranscoder;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingOptionsParser;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.BroadcastTranscodingRecordDAO;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,17 +17,17 @@ import java.io.IOException;
 /**
  *
  */
-public class BroadcastTranscoderApplication {
+public class BroadcastTranscoderApplication extends TranscoderApplication{
 
     private static Logger logger = LoggerFactory.getLogger(BroadcastTranscoderApplication.class);
 
     public static void main(String[] args) throws Exception {
         logger.debug("Entered main method.");
-        SingleTranscodingContext context = null;
+        SingleTranscodingContext<BroadcastTranscodingRecord> context = null;
         TranscodeRequest request = null;
         File lockFile = null;
         try {
-            context = new SingleTranscodingOptionsParser().parseOptions(args);
+            context = new SingleTranscodingOptionsParser<BroadcastTranscodingRecord>().parseOptions(args);
             HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
             context.setTranscodingProcessInterface(new BroadcastTranscodingRecordDAO(util));
             request = new TranscodeRequest();
@@ -57,6 +57,7 @@ public class BroadcastTranscoderApplication {
                 System.exit(111);
             }
         } catch (Exception e) {
+            transcodingFailed(request,context,e);
             //Final fault barrier is necessary for logging
             logger.error("Processing failed for " + context.getProgrampid(), e);
             throw(e);
@@ -72,7 +73,8 @@ public class BroadcastTranscoderApplication {
     }
 
 
-    public static void runChain(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
+
+    public static <T extends TranscodingRecord> void runChain(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {
 
         request.setGoForTranscoding(true);
 
@@ -192,28 +194,6 @@ public class BroadcastTranscoderApplication {
             //This is only a warning. Enrichment is only a nice-to-have.
             logger.warn("Persistence Enrichment failed for " + context.getProgrampid(), e);
         }
-    }
-
-    private static void transcodingComplete(TranscodeRequest request, SingleTranscodingContext context) {
-        BroadcastTranscodingRecord record = (BroadcastTranscodingRecord) context.getTranscodingProcessInterface().read(context.getProgrampid());
-        record.setTranscodingState(TranscodingState.COMPLETE);
-        record.setLastTranscodedTimestamp(context.getTranscodingTimestamp());
-        context.getTranscodingProcessInterface().update(record);
-    }
-
-    private static void reject(TranscodeRequest request, SingleTranscodingContext context) {
-        logger.info("Transcoding rejected for " + context.getProgrampid() + ". Exiting.");
-        context.getTranscodingProcessInterface().markAsRejected(context.getProgrampid(),"Message?");
-    }
-
-    private static void alreadyTranscoded(TranscodeRequest request, SingleTranscodingContext context) {
-
-        logger.info("No transcoding required for " + context.getProgrampid() + ". Exiting.");
-        context.getTranscodingProcessInterface().markAsAlreadyTranscoded(context.getProgrampid());
-
-        context.getTranscodingProcessInterface().setTimestamp(context.getProgrampid(), context.getTranscodingTimestamp());
-        logger.info("No transcoding required for " + context.getProgrampid() + ". Exiting.");
-
     }
 
 

@@ -11,7 +11,7 @@ import java.io.File;
  * Time: 2:39 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FetcherContext extends GetJobsContext {
+public class FetcherContext<T> extends GetJobsContext<T> {
 
 
     private String viewAngle;

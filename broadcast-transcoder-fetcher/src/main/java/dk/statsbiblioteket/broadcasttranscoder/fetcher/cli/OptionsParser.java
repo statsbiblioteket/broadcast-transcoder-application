@@ -13,7 +13,7 @@ import java.util.Properties;
 /**
  *
  */
-public class OptionsParser extends AbstractOptionsParser{
+public class OptionsParser<T> extends AbstractOptionsParser{
 
     protected static final Option SINCE = new Option("since", true, "The timestamp to start from");
     protected static final Option INFRASTRUCTURE_CONFIG_FILE_OPTION = new Option("infrastructure_configfile", true, "The infrastructure config file");
@@ -22,10 +22,10 @@ public class OptionsParser extends AbstractOptionsParser{
 
     protected static Options options;
 
-    private FetcherContext context;
+    private FetcherContext<T> context;
 
     public OptionsParser() {
-        context = new FetcherContext();
+        context = new FetcherContext<T>();
         options = new Options();
         options.addOption(SINCE);
         options.addOption(INFRASTRUCTURE_CONFIG_FILE_OPTION);
@@ -35,7 +35,7 @@ public class OptionsParser extends AbstractOptionsParser{
     }
 
 
-    public FetcherContext parseOptions(String[] args) throws OptionParseException {
+    public FetcherContext<T> parseOptions(String[] args) throws OptionParseException {
         CommandLineParser parser = new PosixParser();
         CommandLine cmd;
         try {
@@ -75,7 +75,7 @@ public class OptionsParser extends AbstractOptionsParser{
         }
     }
 
-    protected void readFetcherProperties(FetcherContext context) throws IOException, OptionParseException {
+    protected void readFetcherProperties(FetcherContext<T> context) throws IOException, OptionParseException {
         Properties props = new Properties();
         props.load(new FileInputStream(context.getFetcherFile()));
         context.setViewAngle(readStringProperty(PropertyNames.VIEW_ANGLE,props));
@@ -86,7 +86,7 @@ public class OptionsParser extends AbstractOptionsParser{
 
 
 
-    protected void readInfrastructureProperties(FetcherContext context) throws IOException, OptionParseException {
+    protected void readInfrastructureProperties(FetcherContext<T> context) throws IOException, OptionParseException {
         Properties props = new Properties();
         props.load(new FileInputStream(context.getInfrastructuralConfigFile()));
 

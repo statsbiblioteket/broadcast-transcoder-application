@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.persistence.entities;
 
-import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingState;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingStateEnum;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,17 +9,7 @@ import java.util.Date;
  *  Persistent record detailing the state of a transcoding
  */
 @Entity
-public class BroadcastTranscodingRecord {
-
-
-    private String domsProgramPid;
-    private Long lastTranscodedTimestamp;
-    private Long domsLatestTimestamp;
-
-    @Enumerated(EnumType.STRING)
-    private TranscodingState transcodingState;
-
-
+public class BroadcastTranscodingRecord extends TranscodingRecord{
 
     private String transcodingCommand;
     private boolean isTvmeter;
@@ -29,7 +19,6 @@ public class BroadcastTranscodingRecord {
     private Date broadcastEndTime;
     private String title;
     private String channel;
-    private String failureMessage;
 
 
     @Lob
@@ -97,61 +86,12 @@ public class BroadcastTranscodingRecord {
         this.channel = channel;
     }
 
-    @Id
-    public String getDomsProgramPid() {
-        return domsProgramPid;
-    }
-
-    public void setDomsProgramPid(String domsProgramPid) {
-        this.domsProgramPid = domsProgramPid;
-    }
-
-    public Long getLastTranscodedTimestamp() {
-        return lastTranscodedTimestamp;
-    }
-
-    public void setLastTranscodedTimestamp(Long lastTranscodedTimestamp) {
-        this.lastTranscodedTimestamp = lastTranscodedTimestamp;
-    }
-
-
-    public Long getDomsLatestTimestamp() {
-        return domsLatestTimestamp;
-    }
-
-    public void setDomsLatestTimestamp(Long domsLatestTimestamp) {
-        this.domsLatestTimestamp = domsLatestTimestamp;
-    }
-
-    public TranscodingState getTranscodingState() {
-        return transcodingState;
-    }
-
-    public void setTranscodingState(TranscodingState transcodingState) {
-        this.transcodingState = transcodingState;
-    }
-
-    @Override
-    public String toString() {
-        return "BroadcastTranscodingRecord{" +
-                "domsProgramPid='" + domsProgramPid + '\'' +
-                ", lastTranscodedTimestamp=" + lastTranscodedTimestamp +
-                ", transcodingCommand='" + transcodingCommand + '\'' +
-                ", isTvmeter=" + isTvmeter +
-                ", startOffset=" + startOffset +
-                ", endOffset=" + endOffset +
-                ", broadtcastStartTime=" + broadtcastStartTime +
-                ", broadcastEndTime=" + broadcastEndTime +
-                ", title='" + title + '\'' +
-                ", channel='" + channel + '\'' +
-                '}';
-    }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof BroadcastTranscodingRecord)) return false;
+        if (!super.equals(o)) return false;
 
         BroadcastTranscodingRecord that = (BroadcastTranscodingRecord) o;
 
@@ -163,10 +103,6 @@ public class BroadcastTranscodingRecord {
         if (broadtcastStartTime != null ? !broadtcastStartTime.equals(that.broadtcastStartTime) : that.broadtcastStartTime != null)
             return false;
         if (channel != null ? !channel.equals(that.channel) : that.channel != null) return false;
-        if (domsProgramPid != null ? !domsProgramPid.equals(that.domsProgramPid) : that.domsProgramPid != null)
-            return false;
-        if (lastTranscodedTimestamp != null ? !lastTranscodedTimestamp.equals(that.lastTranscodedTimestamp) : that.lastTranscodedTimestamp != null)
-            return false;
         if (title != null ? !title.equals(that.title) : that.title != null) return false;
         if (transcodingCommand != null ? !transcodingCommand.equals(that.transcodingCommand) : that.transcodingCommand != null)
             return false;
@@ -176,8 +112,7 @@ public class BroadcastTranscodingRecord {
 
     @Override
     public int hashCode() {
-        int result = domsProgramPid != null ? domsProgramPid.hashCode() : 0;
-        result = 31 * result + (lastTranscodedTimestamp != null ? lastTranscodedTimestamp.hashCode() : 0);
+        int result = super.hashCode();
         result = 31 * result + (transcodingCommand != null ? transcodingCommand.hashCode() : 0);
         result = 31 * result + (isTvmeter ? 1 : 0);
         result = 31 * result + startOffset;
@@ -189,11 +124,18 @@ public class BroadcastTranscodingRecord {
         return result;
     }
 
-    public void setFailureMessage(String failureMessage) {
-        this.failureMessage = failureMessage;
-    }
-
-    public String getFailureMessage() {
-        return failureMessage;
+    @Override
+    public String toString() {
+        return "BroadcastTranscodingRecord{" +
+                super.toString() + "," +
+                "transcodingCommand='" + transcodingCommand + '\'' +
+                ", isTvmeter=" + isTvmeter +
+                ", startOffset=" + startOffset +
+                ", endOffset=" + endOffset +
+                ", broadtcastStartTime=" + broadtcastStartTime +
+                ", broadcastEndTime=" + broadcastEndTime +
+                ", title='" + title + '\'' +
+                ", channel='" + channel + '\'' +
+                '}';
     }
 }

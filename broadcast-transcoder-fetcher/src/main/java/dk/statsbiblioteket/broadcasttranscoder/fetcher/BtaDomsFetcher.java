@@ -4,11 +4,13 @@ package dk.statsbiblioteket.broadcasttranscoder.fetcher;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.fetcher.cli.FetcherContext;
 import dk.statsbiblioteket.broadcasttranscoder.fetcher.cli.OptionsParser;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
-import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.BroadcastTranscodingRecordDAO;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingProcessInterface;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.ReklamefilmTranscodingRecordDAO;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.TranscodingProcessInterface;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
+import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
+import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 import dk.statsbiblioteket.doms.central.InvalidCredentialsException;
 import dk.statsbiblioteket.doms.central.MethodFailedException;
@@ -32,18 +34,38 @@ public class BtaDomsFetcher {
 
     public static void main(String[] args) throws OptionParseException, ProcessorException {
         logger.debug("Entered main method.");
-        FetcherContext context = new OptionsParser().parseOptions(args);
-
+        FetcherContext<TranscodingRecord> context = new OptionsParser<TranscodingRecord>().parseOptions(args);
         try {
 
             CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);
             List<RecordDescription> records = requestInBatches(doms, context);
 
             HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
-            TranscodingProcessInterface dao = new BroadcastTranscodingRecordDAO(util);
-            for (RecordDescription record : records) {
-                dao.markAsChangedInDoms(record.getPid(),record.getDate());
+
+            TranscodingProcessInterface<? extends TranscodingRecord> dao;
+            if (context.getCollection().equals("doms:RadioTV_Collection")){
+                dao = new BroadcastTranscodingRecordDAO(util);
+            } else if (context.getCollection().equals("doms:Collection_Reklamefilm")){
+                dao = new ReklamefilmTranscodingRecordDAO(util);
+            } else {
+                logger.error("Error in initial environment");
+                System.exit(6);
+                return;
             }
+
+            for (RecordDescription record : records) {
+                dao.markAsChangedInDoms(record.getPid(), record.getDate());
+            }
+
+        } catch (Exception e) {
+            logger.error("Error in initial environment", e);
+            System.exit(5);
+        }
+
+
+        try {
+
+
         } catch (Exception e){
             e.printStackTrace();
             System.exit(1);

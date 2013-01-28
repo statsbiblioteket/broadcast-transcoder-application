@@ -44,13 +44,13 @@ public class GenericHibernateDAOTest {
                 HibernateUtil.getInstance(configFile));
         BroadcastTranscodingRecord testObject = new BroadcastTranscodingRecord();
 
-        testObject.setDomsProgramPid("doms:test1");
+        testObject.setDomsPid("doms:test1");
         testObject.setTitle("titleSet");
         testObject.setDomsLatestTimestamp(new Date().getTime());
 
 
         dao.create(testObject);
-        BroadcastTranscodingRecord readObject = dao.read(testObject.getDomsProgramPid());
+        BroadcastTranscodingRecord readObject = dao.read(testObject.getDomsPid());
         assertThat(readObject,is(testObject));
         System.out.println(readObject);
 
@@ -60,13 +60,13 @@ public class GenericHibernateDAOTest {
 
         dao.update(readObject);
 
-        BroadcastTranscodingRecord readObject2 = dao.read(readObject.getDomsProgramPid());
+        BroadcastTranscodingRecord readObject2 = dao.read(readObject.getDomsPid());
 
         assertThat(readObject2,is(readObject));
 
         dao.delete(readObject2);
 
-        BroadcastTranscodingRecord readObject3 = dao.read(readObject2.getDomsProgramPid());
+        BroadcastTranscodingRecord readObject3 = dao.read(readObject2.getDomsPid());
         assertThat((readObject3),IsNull.nullValue());
 
     }

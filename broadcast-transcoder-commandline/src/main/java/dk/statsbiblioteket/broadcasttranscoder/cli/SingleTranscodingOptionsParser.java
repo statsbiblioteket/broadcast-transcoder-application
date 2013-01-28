@@ -18,7 +18,7 @@ import static dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.*;
 /**
  *
  */
-public class SingleTranscodingOptionsParser extends AbstractOptionsParser{
+public class SingleTranscodingOptionsParser<T> extends AbstractOptionsParser{
 
     protected static final Option PID_OPTION = new Option("programpid", true, "The DOMS pid of the program to be transcoded");
     protected static final Option TIMESTAMP_OPTION = new Option("timestamp", true, "The timestamp (milliseconds) for which transcoding is required");
@@ -30,10 +30,10 @@ public class SingleTranscodingOptionsParser extends AbstractOptionsParser{
 
     protected static Options options;
 
-    private SingleTranscodingContext context;
+    private SingleTranscodingContext<T> context;
 
     public SingleTranscodingOptionsParser() {
-        context = new SingleTranscodingContext();
+        context = new SingleTranscodingContext<T>();
         options = new Options();
         options.addOption(PID_OPTION);
         options.addOption(TIMESTAMP_OPTION);
@@ -44,7 +44,7 @@ public class SingleTranscodingOptionsParser extends AbstractOptionsParser{
     }
 
 
-    public SingleTranscodingContext parseOptions(String[] args) throws OptionParseException {
+    public SingleTranscodingContext<T> parseOptions(String[] args) throws OptionParseException {
         CommandLineParser parser = new PosixParser();
         CommandLine cmd;
         try {

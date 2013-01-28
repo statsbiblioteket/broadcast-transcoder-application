@@ -1,6 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder.cli;
 
-import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingState;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingStateEnum;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,13 +10,14 @@ import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingState;
  * Time: 3:40 PM
  * To change this template use File | Settings | File Templates.
  */
-public class GetJobsContext extends InfrastructureContext{
+public class GetJobsContext<T> extends InfrastructureContext<T>{
 
     private String domsViewAngle;
 
     private long fromTimestamp;
 
-    private TranscodingState state;
+    private TranscodingStateEnum state;
+    private String collection;
 
 
     public String getDomsViewAngle() {
@@ -34,11 +36,19 @@ public class GetJobsContext extends InfrastructureContext{
         this.fromTimestamp = fromTimestamp;
     }
 
-    public TranscodingState getState() {
+    public TranscodingStateEnum getState() {
         return state;
     }
 
-    public void setState(TranscodingState state) {
+    public void setState(TranscodingStateEnum state) {
         this.state = state;
+    }
+
+    public void setCollection(String collection) {
+        this.collection = collection;
+    }
+
+    public String getCollection() {
+        return collection;
     }
 }

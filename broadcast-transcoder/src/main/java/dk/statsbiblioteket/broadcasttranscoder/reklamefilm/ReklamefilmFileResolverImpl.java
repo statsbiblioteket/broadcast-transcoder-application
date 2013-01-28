@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -72,7 +73,11 @@ public class ReklamefilmFileResolverImpl implements ReklamefilmFileResolver {
         }
         String[] pathElements = url.getPath().split(File.separator);
         String filename = pathElements[pathElements.length -1];
-        filename = URLDecoder.decode(filename);
+        try {
+            filename = URLDecoder.decode(filename,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Failed to resolve utf-u",e);
+        }
         String filenameEscaped = filename.replaceAll("\\?", "\\?").replaceAll("\\*", "\\*").replaceAll("\\[","\\[").replaceAll("\\]","\\]");
         for (String rootDir: context.getReklamefileRootDirectories()) {
             String cmd = "bash -c \"find " + rootDir + " -name " + "'" + filenameEscaped + "'\"";

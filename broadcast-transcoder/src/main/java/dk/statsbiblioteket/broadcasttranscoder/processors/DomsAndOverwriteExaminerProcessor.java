@@ -1,9 +1,9 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.TranscodingProcessInterface;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.TimestampPersister;
 import dk.statsbiblioteket.doms.central.*;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
@@ -74,13 +74,8 @@ public class DomsAndOverwriteExaminerProcessor extends ProcessorChainElement {
 
         long timeStampOfNewChange = context.getTranscodingTimestamp();
         logger.info("Transcode doms record for " + pid + " timestamp " + timeStampOfNewChange + "=" + new Date(timeStampOfNewChange));
-        TimestampPersister persister = context.getTranscodingProcessInterface();
-        Long oldTranscodingTimestamp = persister.getTimestamp( pid);
-        if (oldTranscodingTimestamp == null) {
-            logger.info("No previous transcoding timestamp set for " + pid);
-            oldTranscodingTimestamp = context.getDefaultTranscodingTimestamp();
-            persister.setTimestamp( pid, oldTranscodingTimestamp);
-        }
+        TranscodingProcessInterface persister = context.getTranscodingProcessInterface();
+        Long oldTranscodingTimestamp = persister.getLatestTranscodingTimestamp(context.getProgrampid());
         logger.info("Previous transcoding timestamp for " + pid + " is " + oldTranscodingTimestamp + "=" + new Date(oldTranscodingTimestamp));
 
         CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);

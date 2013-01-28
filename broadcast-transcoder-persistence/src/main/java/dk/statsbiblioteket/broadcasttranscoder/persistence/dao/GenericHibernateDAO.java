@@ -21,7 +21,8 @@ public class GenericHibernateDAO<T, PK extends Serializable> implements GenericD
         this.util=util;
     }
 
-    public PK create(T o) {
+    @SuppressWarnings("unchecked")
+   public PK create(T o) {
         Session sess = getSession();
         PK key;
         try {
@@ -34,6 +35,7 @@ public class GenericHibernateDAO<T, PK extends Serializable> implements GenericD
         return key;
     }
 
+    @SuppressWarnings("unchecked")
     public T read(PK id) {
         Session sess = getSession();
         //sess.beginTransaction();

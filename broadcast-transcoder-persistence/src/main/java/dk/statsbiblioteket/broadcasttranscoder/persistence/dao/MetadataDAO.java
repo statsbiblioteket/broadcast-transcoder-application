@@ -1,6 +1,8 @@
 package dk.statsbiblioteket.broadcasttranscoder.persistence.dao;
 
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.Metadata;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
@@ -18,8 +20,7 @@ public class MetadataDAO extends GenericHibernateDAO<Metadata, Long> {
     }
 
    public List<Metadata> getByProgramPid(String pid) {
-       return (List<Metadata>) getSession().createQuery("from Metadata where programUuid = :programPid order by lastChangedDate desc ")
-               .setString("programPid", pid).list();
+       return (List<Metadata>)getSession().createCriteria(Metadata.class).add(Restrictions.eq("programUuid", pid)).addOrder(Order.desc("lastChangedDate")).list();
    }
 
 }
