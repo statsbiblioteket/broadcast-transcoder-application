@@ -17,6 +17,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.hibernate.SessionFactory;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.db.Metadata;
@@ -72,6 +73,7 @@ public class MediaInfoServiceTest {
     }
 
     @Test
+    @Ignore
     public void retrieveMetadata() throws DOMSMetadataExtractionConnectToDOMSException, ParseException {
         Date testStartedDate = new Date();
         MediaInfoService mediaInfoService = new MediaInfoService(
@@ -107,6 +109,7 @@ public class MediaInfoServiceTest {
     }
     
     @Test
+    @Ignore
     public void inferFilePathForPrograms() {
         MediaInfoService mediaInfoService = new MediaInfoService(
                 new DOMSMetadataExtractor(properties), 
@@ -121,6 +124,7 @@ public class MediaInfoServiceTest {
     }
 
     @Test
+    @Ignore
     public void retrieveProgramMediaInfo() throws DOMSMetadataExtractionConnectToDOMSException, ParseException {
         Date testStartedDate = new Date();
         MediaInfoService mediaInfoService = new MediaInfoService(
@@ -175,6 +179,7 @@ public class MediaInfoServiceTest {
     }
 
     @Test
+    @Ignore
     public void inferFilePathForPreviews() {
         MediaInfoService mediaInfoService = new MediaInfoService(
                 new DOMSMetadataExtractor(properties), 
@@ -188,6 +193,7 @@ public class MediaInfoServiceTest {
     }
 
     @Test
+    @Ignore
     public void retrievePreviewMediaInfo() throws DOMSMetadataExtractionConnectToDOMSException, ParseException {
         Date testStartedDate = new Date();
         MediaInfoService mediaInfoService = new MediaInfoService(
@@ -241,6 +247,7 @@ public class MediaInfoServiceTest {
     }
     
     @Test
+    @Ignore
     public void inferFilePathForSnapshots() {
         MediaInfoService mediaInfoService = new MediaInfoService(
                 new DOMSMetadataExtractor(properties), 
@@ -258,6 +265,7 @@ public class MediaInfoServiceTest {
     }
 
     @Test
+    @Ignore
     public void retrieveSnapshotMediaInfoSnapshotsExist() throws DOMSMetadataExtractionConnectToDOMSException, ParseException {
         Date testStartedDate = new Date();
         MediaInfoService mediaInfoService = new MediaInfoService(
@@ -301,6 +309,7 @@ public class MediaInfoServiceTest {
     }
 
     @Test
+    @Ignore
     public void testPersistence() throws DOMSMetadataExtractionConnectToDOMSException {
         MediaInfoDAO mediaInfoDAO = new MediaInfoDAO(hibernateSessionFactory);
         MediaInfoService mediaInfoService = new MediaInfoService(

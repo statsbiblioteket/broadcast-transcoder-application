@@ -2,24 +2,31 @@ package dk.statsbiblioteket.broadcasttranscoder.util.persistence;
 
 import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.db.Metadata;
 import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.Date;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
  *
  */
-public class MetadataDAOTest extends TestCase {
+public class MetadataDAOTest {
 
     private static HibernateUtil util;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();    //To change body of overridden methods use File | Settings | File Templates.
+    @Before
+    public void setUp() throws Exception {
         String hibernateConfig = "src/test/config/hibernate.in-memory_unittest.cfg.xml";
         util = HibernateUtil.getInstance(hibernateConfig);
     }
 
+    @Test
+    @Ignore
     public void testCreate() {
         Metadata md = new Metadata();
         md.setChannelID("dr1");

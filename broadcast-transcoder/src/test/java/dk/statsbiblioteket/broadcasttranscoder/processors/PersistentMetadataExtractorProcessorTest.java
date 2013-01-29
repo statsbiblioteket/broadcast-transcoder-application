@@ -3,17 +3,30 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import junit.framework.TestCase;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
- * Created with IntelliJ IDEA.
- * User: csr
- * Date: 11/21/12
- * Time: 3:48 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
-public class PersistentMetadataExtractorProcessorTest extends TestCase {
+public class PersistentMetadataExtractorProcessorTest {
 
-    public void testPersistentMetadataExtractor() throws ProcessorException {
+    @Before
+    public void setUp() {
+        try {
+            InetAddress.getByName("alhena");
+        } catch (UnknownHostException e) {
+            Assume.assumeNoException(e);
+        }
+    }
+
+    @Test
+    public void testPersistentMetadataExtractor() throws ProcessorException, IOException {
         PersistentMetadataExtractorProcessor processor = new PersistentMetadataExtractorProcessor();
         Context context = new Context();
         context.setProgrampid("foobar");
@@ -23,6 +36,7 @@ public class PersistentMetadataExtractorProcessorTest extends TestCase {
        processor.processThis(null, context);
     }
 
+    @Test
     public void testPersistentMetadataExtractorWithFetcher() throws ProcessorException {
         ProgramMetadataFetcherProcessor fetcher = new ProgramMetadataFetcherProcessor();
         PersistentMetadataExtractorProcessor processor = new PersistentMetadataExtractorProcessor();

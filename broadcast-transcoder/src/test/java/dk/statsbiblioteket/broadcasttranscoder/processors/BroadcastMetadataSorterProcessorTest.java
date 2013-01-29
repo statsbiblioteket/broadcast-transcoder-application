@@ -4,19 +4,34 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
 import dk.statsbiblioteket.broadcasttranscoder.util.CalendarUtils;
 import junit.framework.TestCase;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *
  */
-public class BroadcastMetadataSorterProcessorTest extends TestCase {
+public class BroadcastMetadataSorterProcessorTest {
 
+    @Before
+    public void setUp() {
+        try {
+            InetAddress.getByName("carme");
+        } catch (UnknownHostException e) {
+            Assume.assumeNoException(e);
+        }
+    }
 
-
+    @Test
     public void testProcessThis() throws ProcessorException, DatatypeConfigurationException {
         TranscodeRequest request = new TranscodeRequest();
         BroadcastMetadata m1 = new BroadcastMetadata();
@@ -66,6 +81,7 @@ public class BroadcastMetadataSorterProcessorTest extends TestCase {
         assertEquals(400, bm.get(3).getStartTime().getYear());
     }
 
+    @Test
     public void testProcessThisOne() throws ProcessorException, DatatypeConfigurationException {
         TranscodeRequest request = new TranscodeRequest();
         BroadcastMetadata m1 = new BroadcastMetadata();
@@ -82,6 +98,7 @@ public class BroadcastMetadataSorterProcessorTest extends TestCase {
 
     }
 
+    @Test
     public void testSort() throws ProcessorException {
         Context context = new Context();
         context.setProgrampid("uuid:d82107be-20cf-4524-b611-07d8534b97f8");

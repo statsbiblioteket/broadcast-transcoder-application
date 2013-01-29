@@ -15,6 +15,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.hibernate.SessionFactory;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.db.Job;
@@ -58,6 +59,7 @@ public class JobDAOTest {
     }
 
     @Test
+    @Ignore
     public void addJobsToEmptyJobTable() {
         // SessionFactory hibernateSessionFactory = new SessionFactoryMock();
         JobDAO jobDAO = new JobDAO(hibernateSessionFactory);
@@ -74,6 +76,7 @@ public class JobDAOTest {
     }
 
     @Test
+    @Ignore
     public void jobWorkFlow() {
         //SessionFactory hibernateSessionFactory = new SessionFactoryMock();
         JobDAO jobDAO = new JobDAO(hibernateSessionFactory);

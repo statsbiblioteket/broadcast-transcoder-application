@@ -11,10 +11,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.extraction.model.Program;
 import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.extraction.model.ProgramSearchResultItem;
@@ -46,6 +43,7 @@ public class DOMSMetadataExtractorTest {
     }
 
     @Test
+    @Ignore
     public void simpleSearchForShardPids() throws Exception {
         DOMSMetadataExtractor extractor = new DOMSMetadataExtractor(properties);
         List<String> result = extractor.fetchAllShardPids();
@@ -55,6 +53,7 @@ public class DOMSMetadataExtractorTest {
     }
 
     @Test
+    @Ignore
     public void extractProgramMetadata() throws Exception {
         DOMSMetadataExtractor extractor = new DOMSMetadataExtractor(properties);
         List<String> shardPids = new ArrayList<String>();

@@ -13,6 +13,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.hibernate.SessionFactory;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.db.Job;
@@ -50,6 +51,7 @@ public class JobServiceTest {
     }
 
     @Test
+    @Ignore
     public void simpleJobWorkFlow() throws JobAlreadyStartedException, DOMSMetadataExtractionConnectToDOMSException {
         MediaInfoService mediaInfoService = new MediaInfoService(
                 new DOMSMetadataExtractor(properties), 
