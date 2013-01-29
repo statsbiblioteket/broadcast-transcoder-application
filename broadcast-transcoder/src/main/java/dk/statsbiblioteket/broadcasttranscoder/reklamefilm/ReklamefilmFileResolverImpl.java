@@ -84,7 +84,8 @@ public class ReklamefilmFileResolverImpl implements ReklamefilmFileResolver {
                 runner = new ExternalJobRunner(30000L, "find", rootDir, "-name", filenameEscaped);
                 String output = runner.getOutput();
                 if (output != null && !output.trim().equals("")) {
-                    final File file = new File(output.trim());
+                    String lines[] = output.split("\\r?\\n");
+                    final File file = new File(lines[0].trim());
                     logger.info("Resolved " + domsReklamePid + " to " + file.getAbsolutePath());
                     return file;
                 }
