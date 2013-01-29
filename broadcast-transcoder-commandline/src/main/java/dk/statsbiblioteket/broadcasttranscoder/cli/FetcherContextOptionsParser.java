@@ -1,6 +1,6 @@
-package dk.statsbiblioteket.broadcasttranscoder.fetcher.cli;
+package dk.statsbiblioteket.broadcasttranscoder.cli;
 
-import dk.statsbiblioteket.broadcasttranscoder.fetcher.BtaDomsFetcher;
+import dk.statsbiblioteket.broadcasttranscoder.BtaDomsFetcher;
 import dk.statsbiblioteket.broadcasttranscoder.cli.AbstractOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import org.apache.commons.cli.*;
@@ -13,7 +13,7 @@ import java.util.Properties;
 /**
  *
  */
-public class OptionsParser<T> extends AbstractOptionsParser{
+public class FetcherContextOptionsParser<T> extends AbstractOptionsParser{
 
     protected static final Option SINCE = new Option("since", true, "The timestamp to start from");
     protected static final Option INFRASTRUCTURE_CONFIG_FILE_OPTION = new Option("infrastructure_configfile", true, "The infrastructure config file");
@@ -24,7 +24,7 @@ public class OptionsParser<T> extends AbstractOptionsParser{
 
     private FetcherContext<T> context;
 
-    public OptionsParser() {
+    public FetcherContextOptionsParser() {
         context = new FetcherContext<T>();
         options = new Options();
         options.addOption(SINCE);
@@ -78,10 +78,10 @@ public class OptionsParser<T> extends AbstractOptionsParser{
     protected void readFetcherProperties(FetcherContext<T> context) throws IOException, OptionParseException {
         Properties props = new Properties();
         props.load(new FileInputStream(context.getFetcherFile()));
-        context.setViewAngle(readStringProperty(PropertyNames.VIEW_ANGLE,props));
-        context.setCollection(readStringProperty(PropertyNames.COLLECTION, props));
-        context.setFedoraState(readStringProperty(PropertyNames.STATE, props));
-        context.setBatchSize(readIntegerProperty(PropertyNames.BATCH_SIZE, props));
+        context.setViewAngle(readStringProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.VIEW_ANGLE,props));
+        context.setCollection(readStringProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.COLLECTION, props));
+        context.setFedoraState(readStringProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.STATE, props));
+        context.setBatchSize(readIntegerProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.BATCH_SIZE, props));
     }
 
 
@@ -90,15 +90,15 @@ public class OptionsParser<T> extends AbstractOptionsParser{
         Properties props = new Properties();
         props.load(new FileInputStream(context.getInfrastructuralConfigFile()));
 
-        context.setFileOutputRootdir(readFileProperty(PropertyNames.FILE_DIR, props));
-        context.setPreviewOutputRootdir(readFileProperty(PropertyNames.PREVIEW_DIR, props));
-        context.setSnapshotOutputRootdir(readFileProperty(PropertyNames.SNAPSHOT_DIR, props));
-        context.setFileFinderUrl(readStringProperty(PropertyNames.FILE_FINDER, props));
-        context.setMaxFilesFetched(readIntegerProperty(PropertyNames.MAX_FILES_FETCHED, props));
+        context.setFileOutputRootdir(readFileProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.FILE_DIR, props));
+        context.setPreviewOutputRootdir(readFileProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.PREVIEW_DIR, props));
+        context.setSnapshotOutputRootdir(readFileProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.SNAPSHOT_DIR, props));
+        context.setFileFinderUrl(readStringProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.FILE_FINDER, props));
+        context.setMaxFilesFetched(readIntegerProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.MAX_FILES_FETCHED, props));
 
-        context.setDomsEndpoint(readStringProperty(PropertyNames.DOMS_ENDPOINT, props));
-        context.setDomsUsername(readStringProperty(PropertyNames.DOMS_USER, props));
-        context.setDomsPassword(readStringProperty(PropertyNames.DOMS_PASSWORD, props));
+        context.setDomsEndpoint(readStringProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.DOMS_ENDPOINT, props));
+        context.setDomsUsername(readStringProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.DOMS_USER, props));
+        context.setDomsPassword(readStringProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.DOMS_PASSWORD, props));
     }
 
 

@@ -1,4 +1,4 @@
-package dk.statsbiblioteket.broadcasttranscoder.fetcher;
+package dk.statsbiblioteket.broadcasttranscoder;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.processors.DomsAndOverwriteExaminerProcessor;
