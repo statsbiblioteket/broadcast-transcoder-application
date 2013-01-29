@@ -76,6 +76,10 @@ public class ReklamefilmFileResolverImpl implements ReklamefilmFileResolver {
         String[] pathElements = url.getPath().split(File.separator);
         String filename = pathElements[pathElements.length -1];
         filename = URLDecoder.decode(filename);
+        return getFile(domsReklamePid, filename);
+    }
+
+    File getFile(String domsReklamePid, String filename) {
         String filenameEscaped = filename.replaceAll("\\?", "\\?").replaceAll("\\*", "\\*").replaceAll("\\[","\\[").replaceAll("\\]","\\]");
         for (String rootDir: context.getReklamefileRootDirectories()) {
             String cmd = "bash -c \"find " + rootDir + " -name " + "'" + filenameEscaped + "'\"";
