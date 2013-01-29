@@ -5,6 +5,9 @@ import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramBroadcast;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
 import junit.framework.TestCase;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -15,13 +18,9 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: csr
- * Date: 10/3/12
- * Time: 11:02 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
-public class ClipTest extends TestCase {
+public class ClipTest  {
 
     SingleTranscodingContext context = new SingleTranscodingContext();
 
@@ -40,9 +39,9 @@ public class ClipTest extends TestCase {
     String ts_drp8 = scratchDir+"DRP8_20121008_120000_20121008_130000.mux";
 
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
+        Assume.assumeTrue(new File(scratchDir).exists());
         context.setProgrampid("uuid:foobar");
         context.setAnalysisClipLength(100000000l);
         context.setAudioBitrate(96);
@@ -74,6 +73,7 @@ public class ClipTest extends TestCase {
         context.setFileOutputRootdir(new File(scratchWriteDir+"outputdir"));
     }
 
+    @Test
     public void testMultiProgramMux() throws ProcessorException, DatatypeConfigurationException {
         TranscodeRequest request = new TranscodeRequest();
         request.setFileFormat(FileFormatEnum.MULTI_PROGRAM_MUX);
@@ -101,6 +101,7 @@ public class ClipTest extends TestCase {
         dispatcher.processIteratively(request, context);
     }
 
+    @Test
     public void testWav() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
         request.setFileFormat(FileFormatEnum.AUDIO_WAV);
@@ -126,6 +127,7 @@ public class ClipTest extends TestCase {
 
     }
 
+    @Test
     public void testMpeg() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
         request.setFileFormat(FileFormatEnum.MPEG_PS);
@@ -151,6 +153,7 @@ public class ClipTest extends TestCase {
 
     }
 
+    @Test
      public void testAnimal() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
         request.setFileFormat(FileFormatEnum.SINGLE_PROGRAM_VIDEO_TS);
@@ -176,6 +179,7 @@ public class ClipTest extends TestCase {
 
     }
 
+    @Test
      public void testDr1() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
         request.setFileFormat(FileFormatEnum.SINGLE_PROGRAM_VIDEO_TS);
@@ -201,6 +205,7 @@ public class ClipTest extends TestCase {
 
     }
 
+    @Test
     public void testDrp8() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
         request.setFileFormat(FileFormatEnum.SINGLE_PROGRAM_AUDIO_TS);

@@ -7,6 +7,15 @@ import dk.statsbiblioteket.util.Streams;
 import junit.framework.TestCase;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,13 +24,21 @@ import org.custommonkey.xmlunit.XMLUnit;
  * Time: 5:07 PM
  * To change this template use File | Settings | File Templates.
  */
-public class DomsTranscodingStructureFetcherTest extends TestCase {
+public class DomsTranscodingStructureFetcherTest  {
 
 
-
-
+    @Test
     public void testProcessThis() throws Exception {
+<<<<<<< HEAD
         SingleTranscodingContext context = new SingleTranscodingContext();
+=======
+        try {
+            InetAddress.getByName("alhena");
+        } catch (UnknownHostException e) {
+            Assume.assumeNoException(e);
+        }
+        Context context = new Context();
+>>>>>>> 58fb4b75690c7e487e31d3a5857166aaeef30a37
         context.setDomsViewAngle("GUI");
         context.setDomsPassword("fedoraAdminPass");
         context.setDomsUsername("fedoraAdmin");
@@ -32,10 +49,11 @@ public class DomsTranscodingStructureFetcherTest extends TestCase {
         //TODO finish this test
     }
 
-
+    @Test
+    @Ignore
     public void testKillNewVersions() throws Exception {
         DomsAndOverwriteExaminerProcessor thing = new DomsAndOverwriteExaminerProcessor();
-        String bundleString = Streams.getUTF8Resource("xslt/sampleObject.xml");
+        String bundleString = Streams.getUTF8Resource("xslt/sampleObject.xml");   //This file is missing
 
         String result = thing.killNewerVersions(bundleString, 14000000000002L);
 

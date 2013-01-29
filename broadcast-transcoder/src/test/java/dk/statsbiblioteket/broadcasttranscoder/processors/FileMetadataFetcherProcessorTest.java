@@ -2,6 +2,12 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import junit.framework.TestCase;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,8 +16,18 @@ import junit.framework.TestCase;
  * Time: 12:39 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FileMetadataFetcherProcessorTest extends TestCase {
+public class FileMetadataFetcherProcessorTest  {
 
+    @Before
+    public void setUp() {
+        try {
+            InetAddress.getByName("carme");
+        } catch (UnknownHostException e) {
+            Assume.assumeNoException(e);
+        }
+    }
+
+    @Test
     public void testProcessIteratively() throws Exception {
         FileMetadataFetcherProcessor processor = new FileMetadataFetcherProcessor();
         TranscodeRequest request = new TranscodeRequest();

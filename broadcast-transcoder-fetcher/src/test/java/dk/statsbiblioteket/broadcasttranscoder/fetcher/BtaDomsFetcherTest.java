@@ -7,9 +7,16 @@ import dk.statsbiblioteket.doms.central.InvalidCredentialsException;
 import dk.statsbiblioteket.doms.central.MethodFailedException;
 import dk.statsbiblioteket.doms.central.RecordDescription;
 import junit.framework.TestCase;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,7 +25,18 @@ import java.util.List;
  * Time: 1:29 PM
  * To change this template use File | Settings | File Templates.
  */
-public class BtaDomsFetcherTest extends TestCase {
+public class BtaDomsFetcherTest {
+
+    @Before
+    public void setUp() {
+        try {
+            InetAddress.getByName("alhena");
+        } catch (UnknownHostException e) {
+            Assume.assumeNoException(e);
+        }
+    }
+
+    @Test
     public void testMain() throws Exception {
             BtaDomsFetcher.main(
                     new String[] {
@@ -26,10 +44,11 @@ public class BtaDomsFetcherTest extends TestCase {
                             new File(Thread.currentThread().getContextClassLoader().getResource("bta.infrastructure.properties").toURI()).toString(),
                             "-behavioural_configfile",
                             new File(Thread.currentThread().getContextClassLoader().getResource("bta.fetcher.properties").toURI()).toString(),
-
+                            "-since", "0"
                     });
     }
 
+    @Test
     public void testFetcher() throws InvalidCredentialsException, MethodFailedException {
         FetcherContext context = new FetcherContext();
         context.setBatchSize(100);
