@@ -20,7 +20,7 @@ public class ReklamefilmFileResolverImplTest {
     @Test
     public void testGetFile() {
         SingleTranscodingContext context = new SingleTranscodingContext();
-        context.setReklamefileRootDirectories(new String[]{"broadcast-transcoder/src/test/java/dk/statsbiblioteket/broadcasttranscoder/reklamefilm/data"});
+        context.setReklamefileRootDirectories(new String[]{"src/test/java/dk/statsbiblioteket/broadcasttranscoder/reklamefilm/data"});
         ReklamefilmFileResolverImpl resolver = new ReklamefilmFileResolverImpl(context);
         File foundFile = resolver.getFile("foobar", "file1");
         assertTrue(foundFile.exists());

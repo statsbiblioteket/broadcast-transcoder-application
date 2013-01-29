@@ -17,7 +17,7 @@ import java.util.LinkedList;
 /**
  *
  */
-public class ProgramMetadataFetcherProcessorTest extends TestCase {
+public class ProgramMetadataFetcherProcessorTest {
 
     @Before
     public void setUp() {
