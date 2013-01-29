@@ -5,6 +5,7 @@ import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import junit.framework.TestCase;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -26,6 +27,7 @@ public class PersistentMetadataExtractorProcessorTest {
     }
 
     @Test
+    @Ignore
     public void testPersistentMetadataExtractor() throws ProcessorException, IOException {
         PersistentMetadataExtractorProcessor processor = new PersistentMetadataExtractorProcessor();
         Context context = new Context();
@@ -37,6 +39,7 @@ public class PersistentMetadataExtractorProcessorTest {
     }
 
     @Test
+    @Ignore
     public void testPersistentMetadataExtractorWithFetcher() throws ProcessorException {
         ProgramMetadataFetcherProcessor fetcher = new ProgramMetadataFetcherProcessor();
         PersistentMetadataExtractorProcessor processor = new PersistentMetadataExtractorProcessor();

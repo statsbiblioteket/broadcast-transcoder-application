@@ -15,11 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 /**
- * Created with IntelliJ IDEA.
- * User: csr
- * Date: 10/1/12
- * Time: 11:23 AM
- * To change this template use File | Settings | File Templates.
+ *   apparently no longer used
  */
 public class PersistentMetadataExtractorProcessor extends ProcessorChainElement {
 
