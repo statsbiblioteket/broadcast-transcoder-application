@@ -1,6 +1,5 @@
 package dk.statsbiblioteket.broadcasttranscoder.reklamefilm;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import org.junit.Test;
