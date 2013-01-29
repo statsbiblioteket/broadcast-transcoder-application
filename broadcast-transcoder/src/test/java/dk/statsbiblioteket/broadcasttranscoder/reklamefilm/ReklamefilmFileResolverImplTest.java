@@ -1,6 +1,8 @@
 package dk.statsbiblioteket.broadcasttranscoder.reklamefilm;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import org.junit.Test;
 
 import java.io.File;
@@ -18,7 +20,7 @@ public class ReklamefilmFileResolverImplTest {
 
     @Test
     public void testGetFile() {
-        Context context = new Context();
+        SingleTranscodingContext context = new SingleTranscodingContext();
         context.setReklamefileRootDirectories(new String[]{"broadcast-transcoder/src/test/java/dk/statsbiblioteket/broadcasttranscoder/reklamefilm/data"});
         ReklamefilmFileResolverImpl resolver = new ReklamefilmFileResolverImpl(context);
         File foundFile = resolver.getFile("foobar", "file1");
