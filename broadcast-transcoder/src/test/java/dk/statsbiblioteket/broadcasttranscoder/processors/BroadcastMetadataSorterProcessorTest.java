@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
 import dk.statsbiblioteket.broadcasttranscoder.util.CalendarUtils;
 import junit.framework.TestCase;

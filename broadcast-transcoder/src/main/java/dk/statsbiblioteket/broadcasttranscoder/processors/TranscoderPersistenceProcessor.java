@@ -3,10 +3,10 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.MetadataUtils;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.HibernateUtil;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.ProgramMediaInfoDAO;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.ProgramMediaInfoDAO;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.BroadcastTypeEnum;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.ProgramMediaInfo;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.ProgramMediaInfo;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.MediaTypeEnum;
 
 import java.io.File;

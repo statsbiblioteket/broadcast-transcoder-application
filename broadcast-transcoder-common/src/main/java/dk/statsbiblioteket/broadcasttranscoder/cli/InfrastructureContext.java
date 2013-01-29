@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.cli;
 
-import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingProcessInterface;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.TranscodingProcessInterface;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 
 import java.io.File;
@@ -12,13 +12,13 @@ import java.io.File;
  * Time: 3:26 PM
  * To change this template use File | Settings | File Templates.
  */
-public class InfrastructureContext {
+public class InfrastructureContext<T> {
 
     private File infrastructuralConfigFile;
 
     private File hibernateConfigFile;
 
-    private TranscodingProcessInterface transcodingProcessInterface;
+    private TranscodingProcessInterface<T> transcodingProcessInterface;
 
     private File fileOutputRootdir;
     private File previewOutputRootdir;
@@ -139,11 +139,11 @@ public class InfrastructureContext {
         this.reklamefileRootDirectories = reklamefileRootDirectories;
     }
 
-    public TranscodingProcessInterface getTranscodingProcessInterface() {
+    public TranscodingProcessInterface<T> getTranscodingProcessInterface() {
         return transcodingProcessInterface;
     }
 
-    public void setTranscodingProcessInterface(TranscodingProcessInterface transcodingProcessInterface) {
+    public void setTranscodingProcessInterface(TranscodingProcessInterface<T> transcodingProcessInterface) {
         this.transcodingProcessInterface = transcodingProcessInterface;
     }
 }

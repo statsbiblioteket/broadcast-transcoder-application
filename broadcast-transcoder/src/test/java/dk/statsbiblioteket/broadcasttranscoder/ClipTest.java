@@ -7,6 +7,7 @@ import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
 import junit.framework.TestCase;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -73,7 +74,6 @@ public class ClipTest  {
         context.setFileOutputRootdir(new File(scratchWriteDir+"outputdir"));
     }
 
-    @Test
     public void testMultiProgramMux() throws ProcessorException, DatatypeConfigurationException {
         TranscodeRequest request = new TranscodeRequest();
         request.setFileFormat(FileFormatEnum.MULTI_PROGRAM_MUX);
@@ -154,6 +154,7 @@ public class ClipTest  {
     }
 
     @Test
+    @Ignore
      public void testAnimal() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
         request.setFileFormat(FileFormatEnum.SINGLE_PROGRAM_VIDEO_TS);
@@ -180,6 +181,7 @@ public class ClipTest  {
     }
 
     @Test
+    @Ignore
      public void testDr1() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
         request.setFileFormat(FileFormatEnum.SINGLE_PROGRAM_VIDEO_TS);
@@ -206,6 +208,7 @@ public class ClipTest  {
     }
 
     @Test
+    @Ignore
     public void testDrp8() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
         request.setFileFormat(FileFormatEnum.SINGLE_PROGRAM_AUDIO_TS);

@@ -11,7 +11,7 @@ import java.io.File;
  * Time: 3:26 PM
  * To change this template use File | Settings | File Templates.
  */
-public class SingleTranscodingContext extends InfrastructureContext {
+public class SingleTranscodingContext<T> extends InfrastructureContext<T> {
 
     private String programpid;
     private File behaviourConfigFile;

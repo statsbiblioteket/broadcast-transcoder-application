@@ -2,10 +2,13 @@ package dk.statsbiblioteket.broadcasttranscoder;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.GetJobsContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.GetJobsOptionsParser;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.BroadcastTranscodingRecord;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.BroadcastTranscodingRecordDAO;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.HibernateUtil;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingProcessInterface;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.ReklamefilmTranscodingRecordDAO;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.BroadcastTranscodingRecordDAO;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.TranscodingProcessInterface;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.ReklamefilmTranscodingRecord;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,22 +27,36 @@ public class GetAllScheduledJobs {
 
     public static void main(String[] args){
         logger.debug("Entered main method.");
-        GetJobsContext context = null;
+        GetJobsContext<TranscodingRecord> context = null;
         try {
-            context = new GetJobsOptionsParser().parseOptions(args);
+
+            context = new GetJobsOptionsParser<TranscodingRecord>().parseOptions(args);
             HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
-            TranscodingProcessInterface dao = new BroadcastTranscodingRecordDAO(util);
-            List<BroadcastTranscodingRecord> jobs = dao.getAllTranscodings(context.getFromTimestamp(), context.getState());
-            for (BroadcastTranscodingRecord job : jobs) {
-                System.out.println(job.getDomsProgramPid()
+            List<? extends TranscodingRecord> jobs;
+            if (context.getCollection().equals("doms:RadioTV_Collection")){
+                TranscodingProcessInterface<BroadcastTranscodingRecord> dao = new BroadcastTranscodingRecordDAO(util);
+                jobs = dao.getAllTranscodings(context.getFromTimestamp(), context.getState());
+            } else if (context.getCollection().equals("doms:Collection_Reklamefilm")){
+                TranscodingProcessInterface<ReklamefilmTranscodingRecord> dao = new ReklamefilmTranscodingRecordDAO(util);
+                jobs = dao.getAllTranscodings(context.getFromTimestamp(), context.getState());
+            } else {
+                logger.error("Error in initial environment");
+                System.exit(6);
+                return;
+            }
+            for (TranscodingRecord job : jobs) {
+                System.out.println(job.getID()
                         +" "+job.getDomsLatestTimestamp()
                         +" "+job.getTranscodingState()
                         +" "+job.getFailureMessage());
             }
+
+
         } catch (Exception e) {
             logger.error("Error in initial environment", e);
             System.exit(5);
         }
-
     }
+
 }
+
