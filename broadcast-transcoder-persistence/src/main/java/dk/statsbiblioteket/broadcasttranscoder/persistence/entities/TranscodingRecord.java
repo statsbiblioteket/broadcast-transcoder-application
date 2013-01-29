@@ -2,10 +2,7 @@ package dk.statsbiblioteket.broadcasttranscoder.persistence.entities;
 
 import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingStateEnum;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,9 +12,9 @@ import javax.persistence.Id;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-public class TranscodingRecord {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class TranscodingRecord extends Identifiable<String>{
 
-    private String domsPid;
     private Long lastTranscodedTimestamp;
     private Long domsLatestTimestamp;
     private String failureMessage;
@@ -26,14 +23,6 @@ public class TranscodingRecord {
     @Enumerated(EnumType.STRING)
     private TranscodingStateEnum transcodingState;
 
-    @Id
-    public String getDomsPid() {
-        return domsPid;
-    }
-
-    public void setDomsPid(String domsPid) {
-        this.domsPid = domsPid;
-    }
 
     public Long getLastTranscodedTimestamp() {
         return lastTranscodedTimestamp;
@@ -69,7 +58,6 @@ public class TranscodingRecord {
 
         if (domsLatestTimestamp != null ? !domsLatestTimestamp.equals(that.domsLatestTimestamp) : that.domsLatestTimestamp != null)
             return false;
-        if (domsPid != null ? !domsPid.equals(that.domsPid) : that.domsPid != null) return false;
         if (failureMessage != null ? !failureMessage.equals(that.failureMessage) : that.failureMessage != null)
             return false;
         if (lastTranscodedTimestamp != null ? !lastTranscodedTimestamp.equals(that.lastTranscodedTimestamp) : that.lastTranscodedTimestamp != null)
@@ -81,8 +69,7 @@ public class TranscodingRecord {
 
     @Override
     public int hashCode() {
-        int result = domsPid != null ? domsPid.hashCode() : 0;
-        result = 31 * result + (lastTranscodedTimestamp != null ? lastTranscodedTimestamp.hashCode() : 0);
+        int result = lastTranscodedTimestamp != null ? lastTranscodedTimestamp.hashCode() : 0;
         result = 31 * result + (domsLatestTimestamp != null ? domsLatestTimestamp.hashCode() : 0);
         result = 31 * result + (failureMessage != null ? failureMessage.hashCode() : 0);
         result = 31 * result + (transcodingState != null ? transcodingState.hashCode() : 0);
@@ -92,8 +79,7 @@ public class TranscodingRecord {
     @Override
     public String toString() {
         return "TranscodingRecord{" +
-                "domsPid='" + domsPid + '\'' +
-                ", lastTranscodedTimestamp=" + lastTranscodedTimestamp +
+                "lastTranscodedTimestamp=" + lastTranscodedTimestamp +
                 ", domsLatestTimestamp=" + domsLatestTimestamp +
                 ", failureMessage='" + failureMessage + '\'' +
                 ", transcodingState=" + transcodingState +

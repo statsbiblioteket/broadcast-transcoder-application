@@ -37,7 +37,7 @@ public class BroadcastTranscodingRecordDAOTest {
         dao.create(createRecord());
         dao.create(createRecord());
         BroadcastTranscodingRecord record = createRecord();
-        known = record.getDomsPid();
+        known = record.getID();
         dao.create(record);
         dao.create(createRecord());
 
@@ -53,7 +53,7 @@ public class BroadcastTranscodingRecordDAOTest {
 
     public BroadcastTranscodingRecord createRecord(){
         BroadcastTranscodingRecord record1 = new BroadcastTranscodingRecord();
-        record1.setDomsPid("doms:" + UUID.randomUUID().toString());
+        record1.setID("doms:" + UUID.randomUUID().toString());
         record1.setTranscodingState(TranscodingStateEnum.PENDING);
         record1.setDomsLatestTimestamp(new Date().getTime()-1000);
         return record1;
@@ -76,14 +76,14 @@ public class BroadcastTranscodingRecordDAOTest {
         List<BroadcastTranscodingRecord> pendings = dao.getAllTranscodings(0, TranscodingStateEnum.PENDING);
         assertThat(pendings.size(), Is.is(5));
         BroadcastTranscodingRecord latest = pendings.get(4);
-        assertThat(latest.getDomsPid(), IsNot.not(known));
+        assertThat(latest.getID(), IsNot.not(known));
 
 
         dao.markAsChangedInDoms(known,new Date().getTime());
         pendings = dao.getAllTranscodings(0, TranscodingStateEnum.PENDING);
         assertThat(pendings.size(), Is.is(5));
         latest = pendings.get(4);
-        assertThat(latest.getDomsPid(),Is.is(known));
+        assertThat(latest.getID(),Is.is(known));
     }
 
     @Test

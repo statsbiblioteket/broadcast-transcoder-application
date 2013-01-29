@@ -11,10 +11,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class ProgramMediaInfo {
+public class ProgramMediaInfo extends Identifiable<Long>{
 
-    private long id;
-    private Date lastTouched;
+
+   private Date lastTouched;
     private String shardUuid;
 
     private boolean fileExists;
@@ -29,14 +29,8 @@ public class ProgramMediaInfo {
     private String transcodeCommandLine;
     private String note;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public long getId() {
-        return id;
-    }
-    public void setId(long id) {
-        this.id = id;
-    }
+
+
     public Date getLastTouched() {
         return lastTouched;
     }
@@ -117,7 +111,7 @@ public class ProgramMediaInfo {
     }
     @Override
     public String toString() {
-        return "ProgramMediaInfo [id=" + id + ", lastTouched=" + lastTouched
+        return "ProgramMediaInfo [lastTouched=" + lastTouched
                 + ", shardUuid=" + shardUuid + ", fileExists=" + fileExists
                 + ", mediaType=" + mediaType + ", broadcastType="
                 + broadcastType + ", fileSizeByte=" + fileSizeByte
@@ -129,5 +123,5 @@ public class ProgramMediaInfo {
                 + note + "]";
     }
 
-    
+
 }

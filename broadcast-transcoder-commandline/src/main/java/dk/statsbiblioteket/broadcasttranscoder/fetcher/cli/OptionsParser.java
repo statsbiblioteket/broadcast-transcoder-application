@@ -1,8 +1,8 @@
 package dk.statsbiblioteket.broadcasttranscoder.fetcher.cli;
 
+import dk.statsbiblioteket.broadcasttranscoder.fetcher.BtaDomsFetcher;
 import dk.statsbiblioteket.broadcasttranscoder.cli.AbstractOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
-import dk.statsbiblioteket.broadcasttranscoder.fetcher.BtaDomsFetcher;
 import org.apache.commons.cli.*;
 
 import java.io.File;

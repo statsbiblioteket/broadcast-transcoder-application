@@ -7,11 +7,12 @@
  */
 package dk.statsbiblioteket.broadcasttranscoder.persistence.dao;
 
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.Identifiable;
 import org.hibernate.Session;
 
 import java.io.Serializable;
 
-public class GenericHibernateDAO<T, PK extends Serializable> implements GenericDAO<T, PK> {
+public class GenericHibernateDAO<T extends Identifiable<PK>, PK extends Serializable> implements GenericDAO<T, PK> {
 
     private HibernateUtilIF util;
     private Class<T> type;
@@ -44,6 +45,28 @@ public class GenericHibernateDAO<T, PK extends Serializable> implements GenericD
         sess.close();
         return result;
     }
+
+    @SuppressWarnings("unchecked")
+    public T readOrCreate(PK id) {
+        Session sess = getSession();
+        sess.beginTransaction();
+        T result =  (T) sess.get(type, id);
+        if (result == null){
+            try {
+                result = type.newInstance();
+                result.setID(id);
+                sess.save(result);
+            } catch (InstantiationException e) {
+                throw new RuntimeException("Failed to create new hibernate entry",e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException("Failed to create new hibernate entry",e);
+            }
+        }
+        sess.getTransaction().commit();
+        sess.close();
+        return result;
+    }
+
 
     public void update(T o) {
         Session sess = getSession();

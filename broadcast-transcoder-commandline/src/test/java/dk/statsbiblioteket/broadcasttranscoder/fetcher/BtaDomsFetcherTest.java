@@ -21,7 +21,7 @@ import java.util.List;
 public class BtaDomsFetcherTest extends TestCase {
     public void testMain() throws Exception {
             BtaDomsFetcher.main(
-                    new String[] {
+                    new String[]{
                             "-infrastructure_configfile",
                             new File(Thread.currentThread().getContextClassLoader().getResource("bta.infrastructure.properties").toURI()).toString(),
                             "-behavioural_configfile",

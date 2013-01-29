@@ -4,7 +4,10 @@ import dk.statsbiblioteket.doms.central.*;
 
 import javax.jws.WebParam;
 import java.lang.String;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,9 +17,17 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class DomsMockApi implements CentralWebservice{
+
+    private Map<String,Map<String,String>> objects = new HashMap<String, Map<String, String>>();
+
     @Override
     public String newObject(@WebParam(name = "pid", targetNamespace = "") String s, @WebParam(name = "oldID", targetNamespace = "") List<String> strings, @WebParam(name = "comment", targetNamespace = "") String s1) throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        String pid = "uuid:" + UUID.randomUUID().toString();
+        if (objects.containsKey(pid)){
+            return pid;
+        }
+        objects.put(pid,new HashMap<String, String>());
+        return pid;
     }
 
     @Override
@@ -46,12 +57,24 @@ public class DomsMockApi implements CentralWebservice{
 
     @Override
     public void modifyDatastream(@WebParam(name = "pid", targetNamespace = "") String s, @WebParam(name = "datastream", targetNamespace = "") String s1, @WebParam(name = "contents", targetNamespace = "") String s2, @WebParam(name = "comment", targetNamespace = "") String s3) throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        Map<String, String> object = objects.get(s);
+        if (object == null){
+            throw new InvalidResourceException("dfsd","sdfds");
+        }
+        object.put(s1,s2);
     }
 
     @Override
     public String getDatastreamContents(@WebParam(name = "pid", targetNamespace = "") String s, @WebParam(name = "datastream", targetNamespace = "") String s1) throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Map<String, String> object = objects.get(s);
+        if (object == null){
+            throw new InvalidResourceException("dfsd","sdfds");
+        }
+        String contents = object.get(s1);
+        if (contents == null){
+            throw new InvalidResourceException("sdfd","sdfsd");
+        }
+        return contents;
     }
 
     @Override
@@ -132,5 +155,12 @@ public class DomsMockApi implements CentralWebservice{
     @Override
     public List<String> getObjectsInCollection(@WebParam(name = "collectionPid", targetNamespace = "") String s, @WebParam(name = "contentModelPid", targetNamespace = "") String s1) throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void createObject(String pid) {
+        if (objects.containsKey(pid)){
+            return;
+        }
+        objects.put(pid,new HashMap<String, String>());
     }
 }

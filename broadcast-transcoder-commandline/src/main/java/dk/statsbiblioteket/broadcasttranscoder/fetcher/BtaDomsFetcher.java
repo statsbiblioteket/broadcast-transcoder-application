@@ -76,7 +76,7 @@ public class BtaDomsFetcher {
     }
 
 
-    static List<RecordDescription> requestInBatches(CentralWebservice doms,FetcherContext context) throws InvalidCredentialsException, MethodFailedException {
+   static List<RecordDescription> requestInBatches(CentralWebservice doms, FetcherContext context) throws InvalidCredentialsException, MethodFailedException {
         long since = getSince(context);
         String collection = getCollection(context);
         String viewAngle = getViewAngle(context);

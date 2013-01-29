@@ -31,7 +31,7 @@ public abstract class TranscodingRecordDao<T extends TranscodingRecord> extends 
 
     @Override
     public void markAsChangedInDoms(String programpid, long timestamp){
-        T record = read(programpid);
+        T record = readOrCreate(programpid);
         record.setDomsLatestTimestamp(timestamp);
         record.setTranscodingState(TranscodingStateEnum.PENDING);
         update(record);
@@ -81,7 +81,8 @@ public abstract class TranscodingRecordDao<T extends TranscodingRecord> extends 
         Type mySuperClass = getClass().getGenericSuperclass();
         Type tType =  ((ParameterizedType)mySuperClass).getActualTypeArguments()[0];
 
-        Criteria criteria = session.createCriteria(tType.getClass())
+
+        Criteria criteria = session.createCriteria(type)
                 .add(Restrictions.ge("domsLatestTimestamp", since))
                 .addOrder(Order.asc("domsLatestTimestamp"));
         if (state!= null){

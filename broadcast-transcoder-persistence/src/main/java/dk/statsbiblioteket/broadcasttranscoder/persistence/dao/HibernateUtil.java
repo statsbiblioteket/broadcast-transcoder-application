@@ -33,10 +33,7 @@ public class HibernateUtil implements HibernateUtilIF {
             AnnotationConfiguration configure = (new AnnotationConfiguration()).configure(file);
             configure.addAnnotatedClass(BroadcastTranscodingRecord.class);
             configure.addAnnotatedClass(ReklamefilmTranscodingRecord.class);
-            configure.addAnnotatedClass(Metadata.class);
-            configure.addAnnotatedClass(PreviewMediaInfo.class);
             configure.addAnnotatedClass(ProgramMediaInfo.class);
-            configure.addAnnotatedClass(SnapshotMediaInfo.class);
             factory = configure.buildSessionFactory();
         }
         return instance;

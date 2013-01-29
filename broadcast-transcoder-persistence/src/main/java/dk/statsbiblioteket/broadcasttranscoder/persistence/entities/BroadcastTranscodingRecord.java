@@ -21,6 +21,8 @@ public class BroadcastTranscodingRecord extends TranscodingRecord{
     private String channel;
 
 
+
+
     @Lob
     public String getTranscodingCommand() {
         return transcodingCommand;

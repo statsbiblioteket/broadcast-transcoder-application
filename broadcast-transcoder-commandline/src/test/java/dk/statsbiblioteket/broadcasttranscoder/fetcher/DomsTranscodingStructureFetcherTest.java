@@ -35,7 +35,7 @@ public class DomsTranscodingStructureFetcherTest extends TestCase {
 
     public void testKillNewVersions() throws Exception {
         DomsAndOverwriteExaminerProcessor thing = new DomsAndOverwriteExaminerProcessor();
-        String bundleString = Streams.getUTF8Resource("xslt/sampleObject.xml");
+        String bundleString = Streams.getUTF8Resource("src/main/resources/xslt/sampleObject.xml");
 
         String result = thing.killNewerVersions(bundleString, 14000000000002L);
 

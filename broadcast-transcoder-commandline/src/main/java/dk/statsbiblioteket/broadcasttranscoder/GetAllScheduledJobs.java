@@ -45,7 +45,7 @@ public class GetAllScheduledJobs {
                 return;
             }
             for (TranscodingRecord job : jobs) {
-                System.out.println(job.getDomsPid()
+                System.out.println(job.getID()
                         +" "+job.getDomsLatestTimestamp()
                         +" "+job.getTranscodingState()
                         +" "+job.getFailureMessage());
