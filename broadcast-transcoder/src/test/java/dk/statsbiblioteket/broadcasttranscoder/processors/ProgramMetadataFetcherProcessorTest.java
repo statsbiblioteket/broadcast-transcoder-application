@@ -28,8 +28,8 @@ public class ProgramMetadataFetcherProcessorTest {
         ProgramMetadataFetcherProcessor processor = new ProgramMetadataFetcherProcessor();
         TranscodeRequest request = new TranscodeRequest();
         Context context = new Context();
-        context.setProgrampid("uuid:01248937-fc19-4dc5-b701-d92fec52d3d0");
-        context.setDomsEndpoint("http://alhena:7880/centralWebservice-service/central/");
+        context.setProgrampid("uuid:006d9eb9-0e24-43b4-a364-8d07e6e7a19d");
+        context.setDomsEndpoint("http://alhena:7480/centralWebservice-service/central/");
         context.setDomsUsername("fedoraReadOnlyAdmin");
         context.setDomsPassword("fedoraReadOnlyPass");
         processor.processThis(request,context);
