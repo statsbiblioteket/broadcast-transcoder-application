@@ -28,6 +28,7 @@ public class PropertyNames {
     public static final String LOCK_DIR = "lockDirectory";
     public static final String FILE_DEPTH = "fileDepth";
 
+
     /*
     Properties related to transcoding
      */
@@ -38,6 +39,11 @@ public class PropertyNames {
     public static final String X264_FFMPEG_PARAMS = "x264FfmpegProgramStreamParams";
     public static final String TRANSCODING_DIVISOR = "transcodingTimeoutDivisor";
     public static final String ANALYSIS_CLIP_LENGTH = "analysisCliplengthBytes";
+
+    public static final String VIEW_ANGLE = "viewAngle";
+    public static final String COLLECTION = "collection";
+    public static final String STATE = "state";
+    public static final String BATCH_SIZE = "batchSize";
 
     /*
     Properties related to Offsets

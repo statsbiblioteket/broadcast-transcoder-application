@@ -1,17 +1,13 @@
 package dk.statsbiblioteket.broadcasttranscoder;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramBroadcast;
-import dk.statsbiblioteket.broadcasttranscoder.processors.CoverageAnalyserProcessor;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
-import dk.statsbiblioteket.broadcasttranscoder.processors.StructureFixerProcessor;
-import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
-import dk.statsbiblioteket.broadcasttranscoder.processors.TranscoderDispatcherProcessor;
+import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
 import junit.framework.TestCase;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -27,7 +23,7 @@ import java.util.List;
  */
 public class ClipTest  {
 
-    Context context = new Context();
+    SingleTranscodingContext context = new SingleTranscodingContext();
 
     String scratchDir="/home/csr/old_home/yousee_scratch/";
     String scratchWriteDir="target/";
@@ -78,7 +74,6 @@ public class ClipTest  {
         context.setFileOutputRootdir(new File(scratchWriteDir+"outputdir"));
     }
 
-    @Test
     public void testMultiProgramMux() throws ProcessorException, DatatypeConfigurationException {
         TranscodeRequest request = new TranscodeRequest();
         request.setFileFormat(FileFormatEnum.MULTI_PROGRAM_MUX);
@@ -159,6 +154,7 @@ public class ClipTest  {
     }
 
     @Test
+    @Ignore
      public void testAnimal() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
         request.setFileFormat(FileFormatEnum.SINGLE_PROGRAM_VIDEO_TS);
@@ -185,6 +181,7 @@ public class ClipTest  {
     }
 
     @Test
+    @Ignore
      public void testDr1() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
         request.setFileFormat(FileFormatEnum.SINGLE_PROGRAM_VIDEO_TS);
@@ -211,6 +208,7 @@ public class ClipTest  {
     }
 
     @Test
+    @Ignore
     public void testDrp8() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
         request.setFileFormat(FileFormatEnum.SINGLE_PROGRAM_AUDIO_TS);

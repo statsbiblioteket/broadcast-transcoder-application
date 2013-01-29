@@ -7,7 +7,7 @@
  */
 package dk.statsbiblioteket.broadcasttranscoder.util;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 
 import java.util.Date;
@@ -30,7 +30,7 @@ public class MetadataUtils {
     }
 
 
-    public static long getTimeout(TranscodeRequest request, Context context) {
+    public static long getTimeout(TranscodeRequest request, SingleTranscodingContext context) {
         long timeout;
         if (request.getTimeoutMilliseconds() == 0l) {
             long programLength = findProgramLengthMillis(request);

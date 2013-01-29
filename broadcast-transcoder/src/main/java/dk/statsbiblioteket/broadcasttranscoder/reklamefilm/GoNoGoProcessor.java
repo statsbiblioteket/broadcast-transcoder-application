@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.reklamefilm;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
@@ -16,7 +16,7 @@ public class GoNoGoProcessor extends ProcessorChainElement {
     private static Logger logger = LoggerFactory.getLogger(GoNoGoProcessor.class);
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
          if (FileUtils.hasMediaOutputFile(request, context) && !context.isOverwrite()) {
              logger.info("Transcoded file already found. No transcoding necessary.");
              request.setGoForTranscoding(false);

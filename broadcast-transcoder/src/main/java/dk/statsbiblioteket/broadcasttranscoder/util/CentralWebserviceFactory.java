@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.util;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 import dk.statsbiblioteket.doms.central.CentralWebserviceService;
 
@@ -19,7 +19,7 @@ public class CentralWebserviceFactory {
             "CentralWebserviceService");
 
 
-    private static void initialise(Context context) {
+    private static void initialise(InfrastructureContext context) {
         if (context.getDomsApi() != null){
             return;
         }
@@ -36,7 +36,7 @@ public class CentralWebserviceFactory {
         context.setDomsApi(serviceInstance);
     }
 
-    public static CentralWebservice getServiceInstance(Context context) {
+    public static CentralWebservice getServiceInstance(InfrastructureContext context) {
         initialise(context);
         return context.getDomsApi();
     }

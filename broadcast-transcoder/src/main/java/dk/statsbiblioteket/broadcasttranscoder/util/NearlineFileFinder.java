@@ -1,17 +1,13 @@
 package dk.statsbiblioteket.broadcasttranscoder.util;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +30,7 @@ public class NearlineFileFinder implements FileFinder {
      * @return
      */
     @Override
-    public Map<BroadcastMetadata, File> findAndBringOnline(TranscodeRequest request, Context context) throws ProcessorException {
+    public Map<BroadcastMetadata, File> findAndBringOnline(TranscodeRequest request, InfrastructureContext context) throws ProcessorException {
         String finderBaseUrl = context.getFileFinderUrl();
         List<BroadcastMetadata> metadatas = request.getBroadcastMetadata();
         int max_files = context.getMaxFilesFetched();
@@ -90,7 +86,7 @@ public class NearlineFileFinder implements FileFinder {
      * @return
      */
     @Override
-    public boolean isAllFilesOnline(TranscodeRequest request, Context context) throws ProcessorException {
+    public boolean isAllFilesOnline(TranscodeRequest request, InfrastructureContext context) throws ProcessorException {
         String finderBaseUrl = context.getFileFinderUrl();
         List<BroadcastMetadata> metadatas = request.getBroadcastMetadata();
 

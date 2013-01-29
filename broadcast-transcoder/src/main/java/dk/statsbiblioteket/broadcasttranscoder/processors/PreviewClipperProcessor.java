@@ -7,21 +7,15 @@
  */
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutException;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.MetadataUtils;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.PreviewMediaInfoDAO;
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.BroadcastTypeEnum;
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.db.PreviewMediaInfo;
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.extraction.model.MediaTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.Date;
 
 public class PreviewClipperProcessor extends ProcessorChainElement {
 
@@ -36,7 +30,7 @@ public class PreviewClipperProcessor extends ProcessorChainElement {
     }
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         long programLength = MetadataUtils.findProgramLengthMillis(request);
         File sourceFile = FileUtils.getFinalMediaOutputFile(request, context);
         File outputDir = FileUtils.getPreviewOutputDir(request, context);

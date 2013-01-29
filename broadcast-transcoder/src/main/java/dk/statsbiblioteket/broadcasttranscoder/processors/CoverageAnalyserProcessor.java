@@ -1,12 +1,8 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
-import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
-import dk.statsbiblioteket.broadcasttranscoder.domscontent.Hole;
-import dk.statsbiblioteket.broadcasttranscoder.domscontent.MissingEnd;
-import dk.statsbiblioteket.broadcasttranscoder.domscontent.MissingStart;
-import dk.statsbiblioteket.broadcasttranscoder.domscontent.Overlap;
-import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramStructure;
+
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.domscontent.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.CalendarUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +29,7 @@ public class CoverageAnalyserProcessor extends ProcessorChainElement {
     }
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         gapToleranceSeconds = context.getGapToleranceSeconds();
         ProgramStructure localStructure = new ProgramStructure();
         request.setLocalProgramStructure(localStructure);
@@ -42,7 +38,7 @@ public class CoverageAnalyserProcessor extends ProcessorChainElement {
         findHolesAndOverlaps(request, context, localStructure);
     }
 
-    private void findMissingStart(TranscodeRequest request, Context context, ProgramStructure localProgramStructure) {
+    private void findMissingStart(TranscodeRequest request, SingleTranscodingContext context, ProgramStructure localProgramStructure) {
         long fileStartTime = request.getClips().get(0).getFileStartTime()/1000L;
         long programStartTime = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStart())/1000L;
         final long missing = fileStartTime - programStartTime;
@@ -55,7 +51,7 @@ public class CoverageAnalyserProcessor extends ProcessorChainElement {
         }
     }
 
-    private void findMissingEnd(TranscodeRequest request, Context context, ProgramStructure localProgramStructure) {
+    private void findMissingEnd(TranscodeRequest request, SingleTranscodingContext context, ProgramStructure localProgramStructure) {
         int iclips = request.getClips().size();
         long fileEndTime = request.getClips().get(iclips-1).getFileEndTime()/1000L;
         long programEndTime = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStop())/1000L;
@@ -69,7 +65,7 @@ public class CoverageAnalyserProcessor extends ProcessorChainElement {
         }
     }
 
-    private void findHolesAndOverlaps(TranscodeRequest request, Context context, ProgramStructure localProgramStructure) throws ProcessorException {
+    private void findHolesAndOverlaps(TranscodeRequest request, SingleTranscodingContext context, ProgramStructure localProgramStructure) throws ProcessorException {
         ProgramStructure.Holes holes = new ProgramStructure.Holes();
         localProgramStructure.setHoles(holes);
         ProgramStructure.Overlaps overlaps = new ProgramStructure.Overlaps();

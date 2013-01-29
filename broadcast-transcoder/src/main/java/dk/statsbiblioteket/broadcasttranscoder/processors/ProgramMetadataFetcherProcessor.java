@@ -1,15 +1,11 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramBroadcast;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramStructure;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
-import dk.statsbiblioteket.broadcasttranscoder.util.JaxbWrapper;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
-import dk.statsbiblioteket.doms.central.InvalidCredentialsException;
 import dk.statsbiblioteket.doms.central.InvalidResourceException;
-import dk.statsbiblioteket.doms.central.MethodFailedException;
-import dk.statsbiblioteket.doms.central.ObjectProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +14,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import java.io.StringReader;
-import java.net.URL;
 
 
 /**
@@ -36,7 +31,7 @@ public class ProgramMetadataFetcherProcessor extends ProcessorChainElement {
     }
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         ProgramBroadcast programBroadcast = getProgramBroadcast(context);
         request.setProgramBroadcast(programBroadcast);
         ProgramStructure programStructure = getProgramStructure(context);
@@ -46,7 +41,7 @@ public class ProgramMetadataFetcherProcessor extends ProcessorChainElement {
 
 
 
-    private ProgramStructure getProgramStructure(Context context) throws ProcessorException {
+    private ProgramStructure getProgramStructure(SingleTranscodingContext context) throws ProcessorException {
         CentralWebservice domsAPI = CentralWebserviceFactory.getServiceInstance(context);
         String structureXmlString = null;
         try {
@@ -72,7 +67,7 @@ public class ProgramMetadataFetcherProcessor extends ProcessorChainElement {
         return programStructure;
     }
 
-    private ProgramBroadcast getProgramBroadcast(Context context) throws ProcessorException {
+    private ProgramBroadcast getProgramBroadcast(SingleTranscodingContext context) throws ProcessorException {
         CentralWebservice domsAPI = CentralWebserviceFactory.getServiceInstance(context);
         String broadcastXmlString = null;
         try {

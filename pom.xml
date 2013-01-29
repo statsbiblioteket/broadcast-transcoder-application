@@ -12,9 +12,8 @@
     <modules>
         <module>broadcast-transcoder</module>
         <module>broadcast-transcoder-commandline</module>
-        <module>broadcast-transcoder-fetcher</module>
-        <module>bes-media-file-status-log</module>
         <module>broadcast-transcoder-persistence</module>
+        <module>broadcast-transcoder-common</module>
     </modules>
 
     <repositories>
@@ -59,7 +58,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.8.1</version>
+                <version>4.9</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

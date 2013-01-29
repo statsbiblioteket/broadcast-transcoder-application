@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,13 +30,13 @@ public abstract class ProcessorChainElement {
         this.childElement = childElement;
     }
 
-    public void processIteratively(TranscodeRequest request, Context context) throws ProcessorException {
+    public void processIteratively(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         logger.info("Processing with " + this.getClass() + " on " + context.getProgrampid());
         processThis(request, context);
         if (childElement != null) childElement.processIteratively(request, context);
     }
 
-    protected abstract void processThis(TranscodeRequest request, Context context) throws ProcessorException;
+    protected abstract void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException;
 
     protected ProcessorChainElement() {
     }

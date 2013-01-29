@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 
 /**
  *
@@ -15,7 +15,7 @@ public class TranscoderDispatcherProcessor extends ProcessorChainElement {
     }
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         switch (request.getFileFormat()) {
             case MULTI_PROGRAM_MUX:
                 this.setChildElement(new PidAndAsepctRatioExtractorProcessor());

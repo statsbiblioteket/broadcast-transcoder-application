@@ -1,11 +1,10 @@
 package dk.statsbiblioteket.broadcasttranscoder;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
-import dk.statsbiblioteket.broadcasttranscoder.cli.OptionsParser;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramBroadcast;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
-import dk.statsbiblioteket.broadcasttranscoder.processors.PidAndAsepctRatioExtractorProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -26,7 +25,7 @@ import java.util.List;
 public class SingleFileClipper {
 
     public static void main(String[] args) throws OptionParseException, DatatypeConfigurationException, ProcessorException {
-        Context context = new OptionsParser().parseOptions(args);
+        SingleTranscodingContext context = new SingleTranscodingOptionsParser().parseOptions(args);
         String filename = args[0];
         String filelengthSeconds = args[1];
         TranscodeRequest request = new TranscodeRequest();

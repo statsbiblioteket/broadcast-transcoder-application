@@ -7,7 +7,7 @@
  */
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutException;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
@@ -29,11 +29,11 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
     }
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
          mpegClip(request, context);
     }
 
-    private void mpegClip(TranscodeRequest request, Context context) throws ProcessorException {
+    private void mpegClip(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         String command = "cat " + request.getClipperCommand() + " | " + getFfmpegCommandLine(request, context);
         File outputDir = FileUtils.getTemporaryMediaOutputDir(request, context);
         outputDir.mkdirs();
@@ -58,7 +58,7 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
         }
     }
 
-    public static String getFfmpegCommandLine(TranscodeRequest request, Context context) {
+    public static String getFfmpegCommandLine(TranscodeRequest request, SingleTranscodingContext context) {
            File outputFile = FileUtils.getTemporaryMediaOutputFile(request, context);
            String line = "ffmpeg -i - " + context.getX264FfmpegParams()
                    + " -b:v " + context.getVideoBitrate() + "000"
@@ -69,7 +69,7 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
        }
 
 
-       protected static String getFfmpegAspectRatio(TranscodeRequest request, Context context) {
+       protected static String getFfmpegAspectRatio(TranscodeRequest request, SingleTranscodingContext context) {
            Double aspectRatio = request.getDisplayAspectRatio();
            String ffmpegResolution;
            Long height = context.getVideoHeight()*1L;

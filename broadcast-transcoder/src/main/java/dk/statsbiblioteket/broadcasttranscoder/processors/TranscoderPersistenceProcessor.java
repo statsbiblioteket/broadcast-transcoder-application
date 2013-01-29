@@ -1,13 +1,13 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.MetadataUtils;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.HibernateUtil;
-import dk.statsbiblioteket.broadcasttranscoder.util.persistence.ProgramMediaInfoDAO;
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.BroadcastTypeEnum;
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.db.ProgramMediaInfo;
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.extraction.model.MediaTypeEnum;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.ProgramMediaInfoDAO;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.BroadcastTypeEnum;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.ProgramMediaInfo;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.MediaTypeEnum;
 
 import java.io.File;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class TranscoderPersistenceProcessor extends ProcessorChainElement {
     }
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         ProgramMediaInfo info = new ProgramMediaInfo();
         switch (request.getFileFormat()) {
             case MULTI_PROGRAM_MUX:

@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import junit.framework.TestCase;
 import org.junit.Assume;
 import org.junit.Before;
@@ -31,7 +31,7 @@ public class FileMetadataFetcherProcessorTest  {
     public void testProcessIteratively() throws Exception {
         FileMetadataFetcherProcessor processor = new FileMetadataFetcherProcessor();
         TranscodeRequest request = new TranscodeRequest();
-        Context context = new Context();
+        SingleTranscodingContext context = new SingleTranscodingContext();
         context.setProgrampid("uuid:d82107be-20cf-4524-b611-07d8534b97f8");
         context.setDomsEndpoint("http://carme:7880/centralWebservice-service/central/");
         context.setDomsUsername("fedoraAdmin");

@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.util;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class FileUtils {
 
     private static Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
-    public static boolean hasMediaOutputFile(TranscodeRequest request, Context context) {
+    public static boolean hasMediaOutputFile(TranscodeRequest request, SingleTranscodingContext context) {
         File dir = getFinalMediaOutputDir(request, context);
         if (!dir.exists()) {
             return false;
@@ -37,7 +37,7 @@ public class FileUtils {
         }
         return files.length > 0;
     }
-    public static File findMediaOutputFile(TranscodeRequest request, Context context) {
+    public static File findMediaOutputFile(TranscodeRequest request, SingleTranscodingContext context) {
         File dir = getFinalMediaOutputDir(request, context);
         if (!dir.exists()) {
             return null;
@@ -57,7 +57,7 @@ public class FileUtils {
         return null;
     }
 
-    public static File getFinalMediaOutputFile(TranscodeRequest request, Context context) {
+    public static File getFinalMediaOutputFile(TranscodeRequest request, SingleTranscodingContext context) {
         File dir = getFinalMediaOutputDir(request, context);
         String filename = context.getProgrampid().replace("uuid:","");
         switch (request.getFileFormat()) {
@@ -73,7 +73,7 @@ public class FileUtils {
         return new File(dir, filename);
     }
 
-    public static File getTemporaryMediaOutputFile(TranscodeRequest request, Context context) {
+    public static File getTemporaryMediaOutputFile(TranscodeRequest request, SingleTranscodingContext context) {
         File dir = getTemporaryMediaOutputDir(request, context);
         String filename = context.getProgrampid().replace("uuid:","");
         switch (request.getFileFormat()) {
@@ -88,7 +88,7 @@ public class FileUtils {
         }
         return new File(dir, filename);
     }
-    public static File getPreviewOutputFile(TranscodeRequest request, Context context) {
+    public static File getPreviewOutputFile(TranscodeRequest request, SingleTranscodingContext context) {
         File dir = getPreviewOutputDir(request, context);
         String filename = context.getProgrampid().replace("uuid:","");
         switch (request.getFileFormat()) {
@@ -104,38 +104,38 @@ public class FileUtils {
         return new File(dir, filename);
     }
 
-    public static String getSnapshotOutputFileStringTemplate(TranscodeRequest request, Context context) {
+    public static String getSnapshotOutputFileStringTemplate(TranscodeRequest request, SingleTranscodingContext context) {
         File dir = getSnapshotOutputDir(request, context);
         String name = context.getProgrampid().replace("uuid:","") + ".%d.png";
         return dir.getAbsolutePath() + "/" + name;
     }
 
-    public static File getSnapshotOutputDir(TranscodeRequest request, Context context) {
+    public static File getSnapshotOutputDir(TranscodeRequest request, SingleTranscodingContext context) {
             File rootDir = context.getSnapshotOutputRootdir();
             int depth = context.getFileDepth();
             logger.trace("Snapshot directory is relative to '" + rootDir + "'");
             return getOutputSubdirectory(context, rootDir, depth);
         }
 
-    public static File getFinalMediaOutputDir(TranscodeRequest request, Context context) {
+    public static File getFinalMediaOutputDir(TranscodeRequest request, SingleTranscodingContext context) {
         File rootDir = context.getFileOutputRootdir();
         int depth = context.getFileDepth();
         logger.trace("Output directory is relative to '" + rootDir + "'");
         return getOutputSubdirectory(context, rootDir, depth);
     }
 
-    public static File getTemporaryMediaOutputDir(TranscodeRequest request, Context context) {
+    public static File getTemporaryMediaOutputDir(TranscodeRequest request, SingleTranscodingContext context) {
         return new File(getFinalMediaOutputDir(request, context), "temp");
     }
 
-    public static File getPreviewOutputDir(TranscodeRequest request, Context context) {
+    public static File getPreviewOutputDir(TranscodeRequest request, SingleTranscodingContext context) {
         File rootDir = context.getPreviewOutputRootdir();
         int depth = context.getFileDepth();
         logger.trace("Preview directory is relative to '" + rootDir + "'");
         return getOutputSubdirectory(context, rootDir, depth);
     }
 
-    private static File getOutputSubdirectory(Context context, File rootDir, int depth) {
+    private static File getOutputSubdirectory(SingleTranscodingContext context, File rootDir, int depth) {
         String relativePath = "";
         String strippedPid = context.getProgrampid().replace("uuid:","");
         for (int pos = 0; pos < depth; pos++) {
@@ -146,7 +146,7 @@ public class FileUtils {
     }
 
 
-    public static File getLockFile(TranscodeRequest request, Context context) {
+    public static File getLockFile(TranscodeRequest request, SingleTranscodingContext context) {
         File rootDir = context.getLockDir();
         String basename = context.getProgrampid().replace("uuid:", "");
         return new File(rootDir, basename + ".lck");

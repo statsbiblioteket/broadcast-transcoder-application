@@ -1,13 +1,9 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,7 +17,7 @@ public class SanitiseBroadcastMetadataProcessor extends ProcessorChainElement {
 
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         List<BroadcastMetadata> bm = request.getBroadcastMetadata();
         Map<String,List<BroadcastMetadata>> formatsMap = new HashMap<String, List<BroadcastMetadata>>();
         for (BroadcastMetadata metadata : bm) {

@@ -1,9 +1,8 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.Context;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
-import dk.statsbiblioteket.mediaplatform.bes.mediafilelog.batch.extraction.model.PBCoreProgramMetadata;
 import dk.statsbiblioteket.util.xml.DOM;
 import dk.statsbiblioteket.util.xml.XPathSelector;
 import org.slf4j.Logger;
@@ -21,7 +20,7 @@ public class PbcoreMetadataExtractorProcessor extends ProcessorChainElement {
     private static Logger logger = LoggerFactory.getLogger(PbcoreMetadataExtractorProcessor.class);
 
     @Override
-    protected void processThis(TranscodeRequest request, Context context) throws ProcessorException {
+    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         CentralWebservice domsAPI = CentralWebserviceFactory.getServiceInstance(context);
         String structureXmlString = null;
         try {
