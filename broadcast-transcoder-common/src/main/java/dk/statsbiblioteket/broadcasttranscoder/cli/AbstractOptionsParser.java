@@ -1,10 +1,23 @@
 package dk.statsbiblioteket.broadcasttranscoder.cli;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+
 import java.io.File;
 import java.util.Properties;
 
 public  abstract class AbstractOptionsParser {
+    private final Options options;
+    protected static final Option USAGE_OPTION = new Option("u", false, "Usage");
+
+
     public AbstractOptionsParser() {
+        options = new Options();
+        options.addOption(USAGE_OPTION);
+
+
     }
 
     protected File readFileProperty(String propName, Properties props)  throws OptionParseException {
@@ -75,4 +88,25 @@ public  abstract class AbstractOptionsParser {
         }
     }
 
+    protected void parseError(String message) {
+        System.err.println("Error parsing arguments");
+        System.err.println(message);
+        printUsage();
+    }
+    protected void printUsage() {
+            final HelpFormatter usageFormatter = new HelpFormatter();
+            usageFormatter.printHelp(this.getClass().getName(), getOptions(), true);
+        }
+
+    public Options getOptions() {
+        return options;
+    }
+
+
+    protected void parseUsageOption(CommandLine cmd) {
+         if (cmd.hasOption(USAGE_OPTION.getOpt())) {
+             printUsage();
+             System.exit(0);
+         }
+    }
 }

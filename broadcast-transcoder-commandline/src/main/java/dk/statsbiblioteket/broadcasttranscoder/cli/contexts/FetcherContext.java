@@ -1,4 +1,4 @@
-package dk.statsbiblioteket.broadcasttranscoder.cli;
+package dk.statsbiblioteket.broadcasttranscoder.cli.contexts;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.GetJobsContext;
 

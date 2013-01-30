@@ -18,6 +18,7 @@ public class PropertyNames {
     public static final String DOMS_USER = "domsUsername";
     public static final String DOMS_PASSWORD = "domsPassword";
     public static final String DOMS_VIEWANGLE = "domsViewAngle";
+    public static final String DOMS_COLLECTION = "collection";
 
     /*
     Properties related to file paths

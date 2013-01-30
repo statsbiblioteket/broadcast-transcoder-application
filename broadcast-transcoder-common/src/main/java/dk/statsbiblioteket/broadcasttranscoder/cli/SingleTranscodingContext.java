@@ -18,8 +18,6 @@ public class SingleTranscodingContext<T> extends InfrastructureContext<T> {
     private boolean overwrite;
 
 
-    private File lockDir;
-    private int fileDepth;
 
     private int videoBitrate;
     private int audioBitrate;
@@ -99,21 +97,6 @@ public class SingleTranscodingContext<T> extends InfrastructureContext<T> {
     }
 
 
-    public File getLockDir() {
-        return lockDir;
-    }
-
-    public void setLockDir(File lockDir) {
-        this.lockDir = lockDir;
-    }
-
-    public int getFileDepth() {
-        return fileDepth;
-    }
-
-    public void setFileDepth(int fileDepth) {
-        this.fileDepth = fileDepth;
-    }
 
     public int getVideoBitrate() {
         return videoBitrate;

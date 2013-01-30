@@ -1,7 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.GetJobsContext;
-import dk.statsbiblioteket.broadcasttranscoder.cli.GetJobsOptionsParser;
+import dk.statsbiblioteket.broadcasttranscoder.cli.parsers.GetJobsOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.ReklamefilmTranscodingRecordDAO;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.BroadcastTranscodingRecordDAO;

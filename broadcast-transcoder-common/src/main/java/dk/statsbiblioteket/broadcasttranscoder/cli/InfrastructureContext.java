@@ -12,18 +12,18 @@ import java.io.File;
  * Time: 3:26 PM
  * To change this template use File | Settings | File Templates.
  */
-public class InfrastructureContext<T> {
+public class InfrastructureContext<T>  extends HibernateContext<T>{
 
     private File infrastructuralConfigFile;
 
-    private File hibernateConfigFile;
-
-    private TranscodingProcessInterface<T> transcodingProcessInterface;
 
     private File fileOutputRootdir;
     private File previewOutputRootdir;
     private File snapshotOutputRootdir;
     private String[] reklamefileRootDirectories;
+
+    private File lockDir;
+    private int fileDepth;
 
 
     private String fileFinderUrl;
@@ -46,14 +46,6 @@ public class InfrastructureContext<T> {
 
     public void setInfrastructuralConfigFile(File infrastructuralConfigFile) {
         this.infrastructuralConfigFile = infrastructuralConfigFile;
-    }
-
-    public File getHibernateConfigFile() {
-        return hibernateConfigFile;
-    }
-
-    public void setHibernateConfigFile(File hibernateConfigFile) {
-        this.hibernateConfigFile = hibernateConfigFile;
     }
 
 
@@ -139,11 +131,20 @@ public class InfrastructureContext<T> {
         this.reklamefileRootDirectories = reklamefileRootDirectories;
     }
 
-    public TranscodingProcessInterface<T> getTranscodingProcessInterface() {
-        return transcodingProcessInterface;
+
+    public File getLockDir() {
+        return lockDir;
     }
 
-    public void setTranscodingProcessInterface(TranscodingProcessInterface<T> transcodingProcessInterface) {
-        this.transcodingProcessInterface = transcodingProcessInterface;
+    public void setLockDir(File lockDir) {
+        this.lockDir = lockDir;
+    }
+
+    public int getFileDepth() {
+        return fileDepth;
+    }
+
+    public void setFileDepth(int fileDepth) {
+        this.fileDepth = fileDepth;
     }
 }

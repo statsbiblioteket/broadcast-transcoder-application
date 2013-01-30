@@ -2,7 +2,7 @@ package dk.statsbiblioteket.broadcasttranscoder;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
-import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingOptionsParser;
+import dk.statsbiblioteket.broadcasttranscoder.cli.parsers.SingleTranscodingOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramBroadcast;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;

@@ -1,13 +1,11 @@
 package dk.statsbiblioteket.broadcasttranscoder;
 
-import dk.statsbiblioteket.broadcasttranscoder.BtaDomsFetcher;
-import dk.statsbiblioteket.broadcasttranscoder.cli.FetcherContext;
+import dk.statsbiblioteket.broadcasttranscoder.cli.contexts.FetcherContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 import dk.statsbiblioteket.doms.central.InvalidCredentialsException;
 import dk.statsbiblioteket.doms.central.MethodFailedException;
 import dk.statsbiblioteket.doms.central.RecordDescription;
-import junit.framework.TestCase;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;

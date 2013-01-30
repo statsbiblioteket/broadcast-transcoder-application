@@ -1,7 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
-import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingOptionsParser;
+import dk.statsbiblioteket.broadcasttranscoder.cli.parsers.SingleTranscodingOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;

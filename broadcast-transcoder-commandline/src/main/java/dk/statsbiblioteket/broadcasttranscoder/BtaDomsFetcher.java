@@ -1,9 +1,9 @@
 
 package dk.statsbiblioteket.broadcasttranscoder;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.FetcherContextOptionsParser;
+import dk.statsbiblioteket.broadcasttranscoder.cli.parsers.FetcherContextOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
-import dk.statsbiblioteket.broadcasttranscoder.cli.FetcherContext;
+import dk.statsbiblioteket.broadcasttranscoder.cli.contexts.FetcherContext;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.BroadcastTranscodingRecordDAO;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.ReklamefilmTranscodingRecordDAO;
@@ -34,7 +34,7 @@ public class BtaDomsFetcher {
 
     public static void main(String[] args) throws OptionParseException, ProcessorException {
         logger.debug("Entered main method.");
-        FetcherContext<TranscodingRecord> context = new FetcherContextOptionsParser<TranscodingRecord>().parseOptions(args);
+        FetcherContext<? extends TranscodingRecord> context = new FetcherContextOptionsParser<TranscodingRecord>().parseOptions(args);
         try {
 
             CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);

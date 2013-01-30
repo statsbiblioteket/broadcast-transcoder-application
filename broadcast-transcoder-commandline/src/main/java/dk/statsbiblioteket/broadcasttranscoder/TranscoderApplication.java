@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  * Time: 11:13 AM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class TranscoderApplication {
+public abstract class TranscoderApplication<T> {
 
     private static Logger logger = LoggerFactory.getLogger(TranscoderApplication.class);
 
