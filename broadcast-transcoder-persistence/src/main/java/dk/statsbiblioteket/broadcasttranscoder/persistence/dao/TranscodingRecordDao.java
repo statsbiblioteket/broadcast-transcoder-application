@@ -32,21 +32,27 @@ public abstract class TranscodingRecordDao<T extends TranscodingRecord> extends 
     @Override
     public void markAsChangedInDoms(String programpid, long timestamp){
         T record = readOrCreate(programpid);
-        record.setDomsLatestTimestamp(timestamp);
-        record.setTranscodingState(TranscodingStateEnum.PENDING);
-        update(record);
+        Long previousTimestamp = record.getDomsLatestTimestamp();
+        if (timestamp > previousTimestamp){
+            record.setDomsLatestTimestamp(timestamp);
+            record.setTranscodingState(TranscodingStateEnum.PENDING);
+            update(record);
+        }
     }
 
     @Override
-    public void markAsAlreadyTranscoded(String programpid){
+    public void markAsAlreadyTranscoded(String programpid, long timestamp){
         T record = read(programpid);
-        record.setTranscodingState(TranscodingStateEnum.COMPLETE);
-        record.setLastTranscodedTimestamp(record.getDomsLatestTimestamp());
-        update(record);
+        Long previousTimestamp = record.getDomsLatestTimestamp();
+        if (timestamp > previousTimestamp){
+            record.setTranscodingState(TranscodingStateEnum.COMPLETE);
+            record.setLastTranscodedTimestamp(record.getDomsLatestTimestamp());
+            update(record);
+        }
     }
 
     @Override
-    public void markAsFailed(String programpid, String message){
+    public void markAsFailed(String programpid,long timestamp, String message){
         T record = read(programpid);
         record.setTranscodingState(TranscodingStateEnum.FAILED);
         record.setFailureMessage(message);
@@ -54,7 +60,7 @@ public abstract class TranscodingRecordDao<T extends TranscodingRecord> extends 
     }
 
     @Override
-    public void markAsRejected(String programpid, String message){
+    public void markAsRejected(String programpid, long timestamp, String message){
         T record = read(programpid);
         record.setTranscodingState(TranscodingStateEnum.REJECTED);
         record.setFailureMessage(message);

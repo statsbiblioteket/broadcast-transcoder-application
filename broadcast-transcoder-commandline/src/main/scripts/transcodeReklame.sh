@@ -20,16 +20,7 @@ returncode=$?
 
 ## Consider placing progress, successes, failures outside deploy directory so they don't get nuked by deploy.
 
-if [ $returncode -eq 0 ]; then
-       progressFile="$SCRIPT_PATH/../$collection.progress"
-       lockfile "$progressFile.lock"
-       progress_timestamp=$(cat "$progressFile" | tail -1)
-       if [ $timestamp -gt $progress_timestamp ]; then
-          echo $timestamp > $progressFile
-       fi
-       echo "$uuid   $timestamp $machine" >> $SCRIPT_PATH/../$collection.successes
-   rm -f "$progressFile.lock"
-else
+if [ $returncode -ne 0 ]; then
     failureFile= $SCRIPT_PATH/../$collection.failures
     lockfile "$failureFile.lock"
         echo "$uuid   $timestamp $machine" >> $failureFile

@@ -46,37 +46,10 @@ trap 'cleanup; rmdir $globalLock; rm -rf $changes; exit 1' INT TERM
 rm -f $workDir/*${collection}*.lock
 
 
-# get lowest timestamp from progressfiles
-timestamp=$(date +%s)000  #Everything should be less than this
-seedFile=$stateDir/$collection.seed
-for ((i=0;i<$WORKERS;i++)); do
-    progressFile=$stateDir/$i.$collection.progress
-    if [ -e $progressFile ]; then
-        progress_timestamp=$(cat $progressFile)
-    else
-        if [ -e $seedFile ]; then
-            progress_timestamp=$(cat $seedFile)
-        else
-            echo "No seedfile $seedFile found. Exiting."
-            exit 1;
-        fi
-    fi
-    if [ $progress_timestamp -lt $timestamp ]; then
-        timestamp=$progress_timestamp
-    fi
-done
-for ((i=0;i<$WORKERS;i++)); do
-    progressFile=$stateDir/$i.$collection.progress
-    echo $timestamp > $progressFile
-done
-if [ -e $seedFile ]; then
-    rm ${seedFile}
-fi
 
 # Get list of changes from queryChanges with progress timestamp as input
 changes=$( mktemp -p $workDir )
-[ $debug = 1 ] && echo Querying changes since $timestamp
-$SCRIPT_PATH/queryChanges.sh $collection $timestamp | grep "^uuid" > $changes
+$SCRIPT_PATH/queryChanges.sh $collection 0 | grep "^uuid" > $changes
 
 # Cut list into pid/timestamp sets
 # Iterate through list,

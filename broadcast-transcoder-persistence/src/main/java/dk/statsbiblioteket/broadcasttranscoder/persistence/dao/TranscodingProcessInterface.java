@@ -16,11 +16,11 @@ public interface TranscodingProcessInterface<T> extends GenericDAO<T, String> {
 
     void markAsChangedInDoms(String programpid, long timestamp);
 
-    void markAsAlreadyTranscoded(String programpid);
+    void markAsAlreadyTranscoded(String programpid, long timestamp);
 
-    void markAsFailed(String programpid, String message);
+    void markAsFailed(String programpid, long timestamp, String message);
 
-    void markAsRejected(String programpid, String message);
+    void markAsRejected(String programpid, long timestamp, String message);
 
     long getLatestTranscodingTimestamp(String programPid);
 

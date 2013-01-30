@@ -30,19 +30,8 @@ returncode=$?
 [ $debug = 1 ] && echo transcodeFile.sh returned with exit code $returncode
 
 
-if [ $returncode -eq 0 ]; then
-    progressFile=$stateDir/$workerID.$collection.progress
-   progress_timestamp=$(cat $progressFile)
-   if [ $timestamp -gt $progress_timestamp ]; then
-        [ $debug = 1 ] && echo transcodeFile.sh wrote timestamp $timestamp to $progressFile
-       echo $timestamp > $progressFile
-   fi
-   echo  "$collection" "$uuid" "$timestamp"  >> $stateDir/$workerID.$collection.successes
-elif [  $returncode -eq 111 ]; then
-    echo "$collection" "$uuid" "$timestamp"  >> $stateDir/$workerID.$collection.rejects
-else
+if [ $returncode -ne 0 ]; then
     echo "$collection" "$uuid" "$timestamp"  >> $stateDir/$workerID.$collection.failures
-    ##TODO: possibly cat the transcoderOutput
 fi
 #when we have categorized the file, mark is as complete
 rm $workDir/$workerID$collection.workerFile

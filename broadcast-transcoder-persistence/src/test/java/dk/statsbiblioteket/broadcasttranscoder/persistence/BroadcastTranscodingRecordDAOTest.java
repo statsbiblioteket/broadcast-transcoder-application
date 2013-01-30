@@ -91,7 +91,7 @@ public class BroadcastTranscodingRecordDAOTest {
         List<BroadcastTranscodingRecord> pendings = dao.getAllTranscodings(0, TranscodingStateEnum.PENDING);
         assertThat(pendings.size(), Is.is(5));
 
-        dao.markAsAlreadyTranscoded(known);
+        dao.markAsAlreadyTranscoded(known,new Date().getTime());
         pendings = dao.getAllTranscodings(0, TranscodingStateEnum.PENDING);
         assertThat(pendings.size(), Is.is(4));
         pendings = dao.getAllTranscodings(0, TranscodingStateEnum.COMPLETE);
@@ -104,7 +104,7 @@ public class BroadcastTranscodingRecordDAOTest {
         List<BroadcastTranscodingRecord> pendings = dao.getAllTranscodings(0, TranscodingStateEnum.PENDING);
         assertThat(pendings.size(), Is.is(5));
 
-        dao.markAsFailed(known,"Test of failed");
+        dao.markAsFailed(known,new Date().getTime(),"Test of failed");
         pendings = dao.getAllTranscodings(0, TranscodingStateEnum.PENDING);
         assertThat(pendings.size(), Is.is(4));
         pendings = dao.getAllTranscodings(0, TranscodingStateEnum.FAILED);
@@ -117,7 +117,7 @@ public class BroadcastTranscodingRecordDAOTest {
         List<BroadcastTranscodingRecord> pendings = dao.getAllTranscodings(0, TranscodingStateEnum.PENDING);
         assertThat(pendings.size(), Is.is(5));
 
-        dao.markAsRejected(known,"Test of rejected");
+        dao.markAsRejected(known,new Date().getTime(),"Test of rejected");
         pendings = dao.getAllTranscodings(0, TranscodingStateEnum.PENDING);
         assertThat(pendings.size(), Is.is(4));
         pendings = dao.getAllTranscodings(0, TranscodingStateEnum.REJECTED);

@@ -54,6 +54,8 @@ public class BtaDomsFetcher {
             }
 
             for (RecordDescription record : records) {
+
+                //TODO only do so if the timestamp is newer
                 dao.markAsChangedInDoms(record.getPid(), record.getDate());
             }
 

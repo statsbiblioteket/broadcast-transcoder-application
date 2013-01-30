@@ -29,13 +29,13 @@ public abstract class TranscoderApplication<T> {
 
     protected static <T extends TranscodingRecord> void reject(TranscodeRequest request, SingleTranscodingContext<T> context) {
         logger.info("Transcoding rejected for " + context.getProgrampid() + ". Exiting.");
-        context.getTranscodingProcessInterface().markAsRejected(context.getProgrampid(),"Message?");
+        context.getTranscodingProcessInterface().markAsRejected(context.getProgrampid(),context.getTranscodingTimestamp(),"Message?");
     }
 
     protected static <T extends TranscodingRecord> void alreadyTranscoded(TranscodeRequest request, SingleTranscodingContext<T> context) {
 
         logger.info("No transcoding required for " + context.getProgrampid() + ". Exiting.");
-        context.getTranscodingProcessInterface().markAsAlreadyTranscoded(context.getProgrampid());
+        context.getTranscodingProcessInterface().markAsAlreadyTranscoded(context.getProgrampid(),context.getTranscodingTimestamp());
     }
 
     protected static <T extends TranscodingRecord> void transcodingFailed(TranscodeRequest request, SingleTranscodingContext<T> context, Exception e) {
