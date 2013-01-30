@@ -46,7 +46,7 @@ public abstract class TranscodingRecordDao<T extends TranscodingRecord> extends 
         Long previousTimestamp = record.getDomsLatestTimestamp();
         if (timestamp > previousTimestamp){
             record.setTranscodingState(TranscodingStateEnum.COMPLETE);
-            record.setLastTranscodedTimestamp(record.getDomsLatestTimestamp());
+            record.setLastTranscodedTimestamp(timestamp);
             update(record);
         }
     }
@@ -54,17 +54,25 @@ public abstract class TranscodingRecordDao<T extends TranscodingRecord> extends 
     @Override
     public void markAsFailed(String programpid,long timestamp, String message){
         T record = read(programpid);
-        record.setTranscodingState(TranscodingStateEnum.FAILED);
-        record.setFailureMessage(message);
-        update(record);
+        Long previousTimestamp = record.getDomsLatestTimestamp();
+        if (timestamp > previousTimestamp){
+            record.setTranscodingState(TranscodingStateEnum.FAILED);
+            record.setDomsLatestTimestamp(timestamp);
+            record.setFailureMessage(message);
+            update(record);
+        }
     }
 
     @Override
     public void markAsRejected(String programpid, long timestamp, String message){
         T record = read(programpid);
-        record.setTranscodingState(TranscodingStateEnum.REJECTED);
-        record.setFailureMessage(message);
-        update(record);
+        Long previousTimestamp = record.getDomsLatestTimestamp();
+        if (timestamp > previousTimestamp){
+            record.setTranscodingState(TranscodingStateEnum.REJECTED);
+            record.setDomsLatestTimestamp(timestamp);
+            record.setFailureMessage(message);
+            update(record);
+        }
     }
 
     @Override
