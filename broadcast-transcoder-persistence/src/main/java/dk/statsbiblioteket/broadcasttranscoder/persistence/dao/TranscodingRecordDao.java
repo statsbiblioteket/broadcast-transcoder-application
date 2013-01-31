@@ -33,7 +33,7 @@ public abstract class TranscodingRecordDao<T extends TranscodingRecord> extends 
     public void markAsChangedInDoms(String programpid, long timestamp){
         T record = readOrCreate(programpid);
         Long previousTimestamp = record.getDomsLatestTimestamp();
-        if (timestamp > previousTimestamp){
+        if (timestamp >= previousTimestamp){
             record.setDomsLatestTimestamp(timestamp);
             record.setTranscodingState(TranscodingStateEnum.PENDING);
             update(record);
@@ -44,7 +44,7 @@ public abstract class TranscodingRecordDao<T extends TranscodingRecord> extends 
     public void markAsAlreadyTranscoded(String programpid, long timestamp){
         T record = read(programpid);
         Long previousTimestamp = record.getDomsLatestTimestamp();
-        if (timestamp > previousTimestamp){
+        if (timestamp >= previousTimestamp){
             record.setTranscodingState(TranscodingStateEnum.COMPLETE);
             record.setLastTranscodedTimestamp(timestamp);
             update(record);
@@ -55,7 +55,7 @@ public abstract class TranscodingRecordDao<T extends TranscodingRecord> extends 
     public void markAsFailed(String programpid,long timestamp, String message){
         T record = read(programpid);
         Long previousTimestamp = record.getDomsLatestTimestamp();
-        if (timestamp > previousTimestamp){
+        if (timestamp >= previousTimestamp){
             record.setTranscodingState(TranscodingStateEnum.FAILED);
             record.setDomsLatestTimestamp(timestamp);
             record.setFailureMessage(message);
@@ -67,7 +67,7 @@ public abstract class TranscodingRecordDao<T extends TranscodingRecord> extends 
     public void markAsRejected(String programpid, long timestamp, String message){
         T record = read(programpid);
         Long previousTimestamp = record.getDomsLatestTimestamp();
-        if (timestamp > previousTimestamp){
+        if (timestamp >= previousTimestamp){
             record.setTranscodingState(TranscodingStateEnum.REJECTED);
             record.setDomsLatestTimestamp(timestamp);
             record.setFailureMessage(message);
