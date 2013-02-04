@@ -82,7 +82,7 @@ public class NearlineFileFinder implements FileFinder {
     }
 
     /**
-     * Given a list of files to bring online, bring them online and return a map listing their local locations.
+     * Given a list of files to bring online, bring them online and return true if success for all files.
      * @return
      */
     @Override
