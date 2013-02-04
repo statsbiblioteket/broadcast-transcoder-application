@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutException;
@@ -22,6 +23,8 @@ public class UnistreamAudioTranscoderProcessor extends ProcessorChainElement {
     private static Logger log = LoggerFactory.getLogger(UnistreamAudioTranscoderProcessor.class);
 
 
+
+
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         String command = "cat " + request.getClipperCommand() + " | " + getFfmpegCommandLine(request, context);
@@ -31,13 +34,13 @@ public class UnistreamAudioTranscoderProcessor extends ProcessorChainElement {
                 try {
                     long programLength = MetadataUtils.findProgramLengthMillis(request);
                     long timeout = (long) (programLength/context.getTranscodingTimeoutDivisor());
-                    log.debug("Setting transcoding timeout for '" + context.getProgrampid() + "' to " + timeout + "ms");
+                    log.debug("Setting transcoding timeout for '" + request.getObjectPid() + "' to " + timeout + "ms");
                     request.setTranscoderCommand(command);
                     ExternalJobRunner.runClipperCommand(timeout, command);
                 } catch (ExternalProcessTimedOutException e) {
                     log.warn("Deleting '" + outputFile + "'");
                     outputFile.delete();
-                    throw new ProcessorException("External process timed out for " + context.getProgrampid(),e);
+                    throw new ProcessorException("External process timed out for " + request.getObjectPid(),e);
                 }
     }
 

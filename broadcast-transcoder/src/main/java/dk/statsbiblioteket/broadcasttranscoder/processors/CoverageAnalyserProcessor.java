@@ -1,6 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.CalendarUtils;
@@ -10,25 +11,14 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
- * User: csr
- * Date: 9/28/12
- * Time: 10:50 AM
- * To change this template use File | Settings | File Templates.
+ * Calculated holes and overlaps from the clips. Creates the ProgramStructure element
  */
 public class CoverageAnalyserProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(CoverageAnalyserProcessor.class);
     private static int gapToleranceSeconds;
 
-    public CoverageAnalyserProcessor() {
-    }
 
-    public CoverageAnalyserProcessor(ProcessorChainElement childElement) {
-        super(childElement);
-    }
-
-    @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         gapToleranceSeconds = context.getGapToleranceSeconds();
         ProgramStructure localStructure = new ProgramStructure();
@@ -38,34 +28,34 @@ public class CoverageAnalyserProcessor extends ProcessorChainElement {
         findHolesAndOverlaps(request, context, localStructure);
     }
 
-    private void findMissingStart(TranscodeRequest request, SingleTranscodingContext context, ProgramStructure localProgramStructure) {
+    private void findMissingStart(TranscodeRequest request, InfrastructureContext context, ProgramStructure localProgramStructure) {
         long fileStartTime = request.getClips().get(0).getFileStartTime()/1000L;
         long programStartTime = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStart())/1000L;
         final long missing = fileStartTime - programStartTime;
         if ( missing > gapToleranceSeconds) {
-             logger.info("Program " + context.getProgrampid() + " is missing " + missing + " seconds" +
-                     "at start");
+            logger.info("Program " + request.getObjectPid() + " is missing " + missing + " seconds" +
+                    "at start");
             MissingStart ms = new MissingStart();
             ms.setMissingSeconds((int) missing);
             localProgramStructure.setMissingStart(ms);
         }
     }
 
-    private void findMissingEnd(TranscodeRequest request, SingleTranscodingContext context, ProgramStructure localProgramStructure) {
+    private void findMissingEnd(TranscodeRequest request, InfrastructureContext context, ProgramStructure localProgramStructure) {
         int iclips = request.getClips().size();
         long fileEndTime = request.getClips().get(iclips-1).getFileEndTime()/1000L;
         long programEndTime = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStop())/1000L;
         final long missing = programEndTime - fileEndTime;
         if (missing > gapToleranceSeconds) {
-                logger.info("Program " + context.getProgrampid() + " is missing " + missing + " seconds" +
-                     "at end");
+            logger.info("Program " + request.getObjectPid() + " is missing " + missing + " seconds" +
+                    "at end");
             MissingEnd me = new MissingEnd();
             me.setMissingSeconds((int) missing);
             localProgramStructure.setMissingEnd(me);
         }
     }
 
-    private void findHolesAndOverlaps(TranscodeRequest request, SingleTranscodingContext context, ProgramStructure localProgramStructure) throws ProcessorException {
+    private void findHolesAndOverlaps(TranscodeRequest request, InfrastructureContext context, ProgramStructure localProgramStructure) throws ProcessorException {
         ProgramStructure.Holes holes = new ProgramStructure.Holes();
         localProgramStructure.setHoles(holes);
         ProgramStructure.Overlaps overlaps = new ProgramStructure.Overlaps();
@@ -87,7 +77,7 @@ public class CoverageAnalyserProcessor extends ProcessorChainElement {
                     hole.setFile1UUID(firstEntry.getKey());
                     hole.setFile2UUID(secondEntry.getKey());
                     holes.getHole().add(hole);
-                    logger.debug("Added a hole for " + context.getProgrampid() + " " + hole.toString());
+                    logger.debug("Added a hole for " + request.getObjectPid() + " " + hole.toString());
                 }
                 if (overlapLength > gapToleranceSeconds) {
                     Overlap overlap = new Overlap();
@@ -110,7 +100,7 @@ public class CoverageAnalyserProcessor extends ProcessorChainElement {
                     logger.debug("program end  :" + programEndTime + " " + request.getProgramBroadcast().getTimeStop());
                     logger.debug("first file end :" + firstEntryEnd + " " + firstEntry.getValue().getStopTime());
                     logger.debug("second file start :" + secondEntryStart + " " + secondEntry.getValue().getStartTime());
-                    logger.debug("Added an overlap for " + context.getProgrampid() + " " + overlap.toString());
+                    logger.debug("Added an overlap for " + request.getObjectPid()+ " " + overlap.toString());
                 }
             }
         }

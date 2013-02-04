@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.TranscodingProcessInterface;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
@@ -55,34 +56,34 @@ public class DomsAndOverwriteExaminerProcessor extends ProcessorChainElement {
     @Override
     public void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
 
-        final String pid = context.getProgrampid();
+        final String pid = request.getObjectPid();
 
 
         if (FileUtils.hasMediaOutputFile(request, context)) { //file exists
             if ( !context.isOverwrite()){
-                logger.info("Context is no-overwrite and media file exists so no need to transcode for " + context.getProgrampid());
+                logger.info("Context is no-overwrite and media file exists so no need to transcode for " + request.getObjectPid());
                 request.setGoForTranscoding(false);
                 return;
             }
         } else { //no file
             //skip the test if something have changed, we should definitely transcode
-            logger.info("No existing media file was found, so transcoding will be instantiated for " + context.getProgrampid());
+            logger.info("No existing media file was found, so transcoding will be instantiated for " + request.getObjectPid());
             request.setGoForTranscoding(true);
             return;
         }
-        logger.debug("Media file exists, checking whether program record in DOMS has significant changes for " + context.getProgrampid());
+        logger.debug("Media file exists, checking whether program record in DOMS has significant changes for " + request.getObjectPid());
 
         long timeStampOfNewChange = context.getTranscodingTimestamp();
         logger.info("Transcode doms record for " + pid + " timestamp " + timeStampOfNewChange + "=" + new Date(timeStampOfNewChange));
         TranscodingProcessInterface persister = context.getTranscodingProcessInterface();
-        Long oldTranscodingTimestamp = persister.getLatestTranscodingTimestamp(context.getProgrampid());
+        Long oldTranscodingTimestamp = persister.getLatestTranscodingTimestamp(request.getObjectPid());
         logger.info("Previous transcoding timestamp for " + pid + " is " + oldTranscodingTimestamp + "=" + new Date(oldTranscodingTimestamp));
 
         CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);
 
         ViewBundle bundle = null;
         try {
-            bundle = doms.getViewBundle(context.getProgrampid(), context.getDomsViewAngle());
+            bundle = doms.getViewBundle(request.getObjectPid(), context.getDomsViewAngle());
         } catch (InvalidCredentialsException e) {
             throw new ProcessorException("Invalid credentials to get the object bundle for pid " +  pid, e);
         } catch (InvalidResourceException e) {

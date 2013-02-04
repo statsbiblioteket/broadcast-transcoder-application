@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
@@ -10,18 +11,11 @@ import java.io.File;
 import java.util.Map;
 
 /**
- * Ideally this information should be readily extractable from the supplied metadata.
+ * This processor calculates the bitrate from the file length and duration, and determines the type from the filename
  */
 public class FilePropertiesIdentifierProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(FilePropertiesIdentifierProcessor.class);
-
-    public FilePropertiesIdentifierProcessor() {
-    }
-
-    public FilePropertiesIdentifierProcessor(ProcessorChainElement childElement) {
-        super(childElement);
-    }
 
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
@@ -31,7 +25,7 @@ public class FilePropertiesIdentifierProcessor extends ProcessorChainElement {
         Long duration = entry.getKey().getStopTime().toGregorianCalendar().getTimeInMillis()
                 - entry.getKey().getStartTime().toGregorianCalendar().getTimeInMillis();
         Long bitrate = fileLength/(duration/1000L) ;
-        logger.info("Setting bitrate for " + context.getProgrampid() + " to " + bitrate + " bytes/second");
+        logger.info("Setting bitrate for " + request.getObjectPid() + " to " + bitrate + " bytes/second");
         request.setBitrate(bitrate);
         String filename = entry.getValue().getName();
         FileFormatEnum format = null;

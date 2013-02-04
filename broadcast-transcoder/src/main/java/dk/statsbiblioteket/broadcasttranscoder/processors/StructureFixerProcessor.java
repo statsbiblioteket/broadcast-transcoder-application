@@ -7,6 +7,7 @@
  */
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.*;
 import org.slf4j.Logger;
@@ -15,16 +16,13 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.List;
 
+/**
+ * Fixing overlaps by modifying the clips so that nothing is duplicated.
+ */
 public class StructureFixerProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(StructureFixerProcessor.class);
 
-    public StructureFixerProcessor() {
-    }
-
-    public StructureFixerProcessor(ProcessorChainElement childElement) {
-        super(childElement);
-    }
 
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
@@ -96,7 +94,7 @@ public class StructureFixerProcessor extends ProcessorChainElement {
         MissingStart missingStart = request.getLocalProgramStructure().getMissingStart();
         if (missingStart != null && missingStart.getMissingSeconds() > context.getMaxMissingStart()) {
             final String s = missingStart.getMissingSeconds() + " missing seconds at start for " +
-                    context.getProgrampid() + " is more than permitted. Exiting.";
+                    request.getObjectPid() + " is more than permitted. Exiting.";
             logger.info(s);
             request.setRejected(true);
             this.setChildElement(null);
@@ -107,7 +105,7 @@ public class StructureFixerProcessor extends ProcessorChainElement {
         MissingEnd missingEnd = request.getLocalProgramStructure().getMissingEnd();
         if (missingEnd != null && missingEnd.getMissingSeconds() > context.getMaxMissingEnd()) {
             final String s = missingEnd.getMissingSeconds() + " missing seconds at end for " +
-                    context.getProgrampid() + " is more than permitted. Exiting.";
+                    request.getObjectPid() + " is more than permitted. Exiting.";
             logger.info(s);
             request.setRejected(true);
             this.setChildElement(null);

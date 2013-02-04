@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ public class ClipConcatenatorProcessor extends ProcessorChainElement  {
             } else if (iclip == clipSize - 1 && clipSize != 1) {   //last clip in multiclip program
                 String skipString = "";
                 if (clip.getStartOffsetBytes() != null && clip.getStartOffsetBytes() != 0L) {
-                    logger.warn("Found non-zero offset outside first clip for '" + context.getProgrampid());
+                    logger.warn("Found non-zero offset outside first clip for '" + request.getObjectPid());
                     skipString = " skip=" + (clip.getStartOffsetBytes())/blocksize + " ";
                 }
                 if (clipLength != null) {
@@ -49,7 +50,7 @@ public class ClipConcatenatorProcessor extends ProcessorChainElement  {
             } else {   //A file in the middle of a program so take the whole file
                 String skipString = "";
                 if (clip.getStartOffsetBytes() != null && clip.getStartOffsetBytes() != 0L) {
-                    logger.warn("Found non-zero offset outside first clip for '" + context.getProgrampid());
+                    logger.warn("Found non-zero offset outside first clip for '" + request.getObjectPid());
                     skipString = " skip=" + clip.getStartOffsetBytes()/blocksize + " ";
                 }
                 processSubstitutionFileList += " <(dd if=" + clip.getFilepath() + " bs=" + blocksize + skipString + ") ";

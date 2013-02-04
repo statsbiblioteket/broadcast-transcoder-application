@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class ZeroLengthCheckerProcessor extends ProcessorChainElement {
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         File outputFile = FileUtils.getFinalMediaOutputFile(request, context);
         if (outputFile == null) {
-            final String message = "null output file found for " + context.getProgrampid();
+            final String message = "null output file found for " + request.getObjectPid();
             logger.error(message);
             throw new ProcessorException(message);
         } else if (outputFile.length() == 0) {

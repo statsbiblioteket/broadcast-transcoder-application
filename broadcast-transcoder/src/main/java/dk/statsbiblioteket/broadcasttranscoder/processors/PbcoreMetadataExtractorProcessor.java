@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
@@ -10,11 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 /**
- * Created with IntelliJ IDEA.
- * User: csr
- * Date: 12/4/12
- * Time: 2:19 PM
- * To change this template use File | Settings | File Templates.
+ * This processor requests the PBCORE datastream from doms and extracts the title and whether or not we have TVMETER metadata
  */
 public class PbcoreMetadataExtractorProcessor extends ProcessorChainElement {
     private static Logger logger = LoggerFactory.getLogger(PbcoreMetadataExtractorProcessor.class);
@@ -24,9 +21,9 @@ public class PbcoreMetadataExtractorProcessor extends ProcessorChainElement {
         CentralWebservice domsAPI = CentralWebserviceFactory.getServiceInstance(context);
         String structureXmlString = null;
         try {
-            structureXmlString = domsAPI.getDatastreamContents(context.getProgrampid(), "PBCORE");
+            structureXmlString = domsAPI.getDatastreamContents(request.getObjectPid(), "PBCORE");
         } catch (Exception e) {
-            throw new ProcessorException("Failed to get PBCORE for "+context.getProgrampid(),e);
+            throw new ProcessorException("Failed to get PBCORE for "+request.getObjectPid(),e);
         }
         request.setTvmeter(hasTvmeter(structureXmlString));
         request.setTitle(getTitle(structureXmlString));

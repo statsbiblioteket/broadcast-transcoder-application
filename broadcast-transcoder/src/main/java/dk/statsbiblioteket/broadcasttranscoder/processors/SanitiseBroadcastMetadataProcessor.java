@@ -1,16 +1,14 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
 
 import java.util.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: csr
- * Date: 12/21/12
- * Time: 2:36 PM
- * To change this template use File | Settings | File Templates.
+ * This processor finds the source filetype with the best format, and removes the others from the list. This is to
+ * handle the programs that overlap changes in broadcast type, such as going from analog to digital.
  */
 public class SanitiseBroadcastMetadataProcessor extends ProcessorChainElement {
 

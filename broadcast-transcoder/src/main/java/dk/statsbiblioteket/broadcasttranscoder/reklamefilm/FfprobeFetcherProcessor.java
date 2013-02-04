@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.reklamefilm;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.FfprobeType;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
@@ -35,7 +36,7 @@ public class FfprobeFetcherProcessor extends ProcessorChainElement {
         String fileObjectPid = null;
         List<Relation> relations = null;
         try {
-            relations = domsApi.getRelations(context.getProgrampid());
+            relations = domsApi.getRelations(request.getObjectPid());
         } catch (Exception e) {
             throw new RuntimeException("", e);
         }
@@ -50,10 +51,10 @@ public class FfprobeFetcherProcessor extends ProcessorChainElement {
             logger.debug("Found file metadata '" + fileObjectPid + "' :\n" + broadcastMetadataXml);
             ffprobe = JAXBContext.newInstance(FfprobeType.class).createUnmarshaller().unmarshal(new StreamSource(new StringReader(broadcastMetadataXml)), FfprobeType.class).getValue();
         } catch (Exception e) {
-            throw new ProcessorException("Failed to get Broadcast Metadata for "+context.getProgrampid(),e);
+            throw new ProcessorException("Failed to get Broadcast Metadata for "+request.getObjectPid(),e);
         }
         Float duration = ffprobe.getFormat().getDuration();
         request.setFfprobeDurationSeconds(duration);
-        context.setSnapshotPaddingSeconds(1);
+        request.setSnapshotPaddingSeconds(1);
     }
 }

@@ -18,10 +18,10 @@ public class BroadcastTranscodingRecordEnricherProcessor extends ProcessorChainE
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
         BroadcastTranscodingRecordDAO dao = new BroadcastTranscodingRecordDAO(util);
-        BroadcastTranscodingRecord record = dao.read(context.getProgrampid());
+        BroadcastTranscodingRecord record = dao.read(request.getObjectPid());
         if (record == null) {
             throw new ProcessorException("Attempted to enrich metadata for a non-existent database " +
-                    "record for pid " + context.getProgrampid());
+                    "record for pid " + request.getObjectPid());
         }
         record.setTvmeter(request.isTvmeter());
         record.setBroadtcastStartTime(MetadataUtils.getProgramStart(request));

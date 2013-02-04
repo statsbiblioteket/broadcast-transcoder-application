@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramBroadcast;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramStructure;
@@ -17,43 +18,38 @@ import java.io.StringReader;
 
 
 /**
- *
+ * This processor requests the existing PROGRAM_STRUCTURE and PROGRAM_BROADCAST and adds them to the request
  */
 public class ProgramMetadataFetcherProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(ProgramMetadataFetcherProcessor.class);
 
-    public ProgramMetadataFetcherProcessor() {
-    }
 
-    public ProgramMetadataFetcherProcessor(ProcessorChainElement childElement) {
-        super(childElement);
-    }
 
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-        ProgramBroadcast programBroadcast = getProgramBroadcast(context);
+        ProgramBroadcast programBroadcast = getProgramBroadcast(request,context);
         request.setProgramBroadcast(programBroadcast);
-        ProgramStructure programStructure = getProgramStructure(context);
+        ProgramStructure programStructure = getProgramStructure(request,context);
         request.setDomsProgramStructure(programStructure);
 
     }
 
 
 
-    private ProgramStructure getProgramStructure(SingleTranscodingContext context) throws ProcessorException {
+    private ProgramStructure getProgramStructure(TranscodeRequest request,InfrastructureContext context) throws ProcessorException {
         CentralWebservice domsAPI = CentralWebserviceFactory.getServiceInstance(context);
         String structureXmlString = null;
         try {
             try {
-                structureXmlString = domsAPI.getDatastreamContents(context.getProgrampid(), "PROGRAM_STRUCTURE");
+                structureXmlString = domsAPI.getDatastreamContents(request.getObjectPid(), "PROGRAM_STRUCTURE");
             } catch (InvalidResourceException e) {
-               logger.info("No PROGRAM_STRUCTURE datastream in " + context.getProgrampid());
+               logger.info("No PROGRAM_STRUCTURE datastream in " + request.getObjectPid());
                return null;
             }
-            logger.debug("Program Structure for " + context.getProgrampid() + "\n" + structureXmlString);
+            logger.debug("Program Structure for " + request.getObjectPid() + "\n" + structureXmlString);
         } catch (Exception e) {
-            throw new ProcessorException("Failed to get Program Structure for "+context.getProgrampid(),e);
+            throw new ProcessorException("Failed to get Program Structure for "+request.getObjectPid(),e);
         }
         ProgramStructure programStructure = null;
         try {
@@ -62,19 +58,19 @@ public class ProgramMetadataFetcherProcessor extends ProcessorChainElement {
             JAXBContext jaxbContext = JAXBContext.newInstance(ProgramStructure.class);
             programStructure = jaxbContext.createUnmarshaller().unmarshal(new StreamSource(new StringReader(structureXmlString)), ProgramStructure.class).getValue();
         } catch (Exception e) {
-            throw new ProcessorException("Failed to unmarshal ProgramStructure for "+context.getProgrampid(),e);
+            throw new ProcessorException("Failed to unmarshal ProgramStructure for "+request.getObjectPid(),e);
          }
         return programStructure;
     }
 
-    private ProgramBroadcast getProgramBroadcast(SingleTranscodingContext context) throws ProcessorException {
+    private ProgramBroadcast getProgramBroadcast(TranscodeRequest request,InfrastructureContext context) throws ProcessorException {
         CentralWebservice domsAPI = CentralWebserviceFactory.getServiceInstance(context);
         String broadcastXmlString = null;
         try {
-            broadcastXmlString = domsAPI.getDatastreamContents(context.getProgrampid(), "PROGRAM_BROADCAST");
-            logger.debug("Broadcast Structure for " + context.getProgrampid() + "\n" + broadcastXmlString);
+            broadcastXmlString = domsAPI.getDatastreamContents(request.getObjectPid(), "PROGRAM_BROADCAST");
+            logger.debug("Broadcast Structure for " +request.getObjectPid() + "\n" + broadcastXmlString);
         } catch (Exception e) {
-            throw new ProcessorException("Failed to get Broadcast Structure for " + context.getProgrampid(),e);
+            throw new ProcessorException("Failed to get Broadcast Structure for " + request.getObjectPid(),e);
         }
         ProgramBroadcast programBroadcast = null;
         try {
@@ -90,7 +86,7 @@ public class ProgramMetadataFetcherProcessor extends ProcessorChainElement {
             //JaxbWrapper<ProgramBroadcast> programBroadcastWrapper = new JaxbWrapper<ProgramBroadcast>(resource,ProgramBroadcast.class);
             //programBroadcast = programBroadcastWrapper.xmlToObject(broadcastXmlString);
         } catch (Exception e) {
-            throw new ProcessorException("Fault barrier for "+context.getProgrampid(),e);
+            throw new ProcessorException("Fault barrier for "+request.getObjectPid(),e);
          }
         return programBroadcast;
     }

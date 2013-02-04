@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.MetadataUtils;
@@ -21,12 +22,6 @@ import java.util.Date;
  */
 public class TranscoderPersistenceProcessor extends ProcessorChainElement {
 
-    public TranscoderPersistenceProcessor() {
-    }
-
-    public TranscoderPersistenceProcessor(ProcessorChainElement childElement) {
-        super(childElement);
-    }
 
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
@@ -63,7 +58,7 @@ public class TranscoderPersistenceProcessor extends ProcessorChainElement {
             info.setMediaType(MediaTypeEnum.FLV);
         }
         info.setTranscodeCommandLine(request.getTranscoderCommand());
-        info.setShardUuid(context.getProgrampid());
+        info.setShardUuid(request.getObjectPid());
         info.setNote("shardUuid is actually programUuid");
         new ProgramMediaInfoDAO(HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath())).create(info);
     }

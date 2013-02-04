@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
 
@@ -7,17 +8,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
+ * The processor sorts the BroadcastMetadata according the startTime
  */
 public class BroadcastMetadataSorterProcessor extends ProcessorChainElement {
 
-
-    public BroadcastMetadataSorterProcessor() {
-    }
-
-    public BroadcastMetadataSorterProcessor(ProcessorChainElement childElement) {
-        super(childElement);
-    }
 
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {

@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
@@ -17,36 +18,29 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * This processor extracts the file pids from DOMS and a adds the BROADCAST_METADATA datastreams to the request-
  */
 public class FileMetadataFetcherProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(FileMetadataFetcherProcessor.class);
-
-    public FileMetadataFetcherProcessor() {
-    }
-
-    public FileMetadataFetcherProcessor(ProcessorChainElement childElement) {
-        super(childElement);
-    }
 
     private static final String HAS_FILE_RELATION = "http://doms.statsbiblioteket.dk/relations/default/0/1/#hasFile";
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         List<String> fileObjectPids = null;
         try {
-            fileObjectPids = findFileObjects(context);
+            fileObjectPids = findFileObjects(request,context);
         } catch (Exception e) {
-           throw new ProcessorException("Failed to find file objects for "+context.getProgrampid(),e);
+           throw new ProcessorException("Failed to find file objects for "+request.getObjectPid(),e);
         }
         if (fileObjectPids.isEmpty()) {
-            throw new ProcessorException("No file-object relations for program " + context.getProgrampid());
+            throw new ProcessorException("No file-object relations for program " + request.getObjectPid());
         }
         List<BroadcastMetadata> broadcastMetadata = getBroadcastMetadata(fileObjectPids, context, request);
         request.setBroadcastMetadata(broadcastMetadata);
     }
 
-    private List<BroadcastMetadata> getBroadcastMetadata(List<String> fileObjectPids, SingleTranscodingContext context, TranscodeRequest request) throws ProcessorException {
+    private List<BroadcastMetadata> getBroadcastMetadata(List<String> fileObjectPids, InfrastructureContext context, TranscodeRequest request) throws ProcessorException {
         Map<String, BroadcastMetadata> pidMap = new HashMap<String, BroadcastMetadata>();
         CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);
         List<BroadcastMetadata> broadcastMetadataList = new ArrayList<BroadcastMetadata>();
@@ -57,7 +51,7 @@ public class FileMetadataFetcherProcessor extends ProcessorChainElement {
                 logger.debug("Found file metadata '" + fileObjectPid + "' :\n" + broadcastMetadataXml);
                 broadcastMetadata = JAXBContext.newInstance(BroadcastMetadata.class).createUnmarshaller().unmarshal(new StreamSource(new StringReader(broadcastMetadataXml)), BroadcastMetadata.class).getValue();
             } catch (Exception e) {
-                throw new ProcessorException("Failed to get Broadcast Metadata for "+context.getProgrampid(),e);
+                throw new ProcessorException("Failed to get Broadcast Metadata for "+request.getObjectPid(),e);
             }
             broadcastMetadataList.add(broadcastMetadata);
             pidMap.put(fileObjectPid, broadcastMetadata);
@@ -67,10 +61,10 @@ public class FileMetadataFetcherProcessor extends ProcessorChainElement {
     }
 
 
-    private List<String> findFileObjects(SingleTranscodingContext context) throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
+    private List<String> findFileObjects(TranscodeRequest request,InfrastructureContext context) throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);
         List<String> fileObjectPids = new ArrayList<String>();
-        List<Relation> relations = doms.getRelations(context.getProgrampid());
+        List<Relation> relations = doms.getRelations(request.getObjectPid());
         for (Relation relation: relations) {
             if (relation.getPredicate().equals(HAS_FILE_RELATION)) {
                   fileObjectPids.add(relation.getObject());

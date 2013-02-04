@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.NearlineFileFinder;
 import org.slf4j.Logger;
@@ -12,13 +13,6 @@ public class FilefinderProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(FilefinderProcessor.class);
 
-
-    public FilefinderProcessor() {
-    }
-
-    public FilefinderProcessor(ProcessorChainElement childElement) {
-        super(childElement);
-    }
 
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
