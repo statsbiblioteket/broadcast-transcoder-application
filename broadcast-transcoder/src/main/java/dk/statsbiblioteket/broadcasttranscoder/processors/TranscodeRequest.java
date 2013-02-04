@@ -19,6 +19,10 @@ import java.util.Set;
  * To change this template use File | Settings | File Templates.
  */
 public class TranscodeRequest {
+
+
+    private int snapshotPaddingSeconds;
+
     public ProgramBroadcast getProgramBroadcast() {
         return programBroadcast;
     }
@@ -266,6 +270,16 @@ public class TranscodeRequest {
 
     private boolean isRejected = false;
 
+    private String objectPid;
+
+    public String getObjectPid() {
+        return objectPid;
+    }
+
+    public void setObjectPid(String objectPid) {
+        this.objectPid = objectPid;
+    }
+
     public boolean isRejected() {
         return isRejected;
     }
@@ -303,6 +317,14 @@ public class TranscodeRequest {
                 ", isTvmeter=" + isTvmeter +
                 ", title='" + title + '\'' +
                 '}';
+    }
+
+    public void setSnapshotPaddingSeconds(int snapshotPaddingSeconds) {
+        this.snapshotPaddingSeconds = snapshotPaddingSeconds;
+    }
+
+    public int getSnapshotPaddingSeconds() {
+        return snapshotPaddingSeconds;
     }
 
     /**
