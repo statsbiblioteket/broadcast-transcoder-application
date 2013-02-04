@@ -77,7 +77,7 @@ public class ReklamefilmTranscoderApplication extends TranscoderApplication {
             transcodingFailed(request,context,e);
             //Fault barrier. This is necessary because an uncaught RuntimeException will otherwise not log the pid it
             //failed on.
-            logger.error("Error processing " + context.getProgrampid(), e);
+            logger.error("Error processing " + request.getObjectPid(), e);
 
             throw(e);
         } finally {

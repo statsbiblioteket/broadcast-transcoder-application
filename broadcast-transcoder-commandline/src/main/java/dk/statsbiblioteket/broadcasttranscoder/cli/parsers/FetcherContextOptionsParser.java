@@ -1,12 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder.cli.parsers;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
-import dk.statsbiblioteket.broadcasttranscoder.cli.contexts.FetcherContext;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.BroadcastTranscodingRecordDAO;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.ReklamefilmTranscodingRecordDAO;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.TranscodingProcessInterface;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.TranscodingRecordDao;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
+import dk.statsbiblioteket.broadcasttranscoder.cli.FetcherContext;
 import org.apache.commons.cli.*;
 
 import java.io.File;
