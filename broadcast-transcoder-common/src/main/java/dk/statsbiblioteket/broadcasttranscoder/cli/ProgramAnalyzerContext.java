@@ -4,6 +4,8 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import org.apache.log4j.helpers.CyclicBuffer;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,10 +21,16 @@ public class ProgramAnalyzerContext<T extends TranscodingRecord> extends SingleT
     private List<String> pidList;
 
     public Map<String, Long> getFileLengthList() {
+        if (fileLengthList == null){
+            fileLengthList = new HashMap<String, Long>();
+        }
         return fileLengthList;
     }
 
     public List<String> getPidList() {
+        if (pidList == null){
+            pidList = new ArrayList<String>();
+        }
         return pidList;
     }
 }

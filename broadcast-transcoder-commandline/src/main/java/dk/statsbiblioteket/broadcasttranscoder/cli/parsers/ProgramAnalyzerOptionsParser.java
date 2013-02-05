@@ -27,6 +27,8 @@ public class ProgramAnalyzerOptionsParser<T extends TranscodingRecord> extends I
     public ProgramAnalyzerOptionsParser() {
         super();
         context = new ProgramAnalyzerContext<T>();
+        getOptions().addOption(PROGRAMS);
+        getOptions().addOption(FILESIZES);
 
     }
 
