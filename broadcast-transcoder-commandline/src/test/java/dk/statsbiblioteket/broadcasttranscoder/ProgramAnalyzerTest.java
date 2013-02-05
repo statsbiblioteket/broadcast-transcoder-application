@@ -20,9 +20,11 @@ public class ProgramAnalyzerTest {
         String hibernate = new File(Thread.currentThread().getContextClassLoader().getResource("hibernate-derby.xml").toURI()).getAbsolutePath();
         String programsList = new File(Thread.currentThread().getContextClassLoader().getResource("programAnalyzerProgramList.txt").toURI()).getAbsolutePath();
         String fileSizes = new File(Thread.currentThread().getContextClassLoader().getResource("fileSizeList.txt").toURI()).getAbsolutePath();
+        String behaivor = new File(Thread.currentThread().getContextClassLoader().getResource("bta.behaviour.properties").toURI()).getAbsolutePath();
         String[] args = new String[]{
                 "--infrastructure_configfile="+infraProperties
                 ,"--hibernate_configfile="+hibernate
+                ,"--behavioural_configfile="+behaivor
                 ,"--programList="+programsList
                 ,"--fileSizes="+fileSizes
         };
