@@ -46,7 +46,7 @@
         </encoder>
     </appender>
 
-    <logger name="dk.statsbiblioteket.broadcasttranscoder" level="INFO"/>
+    <logger name="dk.statsbiblioteket.broadcasttranscoder" level="DEBUG"/>
     <logger name="ch.qos.logback" level="WARN"/>"
     <logger name="org.hibernate.SQL" level="WARN"/>
     <logger name="org.hibernate.type" level="WARN"/>

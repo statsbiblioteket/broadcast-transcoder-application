@@ -24,7 +24,7 @@ public class BroadcastTranscodingRecordEnricherProcessor extends ProcessorChainE
                     "record for pid " + context.getProgrampid());
         }
         record.setTvmeter(request.isTvmeter());
-        record.setBroadtcastStartTime(MetadataUtils.getProgramStart(request));
+        record.setBroadcastStartTime(MetadataUtils.getProgramStart(request));
         record.setBroadcastEndTime(MetadataUtils.getProgramEnd(request));
         record.setChannel(request.getProgramBroadcast().getChannelId());
         record.setEndOffset(request.getEndOffsetUsed());

@@ -59,7 +59,7 @@ echo "number of programs to transcode is $programs"
 
 machineIndex=0
 counter=1
-while read uuid time; do
+while read uuid time rest; do
     echo "Transcoding program $counter of $programs"
     echo "Processing $uuid" "$time"
     ((counter++))
@@ -110,9 +110,9 @@ while read uuid time; do
             fi
         done
         sleep 2
-        echo
+        [ $debug = 1 ] && echo
     done
-    echo
+    [ $debug = 1 ] && echo
 done < $changes
 
 while ( true ); do

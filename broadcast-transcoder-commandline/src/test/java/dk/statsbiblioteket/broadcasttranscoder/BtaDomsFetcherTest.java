@@ -8,13 +8,16 @@ import dk.statsbiblioteket.doms.central.MethodFailedException;
 import dk.statsbiblioteket.doms.central.RecordDescription;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
 
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -25,6 +28,10 @@ import static org.junit.Assert.assertTrue;
  * To change this template use File | Settings | File Templates.
  */
 public class BtaDomsFetcherTest {
+
+    @Rule
+    public final ExpectedSystemExit exit = ExpectedSystemExit.none();
+
 
     @Before
     public void setUp() {
@@ -37,14 +44,19 @@ public class BtaDomsFetcherTest {
 
     @Test
     public void testMain() throws Exception {
-            BtaDomsFetcher.main(
-                    new String[]{
-                            "-infrastructure_configfile",
-                            new File(Thread.currentThread().getContextClassLoader().getResource("bta.infrastructure.properties").toURI()).toString(),
-                            "-behavioural_configfile",
-                            new File(Thread.currentThread().getContextClassLoader().getResource("bta.fetcher.properties").toURI()).toString(),
-                            "-since", "0"
-                    });
+        exit.expectSystemExitWithStatus(0);
+        final File infrastructureFile = new File(Thread.currentThread().getContextClassLoader().getResource("bta.infrastructure.properties").toURI());
+        final File behaviouralFile = new File(Thread.currentThread().getContextClassLoader().getResource("bta.fetcher.properties").toURI());
+        assertTrue(infrastructureFile.getAbsolutePath() + " should exist.", infrastructureFile.exists());
+        assertTrue(behaviouralFile.getAbsolutePath() + " should exist.", behaviouralFile.exists());
+        BtaDomsFetcher.main(
+                new String[]{
+                        "-infrastructure_configfile",
+                        infrastructureFile.toString(),
+                        "-behavioural_configfile",
+                        behaviouralFile.toString(),
+                        "-since", "0"
+                });
     }
 
     @Test

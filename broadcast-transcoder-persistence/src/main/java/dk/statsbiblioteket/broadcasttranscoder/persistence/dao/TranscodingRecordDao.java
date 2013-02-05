@@ -33,7 +33,7 @@ public abstract class TranscodingRecordDao<T extends TranscodingRecord> extends 
     public void markAsChangedInDoms(String programpid, long timestamp){
         T record = readOrCreate(programpid);
         Long previousTimestamp = record.getDomsLatestTimestamp();
-        if (timestamp >= previousTimestamp){
+        if (previousTimestamp == null || timestamp > previousTimestamp){
             record.setDomsLatestTimestamp(timestamp);
             record.setTranscodingState(TranscodingStateEnum.PENDING);
             update(record);

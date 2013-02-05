@@ -76,6 +76,10 @@ public class DomsAndOverwriteExaminerProcessor extends ProcessorChainElement {
         logger.info("Transcode doms record for " + pid + " timestamp " + timeStampOfNewChange + "=" + new Date(timeStampOfNewChange));
         TranscodingProcessInterface persister = context.getTranscodingProcessInterface();
         Long oldTranscodingTimestamp = persister.getLatestTranscodingTimestamp(context.getProgrampid());
+        if (oldTranscodingTimestamp == null) {
+            logger.info("Using default transcoding timestamp for " + pid);
+            oldTranscodingTimestamp = context.getDefaultTranscodingTimestamp();
+        }
         logger.info("Previous transcoding timestamp for " + pid + " is " + oldTranscodingTimestamp + "=" + new Date(oldTranscodingTimestamp));
 
         CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);

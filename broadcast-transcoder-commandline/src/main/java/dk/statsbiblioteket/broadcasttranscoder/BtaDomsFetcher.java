@@ -64,17 +64,6 @@ public class BtaDomsFetcher {
             System.exit(5);
         }
 
-
-        try {
-
-
-        } catch (Exception e){
-            e.printStackTrace();
-            System.exit(1);
-
-
-        } finally {
-        }
     }
 
 

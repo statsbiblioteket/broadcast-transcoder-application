@@ -39,7 +39,7 @@
 
 
         <!-- THIS PROPERTY MUST BE SET TO "VALIDATE" OR LEFT UNSET IN PRODUCTIONS -->
-        <property name="hbm2ddl.auto">validate</property>
+        <property name="hbm2ddl.auto">update</property>
 
 
         <!--

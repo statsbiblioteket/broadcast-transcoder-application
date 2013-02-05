@@ -58,7 +58,7 @@ public class BroadcastTranscodingRecordDAOTest2  {
 
         record.setTvmeter(false);
 
-        record.setBroadtcastStartTime(new Date(new Date().getTime()-10000));
+        record.setBroadcastStartTime(new Date(new Date().getTime() - 10000));
         record.setBroadcastEndTime(new Date(new Date().getTime()));
         record.setChannel("DR1");
         record.setEndOffset(300);

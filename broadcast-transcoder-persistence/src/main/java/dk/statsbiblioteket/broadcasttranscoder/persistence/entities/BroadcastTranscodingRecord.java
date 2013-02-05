@@ -1,7 +1,5 @@
 package dk.statsbiblioteket.broadcasttranscoder.persistence.entities;
 
-import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingStateEnum;
-
 import javax.persistence.*;
 import java.util.Date;
 
@@ -15,7 +13,7 @@ public class BroadcastTranscodingRecord extends TranscodingRecord{
     private boolean isTvmeter;
     private int startOffset;
     private int endOffset;
-    private Date broadtcastStartTime;
+    private Date broadcastStartTime;
     private Date broadcastEndTime;
     private String title;
     private String channel;
@@ -56,12 +54,12 @@ public class BroadcastTranscodingRecord extends TranscodingRecord{
         this.endOffset = endOffset;
     }
 
-    public Date getBroadtcastStartTime() {
-        return broadtcastStartTime;
+    public Date getBroadcastStartTime() {
+        return broadcastStartTime;
     }
 
-    public void setBroadtcastStartTime(Date broadtcastStartTime) {
-        this.broadtcastStartTime = broadtcastStartTime;
+    public void setBroadcastStartTime(Date broadcastStartTime) {
+        this.broadcastStartTime = broadcastStartTime;
     }
 
     public Date getBroadcastEndTime() {
@@ -102,7 +100,7 @@ public class BroadcastTranscodingRecord extends TranscodingRecord{
         if (startOffset != that.startOffset) return false;
         if (broadcastEndTime != null ? !broadcastEndTime.equals(that.broadcastEndTime) : that.broadcastEndTime != null)
             return false;
-        if (broadtcastStartTime != null ? !broadtcastStartTime.equals(that.broadtcastStartTime) : that.broadtcastStartTime != null)
+        if (broadcastStartTime != null ? !broadcastStartTime.equals(that.broadcastStartTime) : that.broadcastStartTime != null)
             return false;
         if (channel != null ? !channel.equals(that.channel) : that.channel != null) return false;
         if (title != null ? !title.equals(that.title) : that.title != null) return false;
@@ -119,7 +117,7 @@ public class BroadcastTranscodingRecord extends TranscodingRecord{
         result = 31 * result + (isTvmeter ? 1 : 0);
         result = 31 * result + startOffset;
         result = 31 * result + endOffset;
-        result = 31 * result + (broadtcastStartTime != null ? broadtcastStartTime.hashCode() : 0);
+        result = 31 * result + (broadcastStartTime != null ? broadcastStartTime.hashCode() : 0);
         result = 31 * result + (broadcastEndTime != null ? broadcastEndTime.hashCode() : 0);
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (channel != null ? channel.hashCode() : 0);
@@ -134,7 +132,7 @@ public class BroadcastTranscodingRecord extends TranscodingRecord{
                 ", isTvmeter=" + isTvmeter +
                 ", startOffset=" + startOffset +
                 ", endOffset=" + endOffset +
-                ", broadtcastStartTime=" + broadtcastStartTime +
+                ", broadtcastStartTime=" + broadcastStartTime +
                 ", broadcastEndTime=" + broadcastEndTime +
                 ", title='" + title + '\'' +
                 ", channel='" + channel + '\'' +
