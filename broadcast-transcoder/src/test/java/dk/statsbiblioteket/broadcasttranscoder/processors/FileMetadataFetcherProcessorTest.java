@@ -32,7 +32,7 @@ public class FileMetadataFetcherProcessorTest  {
         FileMetadataFetcherProcessor processor = new FileMetadataFetcherProcessor();
         TranscodeRequest request = new TranscodeRequest();
         SingleTranscodingContext context = new SingleTranscodingContext();
-        context.setProgrampid("uuid:d82107be-20cf-4524-b611-07d8534b97f8");
+        request.setObjectPid("uuid:d82107be-20cf-4524-b611-07d8534b97f8");
         context.setDomsEndpoint("http://carme:7880/centralWebservice-service/central/");
         context.setDomsUsername("fedoraAdmin");
         context.setDomsPassword("spD68ZJl");

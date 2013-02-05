@@ -101,11 +101,13 @@ public class BroadcastMetadataSorterProcessorTest {
     @Test
     public void testSort() throws ProcessorException {
         SingleTranscodingContext context = new SingleTranscodingContext();
-        context.setProgrampid("uuid:d82107be-20cf-4524-b611-07d8534b97f8");
+
         context.setDomsEndpoint("http://carme:7880/centralWebservice-service/central/");
         context.setDomsUsername("fedoraAdmin");
         context.setDomsPassword("spD68ZJl");
         TranscodeRequest request = new TranscodeRequest();
+        request.setObjectPid("uuid:d82107be-20cf-4524-b611-07d8534b97f8");
+
         ProcessorChainElement programFetcher = new ProgramMetadataFetcherProcessor();
         ProcessorChainElement filedataFetcher    = new FileMetadataFetcherProcessor();
         ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();

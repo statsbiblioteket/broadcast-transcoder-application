@@ -43,7 +43,7 @@ public class ProgramMetadataFetcherProcessorTest {
                 "  <channelId>tv2z</channelId>\n" +
                 "</programBroadcast>","comment");
         context.setDomsApi(mockApi);
-        context.setProgrampid(pid);
+        request.setObjectPid(pid);
         processor.processThis(request,context);
     }
 
