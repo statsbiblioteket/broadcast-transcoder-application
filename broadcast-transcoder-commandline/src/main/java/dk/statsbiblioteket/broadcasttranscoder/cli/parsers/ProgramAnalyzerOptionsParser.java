@@ -46,7 +46,6 @@ public class ProgramAnalyzerOptionsParser<T extends TranscodingRecord> extends I
         parseFileLengthListOption(cmd);
         try {
             readInfrastructureProperties(context);
-
         } catch (IOException e) {
             throw new OptionParseException("Error reading properties.", e);
         }

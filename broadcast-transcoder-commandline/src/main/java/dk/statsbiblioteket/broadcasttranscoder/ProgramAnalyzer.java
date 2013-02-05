@@ -10,6 +10,7 @@ import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTra
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
+import org.hibernate.exception.LockAcquisitionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,9 +18,10 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- *
+ * This program creates the PROGRAM_STRUCTURE datastream in the selected program objects. Used
+ * to amend the old transcoded programs that were not analyzed.
  */
-public class ProgramAnalyzer extends TranscoderApplication{
+public class ProgramAnalyzer{
 
     private static Logger logger = LoggerFactory.getLogger(ProgramAnalyzer.class);
 
@@ -45,22 +47,26 @@ public class ProgramAnalyzer extends TranscoderApplication{
             handleLock(lockFile);
 
             try {
-                runChain(request, context);
+                request.setGoForTranscoding(true);
+                ProcessorChainElement firstChain = getChain();
+                firstChain.processIteratively(request, context);
                 if (request.isRejected()) {
-                    System.exit(111);
+                    logger.error("Processing failed for " + request.getObjectPid());
+                    System.err.println(request.getObjectPid());
+                    continue;
                 }
 
+
             } catch (Exception e) {
-                transcodingFailed(request,context,e);
-                //Final fault barrier is necessary for logging
                 logger.error("Processing failed for " + request.getObjectPid(), e);
-                throw(e);
+                System.err.println(request.getObjectPid());
+                continue;
             } finally {
                 logger.debug("Deleting lockfile " + lockFile.getAbsolutePath());
                 boolean deleted = lockFile.delete();
                 if (!deleted) {
-                    logger.error("Could not delete lockfile: " + lockFile.getAbsolutePath());
-                    System.exit(0);
+                    logger.error("Could not delete lockfile: " + lockFile.getAbsolutePath() + " for "+request.getObjectPid());
+                    System.err.println(request.getObjectPid());
                 }
             }
             logger.info("All processing finished for " + request.getObjectPid());
@@ -69,21 +75,21 @@ public class ProgramAnalyzer extends TranscoderApplication{
 
     }
 
-    private static void handleLock(File lockFile) {
+    private static void handleLock(File lockFile) throws LockException {
         if (lockFile.exists()) {
-            logger.warn("Lockfile " + lockFile.getAbsolutePath() + " already exists. Exiting.");
-            System.exit(0);
+            logger.warn("Lockfile " + lockFile.getAbsolutePath() + " already exists.");
+            throw new LockException("Lockfile " + lockFile.getAbsolutePath() + " already exists.");
         }
         try {
             logger.debug("Creating lockfile " + lockFile.getAbsolutePath());
             boolean created = lockFile.createNewFile();
             if (!created) {
-                logger.error("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
-                System.exit(3);
+                logger.error("Could not create lockfile: " + lockFile.getAbsolutePath() + ".");
+                throw new LockException("Could not create lockfile: " + lockFile.getAbsolutePath() + ".");
             }
         } catch (IOException e) {
             logger.error("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
-            System.exit(3);
+            throw new LockException("Could not create lockfile: " + lockFile.getAbsolutePath() + ".");
         }
     }
 
@@ -116,21 +122,6 @@ public class ProgramAnalyzer extends TranscoderApplication{
 
     }
 
-    public static <T extends TranscodingRecord> void runChain(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {
-
-        request.setGoForTranscoding(true);
-
-        ProcessorChainElement firstChain = getChain();
-        firstChain.processIteratively(request, context);
-        if (!request.isGoForTranscoding()) {
-            alreadyTranscoded(request, context);
-            return;
-        }
-        if (request.isRejected()) {
-            reject(request, context);
-            return;
-        }
-    }
 
 
 }
