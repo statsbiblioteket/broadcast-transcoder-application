@@ -48,13 +48,13 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
             } else {
                 timeout = request.getTimeoutMilliseconds();
             }
-            log.debug("Setting transcoding timeout for '" + context.getProgrampid() + "' to " + timeout + "ms");
+            log.debug("Setting transcoding timeout for '" + request.getObjectPid() + "' to " + timeout + "ms");
             request.setTranscoderCommand(command);
             ExternalJobRunner.runClipperCommand(timeout, command);
         } catch (ExternalProcessTimedOutException e) {
             log.warn("Deleting '" + outputFile + "'");
             outputFile.delete();
-            throw new ProcessorException("External process timed out for " + context.getProgrampid(),e);
+            throw new ProcessorException("External process timed out for " + request.getObjectPid(),e);
         }
     }
 

@@ -1,11 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder.cli.parsers;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.HibernateContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
-import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
-import dk.statsbiblioteket.broadcasttranscoder.cli.contexts.FetcherContext;
-import dk.statsbiblioteket.broadcasttranscoder.cli.parsers.HibernateOptionsParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 

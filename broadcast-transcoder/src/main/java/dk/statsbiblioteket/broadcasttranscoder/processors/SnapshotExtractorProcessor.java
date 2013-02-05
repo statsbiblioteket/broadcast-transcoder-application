@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutException;
@@ -48,10 +49,10 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         snapshotOutputDir.mkdirs();
         String commandLine = "ffmpeg -i " + fullMediaFile.getAbsolutePath();
         Double aspectRatio = request.getDisplayAspectRatio();
-        logger.debug("Creating snapshot for video with display aspect ratio '" + aspectRatio + "' for " + context.getProgrampid());
+        logger.debug("Creating snapshot for video with display aspect ratio '" + aspectRatio + "' for " + request.getObjectPid());
         int N = targetNumerator * scale;
         int M = targetDenominator * scale;
-        logger.debug("Required aspect ratio is '" + N + "/" + M + "' for " + context.getProgrampid());
+        logger.debug("Required aspect ratio is '" + N + "/" + M + "' for " + request.getObjectPid());
         String geometry = "";
         if (Math.abs(aspectRatio - targetAspectRatio) < 0.01) {
             geometry = " -s " + N + "x" + M;
@@ -84,7 +85,7 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
             ExternalJobRunner.runClipperCommand(timeout, commandLine);
         } catch (ExternalProcessTimedOutException e) {
             logger.warn("Process '" + commandLine + "' timed out after " + timeout + "ms.");
-            throw new ProcessorException("Process Timed out for " + context.getProgrampid() + " after " + timeout + "ms.",e);
+            throw new ProcessorException("Process Timed out for " + request.getObjectPid() + " after " + timeout + "ms.",e);
         }
         // This is a dirty fix because ffmpeg generates 2 snapshots close together at the start
         String fileTemplate = FileUtils.getSnapshotOutputFileStringTemplate(request, context);

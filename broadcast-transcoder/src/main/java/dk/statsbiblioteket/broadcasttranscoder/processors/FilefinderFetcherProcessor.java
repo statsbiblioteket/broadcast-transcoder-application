@@ -1,18 +1,13 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.NearlineFileFinder;
 
 /**
- *
+ * This processor brings each file in the BroadcastMetadata online, and initialises the Filemap
  */
 public class FilefinderFetcherProcessor extends ProcessorChainElement {
-    public FilefinderFetcherProcessor() {
-    }
-
-    public FilefinderFetcherProcessor(ProcessorChainElement childElement) {
-        super(childElement);
-    }
 
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {

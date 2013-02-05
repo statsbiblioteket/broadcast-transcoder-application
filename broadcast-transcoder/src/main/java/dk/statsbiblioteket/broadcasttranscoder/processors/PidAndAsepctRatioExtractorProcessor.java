@@ -74,11 +74,11 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
 
     private void validateFoundData(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         if (request.getAudioPids().isEmpty()) {
-            throw new ProcessorException("No audio stream discovered for " + context.getProgrampid());
+            throw new ProcessorException("No audio stream discovered for " + request.getObjectPid());
         }
         if (request.getFileFormat().equals(FileFormatEnum.MULTI_PROGRAM_MUX) || request.getFileFormat().equals(FileFormatEnum.SINGLE_PROGRAM_VIDEO_TS)) {
             if (request.getVideoPid() == null) {
-                throw new ProcessorException("No video stream discovered for " + context.getProgrampid());
+                throw new ProcessorException("No video stream discovered for " + request.getObjectPid());
             }
         }
     }
@@ -131,7 +131,7 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
             } else if (line.contains("h264")) {
                 request.setVideoFcc("h264");
             }
-            logger.debug("Identified video fourcc for " + context.getProgrampid() + ": " + request.getVideoFcc());
+            logger.debug("Identified video fourcc for " + request.getObjectPid() + ": " + request.getVideoFcc());
             request.setDisplayAspectRatioString(videoMatcher.group(2));
             logger.debug("Identified aspect ratio '" + request.getDisplayAspectRatioString() + "'");
         }
@@ -144,14 +144,14 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
             } else if (line.contains("mp2")) {
                 request.setAudioFcc("mpga");
             }
-            logger.debug("Identified audio fourcc for " + context.getProgrampid() + ": " + request.getAudioFcc());
+            logger.debug("Identified audio fourcc for " + request.getObjectPid() + ": " + request.getAudioFcc());
         }
         audioMatcher = audioPattern2.matcher(line);
         if (audioMatcher.matches() && !line.contains("5.1")) {
             request.addAudioPid(audioMatcher.group(1));
             logger.info("Setting pid for audio '" + audioMatcher.group(1) + "'");
             request.setAudioFcc("mp4a");
-            logger.debug("Identified audio fourcc for " + context.getProgrampid() + ": " + request.getAudioFcc());
+            logger.debug("Identified audio fourcc for " + request.getObjectPid() + ": " + request.getAudioFcc());
         }
         Matcher darMatcher = videoPattern.matcher(line);
         if (darMatcher.matches()) {
@@ -159,7 +159,7 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
             String bottom = darMatcher.group(4);
             logger.debug("Matched DAR '" + top + ":" + bottom);
             final double displayAspectRatio = Double.parseDouble(top) / Double.parseDouble(bottom);
-            logger.info("Detected aspect ratio '" + displayAspectRatio + "' for '" + context.getProgrampid() + "'");
+            logger.info("Detected aspect ratio '" + displayAspectRatio + "' for '" + request.getObjectPid() + "'");
             request.setDisplayAspectRatio(displayAspectRatio);
             request.setDisplayAspectRatioString(top + ":" + bottom);
         }

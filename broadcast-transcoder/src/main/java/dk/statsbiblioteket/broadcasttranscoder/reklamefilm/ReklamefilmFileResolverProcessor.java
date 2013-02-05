@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.reklamefilm;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
@@ -24,7 +25,7 @@ public class ReklamefilmFileResolverProcessor extends ProcessorChainElement {
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         ReklamefilmFileResolver resolver = context.getReklamefilmFileResolver();
-        String pid = context.getProgrampid();
+        String pid = request.getObjectPid();
         File mediafile = resolver.resolverPidToLocalFile(pid);
         request.setClipperCommand("'" + mediafile.getAbsolutePath() + "'");
         logger.info("Resolved " + pid + " to " + request.getClipperCommand());

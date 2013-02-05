@@ -13,19 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ *  Calculates the clips needed from each source file, based on the programBroadcast.
  */
 public class ClipFinderProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(ClipFinderProcessor.class);
 
-
-    public ClipFinderProcessor() {
-    }
-
-    public ClipFinderProcessor(ProcessorChainElement childElement) {
-        super(childElement);
-    }
 
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
@@ -99,7 +92,7 @@ public class ClipFinderProcessor extends ProcessorChainElement {
                 clips.add(clip);
             } else if (programEnd < fileStart || programStart > fileEnd) {
                 //This is not an error because the file could be necessary depending on offsets.
-                logger.warn("File " + file.getAbsolutePath() + " is included in program " + context.getProgrampid() + " " +
+                logger.warn("File " + file.getAbsolutePath() + " is included in program " + request.getObjectPid()+ " " +
                         "but does not appear to be part of the broadcast which ran from " + request.getProgramBroadcast().getTimeStart() + " to " +
                         request.getProgramBroadcast().getTimeStop());
             }

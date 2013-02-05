@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.cli;
 
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmFileResolver;
 
 import java.io.File;
@@ -11,7 +12,7 @@ import java.io.File;
  * Time: 3:26 PM
  * To change this template use File | Settings | File Templates.
  */
-public class SingleTranscodingContext<T> extends InfrastructureContext<T> {
+public class SingleTranscodingContext<T extends TranscodingRecord> extends InfrastructureContext<T> {
 
     private String programpid;
     private File behaviourConfigFile;

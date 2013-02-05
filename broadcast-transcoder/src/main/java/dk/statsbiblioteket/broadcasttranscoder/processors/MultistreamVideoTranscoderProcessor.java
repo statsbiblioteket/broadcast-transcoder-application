@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.*;
 import org.slf4j.Logger;
@@ -16,12 +17,6 @@ import java.io.File;
  */
 public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
 
-    public MultistreamVideoTranscoderProcessor() {
-    }
-
-    public MultistreamVideoTranscoderProcessor(ProcessorChainElement childElement) {
-        super(childElement);
-    }
 
     public static int getHeight(TranscodeRequest request, SingleTranscodingContext context) {
         return context.getVideoHeight();
@@ -40,13 +35,13 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(MultistreamVideoTranscoderProcessor.class);
 
-    @Override
+
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         int programNumber = 0;
         if (request.getFileFormat().equals(FileFormatEnum.MULTI_PROGRAM_MUX)) {
             Integer programNumberObject = request.getClips().get(0).getProgramId();
             if (programNumberObject == null) {
-                throw new ProcessorException("Cannot transcode multi-program transport stream because no program number specified: " + context.getProgrampid());
+                throw new ProcessorException("Cannot transcode multi-program transport stream because no program number specified: " + request.getObjectPid());
             } else {
                 programNumber = programNumberObject;
             }
@@ -69,14 +64,14 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
         try {
             long programLength = MetadataUtils.findProgramLengthMillis(request);
             long timeout = (long) (programLength/context.getTranscodingTimeoutDivisor());
-            logger.debug("Setting transcoding timeout for '" + context.getProgrampid() + "' to " + timeout + "ms" );
+            logger.debug("Setting transcoding timeout for '" + request.getObjectPid() + "' to " + timeout + "ms" );
             request.setTranscoderCommand(clipperCommand);
             ExternalJobRunner.runClipperCommand(timeout, clipperCommand);
         } catch (ExternalProcessTimedOutException e) {
             File outputFile =  FileUtils.getTemporaryMediaOutputFile(request, context);
             logger.warn("Deleting '" + outputFile.getAbsolutePath() + "'");
             outputFile.delete();
-            throw new ProcessorException("Process timed out for "+context.getProgrampid(),e);
+            throw new ProcessorException("Process timed out for "+request.getObjectPid(),e);
         }
     }
 
@@ -114,7 +109,7 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
             if (request.getDvbsubPid() != null) {
                 programSelector += "," + request.getDvbsubPid() + ":spu=dvbs";
             }
-            logger.debug("Using Custom PMT for '" + context.getProgrampid() + "': " + programSelector);
+            logger.debug("Using Custom PMT for '" + request.getObjectPid() + "': " + programSelector);
             clipperCommand = "cat " + processSubstitutionFileList + " |  vlc - " + programSelector + " --quiet --demux=ts --intf dummy --play-and-exit --noaudio --novideo "
                     + "--sout-all --sout '#transcode{vcodec=x264,vb=" + context.getVideoBitrate() + ",venc=x264{" + context.getX264VlcParams() + "}" +
                     ",soverlay,deinterlace,audio-sync,"

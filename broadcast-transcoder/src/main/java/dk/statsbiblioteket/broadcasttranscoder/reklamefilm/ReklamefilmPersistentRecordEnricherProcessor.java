@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.reklamefilm;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
@@ -16,7 +17,7 @@ public class ReklamefilmPersistentRecordEnricherProcessor extends ProcessorChain
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
         ReklamefilmTranscodingRecordDAO reklamefilmTranscodingRecordDAO = new ReklamefilmTranscodingRecordDAO(util);
-        ReklamefilmTranscodingRecord record = reklamefilmTranscodingRecordDAO.read(context.getProgrampid());
+        ReklamefilmTranscodingRecord record = reklamefilmTranscodingRecordDAO.read(request.getObjectPid());
         record.setInputFile(request.getClipperCommand());
         record.setTranscodingCommand(request.getTranscoderCommand());
         reklamefilmTranscodingRecordDAO.update(record);

@@ -31,6 +31,7 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
             HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
             context.setTranscodingProcessInterface(new BroadcastTranscodingRecordDAO(util));
             request = new TranscodeRequest();
+            request.setObjectPid(context.getProgrampid());
             lockFile = FileUtils.getLockFile(request, context);
         } catch (Exception e) {
             logger.error("Error in initial environment", e);
@@ -59,7 +60,7 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
         } catch (Exception e) {
             transcodingFailed(request,context,e);
             //Final fault barrier is necessary for logging
-            logger.error("Processing failed for " + context.getProgrampid(), e);
+            logger.error("Processing failed for " + request.getObjectPid(), e);
             throw(e);
         } finally {
             logger.debug("Deleting lockfile " + lockFile.getAbsolutePath());
@@ -69,7 +70,7 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
                 System.exit(0);
             }
         }
-        logger.info("All processing finished for " + context.getProgrampid());
+        logger.info("All processing finished for " + request.getObjectPid());
     }
 
 
@@ -192,7 +193,7 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
             thirdChain.processIteratively(request, context);
         } catch (ProcessorException e) {
             //This is only a warning. Enrichment is only a nice-to-have.
-            logger.warn("Persistence Enrichment failed for " + context.getProgrampid(), e);
+            logger.warn("Persistence Enrichment failed for " + request.getObjectPid(), e);
         }
     }
 

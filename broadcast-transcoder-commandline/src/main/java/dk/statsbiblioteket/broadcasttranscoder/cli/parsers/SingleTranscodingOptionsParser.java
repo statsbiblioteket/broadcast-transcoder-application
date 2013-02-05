@@ -7,6 +7,7 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.parsers.InfrastructureOptions
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.BroadcastTranscodingRecordDAO;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.ReklamefilmTranscodingRecordDAO;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.TranscodingRecordDao;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Option;
@@ -22,7 +23,7 @@ import static dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.*;
 /**
  *
  */
-public class SingleTranscodingOptionsParser<T> extends InfrastructureOptionsParser<T> {
+public class SingleTranscodingOptionsParser<T extends TranscodingRecord> extends InfrastructureOptionsParser<T> {
 
     protected static final Option PID_OPTION = new Option("programpid", true, "The DOMS pid of the program to be transcoded");
     protected static final Option TIMESTAMP_OPTION = new Option("timestamp", true, "The timestamp (milliseconds) for which transcoding is required");

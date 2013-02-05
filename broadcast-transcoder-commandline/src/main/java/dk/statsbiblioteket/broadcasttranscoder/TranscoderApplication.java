@@ -20,7 +20,7 @@ public abstract class TranscoderApplication<T> {
     private static Logger logger = LoggerFactory.getLogger(TranscoderApplication.class);
 
     protected static <T extends TranscodingRecord> void transcodingComplete(TranscodeRequest request, SingleTranscodingContext<T> context) {
-        T record =  context.getTranscodingProcessInterface().read(context.getProgrampid());
+        T record =  context.getTranscodingProcessInterface().read(request.getObjectPid());
         record.setTranscodingState(TranscodingStateEnum.COMPLETE);
         record.setFailureMessage("");
         record.setLastTranscodedTimestamp(context.getTranscodingTimestamp());
@@ -28,18 +28,18 @@ public abstract class TranscoderApplication<T> {
     }
 
     protected static <T extends TranscodingRecord> void reject(TranscodeRequest request, SingleTranscodingContext<T> context) {
-        logger.info("Transcoding rejected for " + context.getProgrampid() + ". Exiting.");
-        context.getTranscodingProcessInterface().markAsRejected(context.getProgrampid(),context.getTranscodingTimestamp(),"Message?");
+        logger.info("Transcoding rejected for " + request.getObjectPid() + ". Exiting.");
+        context.getTranscodingProcessInterface().markAsRejected(request.getObjectPid(),context.getTranscodingTimestamp(),"Message?");
     }
 
     protected static <T extends TranscodingRecord> void alreadyTranscoded(TranscodeRequest request, SingleTranscodingContext<T> context) {
 
-        logger.info("No transcoding required for " + context.getProgrampid() + ". Exiting.");
-        context.getTranscodingProcessInterface().markAsAlreadyTranscoded(context.getProgrampid(),context.getTranscodingTimestamp());
+        logger.info("No transcoding required for " + request.getObjectPid() + ". Exiting.");
+        context.getTranscodingProcessInterface().markAsAlreadyTranscoded(request.getObjectPid(),context.getTranscodingTimestamp());
     }
 
     protected static <T extends TranscodingRecord> void transcodingFailed(TranscodeRequest request, SingleTranscodingContext<T> context, Exception e) {
-        T record =  context.getTranscodingProcessInterface().read(context.getProgrampid());
+        T record =  context.getTranscodingProcessInterface().read(request.getObjectPid());
         record.setTranscodingState(TranscodingStateEnum.FAILED);
         record.setLastTranscodedTimestamp(context.getTranscodingTimestamp());
         record.setFailureMessage(e.getMessage());

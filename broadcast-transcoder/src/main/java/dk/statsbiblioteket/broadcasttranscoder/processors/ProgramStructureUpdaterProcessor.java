@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.*;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This processor has the following behaviour. If the locally calculated ProgramStructure
+ * This processor will update the DOMS PROGRAM_STRUCTURE, if the locally calculated ProgramStructure
  * is distinct from that in DOMS, or if there is only a dummy ProgramStructure in DOMS, then
  * the local value is written back to DOMS.. Otherwise no action is taken.
  */
@@ -21,27 +22,20 @@ public class ProgramStructureUpdaterProcessor extends ProcessorChainElement {
 
     private static final Logger logger = LoggerFactory.getLogger(ProgramStructureUpdaterProcessor.class);
 
-    public ProgramStructureUpdaterProcessor() {
-    }
-
-    public ProgramStructureUpdaterProcessor(ProcessorChainElement childElement) {
-        super(childElement);
-    }
-
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         ProgramStructure domsProgramStructure = request.getDomsProgramStructure();
         ProgramStructure localProgramStructure = request.getLocalProgramStructure();
         if (isDummy(domsProgramStructure) ||
                 !areSemanticallyEqual(domsProgramStructure, localProgramStructure)) {
-            logger.debug("Writing new program structure for " + context.getProgrampid() + " to DOMS");
+            logger.debug("Writing new program structure for " + request.getObjectPid() + " to DOMS");
             writeStructureToDoms(request, context);
         } else {
             return;
         }
     }
 
-    protected void writeStructureToDoms(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
+    protected void writeStructureToDoms(TranscodeRequest request, InfrastructureContext context) throws ProcessorException {
         CentralWebservice doms = context.getDomsApi();
         ProgramStructure structure = request.getLocalProgramStructure();
         ObjectFactory objectFactory = new ObjectFactory();
@@ -50,25 +44,25 @@ public class ProgramStructureUpdaterProcessor extends ProcessorChainElement {
             JAXBContext.newInstance(ProgramStructure.class).createMarshaller()
                     .marshal(objectFactory.createProgramStructure(structure), writer);
         } catch (JAXBException e) {
-            throw new ProcessorException("Failed to xml-ilise program structure for "+context.getProgrampid(),e);
+            throw new ProcessorException("Failed to xml-ilise program structure for "+request.getObjectPid(),e);
         }
         String xmlString = writer.getBuffer().toString();
-        logger.debug("New program structure for " + context.getProgrampid() + " :\n" + xmlString);
+        logger.debug("New program structure for " + request.getObjectPid() + " :\n" + xmlString);
         List<String> pids = new ArrayList<String>();
-        pids.add(context.getProgrampid());
+        pids.add(request.getObjectPid());
         try {
             doms.markInProgressObject(pids, "Enriching shard content with result of shard analysis");
-            doms.modifyDatastream(context.getProgrampid(), "PROGRAM_STRUCTURE", xmlString, "Updated PROGRAM_STRUCTURE with " +
+            doms.modifyDatastream(request.getObjectPid(), "PROGRAM_STRUCTURE", xmlString, "Updated PROGRAM_STRUCTURE with " +
                     "result from analysis by Broadcast Transcoder Application");
         } catch (Exception e) {
-            throw new ProcessorException("Failed to write to DOMS for "+context.getProgrampid(),e);
+            throw new ProcessorException("Failed to write to DOMS for "+request.getObjectPid(),e);
         } finally {
             try {
                 doms.markPublishedObject(pids, "Updated PROGRAM_STRUCTURE with " +
                         "result from analysis by Broadcast Transcoded Application");
             } catch (Exception e) {
-                logger.error("Problem republishing object " + context.getProgrampid(), e);
-                throw new ProcessorException("Problem republishing object " + context.getProgrampid(), e);
+                logger.error("Problem republishing object " + request.getObjectPid(), e);
+                throw new ProcessorException("Problem republishing object " + request.getObjectPid(), e);
             }
         }
     }
