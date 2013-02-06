@@ -46,7 +46,6 @@ public abstract class InfrastructureOptionsParser<T> extends HibernateOptionsPar
         context.setFileFinderUrl(readStringProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.FILE_FINDER, props));
         context.setMaxFilesFetched(readIntegerProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.MAX_FILES_FETCHED, props));
 
-        context.setLockDir(readExistingDirectoryProperty(LOCK_DIR, props));
         context.setFileDepth(readIntegerProperty(FILE_DEPTH, props));
 
         try {

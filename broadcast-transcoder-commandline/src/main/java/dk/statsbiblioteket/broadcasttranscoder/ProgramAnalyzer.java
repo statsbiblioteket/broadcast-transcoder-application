@@ -40,9 +40,6 @@ public class ProgramAnalyzer{
             request = new TranscodeRequest();
             request.setObjectPid(pid);
 
-            lockFile = FileUtils.getLockFile(request, context);
-            handleLock(lockFile);
-
             try {
                 request.setGoForTranscoding(true);
                 ProcessorChainElement firstChain = getChain();
@@ -58,36 +55,11 @@ public class ProgramAnalyzer{
                 logger.error("Processing failed for " + request.getObjectPid(), e);
                 System.err.println(request.getObjectPid());
                 continue;
-            } finally {
-                logger.debug("Deleting lockfile " + lockFile.getAbsolutePath());
-                boolean deleted = lockFile.delete();
-                if (!deleted) {
-                    logger.error("Could not delete lockfile: " + lockFile.getAbsolutePath() + " for "+request.getObjectPid());
-                    System.err.println(request.getObjectPid());
-                }
             }
             logger.info("All processing finished for " + request.getObjectPid());
             System.out.println(request.getObjectPid());
         }
 
-    }
-
-    private static void handleLock(File lockFile) throws LockException {
-        if (lockFile.exists()) {
-            logger.warn("Lockfile " + lockFile.getAbsolutePath() + " already exists.");
-            throw new LockException("Lockfile " + lockFile.getAbsolutePath() + " already exists.");
-        }
-        try {
-            logger.debug("Creating lockfile " + lockFile.getAbsolutePath());
-            boolean created = lockFile.createNewFile();
-            if (!created) {
-                logger.error("Could not create lockfile: " + lockFile.getAbsolutePath() + ".");
-                throw new LockException("Could not create lockfile: " + lockFile.getAbsolutePath() + ".");
-            }
-        } catch (IOException e) {
-            logger.error("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
-            throw new LockException("Could not create lockfile: " + lockFile.getAbsolutePath() + ".");
-        }
     }
 
 

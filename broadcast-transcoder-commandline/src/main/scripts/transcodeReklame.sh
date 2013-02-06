@@ -18,13 +18,5 @@ java -Dlogback.configurationFile=$SCRIPT_PATH/../config/logback.xml  -cp "$CLASS
 
 returncode=$?
 
-## Consider placing progress, successes, failures outside deploy directory so they don't get nuked by deploy.
-
-if [ $returncode -ne 0 ]; then
-    failureFile= $SCRIPT_PATH/../$collection.failures
-    lockfile "$failureFile.lock"
-        echo "$uuid   $timestamp $machine" >> $failureFile
-    rm -f "$failureFile.lock"
-fi
 
 exit $returncode

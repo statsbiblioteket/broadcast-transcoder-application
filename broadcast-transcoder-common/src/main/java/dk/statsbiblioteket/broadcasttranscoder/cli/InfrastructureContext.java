@@ -22,7 +22,6 @@ public class InfrastructureContext<T>  extends HibernateContext<T>{
     private File snapshotOutputRootdir;
     private String[] reklamefileRootDirectories;
 
-    private File lockDir;
     private int fileDepth;
 
 
@@ -132,13 +131,6 @@ public class InfrastructureContext<T>  extends HibernateContext<T>{
     }
 
 
-    public File getLockDir() {
-        return lockDir;
-    }
-
-    public void setLockDir(File lockDir) {
-        this.lockDir = lockDir;
-    }
 
     public int getFileDepth() {
         return fileDepth;

@@ -51,7 +51,6 @@ public class ClipTest  {
         context.setEndOffsetTS(10);
         context.setFileDepth(4);
         context.setGapToleranceSeconds(2);
-        context.setLockDir(new File(scratchWriteDir+"lockdir"));
         context.setHibernateConfigFile(new File("/home/csr/projects/broadcast-transcoder-application/src/test/config/hibernate.in-memory_unittest.cfg.xml"));
         context.setMaxHole(10);
         context.setMaxMissingEnd(10);

@@ -4,134 +4,157 @@ collection=$1
 
 # Get settings
 SCRIPT_PATH=$(dirname $(readlink -f $0))
-source $SCRIPT_PATH/setenv.sh $collection
+source ${SCRIPT_PATH}/setenv.sh ${collection}
 
 # Ensure only one copy of this script runs for a given collection
 globalLock=$workDir/transcodeChanges.${collection}.lockdir
-if mkdir $globalLock 2>/dev/null; then
-    # We're good
-    true
-else
-    # Fail, another copy is running
+if ! mkdir $globalLock 2>/dev/null; then
     echo "$(basename $0): ERROR this script is already running for collection $collection"
     exit 1
 fi
 
 # Cleanup from previous run
 
-function cleanup {
-[ $debug = 1 ] && echo "Cleaning Up"
-for ((i=0;i<$WORKERS;i++)); do
-    workerfile="$workDir/$i$collection.workerFile"
-    if [ -e  "$workerfile" ]; then
-        [ $debug = 1 ] && echo Cleaning from $workerfile
-        pid=$(cat $workerfile|cut -d' ' -f1)
-        uuid=$(cat $workerfile|cut -d ' ' -f2)
-        timestamp=$(cat $workerfile|cut -d ' ' -f3)
-        machine=$(cat $workerfile|cut -d ' ' -f4)
-        [ $debug = 1 ] && echo Cleaning up after $uuid
-        kill $pid
-        rm $workerfile
-        $SCRIPT_PATH/cleanupUnfinished.sh $uuid $timestamp $machine
+function getWorkerfile(){
+   local workerID=$1
+   local collection$2
+   echo  "${workDir}/${i}${collection}.workerFile"
+
+}
+function checkWorkerfile(){
+    local workerfile=$1
+    local found=0
+
+    if [ ! -e "${workerfile}" ]; then #worker id is free
+        touch ${workerfile}
+        found=1
+    else #worker id is occupied
+        local pid=$(cat ${workerfile}|cut -d' ' -f1)
+        local workeruuid=$(cat ${workerfile}|cut -d' ' -f2)
+        local workertime=$(cat ${workerfile}|cut -d' ' -f3)
+
+        if [ -n "$pid" ]; then
+                kill -0 ${pid} &> /dev/null
+                found=$?
+        else
+                found=1
+        fi
     fi
-done
+    echo ${found}
 }
 
-cleanup;
-trap 'cleanup; rmdir $globalLock; rm -rf $changes; exit 1' INT TERM
-
-##
-# This is probably not necessary, unless we have an unusual race condition that leaves lockfiles behind from a
-# previous run.
-rm -f $workDir/*${collection}*.lock
 
 
+function transcoderWorker() {
+
+    local collection=$1
+    local uuid=$2
+    local timestamp=$3
+    local machine=$4
+    local workerID=$5
+
+    # Determine if we run local or remote
+    if [ "${machine}" = "local" ]
+    then
+       SSH_COMMAND=""
+    else
+       SSH_COMMAND="ssh ${machine}"
+    fi
+
+    # Run transcode
+    
+    ${SSH_COMMAND} ${SCRIPT_PATH}/transcodeFile.sh "${collection}" "${uuid}" "${timestamp}" "${machine}" &> /dev/null
+
+
+    returncode=$?
+    return ${returncode}
+}
+
+
+function startWorker(){
+
+    local collection=$1
+    local uuid=$2
+    local time=$3
+    local machine=$4
+    local workerID=$5
+    local workerfile=$6
+
+    transcoderWorker $@ &
+    echo "$! ${uuid} ${time} ${machine}" > ${workerfile}
+
+}
+
+
+function getNextMachine(){
+    if [ -z "${machineIndex}" ]; then
+        machineIndex=0
+    fi
+    machine=${machines[$machineIndex]}
+    ((machineIndex++))
+    max=${#machines[*]}
+    [ ${machineIndex} -ge ${max} ] && machineIndex=0
+    echo ${machine}
+}
+
+
+trap 'rmdir $globalLock; rm -rf $changes; exit 1' INT TERM
 
 # Get list of changes from queryChanges with progress timestamp as input
-changes=$( mktemp -p $workDir )
-$SCRIPT_PATH/queryChanges.sh $collection 0 | grep "^uuid" > $changes
+changes=$( mktemp -p ${workDir} )
+${SCRIPT_PATH}/queryChanges.sh ${collection} | grep "^uuid" > ${changes}
 
 # Cut list into pid/timestamp sets
 # Iterate through list,
 
-programs=$(wc -l < $changes)
-echo "number of programs to transcode is $programs"
+programs=$(wc -l < ${changes})
+echo "number of programs to transcode is ${programs}"
 
-machineIndex=0
+
 counter=0
-while read "uuid" "time" "rest"; do
+while read uuid timestamp rest; do
     ((counter++))
-    uuid=$uuid
-    time=$time
-    rest=$rest
 
-    started=0
-    # Iterate over workers until one picks up the current uuid
-    while [ $started -eq 0 ]; do
-        [ $debug = 1 ] && echo "$uuid: Starting allocation to worker for uuid $uuid"
-        for ((i=0;i<$WORKERS;i++)); do
-            workerfile="$workDir/$i$collection.workerFile"
-            [ $debug = 1 ] && echo "$uuid: Attempting to get lock on $workerfile"
-            lockfile "$workerfile.lock"
-            if [ ! -e $workerfile ]; then
-                [ $debug = 1 ] && echo "$uuid: $workerfile does not exist, creating"
-                touch $workerfile
-                found=1
-            else
-                pid=$(cat $workerfile|cut -d' ' -f1)
-                workeruuid=$(cat $workerfile|cut -d' ' -f2)
-                workertime=$(cat $workerfile|cut -d' ' -f3)
-                [ $debug = 1 ] && echo "$uuid: Got pid '$pid' from $workerfile"
+    while true ; do # Iterate over workers until one picks up the current uuid
+        echo "$(date) ${uuid}: Attempting allocation to worker, ${counter} of ${programs}"
+        for ((i=0;i<${WORKERS};i++)); do
 
-                kill -0 $pid &> /dev/null
-                found=$?
-                if [ $found != 0 ]; then #workerfile found, but proces stopped
-                    #the content of workerfile never completed. Add it to the incomplete list
-                    echo $workeruuid $workertime >> $stateDir/$collection.incompletes
-                    # TODO log this
-                fi
-            fi
-            if [ $found != 0 ]; then # pid is no longer running or does not belong to us
-                echo "Transcoding program $counter of $programs"
-                echo "Processing $uuid" "$time"
-                machine=${machines[$machineIndex]}
-                [ $debug = 1 ] && echo "$uuid: Did not find found '$pid' among the running processes"
-                [ $debug = 1 ] && echo "$uuid: Starting transcoding for $uuid and $time on $machine"
-                $SCRIPT_PATH/transcoderWorker.sh $collection $uuid $time $machine $i &
-                echo "$! $uuid $time $machine" > $workerfile
-                # Increment the machine index
-                ((machineIndex++))
-                max=${#machines[*]}
-                [ $machineIndex -ge $max ] && machineIndex=0
-                started=1
-            fi
-            [ $debug = 1 ] && echo "$uuid: releasing lock on $workerfile"
-            rm -f "$workerfile.lock"
-            if [ $started -gt 0 ]; then
-                [ $debug = 1 ] && echo "$uuid: Allocated to worker, moving to next entity"
-                break 1
+            workerfile=$(getWorkerfile ${i} ${collection})
+            running=$(checkWorkerfile ${workerfile})
+            if [ ! ${running} == 0 ]; then # pid is no longer running or does not belong to us
+                machine=$(getNextMachine)
+                echo "$(date) ${uuid}: Starting transcoding for ${uuid} and ${time} on ${machine}"
+                startWorker ${collection} ${uuid} ${timestamp} ${machine} ${i} ${workerfile}
+                break 2
             fi
         done
-        sleep 2
-        [ $debug = 1 ] && echo
+        sleep 10
     done
-    [ $debug = 1 ] && echo
-done < $changes
 
-while ( true ); do
+done < ${changes}
+rm ${changes}
+
+
+# Now everything have been started. Wait for the last workers to finish
+
+while true; do
     sleep 2
-    workerFiles=$(ls -1 $workDir/*$collection.workerFile 2>/dev/null | wc -l)
-    if [  $workerFiles -eq 0 ]; then
-        break 1
-    else
-        [ $debug = 1 ] && echo "Waiting for $workerFiles"
-    fi
+    workersRunning=0
+    for ((i=0;i<${WORKERS};i++)); do
+        workerfile=$(getWorkerfile ${i} ${collection})
+        if [ -e ${workerfile} ]; then
+            running=$(checkWorkerfile ${workerfile})
+            if [ ! ${running} ]; then
+                 rm ${workerfile}
+            else
+               workersRunning=${workersRunning}+1
+            fi
+        fi
+    done
+    [ ${workersRunning} == 0 ] && break
 done
 
-# TODO find incompletes in successes and remove them from incompletes
 
-# Merge state files here
 
 echo "All transcoding finished. Exiting normally."
-rm $changes
 rmdir $globalLock

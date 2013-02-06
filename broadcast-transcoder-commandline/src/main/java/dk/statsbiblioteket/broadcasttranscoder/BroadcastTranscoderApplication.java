@@ -27,7 +27,6 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
         logger.debug("Entered main method.");
         SingleTranscodingContext<BroadcastTranscodingRecord> context = null;
         TranscodeRequest request = null;
-        File lockFile = null;
         try {
             try {
                 context = new SingleTranscodingOptionsParser<BroadcastTranscodingRecord>().parseOptions(args);
@@ -38,26 +37,9 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
             context.setTranscodingProcessInterface(new BroadcastTranscodingRecordDAO(util));
             request = new TranscodeRequest();
             request.setObjectPid(context.getProgrampid());
-            lockFile = FileUtils.getLockFile(request, context);
         } catch (Exception e) {
             logger.error("Error in initial environment", e);
             throw new OptionParseException("Failed to parse optioons",e);
-        }
-        if (lockFile.exists()) {
-            logger.warn("Lockfile " + lockFile.getAbsolutePath() + " already exists. Exiting.");
-            throw new LockException("Lockfile " + lockFile.getAbsolutePath() + " already exists. Exiting.");
-        }
-        try {
-            logger.debug("Creating lockfile " + lockFile.getAbsolutePath());
-            boolean created = lockFile.createNewFile();
-            if (!created) {
-                logger.error("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
-                throw new LockException("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
-
-            }
-        } catch (IOException e) {
-            logger.error("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
-            throw new LockException("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
         }
         try {
             runChain(request, context);
@@ -69,13 +51,6 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
             //Final fault barrier is necessary for logging
             logger.error("Processing failed for " + request.getObjectPid(), e);
             throw e;
-        } finally {
-            logger.debug("Deleting lockfile " + lockFile.getAbsolutePath());
-            boolean deleted = lockFile.delete();
-            if (!deleted) {
-                logger.error("Could not delete lockfile: " + lockFile.getAbsolutePath());
-                return;
-            }
         }
         logger.info("All processing finished for " + request.getObjectPid());
     }

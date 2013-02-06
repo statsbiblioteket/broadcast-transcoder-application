@@ -32,21 +32,7 @@ public class ReklamefilmTranscoderApplication extends TranscoderApplication {
         context.setTranscodingProcessInterface(new ReklamefilmTranscodingRecordDAO(util));
         context.setReklamefilmFileResolver(new ReklamefilmFileResolverImpl(context));
         TranscodeRequest request = new TranscodeRequest();
-        File lockFile = FileUtils.getLockFile(request, context);
-        if (lockFile.exists()) {
-            logger.warn("Lockfile " + lockFile.getAbsolutePath() + " already exists. Exiting.");
-            System.exit(2);
-        }
-        try {
-            boolean created = lockFile.createNewFile();
-            if (!created) {
-                logger.warn("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
-                System.exit(3);
-            }
-        } catch (IOException e) {
-            logger.warn("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
-            System.exit(3);
-        }
+
         try {
             request.setGoForTranscoding(true);
             ProcessorChainElement gonogoer = new GoNoGoProcessor();
@@ -80,12 +66,6 @@ public class ReklamefilmTranscoderApplication extends TranscoderApplication {
             logger.error("Error processing " + request.getObjectPid(), e);
 
             throw(e);
-        } finally {
-            boolean deleted = lockFile.delete();
-            if (!deleted) {
-                logger.error("Could not delete lockfile: " + lockFile.getAbsolutePath());
-                System.exit(4);
-            }
         }
         transcodingComplete(request,context);
 

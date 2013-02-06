@@ -147,9 +147,4 @@ public class FileUtils {
     }
 
 
-    public static File getLockFile(TranscodeRequest request, InfrastructureContext context) {
-        File rootDir = context.getLockDir();
-        String basename =request.getObjectPid().replace("uuid:", "");
-        return new File(rootDir, basename + ".lck");
-    }
 }

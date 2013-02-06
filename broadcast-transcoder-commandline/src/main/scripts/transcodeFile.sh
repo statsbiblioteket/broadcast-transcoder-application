@@ -16,7 +16,3 @@ java -Dlogback.configurationFile=$confDir/logback.xml $hibernate_log_config \
  --behavioural_configfile=$confDir/bta.behaviour.properties \
  --programpid=$uuid \
  --timestamp=$timestamp
-
-returncode=$?
-[ $debug = 1 ] && echo jvm exited with return code $returncode
-exit $returncode
