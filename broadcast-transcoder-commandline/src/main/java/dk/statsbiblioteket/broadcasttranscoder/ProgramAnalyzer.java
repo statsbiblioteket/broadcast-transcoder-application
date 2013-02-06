@@ -1,16 +1,13 @@
 package dk.statsbiblioteket.broadcasttranscoder;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.ProgramAnalyzerContext;
-import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.parsers.ProgramAnalyzerOptionsParser;
-import dk.statsbiblioteket.broadcasttranscoder.cli.parsers.SingleTranscodingOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.BroadcastTranscodingRecordDAO;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
-import org.hibernate.exception.LockAcquisitionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +33,7 @@ public class ProgramAnalyzer{
             context.setTranscodingProcessInterface(new BroadcastTranscodingRecordDAO(util));
         } catch (Exception e) {
             logger.error("Error in initial environment", e);
-            System.exit(5);
+            throw new OptionParseException("Error in initial environment", e);
         }
         for (String pid : context.getPidList()) {
             TranscodeRequest request;
