@@ -21,6 +21,11 @@
         <module>broadcast-transcoder-common</module>
     </modules>
 
+    <scm>
+        <connection>scm:git:git@github.com:statsbiblioteket/broadcast-transcoder-application.git</connection>
+        <developerConnection>scm:git:git@github.com:statsbiblioteket/broadcast-transcoder-application.git</developerConnection>
+        <url>https://github.com/statsbiblioteket/broadcast-transcoder-application</url>
+    </scm>
 
     <build>
         <plugins>
