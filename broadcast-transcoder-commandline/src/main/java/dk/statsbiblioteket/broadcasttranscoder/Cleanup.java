@@ -33,6 +33,7 @@ public class Cleanup {
 
         }
         TranscodeRequest request = new TranscodeRequest();
+        request.setObjectPid(context.getProgrampid());
         File lockFile = FileUtils.getLockFile(request, context);
         if (lockFile.exists()) {
             logger.info("Deleting " + lockFile.getAbsolutePath());
