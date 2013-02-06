@@ -92,10 +92,6 @@ public abstract class TranscodingRecordDao<T extends TranscodingRecord> extends 
         Session session = getSession();
         Transaction tx = session.beginTransaction();
 
-        Type mySuperClass = getClass().getGenericSuperclass();
-        Type tType =  ((ParameterizedType)mySuperClass).getActualTypeArguments()[0];
-
-
         Criteria criteria = session.createCriteria(type)
                 .add(Restrictions.ge("domsLatestTimestamp", since))
                 .addOrder(Order.asc("domsLatestTimestamp"));
