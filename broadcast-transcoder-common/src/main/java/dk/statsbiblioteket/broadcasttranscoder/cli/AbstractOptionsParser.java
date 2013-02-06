@@ -94,19 +94,19 @@ public  abstract class AbstractOptionsParser {
         printUsage();
     }
     protected void printUsage() {
-            final HelpFormatter usageFormatter = new HelpFormatter();
-            usageFormatter.printHelp(this.getClass().getName(), getOptions(), true);
-        }
+        final HelpFormatter usageFormatter = new HelpFormatter();
+        usageFormatter.printHelp(this.getClass().getName(), getOptions(), true);
+    }
 
     public Options getOptions() {
         return options;
     }
 
 
-    protected void parseUsageOption(CommandLine cmd) {
-         if (cmd.hasOption(USAGE_OPTION.getOpt())) {
-             printUsage();
-             System.exit(0);
-         }
+    protected void parseUsageOption(CommandLine cmd) throws UsageException {
+        if (cmd.hasOption(USAGE_OPTION.getOpt())) {
+            printUsage();
+            throw new UsageException();
+        }
     }
 }

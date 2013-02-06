@@ -1,6 +1,8 @@
 package dk.statsbiblioteket.broadcasttranscoder;
 
+import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.cli.UsageException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.parsers.SingleTranscodingOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
@@ -27,7 +29,11 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
         TranscodeRequest request = null;
         File lockFile = null;
         try {
-            context = new SingleTranscodingOptionsParser<BroadcastTranscodingRecord>().parseOptions(args);
+            try {
+                context = new SingleTranscodingOptionsParser<BroadcastTranscodingRecord>().parseOptions(args);
+            } catch (UsageException e) {
+                return;
+            }
             HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
             context.setTranscodingProcessInterface(new BroadcastTranscodingRecordDAO(util));
             request = new TranscodeRequest();
@@ -35,39 +41,40 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
             lockFile = FileUtils.getLockFile(request, context);
         } catch (Exception e) {
             logger.error("Error in initial environment", e);
-            System.exit(5);
+            throw new OptionParseException("Failed to parse optioons",e);
         }
         if (lockFile.exists()) {
             logger.warn("Lockfile " + lockFile.getAbsolutePath() + " already exists. Exiting.");
-            System.exit(0);
+            throw new LockException("Lockfile " + lockFile.getAbsolutePath() + " already exists. Exiting.");
         }
         try {
             logger.debug("Creating lockfile " + lockFile.getAbsolutePath());
             boolean created = lockFile.createNewFile();
             if (!created) {
                 logger.error("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
-                System.exit(3);
+                throw new LockException("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
+
             }
         } catch (IOException e) {
             logger.error("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
-            System.exit(3);
+            throw new LockException("Could not create lockfile: " + lockFile.getAbsolutePath() + ". Exiting.");
         }
         try {
             runChain(request, context);
             if (request.isRejected()) {
-                System.exit(111);
+                throw new TranscodingException("Request for pid "+request.getObjectPid()+" was rejected");
             }
         } catch (Exception e) {
             transcodingFailed(request,context,e);
             //Final fault barrier is necessary for logging
             logger.error("Processing failed for " + request.getObjectPid(), e);
-            throw(e);
+            throw e;
         } finally {
             logger.debug("Deleting lockfile " + lockFile.getAbsolutePath());
             boolean deleted = lockFile.delete();
             if (!deleted) {
                 logger.error("Could not delete lockfile: " + lockFile.getAbsolutePath());
-                System.exit(0);
+                return;
             }
         }
         logger.info("All processing finished for " + request.getObjectPid());

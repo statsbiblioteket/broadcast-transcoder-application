@@ -2,6 +2,7 @@ package dk.statsbiblioteket.broadcasttranscoder.cli.parsers;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.FetcherContext;
+import dk.statsbiblioteket.broadcasttranscoder.cli.UsageException;
 import org.apache.commons.cli.*;
 
 import java.io.File;
@@ -33,7 +34,7 @@ public class FetcherContextOptionsParser<T> extends InfrastructureOptionsParser<
     }
 
 
-    public FetcherContext<T> parseOptions(String[] args) throws OptionParseException {
+    public FetcherContext<T> parseOptions(String[] args) throws OptionParseException, UsageException {
         CommandLineParser parser = new PosixParser();
         CommandLine cmd;
         try {

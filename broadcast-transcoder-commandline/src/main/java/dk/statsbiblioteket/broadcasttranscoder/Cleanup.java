@@ -2,6 +2,7 @@ package dk.statsbiblioteket.broadcasttranscoder;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.cli.UsageException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.parsers.SingleTranscodingOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
@@ -24,7 +25,13 @@ public class Cleanup {
 
     public static void main(String[] args) throws OptionParseException {
         logger.debug("Entered main method.");
-        SingleTranscodingContext context = new SingleTranscodingOptionsParser().parseOptions(args);
+        SingleTranscodingContext context = null;
+        try {
+            context = new SingleTranscodingOptionsParser().parseOptions(args);
+        } catch (UsageException e) {
+            return;
+
+        }
         TranscodeRequest request = new TranscodeRequest();
         File lockFile = FileUtils.getLockFile(request, context);
         if (lockFile.exists()) {

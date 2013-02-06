@@ -3,6 +3,7 @@ package dk.statsbiblioteket.broadcasttranscoder.cli.parsers;
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.cli.UsageException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.parsers.InfrastructureOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.BroadcastTranscodingRecordDAO;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.ReklamefilmTranscodingRecordDAO;
@@ -42,7 +43,7 @@ public class SingleTranscodingOptionsParser<T extends TranscodingRecord> extends
     }
 
 
-    public SingleTranscodingContext<T> parseOptions(String[] args) throws OptionParseException {
+    public SingleTranscodingContext<T> parseOptions(String[] args) throws OptionParseException, UsageException {
         CommandLineParser parser = new PosixParser();
         CommandLine cmd;
         try {

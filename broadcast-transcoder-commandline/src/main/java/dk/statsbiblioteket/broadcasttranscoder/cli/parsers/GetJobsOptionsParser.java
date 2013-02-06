@@ -2,6 +2,7 @@ package dk.statsbiblioteket.broadcasttranscoder.cli.parsers;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.GetJobsContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
+import dk.statsbiblioteket.broadcasttranscoder.cli.UsageException;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingStateEnum;
 import org.apache.commons.cli.*;
 
@@ -34,7 +35,7 @@ public class GetJobsOptionsParser<T> extends InfrastructureOptionsParser<T> {
 
 
 
-    public GetJobsContext<T> parseOptions(String[] args) throws OptionParseException {
+    public GetJobsContext<T> parseOptions(String[] args) throws OptionParseException, UsageException {
         CommandLineParser parser = new PosixParser();
         CommandLine cmd;
         try {

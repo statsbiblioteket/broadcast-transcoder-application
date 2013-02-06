@@ -36,7 +36,7 @@ public class ProgramAnalyzerOptionsParser<T extends TranscodingRecord> extends I
         getOptions().addOption(BEHAVIOURAL_CONFIG_FILE_OPTION);
     }
 
-    public ProgramAnalyzerContext<T> parseOptions(String[] args) throws OptionParseException {
+    public ProgramAnalyzerContext<T> parseOptions(String[] args) throws OptionParseException, UsageException {
         CommandLineParser parser = new PosixParser();
         CommandLine cmd;
         try {
