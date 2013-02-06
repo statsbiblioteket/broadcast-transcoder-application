@@ -14,6 +14,7 @@ import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
 import java.io.File;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.List;
 
@@ -44,17 +45,23 @@ public class BtaDomsFetcherTest {
 
     @Test
     public void testMain() throws Exception {
-        exit.expectSystemExitWithStatus(0);
-        final File infrastructureFile = new File(Thread.currentThread().getContextClassLoader().getResource("bta.infrastructure.properties").toURI());
-        final File behaviouralFile = new File(Thread.currentThread().getContextClassLoader().getResource("bta.fetcher.properties").toURI());
+
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        URL resource = contextClassLoader.getResource("bta.infrastructure.properties");
+        final File infrastructureFile = new File(resource.toURI());
+        URL resource1 = contextClassLoader.getResource("bta.fetcher.properties");
+        final File behaviouralFile = new File(resource1.toURI());
+        String hibernate = new File(contextClassLoader.getResource("hibernate-derby.xml").toURI()).getAbsolutePath();
+
         assertTrue(infrastructureFile.getAbsolutePath() + " should exist.", infrastructureFile.exists());
         assertTrue(behaviouralFile.getAbsolutePath() + " should exist.", behaviouralFile.exists());
         BtaDomsFetcher.main(
                 new String[]{
                         "-infrastructure_configfile",
-                        infrastructureFile.toString(),
+                        infrastructureFile.getAbsolutePath(),
                         "-behavioural_configfile",
-                        behaviouralFile.toString(),
+                        behaviouralFile.getAbsolutePath(),
+                        "-hibernate_configfile",hibernate,
                         "-since", "0"
                 });
     }

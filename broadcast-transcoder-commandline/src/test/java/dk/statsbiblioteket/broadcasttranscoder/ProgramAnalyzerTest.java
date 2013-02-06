@@ -16,11 +16,12 @@ public class ProgramAnalyzerTest {
     public void testMain() throws Exception {
 
 
-        String infraProperties = new File(Thread.currentThread().getContextClassLoader().getResource("bta.infrastructure.properties").toURI()).getAbsolutePath();
-        String hibernate = new File(Thread.currentThread().getContextClassLoader().getResource("hibernate-derby.xml").toURI()).getAbsolutePath();
-        String programsList = new File(Thread.currentThread().getContextClassLoader().getResource("programAnalyzerProgramList.txt").toURI()).getAbsolutePath();
-        String fileSizes = new File(Thread.currentThread().getContextClassLoader().getResource("fileSizeList.txt").toURI()).getAbsolutePath();
-        String behaivor = new File(Thread.currentThread().getContextClassLoader().getResource("bta.behaviour.properties").toURI()).getAbsolutePath();
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        String infraProperties = new File(contextClassLoader.getResource("bta.infrastructure.properties").toURI()).getAbsolutePath();
+        String hibernate = new File(contextClassLoader.getResource("hibernate-derby.xml").toURI()).getAbsolutePath();
+        String programsList = new File(contextClassLoader.getResource("programAnalyzerProgramList.txt").toURI()).getAbsolutePath();
+        String fileSizes = new File(contextClassLoader.getResource("fileSizeList.txt").toURI()).getAbsolutePath();
+        String behaivor = new File(contextClassLoader.getResource("bta.behaviour.properties").toURI()).getAbsolutePath();
         String[] args = new String[]{
                 "--infrastructure_configfile="+infraProperties
                 ,"--hibernate_configfile="+hibernate

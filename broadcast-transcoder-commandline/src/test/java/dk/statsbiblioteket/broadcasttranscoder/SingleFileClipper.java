@@ -2,6 +2,7 @@ package dk.statsbiblioteket.broadcasttranscoder;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.cli.UsageException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.parsers.SingleTranscodingOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramBroadcast;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
@@ -25,7 +26,12 @@ import java.util.List;
 public class SingleFileClipper {
 
     public static void main(String[] args) throws OptionParseException, DatatypeConfigurationException, ProcessorException {
-        SingleTranscodingContext context = new SingleTranscodingOptionsParser().parseOptions(args);
+        SingleTranscodingContext context = null;
+        try {
+            context = new SingleTranscodingOptionsParser().parseOptions(args);
+        } catch (UsageException e) {
+            return;
+        }
         String filename = args[0];
         String filelengthSeconds = args[1];
         TranscodeRequest request = new TranscodeRequest();
