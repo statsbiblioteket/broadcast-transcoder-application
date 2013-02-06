@@ -6,10 +6,8 @@ import dk.statsbiblioteket.doms.central.CentralWebservice;
 import dk.statsbiblioteket.doms.central.InvalidCredentialsException;
 import dk.statsbiblioteket.doms.central.MethodFailedException;
 import dk.statsbiblioteket.doms.central.RecordDescription;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.commons.io.FileUtils;
+import org.junit.*;
 import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
 import java.io.File;
@@ -32,16 +30,29 @@ public class BtaDomsFetcherTest {
 
     @Rule
     public final ExpectedSystemExit exit = ExpectedSystemExit.none();
-
+    private File foobar4;
 
     @Before
-    public void setUp() {
+      public void setUp() throws Exception {
+          foobar4 = new File("./foobar4");
+          foobar4.mkdir();
+          foobar4.deleteOnExit();
         try {
             InetAddress.getByName("alhena");
         } catch (UnknownHostException e) {
             Assume.assumeNoException(e);
         }
-    }
+
+      }
+
+      @After
+      public void tearDown() throws Exception {
+          FileUtils.deleteDirectory(foobar4);
+
+
+      }
+
+
 
     @Test
     public void testMain() throws Exception {

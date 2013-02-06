@@ -1,5 +1,8 @@
 package dk.statsbiblioteket.broadcasttranscoder;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -12,6 +15,23 @@ import java.io.File;
  * To change this template use File | Settings | File Templates.
  */
 public class ProgramAnalyzerTest {
+
+    private File foobar4;
+
+    @Before
+    public void setUp() throws Exception {
+        foobar4 = new File("./foobar4");
+        foobar4.mkdir();
+        foobar4.deleteOnExit();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        FileUtils.deleteDirectory(foobar4);
+
+
+    }
+
     @Test
     public void testMain() throws Exception {
 
