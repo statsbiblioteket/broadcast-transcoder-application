@@ -1,0 +1,37 @@
+Use this query to get the unanalyzed programs
+
+
+select $object
+from <#ri>
+where
+$object <fedora-model:hasModel> <info:fedora/doms:ContentModel_Program>
+and
+$object <fedora-model:state> <fedora-model:Active>
+minus (
+$object <fedora-view:disseminates> $datastream
+and
+$datastream <fedora-view:disseminationType> <info:fedora/*/PROGRAM_STRUCTURE>
+)
+
+save this to listPrograms.txt
+
+
+then get the list of old transcodings
+
+ssh develro@thalassa
+cd /home/wowza/services/wowza_vhost_kultur/streamingContent
+find -H *  -type l | cut -d'/' -f5 | cut -d'.' -f1 | sort > listTranscodings.txt
+
+then figure out the overlap of the two lists
+comm listPrograms.txt listTranscodings.txt > programsToBeAnalyzed.txt
+
+Get the list of source files and sizes from the bitarchive, in the form
+name size
+
+invoke the analyzeOldPrograms like this
+./analyzeOldPrograms.sh programsToBeAnalyzed.txt fileSizes.txt
+
+and wait
+
+
+
