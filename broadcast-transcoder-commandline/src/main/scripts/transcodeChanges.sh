@@ -58,11 +58,12 @@ programs=$(wc -l < $changes)
 echo "number of programs to transcode is $programs"
 
 machineIndex=0
-counter=1
-while read uuid time rest; do
-    echo "Transcoding program $counter of $programs"
-    echo "Processing $uuid" "$time"
+counter=0
+while read "uuid" "time" "rest"; do
     ((counter++))
+    uuid=$uuid
+    time=$time
+    rest=$rest
 
     started=0
     # Iterate over workers until one picks up the current uuid
@@ -91,6 +92,8 @@ while read uuid time rest; do
                 fi
             fi
             if [ $found != 0 ]; then # pid is no longer running or does not belong to us
+                echo "Transcoding program $counter of $programs"
+                echo "Processing $uuid" "$time"
                 machine=${machines[$machineIndex]}
                 [ $debug = 1 ] && echo "$uuid: Did not find found '$pid' among the running processes"
                 [ $debug = 1 ] && echo "$uuid: Starting transcoding for $uuid and $time on $machine"
