@@ -40,9 +40,10 @@ public class DomsTranscodingStructureFetcherTest  {
         context.setDomsPassword("fedoraAdminPass");
         context.setDomsUsername("fedoraAdmin");
         context.setDomsEndpoint("http://alhena:7480/centralWebservice-service/central/");
-        context.setProgrampid("uuid:a3d19569-07c9-480f-8561-6dbf5e11d144");
+        TranscodeRequest request = new TranscodeRequest();
+        request.setObjectPid("uuid:a3d19569-07c9-480f-8561-6dbf5e11d144");
         DomsAndOverwriteExaminerProcessor thing = new DomsAndOverwriteExaminerProcessor();
-        thing.processThis(new TranscodeRequest(),context);
+        thing.processThis(request,context);
         //TODO finish this test
     }
 

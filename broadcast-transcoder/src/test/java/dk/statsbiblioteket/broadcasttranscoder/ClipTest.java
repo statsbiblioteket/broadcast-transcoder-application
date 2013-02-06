@@ -38,12 +38,14 @@ public class ClipTest  {
     String ts_animal = scratchDir+"ANIMAL_20121008_120000_20121008_130000.mux";
     //String ts_dr1 = scratchDir+"DR1_20121008_120000_20121008_130000.mux";
     String ts_drp8 = scratchDir+"DRP8_20121008_120000_20121008_130000.mux";
+    private String pid;
 
 
     @Before
     public void setUp() throws Exception {
         Assume.assumeTrue(new File(scratchDir).exists());
-        context.setProgrampid("uuid:foobar");
+
+        pid = "uuid:foobar";
         context.setAnalysisClipLength(100000000l);
         context.setAudioBitrate(96);
         context.setEndOffsetTS(10);
@@ -76,6 +78,7 @@ public class ClipTest  {
 
     public void testMultiProgramMux() throws ProcessorException, DatatypeConfigurationException {
         TranscodeRequest request = new TranscodeRequest();
+        request.setObjectPid(pid);
         request.setFileFormat(FileFormatEnum.MULTI_PROGRAM_MUX);
         TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip(mux2);
         clip.setClipLength(500000000L);
@@ -104,6 +107,7 @@ public class ClipTest  {
     @Test
     public void testWav() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
+        request.setObjectPid(pid);
         request.setFileFormat(FileFormatEnum.AUDIO_WAV);
         TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip(wav);
         clip.setClipLength(500000000L);
@@ -113,7 +117,7 @@ public class ClipTest  {
         request.setClips(clips);
         request.setBitrate(88125L);
 
-        context.setProgrampid("uuid:barfoo");
+        request.setObjectPid("uuid:barfoo");
 
         ProgramBroadcast pb = new ProgramBroadcast();
         XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,5,0));
@@ -130,6 +134,7 @@ public class ClipTest  {
     @Test
     public void testMpeg() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
+        request.setObjectPid(pid);
         request.setFileFormat(FileFormatEnum.MPEG_PS);
         TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip(mpeg);
         clip.setClipLength(800000000L);
@@ -139,7 +144,7 @@ public class ClipTest  {
         request.setClips(clips);
         request.setBitrate(169250L);
 
-        context.setProgrampid("uuid:carfoo");
+        request.setObjectPid("uuid:carfoo");
 
         ProgramBroadcast pb = new ProgramBroadcast();
         XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,5,0));
@@ -157,6 +162,7 @@ public class ClipTest  {
     @Ignore
      public void testAnimal() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
+        request.setObjectPid(pid);
         request.setFileFormat(FileFormatEnum.SINGLE_PROGRAM_VIDEO_TS);
         TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip(ts_animal);
         clip.setClipLength(200000000L);
@@ -166,7 +172,7 @@ public class ClipTest  {
         request.setClips(clips);
         request.setBitrate(425625L);
 
-        context.setProgrampid("uuid:animal");
+        request.setObjectPid("uuid:animal");
 
         ProgramBroadcast pb = new ProgramBroadcast();
         XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,32));
@@ -184,6 +190,7 @@ public class ClipTest  {
     @Ignore
      public void testDr1() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
+        request.setObjectPid(pid);
         request.setFileFormat(FileFormatEnum.SINGLE_PROGRAM_VIDEO_TS);
         TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip(ts_dr1);
         clip.setClipLength(200000000L);
@@ -193,7 +200,7 @@ public class ClipTest  {
         request.setClips(clips);
         request.setBitrate(828750L);
 
-        context.setProgrampid("uuid:drone");
+        request.setObjectPid("uuid:drone");
 
         ProgramBroadcast pb = new ProgramBroadcast();
         XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,32));
@@ -211,6 +218,7 @@ public class ClipTest  {
     @Ignore
     public void testDrp8() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
+        request.setObjectPid(pid);
         request.setFileFormat(FileFormatEnum.SINGLE_PROGRAM_AUDIO_TS);
         TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip(ts_drp8);
         clip.setClipLength(200000000L);
@@ -220,7 +228,7 @@ public class ClipTest  {
         request.setClips(clips);
         request.setBitrate(32000L);
 
-        context.setProgrampid("uuid:drp8");
+        request.setObjectPid("uuid:drp8");
 
         ProgramBroadcast pb = new ProgramBroadcast();
         XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,32));

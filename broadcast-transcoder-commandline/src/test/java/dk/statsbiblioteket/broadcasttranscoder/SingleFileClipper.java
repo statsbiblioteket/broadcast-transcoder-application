@@ -49,7 +49,7 @@ public class SingleFileClipper {
         List<TranscodeRequest.FileClip> clips = new ArrayList<TranscodeRequest.FileClip>();
         clips.add(clip);
         request.setClips(clips);
-        context.setProgrampid("uuid:" + file.getName());
+        request.setObjectPid("uuid:" + file.getName());
         ProgramBroadcast pb = new ProgramBroadcast();
         //XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,35));
         long start = System.currentTimeMillis();
