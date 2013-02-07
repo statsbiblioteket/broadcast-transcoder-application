@@ -1,24 +1,16 @@
 package dk.statsbiblioteket.broadcasttranscoder.cli.parsers;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.UsageException;
-import dk.statsbiblioteket.broadcasttranscoder.cli.parsers.InfrastructureOptionsParser;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.BroadcastTranscodingRecordDAO;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.ReklamefilmTranscodingRecordDAO;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.TranscodingRecordDao;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
+import org.apache.commons.cli.*;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+
 import static dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.*;
 
 /**
@@ -105,6 +97,7 @@ public class SingleTranscodingOptionsParser<T extends TranscodingRecord> extends
         context.setSoxTranscodeParams(readStringProperty(SOX_TRANSCODE_PARAMS, props));
         context.setDefaultTranscodingTimestamp(readLongProperty(DEFAULT_TIMESTAMP, props));
         context.setOverwrite(readBooleanProperty(OVERWRITE,props));
+        context.setOnlyTranscodeChanges(readBooleanProperty(ONLYTRANSCODECHANGES, props));
     }
 
 

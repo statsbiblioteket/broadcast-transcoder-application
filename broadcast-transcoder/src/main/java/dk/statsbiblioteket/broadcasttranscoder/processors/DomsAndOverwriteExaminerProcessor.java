@@ -73,10 +73,21 @@ public class DomsAndOverwriteExaminerProcessor extends ProcessorChainElement {
         }
         logger.debug("Media file exists, checking whether program record in DOMS has significant changes for " + request.getObjectPid());
 
+        if (!context.isOnlyTranscodeChanges()){
+            //if we do not bother to check if the change is major
+            request.setGoForTranscoding(true);
+            return;
+        }
+
+        boolean majorChange = checkDoms(context, pid);
+        request.setGoForTranscoding(majorChange);
+    }
+
+    private boolean checkDoms( SingleTranscodingContext context, String pid) throws ProcessorException {
         long timeStampOfNewChange = context.getTranscodingTimestamp();
         logger.info("Transcode doms record for " + pid + " timestamp " + timeStampOfNewChange + "=" + new Date(timeStampOfNewChange));
         TranscodingProcessInterface persister = context.getTranscodingProcessInterface();
-        Long oldTranscodingTimestamp = persister.getLatestTranscodingTimestamp(request.getObjectPid());
+        Long oldTranscodingTimestamp = persister.getLatestTranscodingTimestamp(pid);
         if (oldTranscodingTimestamp == null) {
             logger.info("Using default transcoding timestamp for " + pid);
             oldTranscodingTimestamp = context.getDefaultTranscodingTimestamp();
@@ -87,7 +98,7 @@ public class DomsAndOverwriteExaminerProcessor extends ProcessorChainElement {
 
         ViewBundle bundle = null;
         try {
-            bundle = doms.getViewBundle(request.getObjectPid(), context.getDomsViewAngle());
+            bundle = doms.getViewBundle(pid, context.getDomsViewAngle());
         } catch (InvalidCredentialsException e) {
             throw new ProcessorException("Invalid credentials to get the object bundle for pid " +  pid, e);
         } catch (InvalidResourceException e) {
@@ -95,7 +106,6 @@ public class DomsAndOverwriteExaminerProcessor extends ProcessorChainElement {
         } catch (MethodFailedException e) {
             throw new ProcessorException("Doms failed for the object bundle for pid " +  pid, e);
         }
-
 
 
         String bundleString = bundle.getContents();
@@ -115,18 +125,17 @@ public class DomsAndOverwriteExaminerProcessor extends ProcessorChainElement {
             Diff smallDiff = new Diff(oldStructure, newStructure);
             if (smallDiff.similar()) {
                 logger.info("Not retranscoding " + pid + " as no significant changes found.");
-                request.setGoForTranscoding(false);
-                return;
+                return false;
             }
         } catch (SAXException e) {
             throw new ProcessorException("Failed to parse the BTA structure from the object bundle for pid " +  pid + " for comparison");
         } catch (IOException e) {
             throw new ProcessorException("Failed to parse the BTA structure from the object bundle for pid " +  pid + " for comparison");
         }
-        request.setGoForTranscoding(true);
         logger.info("Retranscoding " + pid + " as significant changes found.");
-    }
+        return true;
 
+    }
 
 
     String extractBTAstructure(String bundleString) throws TransformerException {

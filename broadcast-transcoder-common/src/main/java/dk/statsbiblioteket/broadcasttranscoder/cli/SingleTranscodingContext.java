@@ -17,6 +17,7 @@ public class SingleTranscodingContext<T extends TranscodingRecord> extends Infra
     private String programpid;
     private File behaviourConfigFile;
     private boolean overwrite;
+    private boolean onlyTranscodeChanges;
 
 
 
@@ -67,7 +68,6 @@ public class SingleTranscodingContext<T extends TranscodingRecord> extends Infra
     private ReklamefilmFileResolver reklamefilmFileResolver;
 
     private String domsViewAngle;
-
 
 
     public SingleTranscodingContext() {
@@ -386,5 +386,13 @@ public class SingleTranscodingContext<T extends TranscodingRecord> extends Infra
 
     public void setDomsViewAngle(String domsViewAngle) {
         this.domsViewAngle = domsViewAngle;
+    }
+
+    public boolean isOnlyTranscodeChanges() {
+        return onlyTranscodeChanges;
+    }
+
+    public void setOnlyTranscodeChanges(boolean onlyTranscodeChanges) {
+        this.onlyTranscodeChanges = onlyTranscodeChanges;
     }
 }

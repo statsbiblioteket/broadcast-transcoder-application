@@ -96,6 +96,7 @@ public class PropertyNames {
     public static final String DEFAULT_TIMESTAMP= "defaultTranscodingTimestamp";
 
     public static final String OVERWRITE = "overwrite";
+    public static final String ONLYTRANSCODECHANGES = "onlyTranscodeChanges";
 
     /**
      * Properties relating to reklamefilm
