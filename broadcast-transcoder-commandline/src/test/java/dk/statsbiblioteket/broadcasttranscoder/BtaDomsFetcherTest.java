@@ -7,8 +7,10 @@ import dk.statsbiblioteket.doms.central.InvalidCredentialsException;
 import dk.statsbiblioteket.doms.central.MethodFailedException;
 import dk.statsbiblioteket.doms.central.RecordDescription;
 import org.apache.commons.io.FileUtils;
-import org.junit.*;
-import org.junit.contrib.java.lang.system.ExpectedSystemExit;
+import org.junit.After;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -16,7 +18,6 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.List;
 
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -28,8 +29,6 @@ import static org.junit.Assert.assertTrue;
  */
 public class BtaDomsFetcherTest {
 
-    @Rule
-    public final ExpectedSystemExit exit = ExpectedSystemExit.none();
     private File foobar4;
 
     @Before

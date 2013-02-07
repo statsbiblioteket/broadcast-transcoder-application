@@ -16,25 +16,14 @@
             <artifactId>broadcast-transcoder</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!--<dependency>
-            <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>
-            <artifactId>broadcast-transcoder-fetcher</artifactId>
-            <version>${project.version}</version>
-        </dependency> -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.stefanbirkner</groupId>
-            <artifactId>system-rules</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
-            <version>10.9.1.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -46,6 +35,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -71,35 +61,35 @@
                 </executions>
             </plugin>
             <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-jar-plugin</artifactId>
-                            <version>2.4</version>
-                            <configuration>
-                                <archive>
-                                    <manifest>
-                                        <addClasspath>true</addClasspath>
-                                    </manifest>
-                                </archive>
-                                <excludes>
-                                    <exclude>
-                                        log4j.xml
-                                    </exclude>
-                                    <exclude>
-                                        logback.xml.xml
-                                    </exclude>
-                                    <exclude>
-                                        logback-test.xml
-                                    </exclude>
-                                </excludes>
-                            </configuration>
-                            <executions>
-                                <execution>
-                                    <goals>
-                                        <goal>test-jar</goal>
-                                    </goals>
-                                </execution>
-                            </executions>
-                        </plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                    </archive>
+                    <excludes>
+                        <exclude>
+                            log4j.xml
+                        </exclude>
+                        <exclude>
+                            logback.xml.xml
+                        </exclude>
+                        <exclude>
+                            logback-test.xml
+                        </exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
