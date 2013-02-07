@@ -62,7 +62,7 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
            File outputFile = FileUtils.getTemporaryMediaOutputFile(request, context);
            String line = "ffmpeg -i - " + context.getX264FfmpegParams()
                    + " -b:v " + context.getVideoBitrate() + "000"
-                   + " -b:a " + context.getAudioBitrate() + "000 -y "
+                   + " -ac 2 -b:a " + context.getAudioBitrate() + "000 -y "
                    + " " + getFfmpegAspectRatio(request, context)  + " "
                    + outputFile.getAbsolutePath();
            return line;

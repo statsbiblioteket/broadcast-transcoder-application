@@ -46,7 +46,7 @@ public class UnistreamAudioTranscoderProcessor extends ProcessorChainElement {
 
      public static String getFfmpegCommandLine(TranscodeRequest request, SingleTranscodingContext context) {
            File outputFile = FileUtils.getTemporaryMediaOutputFile(request, context);
-           String line = "ffmpeg -i - -acodec libmp3lame -ar 44100 "
+           String line = "ffmpeg -i - -acodec libmp3lame -ar 44100 -ac 2 "
                    + " -b:a " + context.getAudioBitrate() + "000 -y "
                    + outputFile.getAbsolutePath();
            return line;

@@ -79,7 +79,7 @@ public class WavTranscoderProcessor extends ProcessorChainElement {
             command += " ) ";
         }
         command += "| ffmpeg -f s16le -i - "
-                + " -ab " + context.getAudioBitrate() + "000 -y "
+                + " -ac 2  -ab " + context.getAudioBitrate() + "000 -y "
                 + FileUtils.getTemporaryMediaOutputFile(request, context).getAbsolutePath();
         return command;
     }
