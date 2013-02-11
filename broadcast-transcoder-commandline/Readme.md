@@ -1,12 +1,9 @@
 # Broadcast Transcoder
 
 
-
 Broadcast transcoder is (surprise) a system, that transcoded radio-tv
 programs from DOMS, based on the raw recordings stored in the Bitmagasin, into
 files suitable to presentation in Mediestream.
-
-How to use this system
 
 
 ## Enqueuing jobs
@@ -43,10 +40,28 @@ the work to 2 machines in a round robin fashion. So each machine will handle 2 t
 
 ## Handling old transcodings
 
-For the first run, note that the field overwrite in bta.behaviour.properties, should be set to
- false. This will cause the system to mark all programs as completed, if the file already exists.
+If old transcodings already exists, the best way to handle them is to mark them as already transcoded.
+As they are marked as transcoded, the system will not attempt to retranscode them until some meaningful
+change happens in doms.
+Generate a list from Fedora with the following query
 
-After this first run all the programs in doms should be marked as completed in the database. We can
-now set the overwrite flag to true, and let the system run continuously.
+select $object $timestamp
+from <#ri>
+where
+$object <fedora-model:hasModel> <info:fedora/doms:ContentModel_Program>
+and
+$object <fedora-model:state> <fedora-model:Active>
+and
+$object <fedora-view:lastModifiedDate> $timestamp
+and
+$object <fedora-view:disseminates> $datastream
+and
+$datastream <fedora-view:disseminationType> <info:fedora/*/PROGRAM_STRUCTURE>
 
+And store the contents (minus the header) in a file. Then invoke the
+    ./markAsCompleted.sh listOfprograms
+It will then create entries in the database for each program in that list.
+
+After this enqueueJobs.sh can be run freely, as it will not update a record
+if the doms timstamp is not newer than the database timestamp.
 
