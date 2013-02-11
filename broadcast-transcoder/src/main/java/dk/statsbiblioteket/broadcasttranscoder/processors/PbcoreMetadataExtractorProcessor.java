@@ -27,6 +27,8 @@ public class PbcoreMetadataExtractorProcessor extends ProcessorChainElement {
         }
         request.setTvmeter(hasTvmeter(structureXmlString));
         request.setTitle(getTitle(structureXmlString));
+        String type = getType(structureXmlString);
+        request.setVideo("Moving Image".equals(type));
     }
 
     boolean hasTvmeter(String structureXmlString) {
@@ -41,4 +43,11 @@ public class PbcoreMetadataExtractorProcessor extends ProcessorChainElement {
         Document doc = DOM.stringToDOM(structureXmlString, true);
         return xpath.selectString(doc, "/pb:PBCoreDescriptionDocument/pb:pbcoreTitle[pb:titleType='titel']/pb:title");
     }
+
+    String getType(String structureXmlString) {
+        XPathSelector xpath = DOM.createXPathSelector("pb", "http://www.pbcore.org/PBCore/PBCoreNamespace.html");
+        Document doc = DOM.stringToDOM(structureXmlString, true);
+        return xpath.selectString(doc, "/pb:PBCoreDescriptionDocument/pb:pbcoreInstantiation/pb:formatMediaType");
+    }
+
 }

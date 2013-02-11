@@ -23,6 +23,16 @@ public class TranscodeRequest {
 
     private int snapshotPaddingSeconds;
 
+    private  boolean video;
+
+    public boolean isVideo() {
+        return video;
+    }
+
+    public void setVideo(boolean video) {
+        this.video = video;
+    }
+
     public ProgramBroadcast getProgramBroadcast() {
         return programBroadcast;
     }
