@@ -14,13 +14,15 @@ import java.util.List;
 public interface TranscodingProcessInterface<T> extends GenericDAO<T, String> {
     List<T> getAllTranscodings(long since, TranscodingStateEnum state);
 
-    void markAsChangedInDoms(String programpid, long timestamp);
+    boolean exists(String programpid);
 
-    void markAsAlreadyTranscoded(String programpid, long timestamp);
+    boolean markAsChangedInDoms(String programpid, long timestamp);
 
-    void markAsFailed(String programpid, long timestamp, String message);
+    boolean markAsAlreadyTranscoded(String programpid, long timestamp);
 
-    void markAsRejected(String programpid, long timestamp, String message);
+    boolean markAsFailed(String programpid, long timestamp, String message);
+
+    boolean markAsRejected(String programpid, long timestamp, String message);
 
     long getLatestTranscodingTimestamp(String programPid);
 
