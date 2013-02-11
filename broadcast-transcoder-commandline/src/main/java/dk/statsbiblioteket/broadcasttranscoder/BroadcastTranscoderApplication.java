@@ -71,13 +71,19 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
             return;
         }
 
-            /*First one getting stuff for the persistence layer*/
-        ProcessorChainElement programFetcher = new ProgramMetadataFetcherProcessor();
 
             /*Next one getting for the persistence layer*/
         ProcessorChainElement pbcorer = new PbcoreMetadataExtractorProcessor();
 
+        ProcessorChainElement metadataChain = ProcessorChainElement.makeChain(pbcorer);
+        metadataChain.processIteratively(request,context);
 
+        if (!request.isVideo()){    //TODO remove this when CSR fixes the radio transcoding
+            return;
+        }
+
+            /*First one getting stuff for the persistence layer*/
+        ProcessorChainElement programFetcher = new ProgramMetadataFetcherProcessor();
         ProcessorChainElement filedataFetcher    = new FileMetadataFetcherProcessor();
         ProcessorChainElement sanitiser = new SanitiseBroadcastMetadataProcessor();
         ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
@@ -93,7 +99,6 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
         ProcessorChainElement concatenator = new ClipConcatenatorProcessor();
         ProcessorChainElement firstChain = ProcessorChainElement.makeChain(
                 programFetcher,
-                pbcorer,
                 filedataFetcher,
                 sanitiser,
                 sorter,
