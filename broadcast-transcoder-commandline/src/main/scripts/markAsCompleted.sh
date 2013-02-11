@@ -2,9 +2,6 @@
 
 
 programList=$1
-fileSizes=$2
-succesList=$3
-failureList=$4
 
 # Get settings
 SCRIPT_PATH=$(dirname $(readlink -f $0))
