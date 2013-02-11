@@ -102,7 +102,7 @@ trap 'rmdir $globalLock; rm -rf $changes; exit 1' INT TERM
 
 # Get list of changes from queryChanges with progress timestamp as input
 changes=$( mktemp -p ${workDir} )
-${SCRIPT_PATH}/queryChanges.sh ${collection} | grep "^uuid" > ${changes}
+${SCRIPT_PATH}/queryChangesDoms.sh ${collection} | grep "^uuid" > ${changes}
 
 # Cut list into pid/timestamp sets
 # Iterate through list,
