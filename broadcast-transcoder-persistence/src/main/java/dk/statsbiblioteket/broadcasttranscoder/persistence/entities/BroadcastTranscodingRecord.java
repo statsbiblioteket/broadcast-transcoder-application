@@ -11,13 +11,22 @@ public class BroadcastTranscodingRecord extends TranscodingRecord{
 
     private String transcodingCommand;
     private boolean isTvmeter;
+
+    /**
+     * Start offset in seconds. Use negative numbers to indicate earlier start, positive ones to start later.
+     */
     private int startOffset;
+
+    /**
+     * End offset in seconds. Use negative numbers to indicate earlier end (ie. shorter record, positive ones to end later (longer record)
+     */
     private int endOffset;
+
     private Date broadcastStartTime;
     private Date broadcastEndTime;
     private String title;
     private String channel;
-
+    private boolean video;
 
 
 
@@ -87,6 +96,15 @@ public class BroadcastTranscodingRecord extends TranscodingRecord{
     }
 
 
+    public boolean isVideo() {
+        return video;
+    }
+
+    public void setVideo(boolean video) {
+        this.video = video;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -98,6 +116,7 @@ public class BroadcastTranscodingRecord extends TranscodingRecord{
         if (endOffset != that.endOffset) return false;
         if (isTvmeter != that.isTvmeter) return false;
         if (startOffset != that.startOffset) return false;
+        if (video != that.video) return false;
         if (broadcastEndTime != null ? !broadcastEndTime.equals(that.broadcastEndTime) : that.broadcastEndTime != null)
             return false;
         if (broadcastStartTime != null ? !broadcastStartTime.equals(that.broadcastStartTime) : that.broadcastStartTime != null)
@@ -121,21 +140,22 @@ public class BroadcastTranscodingRecord extends TranscodingRecord{
         result = 31 * result + (broadcastEndTime != null ? broadcastEndTime.hashCode() : 0);
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (channel != null ? channel.hashCode() : 0);
+        result = 31 * result + (video ? 1 : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return "BroadcastTranscodingRecord{" +
-                super.toString() + "," +
                 "transcodingCommand='" + transcodingCommand + '\'' +
                 ", isTvmeter=" + isTvmeter +
                 ", startOffset=" + startOffset +
                 ", endOffset=" + endOffset +
-                ", broadtcastStartTime=" + broadcastStartTime +
+                ", broadcastStartTime=" + broadcastStartTime +
                 ", broadcastEndTime=" + broadcastEndTime +
                 ", title='" + title + '\'' +
                 ", channel='" + channel + '\'' +
+                ", video=" + video +
                 '}';
     }
 }

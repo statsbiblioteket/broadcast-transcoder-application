@@ -27,6 +27,7 @@ public class BroadcastTranscodingRecordEnricherProcessor extends ProcessorChainE
         record.setBroadcastStartTime(MetadataUtils.getProgramStart(request));
         record.setBroadcastEndTime(MetadataUtils.getProgramEnd(request));
         record.setChannel(request.getProgramBroadcast().getChannelId());
+        record.setVideo(request.isVideo());
         record.setEndOffset(request.getEndOffsetUsed());
         record.setStartOffset(request.getStartOffsetUsed());
         record.setTitle(request.getTitle());
