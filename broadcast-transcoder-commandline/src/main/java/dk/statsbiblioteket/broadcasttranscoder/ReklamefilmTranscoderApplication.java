@@ -32,6 +32,7 @@ public class ReklamefilmTranscoderApplication extends TranscoderApplication {
         context.setTranscodingProcessInterface(new ReklamefilmTranscodingRecordDAO(util));
         context.setReklamefilmFileResolver(new ReklamefilmFileResolverImpl(context));
         TranscodeRequest request = new TranscodeRequest();
+        request.setObjectPid(context.getProgrampid());
 
         try {
             request.setGoForTranscoding(true);
