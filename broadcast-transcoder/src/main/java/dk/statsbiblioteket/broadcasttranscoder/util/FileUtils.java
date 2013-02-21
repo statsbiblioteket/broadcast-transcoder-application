@@ -58,25 +58,23 @@ public class FileUtils {
         return null;
     }
 
-    public static File getFinalMediaOutputFile(TranscodeRequest request, InfrastructureContext context) {
+    public static File getFinalMediaOutputFile(TranscodeRequest request, SingleTranscodingContext context) {
         File dir = getFinalMediaOutputDir(request, context);
-        String filename = request.getObjectPid().replace("uuid:","");
-        switch (request.getFileFormat()) {
-            case SINGLE_PROGRAM_AUDIO_TS:
-                filename += ".mp3";
-                break;
-            case AUDIO_WAV:
-                filename += ".mp3";
-                break;
-            default:
-                filename += ".flv";
-        }
+        String filename = getOutputFilename(request, context);
         return new File(dir, filename);
     }
 
-    public static File getTemporaryMediaOutputFile(TranscodeRequest request, InfrastructureContext context) {
+    public static File getTemporaryMediaOutputFile(TranscodeRequest request, SingleTranscodingContext context) {
         File dir = getTemporaryMediaOutputDir(request, context);
+        String filename = getOutputFilename(request, context);
+        return new File(dir, filename);
+    }
+
+    private static String getOutputFilename(TranscodeRequest request, SingleTranscodingContext context ) {
         String filename = request.getObjectPid().replace("uuid:","");
+        if (request.getOutputBasename() != null && request.getOutputBasename().trim().length()>0) {
+             filename = request.getOutputBasename().trim();
+        }
         switch (request.getFileFormat()) {
             case SINGLE_PROGRAM_AUDIO_TS:
                 filename += ".mp3";
@@ -85,10 +83,11 @@ public class FileUtils {
                 filename += ".mp3";
                 break;
             default:
-                filename += ".flv";
+                filename += "." + context.getVideoOutputSuffix();
         }
-        return new File(dir, filename);
+        return filename;
     }
+
     public static File getPreviewOutputFile(TranscodeRequest request, InfrastructureContext context) {
         File dir = getPreviewOutputDir(request, context);
         String filename = request.getObjectPid().replace("uuid:","");

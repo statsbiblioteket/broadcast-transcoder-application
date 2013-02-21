@@ -36,6 +36,7 @@
             <directory>src/main/scripts/</directory>
             <excludes>
                 <exclude>transcodeReklame.sh</exclude>
+                <exclude>gnuparallel</exclude>
             </excludes>
             <outputDirectory>bin</outputDirectory>
             <fileMode>0755</fileMode>

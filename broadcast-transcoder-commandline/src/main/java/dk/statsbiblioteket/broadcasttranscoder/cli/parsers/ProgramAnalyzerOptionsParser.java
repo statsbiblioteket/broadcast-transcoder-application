@@ -121,7 +121,7 @@ public class ProgramAnalyzerOptionsParser<T extends TranscodingRecord> extends I
         context.setVideoBitrate(readIntegerProperty(VIDEO_BITRATE, props));
         context.setAudioBitrate(readIntegerProperty(AUDIO_BITRATE, props));
         context.setVideoHeight(readIntegerProperty(HEIGHT, props));
-        context.setX264VlcParams(readStringProperty(X264_VLC_PARAMS, props));
+        context.setVlcTranscodingString(readStringProperty(VLC_TRANSCODING_STRING, props));
         context.setX264FfmpegParams(readStringProperty(X264_FFMPEG_PARAMS, props));
         context.setTranscodingTimeoutDivisor(readFloatProperty(TRANSCODING_DIVISOR, props));
         context.setAnalysisClipLength(readLongProperty(ANALYSIS_CLIP_LENGTH, props));

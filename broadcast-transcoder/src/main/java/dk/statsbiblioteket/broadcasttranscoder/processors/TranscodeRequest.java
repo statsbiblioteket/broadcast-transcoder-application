@@ -282,6 +282,16 @@ public class TranscodeRequest {
 
     private String objectPid;
 
+    private String outputBasename;
+
+    public String getOutputBasename() {
+        return outputBasename;
+    }
+
+    public void setOutputBasename(String outputBasename) {
+        this.outputBasename = outputBasename;
+    }
+
     public String getObjectPid() {
         return objectPid;
     }
@@ -397,6 +407,8 @@ public class TranscodeRequest {
         public Long getClipLength() {
             return clipLength;
         }
+
+
 
         @Override
         public String toString() {

@@ -4,7 +4,6 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramBroadcast;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
-import junit.framework.TestCase;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -69,7 +68,7 @@ public class ClipTest  {
         context.setTranscodingTimeoutDivisor(1);
         context.setVideoBitrate(400);
         context.setVideoHeight(288);
-        context.setX264VlcParams("profile=High,preset=superfast,level=3.0");
+        context.setVlcTranscodingString("profile=High,preset=superfast,level=3.0");
         context.setX264FfmpegParams("-async 2 -vcodec libx264 -deinterlace -ar 44100 -preset superfast -threads 0");
         context.setSoxTranscodeParams(" -t raw -s -b 16 -c2");
         context.setFileOutputRootdir(new File(scratchWriteDir+"outputdir"));

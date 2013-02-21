@@ -1,6 +1,5 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.*;
 import org.slf4j.Logger;
@@ -50,16 +49,12 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
         File outputDir = FileUtils.getTemporaryMediaOutputDir(request, context);
         outputDir.mkdirs();
 
-        //The odd logic here is that we prefer to use custom-PMT if we have all three pids, but because of a bug in vlc we
-        //may need to use a custom PMT to get DR1 (program 101) to work even if we don't have a pid for dvbsub. So:
-        boolean useCustomPMT = (request.getDvbsubPid() != null && !request.getAudioPids().isEmpty() && request.getVideoPid() != null && request.getVideoFcc() != null && request.getAudioFcc() != null );
-        useCustomPMT = useCustomPMT |  (!request.getAudioPids().isEmpty() && request.getVideoPid() != null && request.getVideoFcc() != null && request.getAudioFcc() != null && programNumber==101);
-        useCustomPMT = true;
+
         String clipperCommand = null;
         if (request.getFileFormat().equals(FileFormatEnum.SINGLE_PROGRAM_AUDIO_TS)) {
             clipperCommand = findAudioClipperCommand(request, context, processSubstitutionFileList);
         } else {
-            clipperCommand = findVideoClipperCommand(request, context, processSubstitutionFileList, programNumber, useCustomPMT);
+            clipperCommand = findVideoClipperCommand(request, context, processSubstitutionFileList);
         }
         try {
             long programLength = MetadataUtils.findProgramLengthMillis(request);
@@ -81,44 +76,25 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
                 + context.getAudioBitrate() + "000 -y " + FileUtils.getTemporaryMediaOutputDir(request, context);
     }
 
-    private String findVideoClipperCommand(TranscodeRequest request, SingleTranscodingContext context, String processSubstitutionFileList, int programNumber, boolean useCustomPMT) {
-        String clipperCommand;
-        if (!useCustomPMT) {
-            String programString = "";
-            String programSelectString = "";
-            if (request.getFileFormat().equals(FileFormatEnum.MULTI_PROGRAM_MUX)) {
-                programString = " --program=" + programNumber;
-                programSelectString = ",select=\"program=\" + programNumber + \"\"";
-            }
-            clipperCommand = "cat " + processSubstitutionFileList + " | vlc - " + programString + " --quiet --demux=ts --intf dummy --play-and-exit --noaudio --novideo "
-                    + "--sout-all --sout '#duplicate{dst=\"transcode{senc=dvbsub}"
-                    + ":transcode{vcodec=h264,vb=" + context.getVideoBitrate() + ",venc=x264{" + context.getX264VlcParams() + "},soverlay,deinterlace,audio-sync,"
-                    + ",width=" + getWidth(request, context)
-                    + ",height=" + getHeight(request, context) +",threads=0}"
-                    + ":std{access=file,mux=ts,dst=-}\""
-                    + programSelectString + "' | "
-                    + "ffmpeg -i -  -async 2 -vcodec copy -ac 2 -acodec libmp3lame -ar 44100 -ab " + context.getAudioBitrate() + "000 -y -f flv " + FileUtils.getTemporaryMediaOutputFile(request, context);
-        /*
-        For yousee ts files, change this to something like
-        ffmpeg -i  ~/scratch/BTA-unittest/ANIMAL_20121008_120000_20121008_130000.mux -vcodec libx264 -preset superfast -profile:v High -level 3.0 -ab 96000 -vb 400000 -acodec libmp3lame -async 2 -ac 2 -ar 44100 -s 512x288  -f flv temp.flv
-         */
-
-        } else {
-            String programSelector = " --program=1010 --sout-all --ts-extra-pmt=1010:1010=" + request.getVideoPid() + ":video=" + request.getVideoFcc()
-                    + "," + request.getMinimumAudioPid() + ":audio=" + request.getAudioFcc();
-            if (request.getDvbsubPid() != null) {
-                programSelector += "," + request.getDvbsubPid() + ":spu=dvbs";
-            }
-            logger.debug("Using Custom PMT for '" + request.getObjectPid() + "': " + programSelector);
-            clipperCommand = "cat " + processSubstitutionFileList + " |  vlc - " + programSelector + " --quiet --demux=ts --intf dummy --play-and-exit --noaudio --novideo "
-                    + "--sout-all --sout '#transcode{vcodec=x264,vb=" + context.getVideoBitrate() + ",venc=x264{" + context.getX264VlcParams() + "}" +
-                    ",soverlay,deinterlace,audio-sync,"
-                    + ",width=" + getWidth(request, context)
-                    + ",height=" + getHeight(request, context) +",threads=0}"
-                    + ":std{access=file,mux=ts,dst=-}' |" +
-                    "ffmpeg -i -  -async 2 -vcodec copy -acodec libmp3lame -ac 2 -ar 44100 -ab " + context.getAudioBitrate()
-                    + "000 -y -f flv " + FileUtils.getTemporaryMediaOutputFile(request, context);
+    private String findVideoClipperCommand(TranscodeRequest request, SingleTranscodingContext context, String processSubstitutionFileList) throws ProcessorException {
+        String programSelector = " --program=1010 --sout-all --ts-extra-pmt=1010:1010=" + request.getVideoPid() + ":video=" + request.getVideoFcc()
+                + "," + request.getMinimumAudioPid() + ":audio=" + request.getAudioFcc();
+        if (request.getDvbsubPid() != null) {
+            programSelector += "," + request.getDvbsubPid() + ":spu=dvbs";
         }
+        logger.debug("Using Custom PMT for '" + request.getObjectPid() + "': " + programSelector);
+        String transcodingString = context.getVlcTranscodingString();
+        transcodingString = transcodingString.replace("$$VIDEO_BITRATE$$", context.getVideoBitrate()+"");
+        transcodingString = transcodingString.replace("$$VIDEO_WIDTH$$", getWidth(request, context)+"");
+        transcodingString = transcodingString.replace("$$VIDEO_HEIGHT$$", getHeight(request, context)+"");
+        transcodingString = transcodingString.replace("$$AUDIO_BITRATE$$", context.getAudioBitrate()+"");
+        transcodingString = transcodingString.replace("$$OUTPUT_FILE$$", FileUtils.getTemporaryMediaOutputFile(request, context).getAbsolutePath());
+        transcodingString = transcodingString.replace("$$DISPLAY_ASPECT$$", request.getDisplayAspectRatioString());
+        if (transcodingString.contains("$$")) {
+            throw new ProcessorException("Failed to set all template variables in transcoding string: " + transcodingString);
+        }
+
+        String  clipperCommand = "cat " + processSubstitutionFileList + " |" + transcodingString ;
         return clipperCommand;
     }
 

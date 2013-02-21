@@ -24,10 +24,11 @@ public class SingleTranscodingContext<T extends TranscodingRecord> extends Infra
     private int videoBitrate;
     private int audioBitrate;
     private int videoHeight;
-    private String x264VlcParams;
+    private String vlcTranscodingString;
     private String x264FfmpegParams;
     private float transcodingTimeoutDivisor;
     private long analysisClipLength;
+    private String videoOutputSuffix;
 
     private int maxMissingStart;
     private int maxMissingEnd;
@@ -68,6 +69,7 @@ public class SingleTranscodingContext<T extends TranscodingRecord> extends Infra
     private ReklamefilmFileResolver reklamefilmFileResolver;
 
     private String domsViewAngle;
+
 
 
     public SingleTranscodingContext() {
@@ -123,12 +125,12 @@ public class SingleTranscodingContext<T extends TranscodingRecord> extends Infra
         this.videoHeight = videoHeight;
     }
 
-    public String getX264VlcParams() {
-        return x264VlcParams;
+    public String getVlcTranscodingString() {
+        return vlcTranscodingString;
     }
 
-    public void setX264VlcParams(String x264VlcParams) {
-        this.x264VlcParams = x264VlcParams;
+    public void setVlcTranscodingString(String vlcTranscodingString) {
+        this.vlcTranscodingString = vlcTranscodingString;
     }
 
     public String getX264FfmpegParams() {
@@ -394,5 +396,13 @@ public class SingleTranscodingContext<T extends TranscodingRecord> extends Infra
 
     public void setOnlyTranscodeChanges(boolean onlyTranscodeChanges) {
         this.onlyTranscodeChanges = onlyTranscodeChanges;
+    }
+
+    public String getVideoOutputSuffix() {
+        return videoOutputSuffix;
+    }
+
+    public void setVideoOutputSuffix(String videoOutputSuffix) {
+        this.videoOutputSuffix = videoOutputSuffix;
     }
 }
