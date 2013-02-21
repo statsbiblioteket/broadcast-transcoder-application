@@ -69,7 +69,7 @@ public class ClipTest  {
         context.setVideoBitrate(400);
         context.setVideoHeight(288);
         context.setVlcTranscodingString("profile=High,preset=superfast,level=3.0");
-        context.setX264FfmpegParams("-async 2 -vcodec libx264 -deinterlace -ar 44100 -preset superfast -threads 0");
+        context.setFfmpegTranscodingString("-async 2 -vcodec libx264 -deinterlace -ar 44100 -preset superfast -threads 0");
         context.setSoxTranscodeParams(" -t raw -s -b 16 -c2");
         context.setFileOutputRootdir(new File(scratchWriteDir+"outputdir"));
     }

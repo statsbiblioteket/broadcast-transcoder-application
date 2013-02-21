@@ -25,7 +25,8 @@ public class SingleTranscodingContext<T extends TranscodingRecord> extends Infra
     private int audioBitrate;
     private int videoHeight;
     private String vlcTranscodingString;
-    private String x264FfmpegParams;
+    private String ffmpegTranscodingString;
+    private String vlcRemuxingString;
     private float transcodingTimeoutDivisor;
     private long analysisClipLength;
     private String videoOutputSuffix;
@@ -70,7 +71,13 @@ public class SingleTranscodingContext<T extends TranscodingRecord> extends Infra
 
     private String domsViewAngle;
 
+    public String getVlcRemuxingString() {
+        return vlcRemuxingString;
+    }
 
+    public void setVlcRemuxingString(String vlcRemuxingString) {
+        this.vlcRemuxingString = vlcRemuxingString;
+    }
 
     public SingleTranscodingContext() {
     }
@@ -133,12 +140,12 @@ public class SingleTranscodingContext<T extends TranscodingRecord> extends Infra
         this.vlcTranscodingString = vlcTranscodingString;
     }
 
-    public String getX264FfmpegParams() {
-        return x264FfmpegParams;
+    public String getFfmpegTranscodingString() {
+        return ffmpegTranscodingString;
     }
 
-    public void setX264FfmpegParams(String x264FfmpegParams) {
-        this.x264FfmpegParams = x264FfmpegParams;
+    public void setFfmpegTranscodingString(String ffmpegTranscodingString) {
+        this.ffmpegTranscodingString = ffmpegTranscodingString;
     }
 
     public float getTranscodingTimeoutDivisor() {

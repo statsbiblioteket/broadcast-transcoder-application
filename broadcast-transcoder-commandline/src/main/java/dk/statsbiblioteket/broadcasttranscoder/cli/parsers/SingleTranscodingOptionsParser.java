@@ -69,7 +69,7 @@ public class SingleTranscodingOptionsParser<T extends TranscodingRecord> extends
         context.setAudioBitrate(readIntegerProperty(AUDIO_BITRATE, props));
         context.setVideoHeight(readIntegerProperty(HEIGHT, props));
         context.setVlcTranscodingString(readStringProperty(VLC_TRANSCODING_STRING, props));
-        context.setX264FfmpegParams(readStringProperty(X264_FFMPEG_PARAMS, props));
+        context.setFfmpegTranscodingString(readStringProperty(FFMPEG_TRANSCODING_STRING, props));
         context.setTranscodingTimeoutDivisor(readFloatProperty(TRANSCODING_DIVISOR, props));
         context.setAnalysisClipLength(readLongProperty(ANALYSIS_CLIP_LENGTH, props));
         context.setStartOffsetTS(readIntegerProperty(START_OFFSET_TS, props));
@@ -99,6 +99,7 @@ public class SingleTranscodingOptionsParser<T extends TranscodingRecord> extends
         context.setOverwrite(readBooleanProperty(OVERWRITE,props));
         context.setOnlyTranscodeChanges(readBooleanProperty(ONLYTRANSCODECHANGES, props));
         context.setVideoOutputSuffix(readStringProperty(VIDEO_OUTPUT_SUFFIX, props));
+        context.setVlcRemuxingString(readStringProperty(VLC_REMUXING_STRING, props));
     }
 
 

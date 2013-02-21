@@ -8,10 +8,7 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
-import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
-import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutException;
-import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
-import dk.statsbiblioteket.broadcasttranscoder.util.MetadataUtils;
+import dk.statsbiblioteket.broadcasttranscoder.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +32,10 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
 
     private void mpegClip(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         String command = "cat " + request.getClipperCommand() + " | " + getFfmpegCommandLine(request, context);
+        if (request.getFileFormat().equals(FileFormatEnum.MPEG_PS) && context.getVideoOutputSuffix().equals("mpeg")) {
+             //From mpeg to mpeg so remux only
+            throw new ProcessorException("Not implemented");
+        }
         File outputDir = FileUtils.getTemporaryMediaOutputDir(request, context);
         outputDir.mkdirs();
         File outputFile = FileUtils.getTemporaryMediaOutputFile(request, context);
@@ -60,11 +61,11 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
 
     public static String getFfmpegCommandLine(TranscodeRequest request, SingleTranscodingContext context) {
            File outputFile = FileUtils.getTemporaryMediaOutputFile(request, context);
-           String line = "ffmpeg -i - " + context.getX264FfmpegParams()
-                   + " -b:v " + context.getVideoBitrate() + "000"
-                   + " -ac 2 -b:a " + context.getAudioBitrate() + "000 -y "
-                   + " " + getFfmpegAspectRatio(request, context)  + " "
-                   + outputFile.getAbsolutePath();
+           String line = context.getFfmpegTranscodingString();
+           line = line.replace("$$AUDIO_BITRATE$$", context.getAudioBitrate()+"");
+           line = line.replace("$$VIDEO_BITRATE$$", context.getVideoBitrate()+"");
+           line = line.replace("$$FFMPEG_ASPECT_RATIO$$", getFfmpegAspectRatio(request, context));
+           line = line.replace("$$OUTPUT_FILE$$", outputFile.getAbsolutePath());
            return line;
        }
 
@@ -76,9 +77,9 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
            if (aspectRatio != null) {
                long width = 2*Math.round(aspectRatio*height/2);
                //if (width%2 == 1) width += 1;
-               ffmpegResolution = " -s " + width + "x" + height;
+               ffmpegResolution =  width + "x" + height;
            } else {
-               ffmpegResolution = " -s 320x240";
+               ffmpegResolution = " 320x240";
            }
            return ffmpegResolution;
        }
