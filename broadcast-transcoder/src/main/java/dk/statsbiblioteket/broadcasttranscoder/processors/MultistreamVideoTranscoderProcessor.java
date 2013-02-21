@@ -90,6 +90,7 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
         transcodingString = transcodingString.replace("$$AUDIO_BITRATE$$", context.getAudioBitrate()+"");
         transcodingString = transcodingString.replace("$$OUTPUT_FILE$$", FileUtils.getTemporaryMediaOutputFile(request, context).getAbsolutePath());
         transcodingString = transcodingString.replace("$$DISPLAY_ASPECT$$", request.getDisplayAspectRatioString());
+        transcodingString = transcodingString.replace("$$PROGRAM_SELECTOR$$", programSelector);
         if (transcodingString.contains("$$")) {
             throw new ProcessorException("Failed to set all template variables in transcoding string: " + transcodingString);
         }
