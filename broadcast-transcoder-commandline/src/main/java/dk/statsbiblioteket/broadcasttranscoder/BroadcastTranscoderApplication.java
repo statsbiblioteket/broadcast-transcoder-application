@@ -47,9 +47,9 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
                 throw new TranscodingException("Request for pid "+request.getObjectPid()+" was rejected");
             }
         } catch (Exception e) {
-            transcodingFailed(request,context,e);
             //Final fault barrier is necessary for logging
             logger.error("Processing failed for " + request.getObjectPid(), e);
+            transcodingFailed(request,context,e);
             throw e;
         }
         logger.info("All processing finished for " + request.getObjectPid());
