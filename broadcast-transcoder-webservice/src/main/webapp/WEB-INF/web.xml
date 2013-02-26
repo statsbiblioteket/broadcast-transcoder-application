@@ -15,4 +15,7 @@
         <servlet-name>Jersey Web Application</servlet-name>
         <url-pattern>/bta/*</url-pattern>
     </servlet-mapping>
+    <listener>
+        <listener-class>dk.statsbiblioteket.broadcasttranscoder.ws.config.ConfigurationLoader</listener-class>
+    </listener>
 </web-app>

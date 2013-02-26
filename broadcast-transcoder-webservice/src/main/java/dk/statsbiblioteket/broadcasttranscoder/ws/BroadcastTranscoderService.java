@@ -1,21 +1,82 @@
 package dk.statsbiblioteket.broadcasttranscoder.ws;
 
+import dk.statsbiblioteket.broadcasttranscoder.btaws.BtaResponse;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
+import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
+import org.apache.commons.logging.impl.ServletContextCleaner;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 
 /** Example resource class hosted at the URI path "/myresource"
  */
-@Path("/myresource")
+@Path("/bta")
 public class BroadcastTranscoderService {
-    
-    /** Method processing HTTP GET requests, producing "text/plain" MIME media
-     * type.
-     * @return String that will be send back as a response of type "text/plain".
-     */
-    @GET 
-    @Produces("text/plain")
-    public String getIt() {
-        return "Hi there!";
+
+    @Context
+    ServletConfig config;
+    @Context
+    ServletContext context;
+
+    @GET @Path("/btaDVDTranscode")
+    @Produces(MediaType.APPLICATION_XML)
+    public BtaResponse startDigitvTranscoding(
+            @QueryParam("programpid") String programPid,
+            @QueryParam("title") String title,
+            @QueryParam("channel") String channel,
+            @QueryParam("date") long startTime,
+            @QueryParam("additional_start_offset") long additionalStartOffset,
+            @QueryParam("additional_end_offset") long additionalEndOffset,
+            @QueryParam("filename_prefix") String filenamePrefix) throws ProcessorException {
+            checkContext();
+            BtaResponse response = new BtaResponse();
+            response.setFilename(title);
+            return response;
     }
+
+    /**
+     *
+     * @param programPid
+     * @param title
+     * @param channel
+     * @param startTime
+     * @param additionalStartOffset
+     * @param additionalEndOffset
+     * @param filenamePrefix
+     * @param sendEmailParam Ignored. Exists for backwards compatibility.
+     * @param alternative  Ignored. Exists for backwards compatibility.
+     * @return
+     */
+    @GET @Path("/digitv_transcode")
+    @Produces(MediaType.APPLICATION_XML)
+    public BtaResponse startDigitvTranscoding(
+            @QueryParam("programpid") String programPid,
+            @QueryParam("title") String title,
+            @QueryParam("channel") String channel,
+            @QueryParam("date") long startTime,
+            @QueryParam("additional_start_offset") long additionalStartOffset,
+            @QueryParam("additional_end_offset") long additionalEndOffset,
+            @QueryParam("filename_prefix") String filenamePrefix,
+            @DefaultValue("false") @QueryParam("send_email") String sendEmailParam,
+            @DefaultValue("false") @QueryParam("alternative") String alternative ) throws ProcessorException {
+            return startDigitvTranscoding(programPid, title, channel, startTime,
+                    additionalStartOffset, additionalEndOffset, filenamePrefix);
+    }
+
+
+    public void checkContext() throws ProcessorException {
+        Object o = context.getAttribute("transcodingContext");
+        if (! (o instanceof SingleTranscodingContext)) {
+            throw new ProcessorException("Web context not initialised with SingleTranscodingContext");
+        }
+    }
+
 }

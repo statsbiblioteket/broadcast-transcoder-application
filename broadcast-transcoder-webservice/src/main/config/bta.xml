@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context docBase="/home/bta/war/bta.war">
+     <Parameter name="bta.behaviour.properties" value="/home/bta/config/bta.behaviour.ws.properties" />
+     <Parameter name="bta.infrastructure.properties" value="/home/bta/config/bta.infrastructure.ws.properties" />
+    <!--
+    Load with  LogBackConfigLoader, see https://bowerstudios.com/node/896
+    -->
+     <Parameter name="bta.logback.xml" value="/home/bta/config/bta.logback.ws.xml" /> <!-- -->
+</Context>

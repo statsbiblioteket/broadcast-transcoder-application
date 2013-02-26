@@ -21,6 +21,40 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jvnet.jaxb2.maven2</groupId>
+                <artifactId>maven-jaxb2-plugin</artifactId>
+                <version>0.8.3</version>
+                <configuration>
+                    <args>
+                        <arg>-XtoString</arg>
+                    </args>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.jvnet.jaxb2_commons</groupId>
+                            <artifactId>jaxb2-basics</artifactId>
+                            <version>0.6.4</version>
+                        </plugin>
+                    </plugins>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>bta-response</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <extension>true</extension>
+                            <args>
+                                <param>-npa</param>
+                            </args>
+                            <generatePackage>dk.statsbiblioteket.broadcasttranscoder.btaws</generatePackage>
+                            <removeOldOutput>true</removeOldOutput>
+                            <verbose>true</verbose>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Run the application using "mvn embedded-glassfish:run" -->
             <!--<plugin>
                 <groupId>org.glassfish</groupId>
@@ -85,6 +119,15 @@
             <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>
             <artifactId>broadcast-transcoder</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.jaxb2_commons</groupId>
+            <artifactId>jaxb2-basics-runtime</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
         </dependency>
     </dependencies>
     <properties>
