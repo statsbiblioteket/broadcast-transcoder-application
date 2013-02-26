@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "$(date "+%Y-%m-%d %H:%M:%S"): Starting transcode for collection: $1, of $2 with timestamp: $3"
+
 collection=$1
 uuid=$2
 timestamp=$3
