@@ -11,5 +11,9 @@ java -Dlogback.configurationFile=$confDir/logback.xml $hibernate_log_config \
  --infrastructure_configfile=$confDir/bta.infrastructure.properties \
  --behavioural_configfile=$confDir/bta.fetcher.${collection}.properties \
  --hibernate_configfile=$confDir/hibernate.cfg.xml \
- --timestamp=0
-
+ --timestamp=0 | grep "^uuid" |
+while read line
+do
+    # Prepend collection id to each line since run_transcoder.sh expects jobs formatted like this
+    echo "$collection $line"
+done
