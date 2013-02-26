@@ -17,6 +17,7 @@
         <module>broadcast-transcoder-commandline</module>
         <module>broadcast-transcoder-persistence</module>
         <module>broadcast-transcoder-common</module>
+        <module>broadcast-transcoder-webservice</module>
     </modules>
 
     <scm>
