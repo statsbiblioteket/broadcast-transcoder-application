@@ -27,15 +27,11 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
 
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-         mpegClip(request, context);
+        mpegClip(request, context);
     }
 
     private void mpegClip(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         String command = "cat " + request.getClipperCommand() + " | " + getFfmpegCommandLine(request, context);
-        if (request.getFileFormat().equals(FileFormatEnum.MPEG_PS) && context.getVideoOutputSuffix().equals("mpeg")) {
-             //From mpeg to mpeg so remux only
-            throw new ProcessorException("Not implemented");
-        }
         File outputDir = FileUtils.getTemporaryMediaOutputDir(request, context);
         outputDir.mkdirs();
         File outputFile = FileUtils.getTemporaryMediaOutputFile(request, context);
@@ -60,28 +56,31 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
     }
 
     public static String getFfmpegCommandLine(TranscodeRequest request, SingleTranscodingContext context) {
-           File outputFile = FileUtils.getTemporaryMediaOutputFile(request, context);
-           String line = context.getFfmpegTranscodingString();
-           line = line.replace("$$AUDIO_BITRATE$$", context.getAudioBitrate()+"");
-           line = line.replace("$$VIDEO_BITRATE$$", context.getVideoBitrate()+"");
-           line = line.replace("$$FFMPEG_ASPECT_RATIO$$", getFfmpegAspectRatio(request, context));
-           line = line.replace("$$OUTPUT_FILE$$", outputFile.getAbsolutePath());
-           return line;
-       }
+        File outputFile = FileUtils.getTemporaryMediaOutputFile(request, context);
+        String line = context.getFfmpegTranscodingString();
+        if (request.getFileFormat().equals(FileFormatEnum.MPEG_PS) && context.getVideoOutputSuffix().equals("mpeg")) {
+            line = context.getVlcRemuxingString();
+        }
+        line = line.replace("$$AUDIO_BITRATE$$", context.getAudioBitrate()+"");
+        line = line.replace("$$VIDEO_BITRATE$$", context.getVideoBitrate()+"");
+        line = line.replace("$$FFMPEG_ASPECT_RATIO$$", getFfmpegAspectRatio(request, context));
+        line = line.replace("$$OUTPUT_FILE$$", outputFile.getAbsolutePath());
+        return line;
+    }
 
 
-       protected static String getFfmpegAspectRatio(TranscodeRequest request, SingleTranscodingContext context) {
-           Double aspectRatio = request.getDisplayAspectRatio();
-           String ffmpegResolution;
-           Long height = context.getVideoHeight()*1L;
-           if (aspectRatio != null) {
-               long width = 2*Math.round(aspectRatio*height/2);
-               //if (width%2 == 1) width += 1;
-               ffmpegResolution =  width + "x" + height;
-           } else {
-               ffmpegResolution = " 320x240";
-           }
-           return ffmpegResolution;
-       }
+    protected static String getFfmpegAspectRatio(TranscodeRequest request, SingleTranscodingContext context) {
+        Double aspectRatio = request.getDisplayAspectRatio();
+        String ffmpegResolution;
+        Long height = context.getVideoHeight()*1L;
+        if (aspectRatio != null) {
+            long width = 2*Math.round(aspectRatio*height/2);
+            //if (width%2 == 1) width += 1;
+            ffmpegResolution =  width + "x" + height;
+        } else {
+            ffmpegResolution = " 320x240";
+        }
+        return ffmpegResolution;
+    }
 
 }

@@ -78,9 +78,10 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
         ProcessorChainElement metadataChain = ProcessorChainElement.makeChain(pbcorer);
         metadataChain.processIteratively(request,context);
 
-        if (!request.isVideo()){    //TODO remove this when CSR fixes the radio transcoding
-            return;
-        }
+//        if (!request.isVideo()){    //TODO remove this when CSR fixes the radio transcoding
+//            logger.info("Radio transcoding not currently functioning. Exiting.");
+//            return;
+//        }
 
             /*First one getting stuff for the persistence layer*/
         ProcessorChainElement programFetcher = new ProgramMetadataFetcherProcessor();
@@ -132,20 +133,38 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
 
         switch (request.getFileFormat()) {
             case MULTI_PROGRAM_MUX:
-                secondChain = ProcessorChainElement.makeChain(pider,
+                if (context.getVideoOutputSuffix().equals("mpeg")) {
+                    logger.debug("Generating DVD video. No previews or snapshots for " + request.getObjectPid());
+                    secondChain = ProcessorChainElement.makeChain(pider,
+                            multistreamer,
+                            renamer,
+                            zeroChecker
+                    );
+                } else {
+                    secondChain = ProcessorChainElement.makeChain(pider,
                         multistreamer,
                         renamer,
                         zeroChecker,
                         previewer,
                         snapshotter);
+                }
                 break;
             case SINGLE_PROGRAM_VIDEO_TS:
-                secondChain = ProcessorChainElement.makeChain(pider,
-                        unistreamvideoer,
-                        renamer,
-                        zeroChecker,
-                        previewer,
-                        snapshotter);
+                if (context.getVideoOutputSuffix().equals("mpeg")) {
+                    logger.debug("Generating DVD video. No previews or snapshots for " + request.getObjectPid());
+                    secondChain = ProcessorChainElement.makeChain(pider,
+                            unistreamvideoer,
+                            renamer,
+                            zeroChecker
+                    );
+                } else {
+                    secondChain = ProcessorChainElement.makeChain(pider,
+                         unistreamvideoer,
+                         renamer,
+                         zeroChecker,
+                         previewer,
+                         snapshotter);
+                }
                 break;
             case SINGLE_PROGRAM_AUDIO_TS:
                 secondChain = ProcessorChainElement.makeChain(pider,
@@ -155,19 +174,31 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
                         previewer);
                 break;
             case MPEG_PS:
-                secondChain = ProcessorChainElement.makeChain(pider,
-                        unistreamvideoer,
-                        renamer,
-                        zeroChecker,
-                        previewer,
-                        snapshotter);
+                if (context.getVideoOutputSuffix().equals("mpeg")) {
+                    logger.debug("Generating DVD video. No previews or snapshots for " + request.getObjectPid());
+                    secondChain = ProcessorChainElement.makeChain(pider,
+                            unistreamvideoer,
+                            renamer,
+                            zeroChecker
+                    );
+                } else {
+                    secondChain = ProcessorChainElement.makeChain(pider,
+                                         unistreamvideoer,
+                                         renamer,
+                                         zeroChecker,
+                                         previewer,
+                                         snapshotter);
+                }
                 break;
             case AUDIO_WAV:
-                secondChain = ProcessorChainElement.makeChain(waver,
-                        renamer,
-                        zeroChecker,
-                        previewer);
-                break;
+                final String message = "Cannot process wav files at present. Exiting for " + request.getObjectPid();
+                logger.info(message);
+                request.setRejected(true);
+                return;
+               // secondChain = ProcessorChainElement.makeChain(waver,
+               //         renamer,
+               //         zeroChecker,
+               //         previewer);
             default:
                 return;
         }
