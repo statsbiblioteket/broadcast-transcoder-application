@@ -4,7 +4,7 @@ collection=$1
 
 # Get settings
 SCRIPT_PATH=$(dirname $(readlink -f $0))
-source ${SCRIPT_PATH}/setenv.sh ${collection}
+source ${SCRIPT_PATH}/setenv.sh
 
 # Ensure only one copy of this script runs for a given collection
 globalLock=$workDir/transcodeChanges.${collection}.lockdir

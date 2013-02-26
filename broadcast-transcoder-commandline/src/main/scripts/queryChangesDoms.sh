@@ -4,7 +4,7 @@ collection=$1
 
 # Get settings
 SCRIPT_PATH=$(dirname $(readlink -f $0))
-source $SCRIPT_PATH/setenv.sh $collection
+source $SCRIPT_PATH/setenv.sh
 
 java -Dlogback.configurationFile=$confDir/logback.xml $hibernate_log_config \
  -cp "$CLASSPATH" dk.statsbiblioteket.broadcasttranscoder.GetAllScheduledJobs \

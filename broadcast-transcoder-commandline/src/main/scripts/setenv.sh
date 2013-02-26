@@ -44,9 +44,10 @@ for setenv_mkdir in $logDir $workDir $stateDir; do
 done
 
 # collection can have values "Broadcast" or "Reklamefilm"
-collection=$1
+# if it is unset or empty then we cannot proceed
+collection=${collection:-undefined}
 case $collection in
-    Broadcast|Reklamefilm|cleanup)
+    Broadcast|Reklamefilm)
 	# A valid collection given
 	;;
     *)
