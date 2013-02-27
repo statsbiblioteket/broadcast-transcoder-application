@@ -17,7 +17,7 @@ public class GoNoGoProcessor extends ProcessorChainElement {
 
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-         if (FileUtils.hasMediaOutputFile(request, context) && !context.isOverwrite()) {
+         if (FileUtils.hasFinalMediaOutputFile(request, context) && !context.isOverwrite()) {
              logger.info("Transcoded file already found. No transcoding necessary.");
              request.setGoForTranscoding(false);
          } else {

@@ -3,6 +3,7 @@
     <xs:complexType name="btaResponse">
         <xs:sequence>
             <xs:element name="filename" type="xs:string"/>
+            <xs:element name="status" type="xs:string" />
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

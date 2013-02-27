@@ -1,22 +1,73 @@
 package dk.statsbiblioteket.broadcasttranscoder.ws.config;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
+import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
+import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
  */
 public class ConfigurationLoader implements ServletContextListener {
+
+    public static Logger logger;
+
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext context = sce.getServletContext();
+        String logbackFilepath = context.getInitParameter("bta.logback.xml");
+        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        JoranConfigurator configurator = new JoranConfigurator();
+        configurator.setContext(lc);
+        lc.reset();
+        try {
+            configurator.doConfigure(new File(logbackFilepath));
+        } catch (JoranException e) {
+            System.out.println("Could not initialise logging. " + e.getMessage());
+            System.out.println("File path to logging configuration was " + logbackFilepath);
+            throw new RuntimeException(e);
+        }
+        logger = LoggerFactory.getLogger(ConfigurationLoader.class);
         String behaviourFilepath = context.getInitParameter("bta.behaviour.properties");
-        //etc.
+        String infrastructureFilepath = context.getInitParameter("bta.infrastructure.properties");
+        logger.info("Loading behaviour properties from " + behaviourFilepath);
+        logger.info("Loading infrastructure properties from " + infrastructureFilepath);
+        File behaviourFile = new File(behaviourFilepath);
+        if (!behaviourFile.exists()) {
+            final String message = "No such file: " + behaviourFile.getAbsolutePath();
+            logger.error(message);
+            throw new RuntimeException(message);
+        }
+        File infrastructureFile = new File(infrastructureFilepath);
+        if (!infrastructureFile.exists()) {
+            final String message = "No such file: " + infrastructureFilepath;
+            logger.error(message);
+            throw new RuntimeException(message);
+        }
+        SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext = new SingleTranscodingContext<BroadcastTranscodingRecord>();
+        transcodingContext.setBehaviourConfigFile(behaviourFile);
+        transcodingContext.setInfrastructuralConfigFile(infrastructureFile);
+        try {
+            new WebserviceTranscodingOptionsParser(transcodingContext);
+        } catch (Exception e) {
+            throw new RuntimeException("Error parsing properties", e);
+        }
+        sce.getServletContext().setAttribute("transcodingContext", transcodingContext);
+        //TODO clean up lock files
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        //To change body of implemented methods use File | Settings | File Templates.
+       //TODO clean up lock files
     }
 }
