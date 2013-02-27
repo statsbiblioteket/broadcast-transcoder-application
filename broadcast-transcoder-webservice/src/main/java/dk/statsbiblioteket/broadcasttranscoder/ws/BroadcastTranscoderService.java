@@ -49,7 +49,11 @@ public class BroadcastTranscoderService {
         TranscodeRequest request = new TranscodeRequest();
         SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext = (SingleTranscodingContext<BroadcastTranscodingRecord>) context.getAttribute("transcodingContext");
         request.setObjectPid(programPid);
-        request.setOutputBasename(title+"_"+startTime+"_"+additionalStartOffset+"_"+additionalEndOffset);
+        request.setOutputBasename(filenamePrefix+"_"+startTime+"_"+additionalStartOffset+"_"+additionalEndOffset);
+        return getBtaResponse(request, transcodingContext, programDescription);
+    }
+
+    private BtaResponse getBtaResponse(TranscodeRequest request, SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext, String programDescription) {
         BtaResponse response = new BtaResponse();
         response.setFilename(request.getOutputBasename());
         boolean isTranscoding = FileUtils.hasTemporarMediaOutputFile(request, transcodingContext);
