@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context docBase="/home/bta/war/bta.war">
-     <Parameter name="bta.behaviour.properties" value="/home/bta/config/bta.behaviour.ws.properties" />
-     <Parameter name="bta.infrastructure.properties" value="/home/bta/config/bta.infrastructure.ws.properties" />
-     <Parameter name="bta.logback.xml" value="/home/bta/config/logback.ws.xml" /> <!-- -->
+     <Parameter name="bta.behaviour.properties" value="/home/bta/bta/config/bta.behaviour.ws.properties" />
+     <Parameter name="bta.infrastructure.properties" value="/home/bta/bta/config/bta.infrastructure.ws.properties" />
+     <Parameter name="bta.logback.xml" value="/home/bta/bta/config/logback.ws.xml" />
 </Context>
