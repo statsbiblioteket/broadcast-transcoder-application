@@ -69,7 +69,7 @@ public class ConfigurationLoader implements ServletContextListener {
         }
         sce.getServletContext().setAttribute("transcodingContext", transcodingContext);
         FileUtils.cleanupAllTempDirs(transcodingContext);
-        int maxActiveProcesses = Integer.parseInt(sce.getServletContext().getInitParameter("maxActive"));
+        int maxActiveProcesses = Integer.parseInt(sce.getServletContext().getInitParameter("bta.maxActive"));
         thePool = new GenericObjectPool(new BasePoolableObjectFactory() {
             @Override
             public Object makeObject() throws Exception {

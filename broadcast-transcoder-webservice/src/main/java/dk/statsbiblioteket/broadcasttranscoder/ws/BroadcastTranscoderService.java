@@ -81,8 +81,8 @@ public class BroadcastTranscoderService {
             return response;
         } else {
             logger.debug("Starting new transcoding for" + programDescription);
-            response.setStatus("STARTING");
             if (!runningTranscodes.contains(request.getOutputBasename())) {
+                response.setStatus("STARTING");
                 runningTranscodes.add(request.getOutputBasename());
                 new Thread() {
                     @Override
@@ -103,6 +103,8 @@ public class BroadcastTranscoderService {
                         }
                     }
                 }.start();
+            } else {
+               response.setStatus("ALREADY_QUEUED");
             }
             return response;
         }

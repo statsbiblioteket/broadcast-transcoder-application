@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context docBase="/home/bta/bta-ws/broadcast-transcoding-webservice.war">
+<Context docBase="/home/bta/bta-ws/broadcast-transcoder-webservice.war">
      <Parameter name="bta.behaviour.properties" value="/home/bta/bta-ws/config/bta.behaviour.ws.properties" />
      <Parameter name="bta.infrastructure.properties" value="/home/bta/bta-ws/config/bta.infrastructure.ws.properties" />
      <Parameter name="bta.logback.xml" value="/home/bta/bta-ws/config/logback.ws.xml" />
