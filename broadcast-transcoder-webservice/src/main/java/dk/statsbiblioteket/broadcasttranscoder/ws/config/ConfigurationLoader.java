@@ -6,6 +6,7 @@ import ch.qos.logback.core.joran.spi.JoranException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
+import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,11 +64,15 @@ public class ConfigurationLoader implements ServletContextListener {
             throw new RuntimeException("Error parsing properties", e);
         }
         sce.getServletContext().setAttribute("transcodingContext", transcodingContext);
-        //TODO clean up lock files
+        FileUtils.cleanupAllTempDirs(transcodingContext);
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-       //TODO clean up lock files
+        SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext = (SingleTranscodingContext<BroadcastTranscodingRecord>) sce.getServletContext().getAttribute("transcodingContext");
+        FileUtils.cleanupAllTempDirs(transcodingContext);
     }
+
+
+
 }

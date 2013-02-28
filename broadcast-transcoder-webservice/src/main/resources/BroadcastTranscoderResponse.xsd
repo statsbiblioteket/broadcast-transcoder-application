@@ -4,6 +4,7 @@
         <xs:sequence>
             <xs:element name="filename" type="xs:string"/>
             <xs:element name="status" type="xs:string" />
+            <xs:element name="filelength_bytes" type="xs:long" />
         </xs:sequence>
     </xs:complexType>
     </xs:element>

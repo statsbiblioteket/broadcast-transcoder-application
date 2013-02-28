@@ -3,11 +3,15 @@ package dk.statsbiblioteket.broadcasttranscoder.util;
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.NameFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Collection;
 
 /**
  * Created with IntelliJ IDEA.
@@ -185,6 +189,22 @@ public class FileUtils {
         }
         logger.trace("Relative path is '" + relativePath + "'");
         return new File(rootDir, relativePath);
+    }
+
+    public static void cleanupAllTempDirs(InfrastructureContext context) {
+        File rootOutputDir = context.getFileOutputRootdir();
+        IOFileFilter tempdirFilter = new NameFileFilter("temp");
+        Collection<File> tempDirs =  org.apache.commons.io.FileUtils.listFiles(rootOutputDir, tempdirFilter, TrueFileFilter.INSTANCE);
+        for (File tempdir: tempDirs) {
+            for (File content: tempdir.listFiles()) {
+                try {
+                    logger.info("Deleting " + content.getAbsolutePath());
+                    content.delete();
+                } catch (Exception e) {
+                     logger.info("Error deleting " + content.getAbsolutePath(), e);
+                }
+            }
+        }
     }
 
 

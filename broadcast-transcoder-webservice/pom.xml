@@ -55,6 +55,33 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <!--<archive>
+                        <manifest>
+                            <mainClass>dk.statsbiblioteket.broadcasttranscoder.cli.BroadcastTranscoderApplication</mainClass>
+                        </manifest>
+                    </archive>-->
+                    <!--<descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs> -->
+                    <descriptors>
+                        <descriptor>src/main/assembly/zip_package.xml</descriptor>
+                    </descriptors>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Run the application using "mvn embedded-glassfish:run" -->
             <!--<plugin>
                 <groupId>org.glassfish</groupId>
@@ -121,10 +148,10 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-                    <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>
-                    <artifactId>broadcast-transcoder-commandline</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
+            <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>
+            <artifactId>broadcast-transcoder-commandline</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
             <artifactId>jaxb2-basics-runtime</artifactId>
