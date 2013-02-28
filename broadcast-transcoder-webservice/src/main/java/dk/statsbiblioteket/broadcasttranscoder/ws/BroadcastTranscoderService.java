@@ -29,7 +29,7 @@ public class BroadcastTranscoderService {
 
     public static Logger logger = LoggerFactory.getLogger(BroadcastTranscoderService.class);
 
-    private static Set<String> runningPids = new HashSet<String>();
+    private static Set<String> runningTranscodes = new HashSet<String>();
 
     @Context
     ServletConfig config;
@@ -82,8 +82,8 @@ public class BroadcastTranscoderService {
         } else {
             logger.debug("Starting new transcoding for" + programDescription);
             response.setStatus("STARTING");
-            if (!runningPids.contains(request.getObjectPid())) {
-                runningPids.add(request.getObjectPid());
+            if (!runningTranscodes.contains(request.getOutputBasename())) {
+                runningTranscodes.add(request.getOutputBasename());
                 new Thread() {
                     @Override
                     public void run() {
@@ -99,7 +99,7 @@ public class BroadcastTranscoderService {
                             } catch (Exception e) {
                                 logger.error("Error returning lock object", e);
                             }
-                            runningPids.remove(request.getObjectPid());
+                            runningTranscodes.remove(request.getOutputBasename());
                         }
                     }
                 }.start();
