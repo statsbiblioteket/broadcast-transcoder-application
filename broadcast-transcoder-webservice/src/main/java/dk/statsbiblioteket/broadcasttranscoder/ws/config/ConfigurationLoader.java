@@ -7,6 +7,8 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
+import org.apache.commons.pool.BasePoolableObjectFactory;
+import org.apache.commons.pool.impl.GenericObjectPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,8 @@ import java.io.IOException;
 public class ConfigurationLoader implements ServletContextListener {
 
     public static Logger logger;
+
+    private static GenericObjectPool thePool;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -65,6 +69,12 @@ public class ConfigurationLoader implements ServletContextListener {
         }
         sce.getServletContext().setAttribute("transcodingContext", transcodingContext);
         FileUtils.cleanupAllTempDirs(transcodingContext);
+        int maxActiveProcesses = Integer.parseInt(sce.getServletContext().getInitParameter("maxActive"));
+        thePool = new GenericObjectPool(new BasePoolableObjectFactory() {
+            @Override
+            public Object makeObject() throws Exception {
+                return new Object();    }
+        }, maxActiveProcesses);
     }
 
     @Override
@@ -73,6 +83,8 @@ public class ConfigurationLoader implements ServletContextListener {
         FileUtils.cleanupAllTempDirs(transcodingContext);
     }
 
-
+    public static GenericObjectPool getThePool() {
+        return thePool;
+    }
 
 }

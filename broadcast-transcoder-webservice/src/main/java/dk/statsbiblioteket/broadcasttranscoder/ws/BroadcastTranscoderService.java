@@ -5,6 +5,7 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
+import dk.statsbiblioteket.broadcasttranscoder.ws.config.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +72,9 @@ public class BroadcastTranscoderService {
             return response;
         } else if (isComplete) {
             response.setStatus("DONE");
-            response.setFilename(FileUtils.findFinalMediaOutputFile(request, transcodingContext).getAbsolutePath());
+            File finalMediaOutputFile = FileUtils.findFinalMediaOutputFile(request, transcodingContext);
+            response.setFilename(finalMediaOutputFile.getAbsolutePath());
+            response.setFilelengthBytes(finalMediaOutputFile.length());
             logger.debug("Already complete" + programDescription);
             return response;
         } else {
@@ -82,12 +85,18 @@ public class BroadcastTranscoderService {
                 new Thread() {
                     @Override
                     public void run() {
-                        //TODO add pooling here
+                        Object lockObject = null;
                         try {
+                            lockObject = ConfigurationLoader.getThePool().borrowObject();
                             performTranscoding(request, transcodingContext);
                         } catch (Exception e) {    //Fault barrier for transcoding
                             logger.error("Error in processing " + request.getObjectPid(), e);
                         } finally {
+                            try {
+                                ConfigurationLoader.getThePool().returnObject(lockObject);
+                            } catch (Exception e) {
+                                logger.error("Error returning lock object", e);
+                            }
                             runningPids.remove(request.getObjectPid());
                         }
                     }

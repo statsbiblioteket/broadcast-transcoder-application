@@ -193,6 +193,10 @@ public class FileUtils {
 
     public static void cleanupAllTempDirs(InfrastructureContext context) {
         File rootOutputDir = context.getFileOutputRootdir();
+        if (!rootOutputDir.exists()) {
+            logger.info("No output directory to clean up");
+            return;
+        }
         IOFileFilter tempdirFilter = new NameFileFilter("temp");
         Collection<File> tempDirs =  org.apache.commons.io.FileUtils.listFiles(rootOutputDir, tempdirFilter, TrueFileFilter.INSTANCE);
         for (File tempdir: tempDirs) {
