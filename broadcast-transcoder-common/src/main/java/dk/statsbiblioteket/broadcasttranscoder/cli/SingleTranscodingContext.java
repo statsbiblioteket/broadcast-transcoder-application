@@ -46,6 +46,8 @@ public class SingleTranscodingContext<T extends TranscodingRecord> extends Infra
     private int endOffsetTSWithTVMeter;
     private int startOffsetPSWithTVMeter;
     private int endOffsetPSWithTVMeter;
+    private long digitvStartOffset = 0;
+    private long digitvEndOffset = 0;
 
 
     private int previewLength;
@@ -276,6 +278,21 @@ public class SingleTranscodingContext<T extends TranscodingRecord> extends Infra
         this.endOffsetPSWithTVMeter = endOffsetPSWithTVMeter;
     }
 
+    public long getDigitvStartOffset() {
+        return digitvStartOffset;
+    }
+
+    public void setDigitvStartOffset(long digitvStartOffset) {
+        this.digitvStartOffset = digitvStartOffset;
+    }
+
+    public long getDigitvEndOffset() {
+        return digitvEndOffset;
+    }
+
+    public void setDigitvEndOffset(long digitvEndOffset) {
+        this.digitvEndOffset = digitvEndOffset;
+    }
 
     public int getPreviewLength() {
         return previewLength;
