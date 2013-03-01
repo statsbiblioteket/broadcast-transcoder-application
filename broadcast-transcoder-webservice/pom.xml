@@ -21,6 +21,67 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jvnet.jaxb2.maven2</groupId>
+                <artifactId>maven-jaxb2-plugin</artifactId>
+                <version>0.8.3</version>
+                <configuration>
+                    <args>
+                        <arg>-XtoString</arg>
+                    </args>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.jvnet.jaxb2_commons</groupId>
+                            <artifactId>jaxb2-basics</artifactId>
+                            <version>0.6.4</version>
+                        </plugin>
+                    </plugins>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>bta-response</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <extension>true</extension>
+                            <args>
+                                <param>-npa</param>
+                            </args>
+                            <generatePackage>dk.statsbiblioteket.broadcasttranscoder.btaws</generatePackage>
+                            <removeOldOutput>true</removeOldOutput>
+                            <verbose>true</verbose>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <!--<archive>
+                        <manifest>
+                            <mainClass>dk.statsbiblioteket.broadcasttranscoder.cli.BroadcastTranscoderApplication</mainClass>
+                        </manifest>
+                    </archive>-->
+                    <!--<descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs> -->
+                    <descriptors>
+                        <descriptor>src/main/assembly/zip_package.xml</descriptor>
+                    </descriptors>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Run the application using "mvn embedded-glassfish:run" -->
             <!--<plugin>
                 <groupId>org.glassfish</groupId>
@@ -85,6 +146,26 @@
             <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>
             <artifactId>broadcast-transcoder</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>
+            <artifactId>broadcast-transcoder-commandline</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.jaxb2_commons</groupId>
+            <artifactId>jaxb2-basics-runtime</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-pool</groupId>
+            <artifactId>commons-pool</artifactId>
+            <version>1.5.5</version>
         </dependency>
     </dependencies>
     <properties>

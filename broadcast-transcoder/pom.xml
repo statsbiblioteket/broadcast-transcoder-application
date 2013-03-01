@@ -90,7 +90,6 @@
                         </goals>
                         <configuration>
                             <extension>true</extension>
-
                             <args>
                                 <param>-npa</param>
                             </args>

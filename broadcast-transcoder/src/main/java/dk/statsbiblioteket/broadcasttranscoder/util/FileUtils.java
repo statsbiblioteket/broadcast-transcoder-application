@@ -3,11 +3,15 @@ package dk.statsbiblioteket.broadcasttranscoder.util;
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.NameFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Collection;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,16 +24,42 @@ public class FileUtils {
 
     private static Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
-    public static boolean hasMediaOutputFile(TranscodeRequest request, InfrastructureContext context) {
-        File dir = getFinalMediaOutputDir(request, context);
+    public static boolean hasFinalMediaOutputFile(TranscodeRequest request, InfrastructureContext context) {
+       return hasMediaOutputFile(request, context, true);
+    }
+
+    public static boolean hasTemporarMediaOutputFile(TranscodeRequest request, InfrastructureContext context) {
+       return hasMediaOutputFile(request, context, false);
+    }
+
+    public static File findFinalMediaOutputFile(TranscodeRequest request, SingleTranscodingContext context) {
+        return findMediaOutputFile(request, context, true);
+    }
+
+    public static File findTemporaryMediaOutputFile(TranscodeRequest request, SingleTranscodingContext context) {
+        return findMediaOutputFile(request, context, false);
+    }
+
+
+     private static boolean hasMediaOutputFile(TranscodeRequest request, InfrastructureContext context, boolean isFinalFile) {
+         File dir;
+        if (isFinalFile) {
+           dir = getFinalMediaOutputDir(request, context);
+        } else {
+            dir = getTemporaryMediaOutputDir(request, context);
+        }
         if (!dir.exists()) {
             return false;
         }
-        final String filenamePrefix = request.getObjectPid().replace("uuid:","");
+        String filenamePrefix = getOutputFileBasename(request);
+        if (filenamePrefix == null || filenamePrefix.trim().equals("")) {
+               filenamePrefix = request.getObjectPid().replace("uuid:","");
+        }
+        final String finalisedFilenamePrefix = filenamePrefix;
         FilenameFilter filter = new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                return name.startsWith(filenamePrefix);
+                return name.startsWith(finalisedFilenamePrefix);
             }
         };
         final File[] files = dir.listFiles(filter);
@@ -38,16 +68,27 @@ public class FileUtils {
         }
         return files.length > 0;
     }
-    public static File findMediaOutputFile(TranscodeRequest request, SingleTranscodingContext context) {
-        File dir = getFinalMediaOutputDir(request, context);
+
+
+    private static File findMediaOutputFile(TranscodeRequest request, SingleTranscodingContext context, boolean isFinalFile) {
+        File dir;
+        if (isFinalFile) {
+            dir = getFinalMediaOutputDir(request, context);
+        } else {
+            dir = getTemporaryMediaOutputDir(request, context);
+        }
         if (!dir.exists()) {
             return null;
         }
-        final String filenamePrefix = request.getObjectPid().replace("uuid:","");
+        String filenamePrefix = getOutputFileBasename(request);
+        if (filenamePrefix == null || filenamePrefix.trim().equals("")) {
+            filenamePrefix = request.getObjectPid().replace("uuid:","");
+        }
+        final String finalisedFilenamePrefix = filenamePrefix;
         FilenameFilter filter = new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                return name.startsWith(filenamePrefix);
+                return name.startsWith(finalisedFilenamePrefix);
             }
         };
         final File[] files = dir.listFiles(filter);
@@ -71,10 +112,7 @@ public class FileUtils {
     }
 
     private static String getOutputFilename(TranscodeRequest request, SingleTranscodingContext context ) {
-        String filename = request.getObjectPid().replace("uuid:","");
-        if (request.getOutputBasename() != null && request.getOutputBasename().trim().length()>0) {
-             filename = request.getOutputBasename().trim();
-        }
+        String filename = getOutputFileBasename(request);
         switch (request.getFileFormat()) {
             case SINGLE_PROGRAM_AUDIO_TS:
                 filename += ".mp3";
@@ -84,6 +122,14 @@ public class FileUtils {
                 break;
             default:
                 filename += "." + context.getVideoOutputSuffix();
+        }
+        return filename;
+    }
+
+    private static String getOutputFileBasename(TranscodeRequest request) {
+        String filename = request.getObjectPid().replace("uuid:","");
+        if (request.getOutputBasename() != null && request.getOutputBasename().trim().length()>0) {
+             filename = request.getOutputBasename().trim();
         }
         return filename;
     }
@@ -143,6 +189,26 @@ public class FileUtils {
         }
         logger.trace("Relative path is '" + relativePath + "'");
         return new File(rootDir, relativePath);
+    }
+
+    public static void cleanupAllTempDirs(InfrastructureContext context) {
+        File rootOutputDir = context.getFileOutputRootdir();
+        if (!rootOutputDir.exists()) {
+            logger.info("No output directory to clean up");
+            return;
+        }
+        IOFileFilter tempdirFilter = new NameFileFilter("temp");
+        Collection<File> tempDirs =  org.apache.commons.io.FileUtils.listFiles(rootOutputDir, tempdirFilter, TrueFileFilter.INSTANCE);
+        for (File tempdir: tempDirs) {
+            for (File content: tempdir.listFiles()) {
+                try {
+                    logger.info("Deleting " + content.getAbsolutePath());
+                    content.delete();
+                } catch (Exception e) {
+                     logger.info("Error deleting " + content.getAbsolutePath(), e);
+                }
+            }
+        }
     }
 
 

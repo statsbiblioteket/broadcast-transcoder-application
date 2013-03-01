@@ -1,6 +1,5 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.TranscodingProcessInterface;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
@@ -59,7 +58,7 @@ public class DomsAndOverwriteExaminerProcessor extends ProcessorChainElement {
         final String pid = request.getObjectPid();
 
 
-        if (FileUtils.hasMediaOutputFile(request, context)) { //file exists
+        if (FileUtils.hasFinalMediaOutputFile(request, context)) { //file exists
             if ( !context.isOverwrite()){
                 logger.info("Context is no-overwrite and media file exists so no need to transcode for " + request.getObjectPid());
                 request.setGoForTranscoding(false);
