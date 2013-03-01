@@ -169,37 +169,38 @@ public class BroadcastTranscoderService {
                             renamer);
                 }
                 break;
-            case SINGLE_PROGRAM_AUDIO_TS:
-                secondChain = ProcessorChainElement.makeChain(pider,
-                        unistreamaudioer,
-                        renamer);
-                break;
-            case MPEG_PS:
-                if (transcodingContext.getVideoOutputSuffix().equals("mpeg")) {
-                    logger.debug("Generating DVD video. No previews or snapshots for " + request.getObjectPid());
-                    secondChain = ProcessorChainElement.makeChain(pider,
-                            unistreamvideoer,
-                            renamer
-                    );
-                } else {
-                    secondChain = ProcessorChainElement.makeChain(pider,
-                            unistreamvideoer,
-                            renamer);
-                }
-                break;
-            case AUDIO_WAV:
-                final String message = "Cannot process wav files at present. Exiting for " + request.getObjectPid();
-                logger.info(message);
-                throw new ProcessorException(message);
-               // request.setRejected(true);
-               // return;
-            // secondChain = ProcessorChainElement.makeChain(waver,
-            //         renamer,
-            //         zeroChecker,
-            //         previewer);
-            default:
-                return;
-        }
+              case SINGLE_PROGRAM_AUDIO_TS:
+                  secondChain = ProcessorChainElement.makeChain(pider,
+                          unistreamaudioer,
+                          renamer);
+                  break;
+              case MPEG_PS:
+                  if (transcodingContext.getVideoOutputSuffix().equals("mpeg")) {
+                      logger.debug("Generating DVD video. No previews or snapshots for " + request.getObjectPid());
+                      secondChain = ProcessorChainElement.makeChain(pider,
+                              unistreamvideoer,
+                              renamer
+                      );
+                  } else {
+                      secondChain = ProcessorChainElement.makeChain(pider,
+                              unistreamvideoer,
+                              renamer);
+                  }
+                  break;
+              case AUDIO_WAV:
+                  //final String message = "Cannot process wav files at present. Exiting for " + request.getObjectPid();
+                  //logger.info(message);
+                  //throw new ProcessorException(message);
+                  // request.setRejected(true);
+                  // return;
+
+                  secondChain = ProcessorChainElement.makeChain(waver,
+                          renamer
+                  );
+                  break;
+              default:
+                  return;
+          }
         secondChain.processIteratively(request, transcodingContext);
     }
 
