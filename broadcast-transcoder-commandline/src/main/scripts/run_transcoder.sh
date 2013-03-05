@@ -92,30 +92,30 @@ main()
     job="go"
     while [ -n "$job" -a $shutdown -eq 0 ]
     do
-	job="$($queue_cmd $jobfile pop)"
-	set -- $job
-	collection=$1
-	uuid=$2
-	timestamp=$3
-	# Check that we didn't get a malformed job from the queue
-	if [ -n "$collection" -a -n "$uuid" -a -n "$timestamp" ]; then
-	    ssh -n $host $transcode_cmd $collection $uuid $timestamp >> $transcode_cmd_log 2>&1 &
-	    ((current_jobs++))
-	    ((jobcounter++))
-	fi
-	while [ $current_jobs -ge $numjobs ]
-	do
-	    # Update the running job count
-	    current_jobs=$(func_joblist|wc -l)
-	    # Check every second if there is a free slot
-	    sleep 1
-	done
+        job="$($queue_cmd $jobfile pop)"
+        set -- $job
+        collection=$1
+        uuid=$2
+        timestamp=$3
+        # Check that we didn't get a malformed job from the queue
+        if [ -n "$collection" -a -n "$uuid" -a -n "$timestamp" ]; then
+            ssh -n $host $transcode_cmd $collection $uuid $timestamp >> $transcode_cmd_log 2>&1 &
+            ((current_jobs++))
+            ((jobcounter++))
+        fi
+        while [ $current_jobs -ge $numjobs ]
+        do
+            # Update the running job count
+            current_jobs=$(func_joblist|wc -l)
+            # Check every second if there is a free slot
+            sleep 1
+        done
     done
     # Wait out running jobs
     # Exit status greater than 128 means wait was aborted by a trap
     while ! wait
     do
-	wait
+	    wait
     done
     func_status
     echo "$(func_date): Exiting"
