@@ -50,6 +50,7 @@ public class BroadcastTranscoderService {
             throws ProcessorException {
         final String programDescription = " " + title + " " + programPid + " " + channel + " " + startTime;
         logger.info("Received request for" + programDescription);
+        logger.debug("Parameters: additional_start_offset/additional_end_offset: " + additionalStartOffset + " / " + additionalEndOffset);
         checkContext();
         TranscodeRequest request = new TranscodeRequest();
         SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext = (SingleTranscodingContext<BroadcastTranscodingRecord>) context.getAttribute("transcodingContext");
