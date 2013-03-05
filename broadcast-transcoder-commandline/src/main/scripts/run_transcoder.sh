@@ -70,6 +70,12 @@ func_stop()
 	    # We've already been called once, so this time kill off children
 	    # Note that just killing ssh will leave the transcode process
 	    # a zombie waiting to be reaped by init
+	    #
+	    # Further note: the java transcode process has the responsibility of updating the database
+	    # when a transcoding has been successfully completed. So any processes killed here will eventually
+	    # be requeued the next time we query the database.
+	    #
+	    #
 	    echo "$(func_date): Terminating current jobs"
 	    func_status
 	    for pid in $(func_joblist)

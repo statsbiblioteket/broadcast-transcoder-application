@@ -183,22 +183,19 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
                     );
                 } else {
                     secondChain = ProcessorChainElement.makeChain(pider,
-                                         unistreamvideoer,
-                                         renamer,
-                                         zeroChecker,
-                                         previewer,
-                                         snapshotter);
+                            unistreamvideoer,
+                            renamer,
+                            zeroChecker,
+                            previewer,
+                            snapshotter);
                 }
                 break;
             case AUDIO_WAV:
-                final String message = "Cannot process wav files at present. Exiting for " + request.getObjectPid();
-                logger.info(message);
-                request.setRejected(true);
-                return;
-               // secondChain = ProcessorChainElement.makeChain(waver,
-               //         renamer,
-               //         zeroChecker,
-               //         previewer);
+                secondChain = ProcessorChainElement.makeChain(waver,
+                        renamer,
+                        zeroChecker,
+                        previewer);
+                break;
             default:
                 return;
         }

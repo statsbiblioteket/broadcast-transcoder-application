@@ -18,6 +18,7 @@
                 <include>logback.xml</include>
                 <include>bta.fetcher.Broadcast.properties</include>
                 <include>bta.fetcher.Reklamefilm.properties</include>
+                <include>run_transcoder.conf</include>
             </includes>
             <filtered>false</filtered>
         </fileSet>

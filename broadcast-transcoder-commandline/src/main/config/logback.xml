@@ -14,7 +14,7 @@
     </appender>
 
     <appender name="DEBUG_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>bta.debug.log</file>
+        <file>logs/bta.debug.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
             <fileNamePattern>bta.debug.log.%i</fileNamePattern>
             <minIndex>0</minIndex>
@@ -29,7 +29,7 @@
     </appender>
 
     <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>bta.error.log</file>
+        <file>logs/bta.error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
             <fileNamePattern>bta.error.log.%i</fileNamePattern>
             <minIndex>0</minIndex>
