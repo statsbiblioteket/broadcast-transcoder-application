@@ -61,8 +61,9 @@ public class BtaDomsFetcher {
 
             for (RecordDescription record : records) {
 
-
-                dao.markAsChangedInDoms(record.getPid(), record.getDate());
+                if (record.getPid().startsWith("uuid")){
+                    dao.markAsChangedInDoms(record.getPid(), record.getDate());
+                }
             }
 
         } catch (Exception e) {
@@ -73,7 +74,7 @@ public class BtaDomsFetcher {
     }
 
 
-   static List<RecordDescription> requestInBatches(CentralWebservice doms, FetcherContext context) throws InvalidCredentialsException, MethodFailedException {
+    static List<RecordDescription> requestInBatches(CentralWebservice doms, FetcherContext context) throws InvalidCredentialsException, MethodFailedException {
         long since = getSince(context);
         String collection = getCollection(context);
         String viewAngle = getViewAngle(context);
