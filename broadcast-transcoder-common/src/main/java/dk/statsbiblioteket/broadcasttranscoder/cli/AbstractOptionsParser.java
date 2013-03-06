@@ -20,7 +20,7 @@ public  abstract class AbstractOptionsParser {
 
     }
 
-    protected File readFileProperty(String propName, Properties props)  throws OptionParseException {
+    protected static File readFileProperty(String propName, Properties props)  throws OptionParseException {
         String prop = props.getProperty(propName);
         if (prop == null || "".equals(prop)) {
             throw new OptionParseException("Property " + propName + " not set.");
@@ -28,7 +28,7 @@ public  abstract class AbstractOptionsParser {
         return new File(prop);
     }
 
-    protected File readExistingDirectoryProperty(String propName, Properties props) throws OptionParseException {
+    protected static File readExistingDirectoryProperty(String propName, Properties props) throws OptionParseException {
         String prop = props.getProperty(propName);
         if (prop == null || "".equals(prop)) {
             throw new OptionParseException("Property " + propName + " not set.");
@@ -40,7 +40,7 @@ public  abstract class AbstractOptionsParser {
         return dir;
     }
 
-    protected String readStringProperty(String propName, Properties props) throws OptionParseException {
+    protected static String readStringProperty(String propName, Properties props) throws OptionParseException {
         String prop = props.getProperty(propName);
         if (prop == null || "".equals(prop)) {
             throw new OptionParseException("Property " + propName + " not set.");
@@ -48,7 +48,7 @@ public  abstract class AbstractOptionsParser {
         return prop;
     }
 
-    protected int readIntegerProperty(String propName, Properties props) throws OptionParseException {
+    protected static int readIntegerProperty(String propName, Properties props) throws OptionParseException {
         String prop = props.getProperty(propName);
         try {
             Integer result = Integer.parseInt(prop);
@@ -58,7 +58,7 @@ public  abstract class AbstractOptionsParser {
         }
     }
 
-    protected float readFloatProperty(String propName, Properties props) throws OptionParseException {
+    protected static float readFloatProperty(String propName, Properties props) throws OptionParseException {
         String prop = props.getProperty(propName);
         try {
             Float result = Float.parseFloat(prop);
@@ -68,7 +68,7 @@ public  abstract class AbstractOptionsParser {
         }
     }
 
-    protected long readLongProperty(String propName, Properties props) throws OptionParseException {
+    protected static long readLongProperty(String propName, Properties props) throws OptionParseException {
         String prop = props.getProperty(propName);
         try {
             Long result = Long.parseLong(prop);
@@ -78,7 +78,7 @@ public  abstract class AbstractOptionsParser {
         }
     }
 
-    protected boolean readBooleanProperty(String propName, Properties props) throws OptionParseException {
+    protected static boolean readBooleanProperty(String propName, Properties props) throws OptionParseException {
         String prop = props.getProperty(propName);
         try {
             boolean result = Boolean.parseBoolean(prop);

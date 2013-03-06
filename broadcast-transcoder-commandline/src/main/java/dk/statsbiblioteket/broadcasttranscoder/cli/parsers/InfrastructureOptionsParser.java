@@ -30,7 +30,7 @@ public abstract class InfrastructureOptionsParser<T> extends HibernateOptionsPar
 
     }
 
-    protected void readInfrastructureProperties(InfrastructureContext<T> context) throws IOException, OptionParseException {
+    protected static void readInfrastructureProperties(InfrastructureContext context) throws IOException, OptionParseException {
         Properties props = new Properties();
         props.load(new FileInputStream(context.getInfrastructuralConfigFile()));
 

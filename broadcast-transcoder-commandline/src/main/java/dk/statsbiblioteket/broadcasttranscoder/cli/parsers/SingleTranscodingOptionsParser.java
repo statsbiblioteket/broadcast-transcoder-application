@@ -62,7 +62,7 @@ public class SingleTranscodingOptionsParser<T extends TranscodingRecord> extends
 
 
 
-    protected void readBehaviouralProperties(SingleTranscodingContext context) throws IOException, OptionParseException {
+    protected static void readBehaviouralProperties(SingleTranscodingContext context) throws IOException, OptionParseException {
         Properties props = new Properties();
         props.load(new FileInputStream(context.getBehaviourConfigFile()));
         context.setVideoBitrate(readIntegerProperty(VIDEO_BITRATE, props));
