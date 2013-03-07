@@ -50,6 +50,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
+                    <finalName>broadcast-transcoder-webservice-${project.version}</finalName>
                     <!--<archive>
                         <manifest>
                             <mainClass>dk.statsbiblioteket.broadcasttranscoder.cli.BroadcastTranscoderApplication</mainClass>
