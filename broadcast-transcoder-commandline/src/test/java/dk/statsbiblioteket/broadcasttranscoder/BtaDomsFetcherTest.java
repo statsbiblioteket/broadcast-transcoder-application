@@ -7,10 +7,7 @@ import dk.statsbiblioteket.doms.central.InvalidCredentialsException;
 import dk.statsbiblioteket.doms.central.MethodFailedException;
 import dk.statsbiblioteket.doms.central.RecordDescription;
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -76,7 +73,9 @@ public class BtaDomsFetcherTest {
                 });
     }
 
+
     @Test
+    @Ignore("to slow")
     public void testFetcher() throws InvalidCredentialsException, MethodFailedException {
         FetcherContext context = new FetcherContext();
         context.setBatchSize(100);
