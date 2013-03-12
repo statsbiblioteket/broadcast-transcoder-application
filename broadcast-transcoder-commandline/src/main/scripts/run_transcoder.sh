@@ -99,10 +99,12 @@ main()
     while [ -n "$job" -a $shutdown -eq 0 ]
     do
         job="$($queue_cmd $jobfile pop)"
+        echo "executing job: $job" > $logfile
         set -- $job
         collection=$1
         uuid=$2
         timestamp=$3
+
         # Check that we didn't get a malformed job from the queue
         if [ -n "$collection" -a -n "$uuid" -a -n "$timestamp" ]; then
             ssh -n $host $transcode_cmd $collection $uuid $timestamp >> $transcode_cmd_log 2>&1 &
