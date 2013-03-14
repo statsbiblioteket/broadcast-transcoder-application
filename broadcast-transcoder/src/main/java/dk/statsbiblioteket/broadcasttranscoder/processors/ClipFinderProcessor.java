@@ -77,12 +77,18 @@ public class ClipFinderProcessor extends ProcessorChainElement {
             long fileEnd = CalendarUtils.getTimestamp(metadata.getStopTime());
             clip.setFileStartTime(fileStart);
             clip.setFileEndTime(fileEnd);
-            //Four possibilites
+            //Five possibilites
+            //File is an exact file - ie a hand-prepared clip that exactly represents the program
             //File contains start and stop times
             //File contains only start
             //File contains only stop
             //File contains neither
-            if (programStart >= fileStart && programEnd <= fileEnd) {
+            if (request.isHasExactFile()) {
+                clips.add(clip);
+                request.setClips(clips);
+                logger.debug("Added exact clip " + clip);
+                return;
+            } else if (programStart >= fileStart && programEnd <= fileEnd) {
                 clip.setStartOffsetBytes(bitrate * (programStart - fileStart) / 1000L);
                 clip.setClipLength(bitrate*(programEnd-programStart)/1000L);
                 logger.debug("Added clip " + clip);

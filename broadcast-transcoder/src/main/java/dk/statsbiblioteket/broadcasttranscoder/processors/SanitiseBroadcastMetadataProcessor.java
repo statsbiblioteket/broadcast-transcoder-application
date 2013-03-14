@@ -16,6 +16,9 @@ public class SanitiseBroadcastMetadataProcessor extends ProcessorChainElement {
 
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
+        if (request.isHasExactFile()) {
+            return;
+        }
         List<BroadcastMetadata> bm = request.getBroadcastMetadata();
         Map<String,List<BroadcastMetadata>> formatsMap = new HashMap<String, List<BroadcastMetadata>>();
         for (BroadcastMetadata metadata : bm) {

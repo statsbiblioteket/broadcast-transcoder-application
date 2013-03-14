@@ -25,6 +25,9 @@ public class FileMetadataFetcherProcessor extends ProcessorChainElement {
     private static Logger logger = LoggerFactory.getLogger(FileMetadataFetcherProcessor.class);
 
     private static final String HAS_FILE_RELATION = "http://doms.statsbiblioteket.dk/relations/default/0/1/#hasFile";
+    private static final String HAS_EXACT_FILE_RELATION = "http://doms.statsbiblioteket.dk/relations/default/0/1/#hasExactFile";
+
+
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         List<String> fileObjectPids = null;
@@ -60,14 +63,29 @@ public class FileMetadataFetcherProcessor extends ProcessorChainElement {
         return broadcastMetadataList;
     }
 
-
+    /**
+     * Returns either a list of all the files connected to this program or the single file that represents this
+     * program exactly, if such a file exists.
+     * @param request
+     * @param context
+     * @return
+     * @throws InvalidCredentialsException
+     * @throws InvalidResourceException
+     * @throws MethodFailedException
+     */
     private List<String> findFileObjects(TranscodeRequest request,InfrastructureContext context) throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);
         List<String> fileObjectPids = new ArrayList<String>();
         List<Relation> relations = doms.getRelations(request.getObjectPid());
         for (Relation relation: relations) {
-            if (relation.getPredicate().equals(HAS_FILE_RELATION)) {
-                  fileObjectPids.add(relation.getObject());
+            if (relation.getPredicate().equals(HAS_EXACT_FILE_RELATION)) {
+                fileObjectPids = new ArrayList<String>();
+                fileObjectPids.add(relation.getObject());
+                request.setHasExactFile(true);
+                logger.debug("Program " + request.getObjectPid() + " has an exact file " + relation.getObject());
+                return fileObjectPids;
+            } else if (relation.getPredicate().equals(HAS_FILE_RELATION)) {
+                fileObjectPids.add(relation.getObject());
             }
         }
         return fileObjectPids;

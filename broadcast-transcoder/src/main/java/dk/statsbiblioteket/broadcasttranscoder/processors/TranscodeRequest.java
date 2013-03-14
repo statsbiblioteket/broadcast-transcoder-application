@@ -25,6 +25,16 @@ public class TranscodeRequest {
 
     private  boolean video;
 
+    private boolean hasExactFile = false;
+
+    public boolean isHasExactFile() {
+        return hasExactFile;
+    }
+
+    public void setHasExactFile(boolean hasExactFile) {
+        this.hasExactFile = hasExactFile;
+    }
+
     public boolean isVideo() {
         return video;
     }

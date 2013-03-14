@@ -22,7 +22,14 @@ public class CoverageAnalyserProcessor extends ProcessorChainElement {
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         gapToleranceSeconds = context.getGapToleranceSeconds();
         ProgramStructure localStructure = new ProgramStructure();
+        ProgramStructure.Holes holes = new ProgramStructure.Holes();
+        localStructure.setHoles(holes);
+        ProgramStructure.Overlaps overlaps = new ProgramStructure.Overlaps();
+        localStructure.setOverlaps(overlaps);
         request.setLocalProgramStructure(localStructure);
+        if (request.isHasExactFile()) {
+            return;
+        }
         findMissingStart(request, context, localStructure);
         findMissingEnd(request, context, localStructure);
         findHolesAndOverlaps(request, context, localStructure);
@@ -56,10 +63,8 @@ public class CoverageAnalyserProcessor extends ProcessorChainElement {
     }
 
     private void findHolesAndOverlaps(TranscodeRequest request, InfrastructureContext context, ProgramStructure localProgramStructure) throws ProcessorException {
-        ProgramStructure.Holes holes = new ProgramStructure.Holes();
-        localProgramStructure.setHoles(holes);
-        ProgramStructure.Overlaps overlaps = new ProgramStructure.Overlaps();
-        localProgramStructure.setOverlaps(overlaps);
+        ProgramStructure.Holes holes = localProgramStructure.getHoles();
+        ProgramStructure.Overlaps overlaps = localProgramStructure.getOverlaps();
         Map.Entry<String, BroadcastMetadata> firstEntry = null;
         Map.Entry<String, BroadcastMetadata> secondEntry = null;
         for (BroadcastMetadata metadata: request.getBroadcastMetadata()) {
