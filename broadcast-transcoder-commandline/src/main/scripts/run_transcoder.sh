@@ -99,7 +99,6 @@ main()
     while [ -n "$job" -a $shutdown -eq 0 ]
     do
         job="$($queue_cmd $jobfile pop)"
-        echo "executing job: $job" > $logfile
         set -- $job
         collection=$1
         uuid=$2

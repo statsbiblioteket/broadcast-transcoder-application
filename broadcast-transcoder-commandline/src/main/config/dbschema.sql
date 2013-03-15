@@ -1,6 +1,8 @@
 --
 -- PostgreSQL database dump
+-- TODO update this to match the used database
 --
+
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';

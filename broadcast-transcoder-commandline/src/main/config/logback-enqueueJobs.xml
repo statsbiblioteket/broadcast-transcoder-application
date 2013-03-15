@@ -5,18 +5,20 @@
       If this file is not placed on the classpath then it can be loaded at runtime
       with java -Dlogback.configurationFile=/path/to/thisfile.xml
     -->
+    <property name="LOGDIR" value="" description="value should end with /" />
+    <property name="LOGFILE_BASENAME" value="${LOGDIR}bta-enqueueJobs" />
 
     <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-        <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        <pattern>%d [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
         <target>System.err</target>
     </appender>
 
     <appender name="DEBUG_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/bta-enqueueJobs.debug.log</file>
+	<file>${LOGFILE_BASENAME}.debug.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>bta-enqueueJobs.debug.log.%i</fileNamePattern>
+	    <fileNamePattern>${LOGFILE_BASENAME}.debug.log.%i</fileNamePattern>
             <minIndex>0</minIndex>
             <maxIndex>10</maxIndex>
         </rollingPolicy>
@@ -24,14 +26,14 @@
             <maxFileSize>5MB</maxFileSize>
         </triggeringPolicy>
          <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-        <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        <pattern>%d [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
     <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/bta-enqueueJobs.error.log</file>
+	<file>${LOGFILE_BASENAME}.error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>bta-enqueueJobs.error.log.%i</fileNamePattern>
+	    <fileNamePattern>${LOGFILE_BASENAME}.error.log.%i</fileNamePattern>
             <minIndex>0</minIndex>
             <maxIndex>10</maxIndex>
         </rollingPolicy>
@@ -42,7 +44,7 @@
             <maxFileSize>5MB</maxFileSize>
         </triggeringPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
