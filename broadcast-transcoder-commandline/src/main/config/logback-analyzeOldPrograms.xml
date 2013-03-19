@@ -5,7 +5,7 @@
       If this file is not placed on the classpath then it can be loaded at runtime
       with java -Dlogback.configurationFile=/path/to/thisfile.xml
     -->
-    <property name="LOGDIR" value="" description="value should end with /" />
+    <property name="LOGDIR" value="${user.home}/logs/" description="value should end with /" />
     <property name="LOGFILE_BASENAME" value="${LOGDIR}bta-analyzeOldPrograms" />
 
     <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
