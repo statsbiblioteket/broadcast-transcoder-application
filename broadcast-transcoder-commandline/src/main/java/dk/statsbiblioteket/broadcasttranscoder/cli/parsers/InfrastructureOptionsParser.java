@@ -43,7 +43,8 @@ public abstract class InfrastructureOptionsParser<T> extends HibernateOptionsPar
         context.setFileOutputRootdir(readFileProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.FILE_DIR, props));
         context.setPreviewOutputRootdir(readFileProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.PREVIEW_DIR, props));
         context.setSnapshotOutputRootdir(readFileProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.SNAPSHOT_DIR, props));
-        context.setFileFinderUrl(readStringProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.FILE_FINDER, props));
+        context.setNearlineFileFinderUrl(readStringProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.NEARLINE_FILEFINDER_URL, props));
+        context.setOnlineFileFinderUrl(readStringProperty(ONLINE_FILEFINDER_URL, props));
         context.setMaxFilesFetched(readIntegerProperty(dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.MAX_FILES_FETCHED, props));
 
         context.setFileDepth(readIntegerProperty(FILE_DEPTH, props));

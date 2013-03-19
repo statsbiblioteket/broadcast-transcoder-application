@@ -31,7 +31,7 @@ public class NearlineFileFinder implements FileFinder {
      */
     @Override
     public Map<BroadcastMetadata, File> findAndBringOnline(TranscodeRequest request, InfrastructureContext context) throws ProcessorException {
-        String finderBaseUrl = context.getFileFinderUrl();
+        String finderBaseUrl = context.getNearlineFileFinderUrl();
         List<BroadcastMetadata> metadatas = request.getBroadcastMetadata();
         int max_files = context.getMaxFilesFetched();
 
@@ -90,7 +90,7 @@ public class NearlineFileFinder implements FileFinder {
      */
     @Override
     public boolean isAllFilesOnline(TranscodeRequest request, InfrastructureContext context) throws ProcessorException {
-        String finderBaseUrl = context.getFileFinderUrl();
+        String finderBaseUrl = context.getNearlineFileFinderUrl();
         List<BroadcastMetadata> metadatas = request.getBroadcastMetadata();
 
         boolean allIsOnline = true;

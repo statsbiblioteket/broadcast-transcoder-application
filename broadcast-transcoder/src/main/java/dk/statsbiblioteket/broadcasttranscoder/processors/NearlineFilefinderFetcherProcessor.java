@@ -7,7 +7,7 @@ import dk.statsbiblioteket.broadcasttranscoder.util.NearlineFileFinder;
 /**
  * This processor brings each file in the BroadcastMetadata online, and initialises the Filemap
  */
-public class FilefinderFetcherProcessor extends ProcessorChainElement {
+public class NearlineFilefinderFetcherProcessor extends ProcessorChainElement {
 
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {

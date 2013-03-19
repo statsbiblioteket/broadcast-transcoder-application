@@ -118,7 +118,7 @@ public class BroadcastTranscoderService {
         ProcessorChainElement filedataFetcher    = new FileMetadataFetcherProcessor();
         ProcessorChainElement sanitiser = new SanitiseBroadcastMetadataProcessor();
         ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
-        ProcessorChainElement fileFinderFetcher = new FilefinderFetcherProcessor();
+        ProcessorChainElement fileFinderFetcher = new NearlineFilefinderFetcherProcessor();
         ProcessorChainElement identifier = new FilePropertiesIdentifierProcessor();
         ProcessorChainElement clipper = new ClipFinderProcessor();
         ProcessorChainElement coverage = new CoverageAnalyserProcessor();

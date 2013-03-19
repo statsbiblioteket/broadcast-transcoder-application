@@ -1,6 +1,5 @@
 package dk.statsbiblioteket.broadcasttranscoder.cli;
 
-import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.TranscodingProcessInterface;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 
 import java.io.File;
@@ -25,7 +24,8 @@ public class InfrastructureContext<T>  extends HibernateContext<T>{
     private int fileDepth;
 
 
-    private String fileFinderUrl;
+    private String nearlineFileFinderUrl;
+    private String onlineFileFinderUrl;
     private int maxFilesFetched;
 
 
@@ -47,7 +47,13 @@ public class InfrastructureContext<T>  extends HibernateContext<T>{
         this.infrastructuralConfigFile = infrastructuralConfigFile;
     }
 
+    public String getOnlineFileFinderUrl() {
+        return onlineFileFinderUrl;
+    }
 
+    public void setOnlineFileFinderUrl(String onlineFileFinderUrl) {
+        this.onlineFileFinderUrl = onlineFileFinderUrl;
+    }
 
     public String getDomsEndpoint() {
         return domsEndpoint;
@@ -106,12 +112,12 @@ public class InfrastructureContext<T>  extends HibernateContext<T>{
         this.snapshotOutputRootdir = snapshotOutputRootdir;
     }
 
-    public String getFileFinderUrl() {
-        return fileFinderUrl;
+    public String getNearlineFileFinderUrl() {
+        return nearlineFileFinderUrl;
     }
 
-    public void setFileFinderUrl(String fileFinderUrl) {
-        this.fileFinderUrl = fileFinderUrl;
+    public void setNearlineFileFinderUrl(String nearlineFileFinderUrl) {
+        this.nearlineFileFinderUrl = nearlineFileFinderUrl;
     }
 
     public int getMaxFilesFetched() {

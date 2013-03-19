@@ -6,15 +6,11 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.UsageException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.parsers.SingleTranscodingOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
-import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.BroadcastTranscodingRecordDAO;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  *
@@ -78,17 +74,12 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
         ProcessorChainElement metadataChain = ProcessorChainElement.makeChain(pbcorer);
         metadataChain.processIteratively(request,context);
 
-//        if (!request.isVideo()){    //TODO remove this when CSR fixes the radio transcoding
-//            logger.info("Radio transcoding not currently functioning. Exiting.");
-//            return;
-//        }
-
             /*First one getting stuff for the persistence layer*/
         ProcessorChainElement programFetcher = new ProgramMetadataFetcherProcessor();
         ProcessorChainElement filedataFetcher    = new FileMetadataFetcherProcessor();
         ProcessorChainElement sanitiser = new SanitiseBroadcastMetadataProcessor();
         ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
-        ProcessorChainElement fileFinderFetcher = new FilefinderFetcherProcessor();
+        ProcessorChainElement fileFinderFetcher = new OnlineFilefinderProcessor();
         ProcessorChainElement identifier = new FilePropertiesIdentifierProcessor();
 
             /*Find the offsets*/
