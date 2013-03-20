@@ -10,6 +10,8 @@
 
     <artifactId>broadcast-transcoder-commandline</artifactId>
 
+
+
     <dependencies>
         <dependency>
             <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>

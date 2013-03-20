@@ -77,12 +77,13 @@ public class ClipFinderProcessor extends ProcessorChainElement {
             long fileEnd = CalendarUtils.getTimestamp(metadata.getStopTime());
             clip.setFileStartTime(fileStart);
             clip.setFileEndTime(fileEnd);
-            //Five possibilites
+            //Six possibilites
             //File is an exact file - ie a hand-prepared clip that exactly represents the program
             //File contains start and stop times
             //File contains only start
             //File contains only stop
-            //File contains neither
+            //File is wholly after or wholly before program.
+            //Whole file is contained within program
             if (request.isHasExactFile()) {
                 clips.add(clip);
                 request.setClips(clips);
@@ -101,6 +102,9 @@ public class ClipFinderProcessor extends ProcessorChainElement {
                 clip.setClipLength(bitrate*(programEnd - fileStart )/1000L);
                 logger.debug("Added clip " + clip);
                 clips.add(clip);
+            } else if (programStart < fileStart && programEnd > fileEnd) {
+                logger.debug("Added clip " + clip);
+                clips.add(clip);
             } else if (programEnd < fileStart || programStart > fileEnd) {
                 //This is not an error because the file could be necessary depending on offsets.
                 logger.warn("File " + file.getAbsolutePath() + " is included in program " + request.getObjectPid()+ " " +
@@ -108,7 +112,13 @@ public class ClipFinderProcessor extends ProcessorChainElement {
                         request.getProgramBroadcast().getTimeStop());
             }
             request.setClips(clips);
-            logger.debug("Clips found:\n" + clips.toString());
+            if (clips.size() == 0) {
+                this.setChildElement(null);
+                request.setRejected(true);
+                logger.info("Not transcoding {} because there were no clips found.", request.getObjectPid());
+            } else {
+                logger.debug("Clips found:\n" + clips.toString());
+            }
         }
 
 

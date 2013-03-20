@@ -63,10 +63,12 @@ public class StructureFixerProcessor extends ProcessorChainElement {
             }
         }
         if (clip1 == null) {
-            throw new ProcessorException("Could not find " + file1.getAbsolutePath() + " in clip");
+            logger.debug("Could not find {} in clip, although it appears in overlap {}. Proceeding with caution.", file1.getAbsolutePath(), overlap.toString());
+            return;
         }
         if (clip2 == null) {
-            throw new ProcessorException("Could not find " + file2.getAbsolutePath() + " in clip");
+            logger.debug("Could not find {} in clip, although it appears in overlap {}. Proceeding with caution.", file2.getAbsolutePath(), overlap.toString());
+            return;
         }
         switch (overlap.getOverlapType()) {
             case(0):
@@ -122,12 +124,33 @@ public class StructureFixerProcessor extends ProcessorChainElement {
             return;
         } else {
             for (Hole hole: holeList) {
-                 if (hole.getHoleLength() > context.getMaxHole()) {
-                     String s = "Hole length for " + hole.toString() + " is greater than maximum permitted. Exiting.";
-                     logger.info(s);
-                     request.setRejected(true);
-                     this.setChildElement(null);
-                 }
+                BroadcastMetadata bmd1 = request.getPidMap().get(hole.getFile1UUID());
+                BroadcastMetadata bmd2 = request.getPidMap().get(hole.getFile2UUID());
+                File file1 = request.getFileMap().get(bmd1);
+                File file2 = request.getFileMap().get(bmd2);
+                TranscodeRequest.FileClip clip1 = null;
+                TranscodeRequest.FileClip clip2 = null;
+                for (TranscodeRequest.FileClip clip: request.getClips()) {
+                    String clipFilename = (new File(clip.getFilepath())).getName();
+                    if (clipFilename.equals(file1.getName())) {
+                        clip1 = clip;
+                    } else
+                    if (clipFilename.equals(file2.getName())) {
+                        clip2 = clip;
+                    }
+                }
+                if (clip1 == null) {
+                    logger.debug("Could not find {} in clip, although it appears in hole {}. Proceeding with caution.", file1.getAbsolutePath(), hole.toString());
+                    return;
+                } else if (clip2 == null) {
+                    logger.debug("Could not find {} in clip, although it appears in hole {}. Proceeding with caution.", file2.getAbsolutePath(), hole.toString());
+                    return;
+                } else if (hole.getHoleLength() > context.getMaxHole()) {
+                    String s = "Hole length for " + hole.toString() + " is greater than maximum permitted. Exiting.";
+                    logger.info(s);
+                    request.setRejected(true);
+                    this.setChildElement(null);
+                }
             }
         }
     }
