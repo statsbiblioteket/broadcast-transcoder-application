@@ -10,7 +10,7 @@
         <fileSet>
             <directory>${basedir}/src/main/config</directory>
             <outputDirectory>config</outputDirectory>
-            <filtered>true</filtered>
+            <filtered>false</filtered>
         </fileSet>
         <fileSet>
             <directory>${project.build.directory}</directory>
