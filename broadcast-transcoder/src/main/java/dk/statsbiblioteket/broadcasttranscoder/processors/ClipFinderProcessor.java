@@ -59,8 +59,8 @@ public class ClipFinderProcessor extends ProcessorChainElement {
                 break;
         }
         logger.debug("Start/End Offset in seconds: " + startOffset + " / " + endOffset);
-        startOffset += context.getDigitvStartOffset();
-        endOffset += context.getDigitvEndOffset();
+        startOffset += request.getAdditionalStartOffset();
+        endOffset += request.getAdditionalEndOffset();
         logger.debug("Modified Start/End Offset in seconds: " + startOffset + " / " + endOffset);
         programStart += startOffset*1000L;
         programEnd += endOffset*1000L;

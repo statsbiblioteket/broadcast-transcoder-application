@@ -57,8 +57,8 @@ public class BroadcastTranscoderService {
         SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext = (SingleTranscodingContext<BroadcastTranscodingRecord>) context.getAttribute("transcodingContext");
         request.setObjectPid(programPid);
         request.setOutputBasename(filenamePrefix+"_"+startTime+"_"+additionalStartOffset+"_"+additionalEndOffset);
-        transcodingContext.setDigitvStartOffset(additionalStartOffset);
-        transcodingContext.setDigitvEndOffset(additionalEndOffset);
+        request.setAdditionalStartOffset(additionalStartOffset);
+        request.setAdditionalEndOffset(additionalEndOffset);
         return getBtaResponse(request, transcodingContext, programDescription);
     }
 

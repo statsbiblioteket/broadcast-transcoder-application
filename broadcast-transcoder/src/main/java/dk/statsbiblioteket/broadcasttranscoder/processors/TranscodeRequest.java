@@ -27,6 +27,50 @@ public class TranscodeRequest {
 
     private boolean hasExactFile = false;
 
+    private long additionalStartOffset;
+    private long additionalEndOffset;
+
+    private ProgramBroadcast programBroadcast;
+    private ProgramStructure domsProgramStructure;
+    private ProgramStructure localProgramStructure;
+    private List<BroadcastMetadata> broadcastMetadata;
+    private Map<BroadcastMetadata, File> fileMap;
+    private Map<String, BroadcastMetadata> pidMap;
+    private long bitrate; // bytes/second
+    private FileFormatEnum fileFormat;
+    private List<FileClip> clips;
+
+    private String dvbsubPid;
+    private String videoPid;
+    private String videoFcc;
+    private String audioFcc;
+
+
+    private Double displayAspectRatio;
+    private String displayAspectRatioString;
+
+    private String transcoderCommand;
+    private int startOffsetUsed;
+    private int endOffsetUsed;
+
+    private String clipperCommand;
+
+    private boolean goForTranscoding;
+
+    private long timeoutMilliseconds;
+    private Float ffprobeDurationSeconds;
+
+    private boolean isTvmeter;
+    private String title;
+
+    private boolean isRejected = false;
+
+    private String objectPid;
+
+    private String outputBasename;
+
+    /*----------------------------------------------------------------------------------*/
+
     public boolean isHasExactFile() {
         return hasExactFile;
     }
@@ -255,44 +299,23 @@ public class TranscodeRequest {
         this.title = title;
     }
 
-    private ProgramBroadcast programBroadcast;
-    private ProgramStructure domsProgramStructure;
-    private ProgramStructure localProgramStructure;
-    private List<BroadcastMetadata> broadcastMetadata;
-    private Map<BroadcastMetadata, File> fileMap;
-    private Map<String, BroadcastMetadata> pidMap;
-    private long bitrate; // bytes/second
-    private FileFormatEnum fileFormat;
-    private List<FileClip> clips;
-
-    private String dvbsubPid;
-    private String videoPid;
-    private String videoFcc;
-    private String audioFcc;
 
 
-    private Double displayAspectRatio;
-    private String displayAspectRatioString;
+    public long getAdditionalStartOffset() {
+        return additionalStartOffset;
+    }
 
-    private String transcoderCommand;
-    private int startOffsetUsed;
-    private int endOffsetUsed;
+    public void setAdditionalStartOffset(long additionalStartOffset) {
+        this.additionalStartOffset = additionalStartOffset;
+    }
 
-    private String clipperCommand;
+    public long getAdditionalEndOffset() {
+        return additionalEndOffset;
+    }
 
-    private boolean goForTranscoding;
-
-    private long timeoutMilliseconds;
-    private Float ffprobeDurationSeconds;
-
-    private boolean isTvmeter;
-    private String title;
-
-    private boolean isRejected = false;
-
-    private String objectPid;
-
-    private String outputBasename;
+    public void setAdditionalEndOffset(long additionalEndOffset) {
+        this.additionalEndOffset = additionalEndOffset;
+    }
 
     public String getOutputBasename() {
         return outputBasename;
@@ -358,53 +381,53 @@ public class TranscodeRequest {
     }
 
     /**
-       * Class representing the absolute minimum information needed to clip data from a file
-       */
+     * Class representing the absolute minimum information needed to clip data from a file
+     */
     public static class FileClip {
-          private String filepath;
-          private Integer programId; //non-null only for mux'es
-          private Long startOffsetBytes;
-          private Long clipLength;
+        private String filepath;
+        private Integer programId; //non-null only for mux'es
+        private Long startOffsetBytes;
+        private Long clipLength;
 
-          private Long fileStartTime;
-          private Long fileEndTime;
+        private Long fileStartTime;
+        private Long fileEndTime;
 
 
-          public Long getFileStartTime() {
-              return fileStartTime;
-          }
+        public Long getFileStartTime() {
+            return fileStartTime;
+        }
 
-          public void setFileStartTime(Long fileStartTime) {
-              this.fileStartTime = fileStartTime;
-          }
+        public void setFileStartTime(Long fileStartTime) {
+            this.fileStartTime = fileStartTime;
+        }
 
-          public Long getFileEndTime() {
-              return fileEndTime;
-          }
+        public Long getFileEndTime() {
+            return fileEndTime;
+        }
 
-          public void setFileEndTime(Long fileEndTime) {
-              this.fileEndTime = fileEndTime;
-          }
+        public void setFileEndTime(Long fileEndTime) {
+            this.fileEndTime = fileEndTime;
+        }
 
-          public FileClip(String filepath) {
-              this.filepath = filepath;
-          }
+        public FileClip(String filepath) {
+            this.filepath = filepath;
+        }
 
-          public void setProgramId(Integer programId) {
-              this.programId = programId;
-          }
+        public void setProgramId(Integer programId) {
+            this.programId = programId;
+        }
 
-          public void setStartOffsetBytes(Long startOffsetBytes) {
-              this.startOffsetBytes = startOffsetBytes;
-          }
+        public void setStartOffsetBytes(Long startOffsetBytes) {
+            this.startOffsetBytes = startOffsetBytes;
+        }
 
-          public void setClipLength(Long clipLength) {
-              this.clipLength = clipLength;
-          }
+        public void setClipLength(Long clipLength) {
+            this.clipLength = clipLength;
+        }
 
-          public String getFilepath() {
-              return filepath;
-          }
+        public String getFilepath() {
+            return filepath;
+        }
 
         public Integer getProgramId() {
             return programId;
