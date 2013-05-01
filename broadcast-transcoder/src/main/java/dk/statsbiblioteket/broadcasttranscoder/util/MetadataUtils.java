@@ -29,12 +29,15 @@ public class MetadataUtils {
         return request.getProgramBroadcast().getTimeStop().toGregorianCalendar().getTime();
     }
 
+    public static long findTotalLengthMillis(TranscodeRequest request) {
+         return findProgramLengthMillis(request) - request.getStartOffsetUsed()*1000L + request.getEndOffsetUsed()*1000L;
+    }
 
     public static long getTimeout(TranscodeRequest request, SingleTranscodingContext context) {
         long timeout;
         if (request.getTimeoutMilliseconds() == 0l) {
-            long programLength = findProgramLengthMillis(request);
-            timeout = (long) (programLength/context.getTranscodingTimeoutDivisor());
+            long totalLengthMillis = findTotalLengthMillis(request);
+            timeout = (long) (totalLengthMillis/context.getTranscodingTimeoutDivisor());
         } else {
             timeout = request.getTimeoutMilliseconds();
         }

@@ -38,10 +38,12 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
         try {
             long timeout;
             if (request.getTimeoutMilliseconds() == 0l) {
-                long programLength = MetadataUtils.findProgramLengthMillis(request);
-                timeout = (long) (programLength/context.getTranscodingTimeoutDivisor());
+                timeout = MetadataUtils.getTimeout(request, context);
             } else if (request.getFfprobeDurationSeconds() != null) {
-                timeout = (long) (Math.round(request.getFfprobeDurationSeconds()*1000L)/context.getTranscodingTimeoutDivisor());
+                timeout = (long) (Math.round(request.getFfprobeDurationSeconds()*1000L
+                        - request.getStartOffsetUsed()*1000L
+                        + request.getEndOffsetUsed()*1000L
+                )/context.getTranscodingTimeoutDivisor());
             } else {
                 timeout = request.getTimeoutMilliseconds();
             }

@@ -57,8 +57,7 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
             clipperCommand = findVideoClipperCommand(request, context, processSubstitutionFileList);
         }
         try {
-            long programLength = MetadataUtils.findProgramLengthMillis(request);
-            long timeout = (long) (programLength/context.getTranscodingTimeoutDivisor());
+            long timeout = MetadataUtils.getTimeout(request,context);
             logger.debug("Setting transcoding timeout for '" + request.getObjectPid() + "' to " + timeout + "ms" );
             request.setTranscoderCommand(clipperCommand);
             ExternalJobRunner.runClipperCommand(timeout, clipperCommand);

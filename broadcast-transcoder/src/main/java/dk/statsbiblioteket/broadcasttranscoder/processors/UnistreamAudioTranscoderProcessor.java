@@ -32,8 +32,7 @@ public class UnistreamAudioTranscoderProcessor extends ProcessorChainElement {
                 outputDir.mkdirs();
                 File outputFile = FileUtils.getTemporaryMediaOutputFile(request, context);
                 try {
-                    long programLength = MetadataUtils.findProgramLengthMillis(request);
-                    long timeout = (long) (programLength/context.getTranscodingTimeoutDivisor());
+                    long timeout = MetadataUtils.getTimeout(request, context);
                     log.debug("Setting transcoding timeout for '" + request.getObjectPid() + "' to " + timeout + "ms");
                     request.setTranscoderCommand(command);
                     ExternalJobRunner.runClipperCommand(timeout, command);
