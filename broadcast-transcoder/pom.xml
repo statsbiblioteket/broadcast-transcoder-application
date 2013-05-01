@@ -4,7 +4,7 @@
     <parent>
         <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>
         <artifactId>broadcast-transcoder-application</artifactId>
-        <version>0.2.1-SNAPSHOT</version>
+        <version>0.3.5-SNAPSHOT</version>
     </parent>
 
 
@@ -85,6 +85,7 @@
                 <executions>
                     <execution>
                         <id>pbcore</id>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>

@@ -63,7 +63,7 @@ public class ConfigurationLoader implements ServletContextListener {
         transcodingContext.setBehaviourConfigFile(behaviourFile);
         transcodingContext.setInfrastructuralConfigFile(infrastructureFile);
         try {
-            new WebserviceTranscodingOptionsParser(transcodingContext);
+            transcodingContext = WebserviceTranscodingOptionsParser.readProperties(transcodingContext);
         } catch (Exception e) {
             throw new RuntimeException("Error parsing properties", e);
         }

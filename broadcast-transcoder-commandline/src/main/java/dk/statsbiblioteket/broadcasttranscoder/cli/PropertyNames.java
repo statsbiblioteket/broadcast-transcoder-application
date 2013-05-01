@@ -74,7 +74,8 @@ public class PropertyNames {
     /*
     Properties related to nearline storage
      */
-    public static final String FILE_FINDER = "nearlineFilefinderUrl";
+    public static final String NEARLINE_FILEFINDER_URL = "nearlineFilefinderUrl";
+    public static final String ONLINE_FILEFINDER_URL = "onlineFilefinderUrl";
     public static final String MAX_FILES_FETCHED = "maxFilesFetched";
 
     /*

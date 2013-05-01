@@ -42,6 +42,7 @@ public class BtaDomsFetcher {
             return;
         }
         try {
+            logger.info("Starting BtaDomsFetcher with args {}",args);
 
             CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);
             List<RecordDescription> records = requestInBatches(doms, context);
@@ -59,10 +60,15 @@ public class BtaDomsFetcher {
                 return;
             }
 
+            int count = 0;
             for (RecordDescription record : records) {
-
-
-                dao.markAsChangedInDoms(record.getPid(), record.getDate());
+                if (record.getPid().startsWith("uuid")){
+                    dao.markAsChangedInDoms(record.getPid(), record.getDate());
+                    if (count % 10 ==0){
+                        logger.debug("added {} records to the database",count);
+                    }
+                    count++;
+                }
             }
 
         } catch (Exception e) {
@@ -70,23 +76,30 @@ public class BtaDomsFetcher {
             System.exit(5);
         }
 
+        logger.info("BtaDomsFetcher complete");
     }
 
 
-   static List<RecordDescription> requestInBatches(CentralWebservice doms, FetcherContext context) throws InvalidCredentialsException, MethodFailedException {
+    static List<RecordDescription> requestInBatches(CentralWebservice doms, FetcherContext context) throws InvalidCredentialsException, MethodFailedException {
+
+
         long since = getSince(context);
         String collection = getCollection(context);
         String viewAngle = getViewAngle(context);
         String state = getState(context);
         int batchSize = getBatchSize(context);
+        logger.debug("Requesting objects from doms, since {}, collection {}, viewangle {}, state {}, batchsize {}",
+                new Object[]{ since,collection,viewAngle,state,batchSize});
 
         List<RecordDescription> records = doms.getIDsModified(since, collection, viewAngle, state,0,batchSize);
         int size = records.size();
+        logger.debug("Retrieved {} records, total {}",size, records.size());
         while (size == batchSize){
             RecordDescription lastObject = records.get(records.size() - 1);
             List<RecordDescription> temp = doms.getIDsModified(lastObject.getDate(), collection, viewAngle, state, 0, batchSize);
             size = temp.size();
             records.addAll(temp);
+            logger.debug("Retrieved {} records, total {}",size, records.size());
         }
         return records;
     }

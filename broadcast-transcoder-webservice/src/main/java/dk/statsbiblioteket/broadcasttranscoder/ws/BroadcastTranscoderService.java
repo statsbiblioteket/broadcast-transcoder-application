@@ -36,9 +36,10 @@ public class BroadcastTranscoderService {
     @Context
     ServletContext context;
 
-    @GET @Path("/btaDVDTranscode")
+    @GET
+    @Path("/btaDVDTranscode")
     @Produces(MediaType.APPLICATION_XML)
-    public BtaResponse startDigitvTranscoding(
+    public BtaResponse startDVDTranscoding(
             @QueryParam("programpid") String programPid,
             @QueryParam("title") String title,
             @QueryParam("channel") String channel,
@@ -56,8 +57,8 @@ public class BroadcastTranscoderService {
         SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext = (SingleTranscodingContext<BroadcastTranscodingRecord>) context.getAttribute("transcodingContext");
         request.setObjectPid(programPid);
         request.setOutputBasename(filenamePrefix+"_"+startTime+"_"+additionalStartOffset+"_"+additionalEndOffset);
-        transcodingContext.setDigitvStartOffset(additionalStartOffset);
-        transcodingContext.setDigitvEndOffset(additionalEndOffset);
+        request.setAdditionalStartOffset(additionalStartOffset);
+        request.setAdditionalEndOffset(additionalEndOffset);
         return getBtaResponse(request, transcodingContext, programDescription);
     }
 
@@ -117,7 +118,7 @@ public class BroadcastTranscoderService {
         ProcessorChainElement filedataFetcher    = new FileMetadataFetcherProcessor();
         ProcessorChainElement sanitiser = new SanitiseBroadcastMetadataProcessor();
         ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
-        ProcessorChainElement fileFinderFetcher = new FilefinderFetcherProcessor();
+        ProcessorChainElement fileFinderFetcher = new NearlineFilefinderFetcherProcessor();
         ProcessorChainElement identifier = new FilePropertiesIdentifierProcessor();
         ProcessorChainElement clipper = new ClipFinderProcessor();
         ProcessorChainElement coverage = new CoverageAnalyserProcessor();
@@ -157,36 +158,20 @@ public class BroadcastTranscoderService {
                             renamer);
                 }
                 break;
+              case MPEG_PS:
             case SINGLE_PROGRAM_VIDEO_TS:
                 if (transcodingContext.getVideoOutputSuffix().equals("mpeg")) {
                     logger.debug("Generating DVD video. No previews or snapshots for " + request.getObjectPid());
-                    secondChain = ProcessorChainElement.makeChain(pider,
-                            unistreamvideoer,
-                            renamer
-                    );
-                } else {
-                    secondChain = ProcessorChainElement.makeChain(pider,
-                            unistreamvideoer,
-                            renamer);
                 }
+                secondChain = ProcessorChainElement.makeChain(pider,
+                        unistreamvideoer,
+                        renamer
+                );
                 break;
               case SINGLE_PROGRAM_AUDIO_TS:
                   secondChain = ProcessorChainElement.makeChain(pider,
                           unistreamaudioer,
                           renamer);
-                  break;
-              case MPEG_PS:
-                  if (transcodingContext.getVideoOutputSuffix().equals("mpeg")) {
-                      logger.debug("Generating DVD video. No previews or snapshots for " + request.getObjectPid());
-                      secondChain = ProcessorChainElement.makeChain(pider,
-                              unistreamvideoer,
-                              renamer
-                      );
-                  } else {
-                      secondChain = ProcessorChainElement.makeChain(pider,
-                              unistreamvideoer,
-                              renamer);
-                  }
                   break;
               case AUDIO_WAV:
                   //final String message = "Cannot process wav files at present. Exiting for " + request.getObjectPid();
@@ -231,7 +216,7 @@ public class BroadcastTranscoderService {
             @QueryParam("filename_prefix") String filenamePrefix,
             @DefaultValue("false") @QueryParam("send_email") String sendEmailParam,
             @DefaultValue("false") @QueryParam("alternative") String alternative ) throws ProcessorException {
-        return startDigitvTranscoding(programPid, title, channel, startTime,
+        return startDVDTranscoding(programPid, title, channel, startTime,
                 additionalStartOffset, additionalEndOffset, filenamePrefix, "true");
     }
 

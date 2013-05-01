@@ -10,16 +10,6 @@
         <fileSet>
             <directory>${basedir}/src/main/config</directory>
             <outputDirectory>config</outputDirectory>
-            <includes>
-                <include>bta.behaviour.properties</include>
-                <include>bta.infrastructure.properties</include>
-                <include>dbschema.sql</include>
-                <include>hibernate.cfg.xml</include>
-                <include>logback.xml</include>
-                <include>bta.fetcher.Broadcast.properties</include>
-                <include>bta.fetcher.Reklamefilm.properties</include>
-                <include>run_transcoder.conf</include>
-            </includes>
             <filtered>false</filtered>
         </fileSet>
         <fileSet>

@@ -7,7 +7,7 @@ timestamp=$2
 SCRIPT_PATH=$(dirname $(readlink -f $0))
 source $SCRIPT_PATH/setenv.sh
 
-java -Dlogback.configurationFile=$confDir/logback.xml $hibernate_log_config \
+java -Dlogback.configurationFile=$confDir/logback-enqueueJobs.xml $hibernate_log_config \
  -cp "$CLASSPATH" dk.statsbiblioteket.broadcasttranscoder.BtaDomsFetcher \
  --infrastructure_configfile=$confDir/bta.infrastructure.properties \
  --behavioural_configfile=$confDir/bta.fetcher.${collection}.properties \

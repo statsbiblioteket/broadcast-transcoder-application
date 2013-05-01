@@ -12,10 +12,11 @@ import java.io.IOException;
  */
 public class WebserviceTranscodingOptionsParser extends SingleTranscodingOptionsParser<BroadcastTranscodingRecord> {
 
-    public WebserviceTranscodingOptionsParser(SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext)
+    public static SingleTranscodingContext<BroadcastTranscodingRecord> readProperties(SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext)
             throws IOException, OptionParseException {
-        this.readBehaviouralProperties(transcodingContext);
-        this.readInfrastructureProperties(transcodingContext);
+        readBehaviouralProperties(transcodingContext);
+        readInfrastructureProperties(transcodingContext);
+        return transcodingContext;
     }
 
 }

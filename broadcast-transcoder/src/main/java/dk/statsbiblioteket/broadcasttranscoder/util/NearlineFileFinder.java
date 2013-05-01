@@ -31,13 +31,16 @@ public class NearlineFileFinder implements FileFinder {
      */
     @Override
     public Map<BroadcastMetadata, File> findAndBringOnline(TranscodeRequest request, InfrastructureContext context) throws ProcessorException {
-        String finderBaseUrl = context.getFileFinderUrl();
+        String finderBaseUrl = context.getNearlineFileFinderUrl();
         List<BroadcastMetadata> metadatas = request.getBroadcastMetadata();
         int max_files = context.getMaxFilesFetched();
 
         Map<BroadcastMetadata, File> result = new HashMap<BroadcastMetadata, File>();
         if (metadatas.size() > max_files) {
             //TODO how about paging the stuff instead?
+            //[Comment:CSR] This is really a sanity test. If we have to fetch more than, say, 10 files for a given
+            //program then this is almost certainly an error in the DOMS object. This check saves us from
+            //making silly nearline-requests that would seriously compromise the functioning of our backend storage.
             throw new ProcessorException("Tried to fetch " + metadatas.size() + " at a time. Disallowed.");
         }
         String query = "";
@@ -87,7 +90,7 @@ public class NearlineFileFinder implements FileFinder {
      */
     @Override
     public boolean isAllFilesOnline(TranscodeRequest request, InfrastructureContext context) throws ProcessorException {
-        String finderBaseUrl = context.getFileFinderUrl();
+        String finderBaseUrl = context.getNearlineFileFinderUrl();
         List<BroadcastMetadata> metadatas = request.getBroadcastMetadata();
 
         boolean allIsOnline = true;

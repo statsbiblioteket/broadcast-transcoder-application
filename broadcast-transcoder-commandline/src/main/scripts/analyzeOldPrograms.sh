@@ -11,7 +11,7 @@ failureList=$4
 SCRIPT_PATH=$(dirname $(readlink -f $0))
 source $SCRIPT_PATH/setenv.sh
 
-java -Dlogback.configurationFile=$confDir/logback.xml $hibernate_log_config \
+java -Dlogback.configurationFile=$confDir/logback-analyzeOldPrograms.xml $hibernate_log_config \
  -cp "$CLASSPATH" dk.statsbiblioteket.broadcasttranscoder.ProgramAnalyzer \
  --infrastructure_configfile=$confDir/bta.infrastructure.properties \
  --hibernate_configfile=$confDir/hibernate.cfg.xml \

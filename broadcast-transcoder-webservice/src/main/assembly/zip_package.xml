@@ -21,7 +21,7 @@
             <directory>${basedir}/src/main/config</directory>
             <outputDirectory>context</outputDirectory>
             <includes>
-                <include>bta.xml</include>
+                <include>bta-ws.xml</include>
             </includes>
             <filtered>false</filtered>
         </fileSet>
