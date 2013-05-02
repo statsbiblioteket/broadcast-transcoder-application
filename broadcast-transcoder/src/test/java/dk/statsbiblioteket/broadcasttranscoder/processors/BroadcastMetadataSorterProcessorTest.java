@@ -106,7 +106,7 @@ public class BroadcastMetadataSorterProcessorTest {
         context.setDomsUsername("fedoraAdmin");
         context.setDomsPassword("spD68ZJl");
         TranscodeRequest request = new TranscodeRequest();
-        request.setObjectPid("uuid:d82107be-20cf-4524-b611-07d8534b97f8");
+        request.setObjectPid("uuid:3a1bdfce-497f-4bff-8804-22ac000cca83");
 
         ProcessorChainElement programFetcher = new ProgramMetadataFetcherProcessor();
         ProcessorChainElement filedataFetcher    = new FileMetadataFetcherProcessor();
