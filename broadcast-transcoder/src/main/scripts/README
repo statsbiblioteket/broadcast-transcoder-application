@@ -1,0 +1,21 @@
+This describes how to use these scripts to find information on damaged files
+
+1. Find the soundless files:
+   On develro@phoebe run
+   > ./test_for_audio.sh /home/bta/data/streamingContent > missing_audio.txt
+
+2. Find the corresponding program information
+   > cat missing_audio.txt|xargs -n 1 ./program_info.sh >  soundless_programs.txt
+
+3. Sort the soundless programs
+   > sort -k 2 soundless_programs.txt >  soundless_programs.sorted.txt
+
+4. Get the uuid's of the corresponding file objects
+   > cat soundless_programs.sorted.txt|xargs -n 1 ./file_info.sh >  soundless_files_uuids.txt
+
+5. Uniqify the uuids:
+   > cat soundless_files_uuids.txt |uniq > soundless_files_uuids.uniq.txt
+
+6. Get the corresponding filenames:
+   >  cat soundless_files_uuids.uniq.txt|xargs -n 1 ./get_file_name.sh >  soundless_program_files.urls.txt
+
