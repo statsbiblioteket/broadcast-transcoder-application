@@ -40,7 +40,7 @@
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>WARN</level>
         </filter>
-        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+        <triggeringPolicy class="dk.statsbiblioteket.broadcasttranscoder.util.EverRollingSizeBasedTriggeringPolicy">
             <maxFileSize>5MB</maxFileSize>
         </triggeringPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
