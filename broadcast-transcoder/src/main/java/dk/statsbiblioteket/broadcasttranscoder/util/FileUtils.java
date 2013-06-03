@@ -211,5 +211,20 @@ public class FileUtils {
         }
     }
 
+    public static void deleteAndLogFailedFile(File file, Exception cause) {
+        if (file == null) {
+            logger.error("Attempting to delete null file");
+            return;
+        } else {
+            if (cause != null) {
+                logger.info("Deleting failed file '" + file.getAbsolutePath() + "' of length " + file.length() + " bytes", cause);
+            } else {
+                logger.info("Deleting failed file '" + file.getAbsolutePath() + "' of length " + file.length() + " bytes");
+            }
+            if (!file.delete()) {
+                logger.warn("Could not delete '" + file.getAbsolutePath() + "'");
+            }
+        }
+    }
 
 }

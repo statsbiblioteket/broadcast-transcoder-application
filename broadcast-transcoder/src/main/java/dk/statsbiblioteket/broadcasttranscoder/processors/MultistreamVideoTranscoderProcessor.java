@@ -63,8 +63,7 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
             ExternalJobRunner.runClipperCommand(timeout, clipperCommand);
         } catch (ExternalProcessTimedOutException e) {
             File outputFile =  FileUtils.getTemporaryMediaOutputFile(request, context);
-            logger.warn("Deleting '" + outputFile.getAbsolutePath() + "'");
-            outputFile.delete();
+            FileUtils.deleteAndLogFailedFile(outputFile, e);
             throw new ProcessorException("Process timed out for "+request.getObjectPid(),e);
         }
     }

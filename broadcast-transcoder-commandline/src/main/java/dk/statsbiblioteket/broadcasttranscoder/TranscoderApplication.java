@@ -42,6 +42,7 @@ public abstract class TranscoderApplication<T> {
         T record =  context.getTranscodingProcessInterface().read(request.getObjectPid());
         record.setTranscodingState(TranscodingStateEnum.FAILED);
         record.setLastTranscodedTimestamp(context.getTranscodingTimestamp());
+        logger.info("Updating persistent error message from '" + record.getFailureMessage() + "' to '" + e.getMessage() + "'");
         record.setFailureMessage(e.getMessage());
         context.getTranscodingProcessInterface().update(record);
     }

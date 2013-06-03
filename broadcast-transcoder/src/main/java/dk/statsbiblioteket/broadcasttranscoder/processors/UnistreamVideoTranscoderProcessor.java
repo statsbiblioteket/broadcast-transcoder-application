@@ -51,8 +51,7 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
             request.setTranscoderCommand(command);
             ExternalJobRunner.runClipperCommand(timeout, command);
         } catch (ExternalProcessTimedOutException e) {
-            log.warn("Deleting '" + outputFile + "'");
-            outputFile.delete();
+            FileUtils.deleteAndLogFailedFile(outputFile, e);
             throw new ProcessorException("External process timed out for " + request.getObjectPid(),e);
         }
     }
