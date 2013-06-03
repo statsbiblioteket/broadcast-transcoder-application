@@ -100,6 +100,7 @@ public class SingleTranscodingOptionsParser<T extends TranscodingRecord> extends
         context.setOnlyTranscodeChanges(readBooleanProperty(ONLYTRANSCODECHANGES, props));
         context.setVideoOutputSuffix(readStringProperty(VIDEO_OUTPUT_SUFFIX, props));
         context.setVlcRemuxingString(readStringProperty(VLC_REMUXING_STRING, props));
+        context.setDomsViewAngle(readStringProperty(DOMS_VIEWANGLE, props));
     }
 
 
