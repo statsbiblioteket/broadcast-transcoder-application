@@ -49,6 +49,7 @@ public class BroadcastTranscoderService {
             @QueryParam("filename_prefix") String filenamePrefix,
             @DefaultValue("true") @QueryParam("burn_subtitles") String burnSubtitles)
             throws ProcessorException {
+        filenamePrefix = sanitiseTitle(filenamePrefix);
         final String programDescription = " " + title + " " + programPid + " " + channel + " " + startTime;
         logger.info("Received request for" + programDescription);
         logger.debug("Parameters: additional_start_offset/additional_end_offset: " + additionalStartOffset + " / " + additionalEndOffset);
@@ -60,6 +61,10 @@ public class BroadcastTranscoderService {
         request.setAdditionalStartOffset(additionalStartOffset);
         request.setAdditionalEndOffset(additionalEndOffset);
         return getBtaResponse(request, transcodingContext, programDescription);
+    }
+
+    public static String sanitiseTitle(String filenamePrefix) {
+        return filenamePrefix.replaceAll("[^a-zA-Z0-9_.\\-æøåÆØÅ%+]", "_");
     }
 
     private BtaResponse getBtaResponse(final TranscodeRequest request, final SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext, String programDescription) {
