@@ -17,86 +17,49 @@ logdir=$HOME/logs
 configfile=$(readlink -f $(dirname $(readlink -f $0))/../config/run_transcoder.conf)
 [ -r $configfile ] && . $configfile
 
-# 0 is running status, 1 is stopped queue processing, 2 is active termination
-shutdown=0
-# Save the pid of this process for later use
-this_pid=$$
-# This process logs here (see redirection before calling main())
-logfile=$logdir/run_transcoder.$this_pid.log
+# Keep track of how many jobs we've forked
+jobcounter=0
 
 func_date()
 {
     date "+%Y-%m-%d %H:%M:%S"
 }
 
-func_numjobs_inc()
+# rotate_log(): rotate a logfile
+# params: $1 = logfile to rotate, $2 = max logsize which determines rotation
+# $2 is optional and defaults to 10M
+# The number of log generations are fixed to 8
+rotate_log()
 {
-    ((numjobs++))
-    echo "$(func_date): Increase concurrent jobs to $numjobs"
-}
+    # Keep 8 log generations
+    local numlogs=8
 
-func_numjobs_dec()
-{
-    [ $numjobs -gt 1 ] && ((numjobs--))
-    echo "$(func_date): Decrease concurrent jobs to $numjobs"
-}
+    local logfile=$1
+    # Default is 10485760 bytes, 10M
+    local maxlogsize=${2:-10485760}
 
-func_joblist()
-{
-    pgrep -f -P $this_pid "ssh[ ]-n[ ]$host[ ]$transcode_cmd[ ].*"
-}
-
-func_status()
-{
-    local d=$(func_date)
-    echo "$d: process pid: $this_pid"
-    echo "$d: requested number of concurrent jobs: $numjobs"
-    echo "$d: current running jobs: $(func_joblist|wc -l)"
-    echo "$d: processed jobs: $jobcounter"
-    echo "$d: jobs left in queue: $(wc -l < $jobfile)"
+    # Should we rotate?
+    if [ -r "$logfile" -a "$(stat -c %s $logfile)" -ge $maxlogsize ]; then
+	# Rotate log
+	for x in $(seq $numlogs -1 1)
+	do
+	    [ -r ${logfile}.$x ] && mv ${logfile}.$x ${logfile}.$((x+1))
+	done
+	[ -r ${logfile} ] && mv ${logfile} ${logfile}.1
+    fi
 }
 
 func_stop()
 {
-    local pid
-    # Only enter if we are not in state 2
-    if [ $shutdown -ne 2 ]; then
-	if [ $shutdown -eq 0 ]; then
-	    shutdown=1
-	    echo "$(func_date): Stopped queue processing, waiting for jobs to finish"
-	    func_status
-	else
-	    shutdown=2
-	    # We've already been called once, so this time kill off children
-	    # Note that just killing ssh will leave the transcode process
-	    # a zombie waiting to be reaped by init
-	    #
-	    # Further note: the java transcode process has the responsibility of updating the database
-	    # when a transcoding has been successfully completed. So any processes killed here will eventually
-	    # be requeued the next time we query the database.
-	    #
-	    #
-	    echo "$(func_date): Terminating current jobs"
-	    func_status
-	    for pid in $(func_joblist)
-	    do
-		kill $pid
-	    done
-	fi
-    fi
+    echo "$(func_date): pid $$ exiting, jobs processed from $jobfile: $jobcounter" >> $logfile
 }
 
 main()
 {
-    # Workers log here
-    transcode_cmd_log=$logdir/${host}.job.log
-    # The number of currently running jobs on $host
-    current_jobs=0
-    # Keep track of how many jobs we've forked
-    jobcounter=0
+    echo "$(func_date): pid $$ startup using $jobfile" >> $logfile
     # As long as we get a job from the queue, we keep running
     job="go"
-    while [ -n "$job" -a $shutdown -eq 0 ]
+    while [ -n "$job" ]
     do
         job="$($queue_cmd $jobfile pop)"
         set -- $job
@@ -106,34 +69,20 @@ main()
 
         # Check that we didn't get a malformed job from the queue
         if [ -n "$collection" -a -n "$uuid" -a -n "$timestamp" ]; then
-            ssh -n $host $transcode_cmd $collection $uuid $timestamp >> $transcode_cmd_log 2>&1 &
-            ((current_jobs++))
             ((jobcounter++))
+	    # Run job in the foreground so the loop naturally waits for completion
+            ssh -n $host $transcode_cmd $collection $uuid $timestamp >> $logfile 2>&1
+	    # rotate log if necessary
+	    rotate_log "$logfile"
         fi
-        while [ $current_jobs -ge $numjobs ]
-        do
-            # Update the running job count
-            current_jobs=$(func_joblist|wc -l)
-            # Check every second if there is a free slot
-            sleep 1
-        done
     done
-    # Wait out running jobs
-    # Exit status greater than 128 means wait was aborted by a trap
-    while ! wait
-    do
-	    wait
-    done
-    func_status
-    echo "$(func_date): Exiting"
 }
 
 print_usage()
 {
-    echo "Usage: $(basename $0) -h <host> -n <number of jobs> -j <jobfile>"
+    echo "Usage: $(basename $0) -h <host> -j <jobfile>"
     echo
-    echo "-h	Specify host for transcoding jobs"
-    echo "-n	Number of concurrent transcoding jobs on host"
+    echo "-h	Specify host for transcoding job"
     echo "-j	File to pick jobs from"
     echo
     echo "The format of the jobs returned from jobfile should be:"
@@ -152,9 +101,6 @@ if [ $# -gt 0 ]; then
 	    h)
 		host=$OPTARG
 		;;
-	    n)
-		numjobs=$OPTARG
-		;;
 	    j)
 		jobfile=$OPTARG
 		;;
@@ -164,7 +110,7 @@ if [ $# -gt 0 ]; then
 		;;
 	esac
     done
-    shift `expr $OPTIND - 1`
+    shift $((OPTIND - 1))
 else
     print_usage
     exit 1
@@ -172,19 +118,15 @@ fi
 
 # Check that we got the args we wanted
 [ -z "$host" ] && print_usage && exit 2
-[ -z "$numjobs" ] && print_usage && exit 3
 [ -z "$jobfile" -o ! -r "$jobfile" ] && print_usage && exit 4
 
-# Still here...
+# Setup trap
+trap 'func_stop' EXIT
 
-# Setup traps
-trap 'func_stop' SIGQUIT SIGTERM
-trap 'func_status' SIGINT
-trap 'func_numjobs_inc' SIGUSR1
-trap 'func_numjobs_dec' SIGUSR2
-
-# Save all output to the logfile aswell
-exec > >(tee $logfile) 2>&1
+# This process logs here
+logfile=$logdir/${host}.job.log
 
 # off we go!
 main
+
+# vim: set sw=4 sts=4 et ft=sh : #
