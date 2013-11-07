@@ -81,7 +81,8 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
         ProcessorChainElement filedataFetcher    = new FileMetadataFetcherProcessor();
         ProcessorChainElement sanitiser = new SanitiseBroadcastMetadataProcessor();
         ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
-        ProcessorChainElement fileFinderFetcher = new OnlineFilefinderProcessor();
+        //ProcessorChainElement fileFinderFetcher = new OnlineFilefinderProcessor();
+        ProcessorChainElement fileFinderFetcher = new NearlineFilefinderFetcherProcessor();
         ProcessorChainElement identifier = new FilePropertiesIdentifierProcessor();
 
             /*Find the offsets*/

@@ -34,6 +34,11 @@
             <artifactId>derby</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>dk.statsbiblioteket.doms.central</groupId>
+            <artifactId>centralWebservice-interface</artifactId>
+            <version>0.0.26</version>
+        </dependency>
 
 
     </dependencies>

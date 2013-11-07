@@ -18,6 +18,7 @@
         <module>broadcast-transcoder-persistence</module>
         <module>broadcast-transcoder-common</module>
         <module>broadcast-transcoder-webservice</module>
+        <module>broadcast-transcoder-thumbnailer</module>
     </modules>
     <properties>
         <jersey.version>1.17</jersey.version>
