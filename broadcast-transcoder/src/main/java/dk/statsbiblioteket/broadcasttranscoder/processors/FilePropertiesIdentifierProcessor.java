@@ -31,7 +31,7 @@ public class FilePropertiesIdentifierProcessor extends ProcessorChainElement {
         FileFormatEnum format = null;
         if (filename.endsWith("wav")) {
             format = FileFormatEnum.AUDIO_WAV;
-        } else if (filename.endsWith("mpeg")) {
+        } else if (filename.matches(".*\\.mpe?g[12]?$")) {
             format = FileFormatEnum.MPEG_PS;
         } else if (filename.startsWith("mux") && filename.endsWith("ts")) {
             format = FileFormatEnum.MULTI_PROGRAM_MUX;
