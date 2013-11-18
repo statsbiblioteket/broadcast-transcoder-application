@@ -49,29 +49,20 @@ updated using the queue.sh command to avoid corrupting the file
     for job in $(./bin/queryChangesDoms.sh Broadcast); do \
     ./bin/queue.sh myqueue push "$job"; done; IFS=$OIFS
 
-The transcoding is then started with
-    ./bin/run_transcoder.sh -h localhost -n 2 -j myqueue
+The transcoding is started with
+    ./bin/transcode-master.sh -h localhost -n 2 -j myqueue
 
 If run with no or wrong parameters it will output usage instructions.
 
-As many instances of run_transcoder.sh can be run as needed, even on the same
-host.
+transcode-master.sh will start up the given number (-n) of transcoding jobs
+(usually run_transcoder.sh) which will then run in the background.
+As many instances of run_transcoder.sh can be started as needed, even on the
+same host.
 Both Broadcast and Reklamefilm jobs can be added to the same queue.
 
-The number of concurrent jobs (-n) can be adjusted on the fly by sending a
-SIGUSR1 (increase number) or SIGUSR2 (decrease number) signal to the process.
-Sending a SIGINT (ctrl-c on the terminal) to the process will make it dump a
-status to stdout:
-
-    2013-02-25 12:51:46: requested number of concurrent jobs: 2
-    2013-02-25 12:51:46: current running jobs: 2
-    2013-02-25 12:51:46: processed jobs: 2
-    2013-02-25 12:51:46: jobs left in queue: 17
-
-Sending a SIGTERM or a SIGQUIT to the process will make it stop processing
-the queue and wait for current running jobs to finish. Sending a second
-SIGTERM/SIGQUIT will make the process forcibly kill off the worker processes
-and exit.
+Running jobs are managed with transcode-master.sh but note that it currently
+only distinguishes jobs based on the host assigned so jobs with different queues
+are treated the same.
 
 ## Handling old transcodings
 
