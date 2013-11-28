@@ -3,6 +3,9 @@
 # Very simple filebased push/pop queue
 #
 
+# No interruptions please
+trap '' INT
+
 qfile=$1
 cmd=$2
 input=$3
