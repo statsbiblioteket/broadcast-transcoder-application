@@ -38,15 +38,20 @@ rotate_log()
     # Default is 10485760 bytes, 10M
     local maxlogsize=${2:-10485760}
 
-    # Should we rotate?
-    if [ -r "$logfile" -a "$(stat -c %s $logfile)" -ge $maxlogsize ]; then
-	# Rotate log
-	for x in $(seq $numlogs -1 1)
-	do
-	    [ -r ${logfile}.$x ] && mv ${logfile}.$x ${logfile}.$((x+1))
-	done
-	[ -r ${logfile} ] && mv ${logfile} ${logfile}.1
-    fi
+    # Multiple instances could be running in parallel so we need to grab a lock
+    # to avoid race conditions
+    (
+        flock 200
+        # Should we rotate?
+        if [ -r "$logfile" ] && [ "$(stat -c %s $logfile)" -ge $maxlogsize ]; then
+            # Rotate log
+            for x in $(seq $numlogs -1 1)
+            do
+                [ -r ${logfile}.$x ] && mv ${logfile}.$x ${logfile}.$((x+1))
+            done
+            [ -r ${logfile} ] && mv ${logfile} ${logfile}.1
+        fi
+    ) 200> ${logfile}.lck
 }
 
 func_stop()
