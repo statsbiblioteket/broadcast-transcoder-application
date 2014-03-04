@@ -7,6 +7,7 @@
         <artifactId>sbprojects-parent</artifactId>
         <version>3</version>
     </parent>
+
     <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>
     <artifactId>broadcast-transcoder-application</artifactId>
     <version>0.3.8-SNAPSHOT</version>
