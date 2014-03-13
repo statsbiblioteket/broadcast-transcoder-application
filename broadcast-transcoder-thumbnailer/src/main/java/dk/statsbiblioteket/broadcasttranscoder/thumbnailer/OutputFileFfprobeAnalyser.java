@@ -45,8 +45,8 @@ public class OutputFileFfprobeAnalyser extends ProcessorChainElement {
         for (String line:lines) {
             Matcher darMatcher = videoPattern.matcher(line);
             if (darMatcher.matches()) {
-                String top = darMatcher.group(3);
-                String bottom = darMatcher.group(4);
+                String top = darMatcher.group(2);
+                String bottom = darMatcher.group(3);
                 logger.debug("Matched DAR '" + top + ":" + bottom);
                 final double displayAspectRatio = Double.parseDouble(top) / Double.parseDouble(bottom);
                 logger.info("Detected aspect ratio '" + displayAspectRatio + "' for '" + request.getObjectPid() + "'");
