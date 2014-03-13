@@ -44,8 +44,6 @@ public class BroadcastThumbnailApplication extends TranscoderApplication {
         if (!FileUtils.hasFinalMediaOutputFile(request, context)) {
             logger.warn("Cannot generate snapshots as there is no transcoded file for " + request.getObjectPid());
             System.exit(2);
-        } else {
-
         }
         ProcessorChainElement deleter = new OldThumbnailDeleter();
         ProcessorChainElement analyser = new OutputFileFfprobeAnalyser();

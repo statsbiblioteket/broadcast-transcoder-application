@@ -23,7 +23,7 @@ public class OutputFileFfprobeAnalyser extends ProcessorChainElement {
 
     @Override
     protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {
-        File outputFile = FileUtils.getFinalMediaOutputFile(request, context);
+        File outputFile = FileUtils.findFinalMediaOutputFile(request, context);
         String command = "ffprobe " + outputFile.getAbsolutePath() + " -show_format ";
         logger.info("Executing '" + command + "'");
         ExternalJobRunner runner;
