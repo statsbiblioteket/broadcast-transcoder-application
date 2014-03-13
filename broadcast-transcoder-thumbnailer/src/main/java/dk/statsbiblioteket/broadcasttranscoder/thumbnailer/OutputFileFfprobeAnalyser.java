@@ -41,7 +41,7 @@ public class OutputFileFfprobeAnalyser extends ProcessorChainElement {
     }
 
     private void findDAR (String[] lines, TranscodeRequest request) {
-        Pattern videoPattern = Pattern.compile(".*Stream.*\\[(0x[0-9a-f]*)\\].*Video.*DAR\\s(([0-9]*):([0-9]*)).*");
+        Pattern videoPattern = Pattern.compile(".*Stream.*DAR\\s(([0-9]*):([0-9]*)).*");
         for (String line:lines) {
             Matcher darMatcher = videoPattern.matcher(line);
             if (darMatcher.matches()) {
