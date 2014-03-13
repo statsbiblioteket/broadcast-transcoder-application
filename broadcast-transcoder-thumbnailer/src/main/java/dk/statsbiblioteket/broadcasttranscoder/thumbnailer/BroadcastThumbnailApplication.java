@@ -10,6 +10,7 @@ import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
 import dk.statsbiblioteket.broadcasttranscoder.processors.SnapshotExtractorProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
+import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,7 @@ public class BroadcastThumbnailApplication extends TranscoderApplication {
             logger.warn("Cannot generate snapshots as there is no transcoded file for " + request.getObjectPid());
             System.exit(2);
         }
+        request.setFileFormat(FileFormatEnum.SINGLE_PROGRAM_VIDEO_TS);
         ProcessorChainElement deleter = new OldThumbnailDeleter();
         ProcessorChainElement analyser = new OutputFileFfprobeAnalyser();
         ProcessorChainElement extractor = new SnapshotExtractorProcessor();
