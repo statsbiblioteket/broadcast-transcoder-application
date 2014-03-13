@@ -2,6 +2,10 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingStateEnum;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.ThumbnailExtractionRecordDAO;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.ThumbnailExtractionRecord;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutException;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
@@ -37,6 +41,17 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
 
     @Override
     protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
+        HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
+        ThumbnailExtractionRecordDAO dao = new ThumbnailExtractionRecordDAO(util);
+        ThumbnailExtractionRecord record = dao.readOrCreate(request.getObjectPid());
+        try {
+            doExtraction(request, context, record);
+        } finally {
+            dao.update(record);
+        }
+    }
+
+    private void doExtraction(TranscodeRequest request, SingleTranscodingContext context, ThumbnailExtractionRecord record) throws ProcessorException {
         int targetNumerator = context.getSnapshotTargetNumerator();
         int targetDenominator = context.getSnapshotTargetDenominator();
         int scale = context.getSnapshotScale();
@@ -83,10 +98,15 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         commandLine = commandLine + " -ss " + paddingSeconds + " -t " + modLength + " -r "  + rate + geometry
                 + " -an -y -vframes " + (nframes + 1) + " " + FileUtils.getSnapshotOutputFileStringTemplate(request, context);
         final long timeout = (long) (1000.0 * (float) length / timeoutDivisor);
+        record.setExtractionCommand(commandLine);
         try {
             ExternalJobRunner.runClipperCommand(timeout, commandLine);
+            record.setExtractionState(TranscodingStateEnum.COMPLETE);
         } catch (ExternalProcessTimedOutException e) {
-            logger.warn("Process '" + commandLine + "' timed out after " + timeout + "ms.");
+            String message = "Process '" + commandLine + "' timed out after " + timeout + "ms.";
+            logger.warn(message);
+            record.setErrorMessage(message);
+            record.setExtractionState(TranscodingStateEnum.FAILED);
             throw new ProcessorException("Process Timed out for " + request.getObjectPid() + " after " + timeout + "ms.",e);
         }
         // This is a dirty fix because ffmpeg generates 2 snapshots close together at the start
