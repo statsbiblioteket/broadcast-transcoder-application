@@ -11,12 +11,12 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class ThumbnailExtractionRecord extends Identifiable<String> {
 
-    @Enumerated(EnumType.STRING)
     TranscodingStateEnum extractionState;
 
     String extractionCommand;
     String errorMessage;
 
+    @Enumerated(EnumType.STRING)
     public TranscodingStateEnum getExtractionState() {
         return extractionState;
     }
