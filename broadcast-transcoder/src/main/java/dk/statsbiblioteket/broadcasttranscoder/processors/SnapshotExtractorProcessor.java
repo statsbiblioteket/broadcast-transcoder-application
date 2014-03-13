@@ -68,6 +68,8 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
                     " -vf 'pad="  + N + ":" + M + ":0:" + delta + ":black' ";
         }
         int length;
+        //This if/else looks screwy but works so long as we use ffprobeDurationSeconds only for
+        //reklamfilmer/snapshot-recodings where there is only a single input file.
         if (request.getFfprobeDurationSeconds() != null) {
           length = Math.round(request.getFfprobeDurationSeconds());
         } else {
