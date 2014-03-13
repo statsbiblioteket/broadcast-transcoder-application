@@ -2,10 +2,7 @@ package dk.statsbiblioteket.broadcasttranscoder.persistence.entities;
 
 import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingStateEnum;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Lob;
+import javax.persistence.*;
 
 /**
  *
@@ -14,7 +11,9 @@ import javax.persistence.Lob;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class ThumbnailExtractionRecord extends Identifiable<String> {
 
+    @Enumerated(EnumType.STRING)
     TranscodingStateEnum extractionState;
+
     String extractionCommand;
     String errorMessage;
 
