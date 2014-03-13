@@ -1,8 +1,6 @@
 #!/bin/sh
 
-collection=$1
-uuid=$2
-timestamp=$3
+uuid=$1
 
 # Get settings
 SCRIPT_PATH=$(dirname $(readlink -f $0))
@@ -15,5 +13,5 @@ java -Dlogback.configurationFile=$confDir/logback-extractSnapshot.xml $hibernate
  --infrastructure_configfile=$confDir/bta.infrastructure.properties \
  --behavioural_configfile=$confDir/bta.behaviour.properties \
  --programpid=$uuid \
- --timestamp=$timestamp
+ --timestamp=0
 
