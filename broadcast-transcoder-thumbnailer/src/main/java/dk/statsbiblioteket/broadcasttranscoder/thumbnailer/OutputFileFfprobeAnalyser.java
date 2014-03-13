@@ -30,11 +30,13 @@ public class OutputFileFfprobeAnalyser extends ProcessorChainElement {
         try {
             runner = new ExternalJobRunner(new String[]{"bash", "-c", command});
             logger.debug("Command '" + command + "' returned with output '" + runner.getOutput());
+            logger.debug("Command '" + command + "' returned with stderror '" + runner.getError());
         } catch (Exception e) {
             throw new ProcessorException("Failed to run command "+command,e);
         }
         String[] commandOutput = runner.getOutput().split("\\n");
-        findDAR(commandOutput, request);
+        String[] commandError = runner.getError().split("\\n");
+        findDAR(commandError, request);
         findLengthSeconds(commandOutput, request);
     }
 
