@@ -1,10 +1,7 @@
-package dk.statsbiblioteket.broadcasttranscoder.thumbnailer;
+package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
-import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

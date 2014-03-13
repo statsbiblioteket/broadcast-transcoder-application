@@ -1,21 +1,15 @@
-package dk.statsbiblioteket.broadcasttranscoder.thumbnailer;
+package dk.statsbiblioteket.broadcasttranscoder;
 
-import dk.statsbiblioteket.broadcasttranscoder.TranscoderApplication;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.UsageException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.parsers.SingleTranscodingOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
-import dk.statsbiblioteket.broadcasttranscoder.processors.SnapshotExtractorProcessor;
-import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
+import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
 
 /**
  * An easy-to-use application which takes the uuid of an already-transcoded TV program, deletes any existing thumbnails,
@@ -27,7 +21,7 @@ public class BroadcastThumbnailApplication extends TranscoderApplication {
 
 
     public static void main(String[] args) throws OptionParseException {
-        logger.debug("Entered main method.");
+        logger.debug("Entered main method of " + BroadcastThumbnailApplication.class.getSimpleName());
         SingleTranscodingContext<BroadcastTranscodingRecord> context = null;
         TranscodeRequest request = null;
         try {
@@ -57,11 +51,6 @@ public class BroadcastThumbnailApplication extends TranscoderApplication {
             e.printStackTrace();
             System.exit(3);
         }
-
-
-        //Delete existing files
-        //Calculate resolution and aspect ratio of transcoded file
-        //Do thumbnails
-
+        logger.info("Completed processing of {}.", request.getObjectPid());
     }
 }

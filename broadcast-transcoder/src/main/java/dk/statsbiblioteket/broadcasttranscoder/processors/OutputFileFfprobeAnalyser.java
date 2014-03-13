@@ -1,10 +1,7 @@
-package dk.statsbiblioteket.broadcasttranscoder.thumbnailer;
+package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorChainElement;
-import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
-import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import org.slf4j.Logger;
@@ -47,7 +44,7 @@ public class OutputFileFfprobeAnalyser extends ProcessorChainElement {
             if (darMatcher.matches()) {
                 String top = darMatcher.group(2);
                 String bottom = darMatcher.group(3);
-                logger.debug("Matched DAR '" + top + ":" + bottom);
+                logger.debug("Matched DAR " + top + ":" + bottom);
                 final double displayAspectRatio = Double.parseDouble(top) / Double.parseDouble(bottom);
                 logger.info("Detected aspect ratio '" + displayAspectRatio + "' for '" + request.getObjectPid() + "'");
                 request.setDisplayAspectRatio(displayAspectRatio);
