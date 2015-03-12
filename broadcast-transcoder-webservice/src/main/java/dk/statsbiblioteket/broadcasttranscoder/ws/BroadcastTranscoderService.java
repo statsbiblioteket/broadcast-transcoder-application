@@ -149,7 +149,7 @@ public class BroadcastTranscoderService {
         ProcessorChainElement unistreamvideoer = new UnistreamVideoTranscoderProcessor();
         ProcessorChainElement unistreamaudioer = new UnistreamAudioTranscoderProcessor();
         ProcessorChainElement renamer = new FinalMediaFileRenamerProcessor();
-          switch (request.getFileFormat()) {
+        switch (request.getFileFormat()) {
             case MULTI_PROGRAM_MUX:
                 if (transcodingContext.getVideoOutputSuffix().equals("mpeg")) {
                     logger.debug("Generating DVD video. No previews or snapshots for " + request.getObjectPid());
@@ -163,7 +163,8 @@ public class BroadcastTranscoderService {
                             renamer);
                 }
                 break;
-              case MPEG_PS:
+            case MPEG_PS: //Note deliberate use of fall-though here!
+                          //MPEG-PS also uses unistreamvideoer
             case SINGLE_PROGRAM_VIDEO_TS:
                 if (transcodingContext.getVideoOutputSuffix().equals("mpeg")) {
                     logger.debug("Generating DVD video. No previews or snapshots for " + request.getObjectPid());
