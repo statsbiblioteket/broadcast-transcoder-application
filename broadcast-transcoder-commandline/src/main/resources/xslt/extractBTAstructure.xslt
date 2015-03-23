@@ -5,6 +5,7 @@
                 xmlns:dobundle="http://ecm.sourceforge.net/types/digitalobjectbundle/0/2/#"
         >
 
+    <xsl:output method="xml" indent="yes"/>
 
     <xsl:strip-space elements="*"/>
 

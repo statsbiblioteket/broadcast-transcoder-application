@@ -4,8 +4,10 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.FetcherContext;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 import dk.statsbiblioteket.doms.central.InvalidCredentialsException;
+import dk.statsbiblioteket.doms.central.InvalidResourceException;
 import dk.statsbiblioteket.doms.central.MethodFailedException;
 import dk.statsbiblioteket.doms.central.RecordDescription;
+import dk.statsbiblioteket.doms.central.ViewBundle;
 import org.apache.commons.io.FileUtils;
 import org.junit.*;
 
@@ -91,5 +93,20 @@ public class BtaDomsFetcherTest {
             System.out.println(record.getPid()+":"+record.getDate());
         }
         assertTrue("No records found",records.size()>0);
+    }
+
+    @Test
+    public void getBundle() throws MethodFailedException, InvalidResourceException, InvalidCredentialsException {
+        FetcherContext context = new FetcherContext();
+        context.setBatchSize(100);
+        context.setCollection("doms:RadioTV_Collection");
+        context.setFedoraState("Published");
+        context.setViewAngle("SummaVisible");
+        context.setDomsUsername("fedoraReadOnlyAdmin");
+        context.setDomsPassword("7HRphHtn");
+        context.setDomsEndpoint("http://naiad:7880/centralWebservice-service/central/");
+        CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);
+        ViewBundle bundle =  doms.getViewBundle("uuid:1d4ea35e-6cc4-436f-aa7f-0e48b37dc495", "GUI");
+        System.out.println(bundle.getContents());
     }
 }

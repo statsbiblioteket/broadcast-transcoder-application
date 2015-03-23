@@ -63,6 +63,24 @@ public class BroadcastTranscoderService {
         return getBtaResponse(request, transcodingContext, programDescription);
     }
 
+    /**
+     * Create a dissemination copy suitable for download, using the pid as the basename of the output file.
+     * @param programPid the doms pid of the program to be transcoded.
+     * @return the current status of the transcoding.
+     */
+    @GET
+    @Path("/btaDorqTranscode")
+    @Produces(MediaType.APPLICATION_XML)
+    public BtaResponse startDorqTranscoding(@QueryParam("programpid") String programPid) {
+        TranscodeRequest request = new TranscodeRequest();
+        SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext = (SingleTranscodingContext<BroadcastTranscodingRecord>) context.getAttribute("transcodingContext");
+        request.setObjectPid(programPid);
+        request.setOutputBasename(programPid.replaceAll("uuid:", ""));
+        request.setAdditionalStartOffset(0L);
+        request.setAdditionalEndOffset(0L);
+        return getBtaResponse(request, transcodingContext, programPid);
+    }
+
     public static String sanitiseTitle(String filenamePrefix) {
         return filenamePrefix.replaceAll("[^a-zA-Z0-9_.\\-æøåÆØÅ%+]", "_");
     }
@@ -180,12 +198,6 @@ public class BroadcastTranscoderService {
                           renamer);
                   break;
               case AUDIO_WAV:
-                  //final String message = "Cannot process wav files at present. Exiting for " + request.getObjectPid();
-                  //logger.info(message);
-                  //throw new ProcessorException(message);
-                  // request.setRejected(true);
-                  // return;
-
                   secondChain = ProcessorChainElement.makeChain(waver,
                           renamer
                   );

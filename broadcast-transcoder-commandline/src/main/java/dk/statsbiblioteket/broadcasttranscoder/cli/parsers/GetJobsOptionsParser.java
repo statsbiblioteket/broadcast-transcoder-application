@@ -4,7 +4,11 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.GetJobsContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.UsageException;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingStateEnum;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.PosixParser;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -3,6 +3,7 @@ package dk.statsbiblioteket.broadcasttranscoder.util;
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
+import org.apache.commons.io.filefilter.FalseFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -198,8 +199,13 @@ public class FileUtils {
             return;
         }
         IOFileFilter tempdirFilter = new NameFileFilter("temp");
-        Collection<File> tempDirs =  org.apache.commons.io.FileUtils.listFiles(rootOutputDir, tempdirFilter, TrueFileFilter.INSTANCE);
+        //Collection<File> tempDirs =  org.apache.commons.io.FileUtils.listFiles(rootOutputDir, tempdirFilter, TrueFileFilter.INSTANCE);
+        Collection<File> tempDirs =  org.apache.commons.io.FileUtils.listFilesAndDirs(
+                rootOutputDir, FalseFileFilter.FALSE, tempdirFilter
+        );
+        tempDirs.remove(rootOutputDir);
         for (File tempdir: tempDirs) {
+            logger.info("Cleaning up directory " + tempdir.getAbsolutePath());
             for (File content: tempdir.listFiles()) {
                 try {
                     logger.info("Deleting " + content.getAbsolutePath());
