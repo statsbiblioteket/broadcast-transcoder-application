@@ -78,6 +78,7 @@ public class FileMetadataFetcherProcessor extends ProcessorChainElement {
         List<String> fileObjectPids = new ArrayList<String>();
         List<Relation> relations = doms.getRelations(request.getObjectPid());
         for (Relation relation: relations) {
+            logger.debug("Relation: " + request.getObjectPid() + " " + relation.getPredicate() + " " + relation.getObject());
             if (relation.getPredicate().equals(HAS_EXACT_FILE_RELATION)) {
                 fileObjectPids = new ArrayList<String>();
                 fileObjectPids.add(relation.getObject());
