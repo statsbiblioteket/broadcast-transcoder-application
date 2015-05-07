@@ -40,9 +40,17 @@ public class FileMetadataFetcherProcessor extends ProcessorChainElement {
             throw new ProcessorException("No file-object relations for program " + request.getObjectPid());
         }
         if (request.isHasExactFile()) {
+            String uniqueFilePid = fileObjectPids.get(0);
+            CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);
             BroadcastMetadata broadcastMetadata = new BroadcastMetadata();
+            try {
+                String filename = doms.getObjectProfile(uniqueFilePid).getTitle();
+                broadcastMetadata.setFilename(filename);
+            } catch (Exception e) {
+                throw new ProcessorException("" + e);
+            }
             Map<String, BroadcastMetadata> pidMap = new HashMap<String, BroadcastMetadata>();
-            pidMap.put(fileObjectPids.get(0), broadcastMetadata);
+            pidMap.put(uniqueFilePid, broadcastMetadata);
             request.setPidMap(pidMap);
             List<BroadcastMetadata> broadcastMetadatas = new ArrayList<BroadcastMetadata>();
             broadcastMetadatas.add(broadcastMetadata);
