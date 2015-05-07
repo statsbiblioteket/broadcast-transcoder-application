@@ -61,7 +61,11 @@ public class ReklamefilmTranscoderApplication extends TranscoderApplication {
                 secondChain.processIteratively(request, context);
             }
         } catch (Exception e) {
-            transcodingFailed(request,context,e);
+            try {
+                transcodingFailed(request,context,e);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
             //Fault barrier. This is necessary because an uncaught RuntimeException will otherwise not log the pid it
             //failed on.
             logger.error("Error processing " + request.getObjectPid(), e);
