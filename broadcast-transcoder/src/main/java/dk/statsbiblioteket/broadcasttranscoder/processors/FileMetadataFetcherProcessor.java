@@ -39,8 +39,18 @@ public class FileMetadataFetcherProcessor extends ProcessorChainElement {
         if (fileObjectPids.isEmpty()) {
             throw new ProcessorException("No file-object relations for program " + request.getObjectPid());
         }
-        List<BroadcastMetadata> broadcastMetadata = getBroadcastMetadata(fileObjectPids, context, request);
-        request.setBroadcastMetadata(broadcastMetadata);
+        if (request.isHasExactFile()) {
+            BroadcastMetadata broadcastMetadata = new BroadcastMetadata();
+            Map<String, BroadcastMetadata> pidMap = new HashMap<String, BroadcastMetadata>();
+            pidMap.put(fileObjectPids.get(0), broadcastMetadata);
+            request.setPidMap(pidMap);
+            List<BroadcastMetadata> broadcastMetadatas = new ArrayList<BroadcastMetadata>();
+            broadcastMetadatas.add(broadcastMetadata);
+            request.setBroadcastMetadata(broadcastMetadatas);
+        } else {
+            List<BroadcastMetadata> broadcastMetadata = getBroadcastMetadata(fileObjectPids, context, request);
+            request.setBroadcastMetadata(broadcastMetadata);
+        }
     }
 
     private List<BroadcastMetadata> getBroadcastMetadata(List<String> fileObjectPids, InfrastructureContext context, TranscodeRequest request) throws ProcessorException {
