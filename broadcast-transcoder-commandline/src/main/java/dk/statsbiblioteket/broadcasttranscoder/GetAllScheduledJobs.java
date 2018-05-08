@@ -44,12 +44,16 @@ public class GetAllScheduledJobs {
                 System.exit(6);
                 return;
             }
+            logger.debug("Retrieved {} jobs from the database",jobs.size());
+            logger.debug("Starting printing of jobs");
             for (TranscodingRecord job : jobs) {
                 System.out.println(job.getID()
                         +" "+job.getDomsLatestTimestamp()
                         +" "+job.getTranscodingState()
                         +" "+job.getFailureMessage());
             }
+            logger.debug("All {} jobs printed", jobs.size());
+
 
 
         } catch (Exception e) {
