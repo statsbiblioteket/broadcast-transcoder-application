@@ -34,7 +34,10 @@ public class ReklamefilmTranscoderApplication extends TranscoderApplication {
         TranscodeRequest request = new TranscodeRequest();
         request.setObjectPid(context.getProgrampid());
 
+        String origThreadName = Thread.currentThread().getName();
         try {
+            Thread.currentThread().setName(request.getObjectPid());
+
             request.setGoForTranscoding(true);
             ProcessorChainElement gonogoer = new GoNoGoProcessor();
             ProcessorChainElement firstChain = ProcessorChainElement.makeChain(gonogoer);
@@ -71,6 +74,8 @@ public class ReklamefilmTranscoderApplication extends TranscoderApplication {
             logger.error("Error processing " + request.getObjectPid(), e);
 
             throw(e);
+        } finally {
+            Thread.currentThread().setName(origThreadName);
         }
         transcodingComplete(request,context);
 

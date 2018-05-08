@@ -20,7 +20,7 @@ public class BroadcastThumbnailApplication extends TranscoderApplication {
     private static Logger logger = LoggerFactory.getLogger(BroadcastThumbnailApplication.class);
 
 
-    public static void main(String[] args) throws OptionParseException {
+    public static void main(String[] args) throws OptionParseException, ProcessorException {
         logger.debug("Entered main method of " + BroadcastThumbnailApplication.class.getSimpleName());
         SingleTranscodingContext<BroadcastTranscodingRecord> context = null;
         TranscodeRequest request = null;
@@ -45,12 +45,13 @@ public class BroadcastThumbnailApplication extends TranscoderApplication {
         ProcessorChainElement analyser = new OutputFileFfprobeAnalyser();
         ProcessorChainElement extractor = new SnapshotExtractorProcessor();
         ProcessorChainElement chain = ProcessorChainElement.makeChain(deleter, analyser, extractor);
+        String origThreadName = Thread.currentThread().getName();
         try {
+            Thread.currentThread().setName(request.getObjectPid());
             chain.processIteratively(request, context);
-        } catch (ProcessorException e) {
-            e.printStackTrace();
-            System.exit(3);
+            logger.info("Completed processing of {}.", request.getObjectPid());
+        } finally {
+            Thread.currentThread().setName(origThreadName);
         }
-        logger.info("Completed processing of {}.", request.getObjectPid());
     }
 }

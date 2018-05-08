@@ -37,7 +37,9 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
             logger.error("Error in initial environment", e);
             throw new OptionParseException("Failed to parse optioons",e);
         }
+        String origThreadName = Thread.currentThread().getName();
         try {
+            Thread.currentThread().setName(request.getObjectPid());
             runChain(request, context);
             if (request.isRejected()) {
                 logger.warn("Request for pid "+request.getObjectPid()+" was rejected");
@@ -50,6 +52,7 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
             throw e;
         } finally {
             logger.info("All processing finished for " + request.getObjectPid());
+            Thread.currentThread().setName(origThreadName);
         }
     }
 
