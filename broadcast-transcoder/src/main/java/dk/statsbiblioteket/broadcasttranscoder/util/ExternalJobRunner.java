@@ -68,7 +68,7 @@ public class ExternalJobRunner {
         class StreamHarvester implements Runnable {
             public static final String OUT = "standard_out";
             public static final String ERR = "standard_err";
-            private StringBuffer buffer;
+            private final StringBuffer buffer;
             private InputStream stream;
             private String stream_type;
 
@@ -89,7 +89,7 @@ public class ExternalJobRunner {
             }
 
             public void run() {
-                log.debug("Starting harvesting thread for '" + stream_type + "' for '" + logString + "'");
+                log.trace("Starting harvesting thread for '" + stream_type + "' for '" + logString + "'");
                 synchronized(buffer) {
                     started = true;
                     synchronized (this) {
@@ -111,7 +111,7 @@ public class ExternalJobRunner {
                         }
                     } finally {
                         try {
-                            log.debug("Closing stream for '" + logString + "'");
+                            log.trace("Closing stream for '" + logString + "'");
                             stream.close();
                         } catch (IOException e) {
                             log.error("Error closing an InputStream for '" + logString + "'", e);
@@ -128,9 +128,9 @@ public class ExternalJobRunner {
             (new Thread(out_harvester)).start();
             if (!out_harvester.started) {
                 try {
-                    log.debug("Waiting for stdout harvester for: '" + logString + "'");
+                    log.trace("Waiting for stdout harvester for: '" + logString + "'");
                     out_harvester.wait(harvesterThreadTimeout);
-                    log.debug("Finished waiting for stdout harvester for: '" + logString + "'");
+                    log.trace("Finished waiting for stdout harvester for: '" + logString + "'");
                 } catch (InterruptedException e) {
                     log.warn("Failed to start harvester thread.", e);
                     killInterruptedProcess(p,e);
@@ -142,9 +142,9 @@ public class ExternalJobRunner {
             (new Thread(err_harvester)).start();
             if (!err_harvester.started){
                 try {
-                    log.debug("Waiting for stderr harvester for: '" + logString + "'");
+                    log.trace("Waiting for stderr harvester for: '" + logString + "'");
                     err_harvester.wait(harvesterThreadTimeout);
-                    log.debug("Finished waiting for stderr harvester for: '" + logString + "'");
+                    log.trace("Finished waiting for stderr harvester for: '" + logString + "'");
                 } catch (InterruptedException e) {
                     log.warn("Failed to start harvester thread.", e);
                     killInterruptedProcess(p,e);
@@ -152,7 +152,7 @@ public class ExternalJobRunner {
                 }
             }
         }
-        log.debug("Waiting for '" + logString + "'");
+        log.trace("Waiting for '" + logString + "'");
         Timer timer = new Timer();
         if (this.timeout != 0L) {
             timer.schedule(new InterruptScheduler(Thread.currentThread()), this.timeout);
@@ -174,7 +174,7 @@ public class ExternalJobRunner {
                 log.warn("",e);
             }
         }
-        log.debug("Finished waiting for '" + logString + "'");
+        log.trace("Finished waiting for '" + logString + "'");
         exit_code = p.exitValue();
     }
 
