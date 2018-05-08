@@ -52,52 +52,41 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
     }
 
     private void doExtraction(TranscodeRequest request, SingleTranscodingContext context, ThumbnailExtractionRecord record) throws ProcessorException {
+        Double aspectRatio = request.getDisplayAspectRatio();
+        String objectPid = request.getObjectPid();
+        Float ffprobeDurationSeconds = request.getFfprobeDurationSeconds();
+
+
         int targetNumerator = context.getSnapshotTargetNumerator();
         int targetDenominator = context.getSnapshotTargetDenominator();
         int scale = context.getSnapshotScale();
-        double targetAspectRatio = (targetNumerator*1.)/(targetDenominator*1.);
+
         int paddingSeconds = context.getSnapshotPaddingSeconds();
         int nframes = context.getSnapshotFrames();
         float timeoutDivisor = context.getSnapshotTimeoutDivisor();
+
         File fullMediaFile = FileUtils.getFinalMediaOutputFile(request, context);
         File snapshotOutputDir = FileUtils.getSnapshotOutputDir(request, context);
         snapshotOutputDir.mkdirs();
-        String commandLine = "ffmpeg -i " + fullMediaFile.getAbsolutePath();
-        Double aspectRatio = request.getDisplayAspectRatio();
-        logger.debug("Creating snapshot for video with display aspect ratio '" + aspectRatio + "' for " + request.getObjectPid());
-        int N = targetNumerator * scale;
-        int M = targetDenominator * scale;
-        logger.debug("Required aspect ratio is '" + N + "/" + M + "' for " + request.getObjectPid());
-        String geometry = "";
-        if (Math.abs(aspectRatio - targetAspectRatio) < 0.01) {
-            geometry = " -s " + N + "x" + M;
-        } else if (aspectRatio - targetAspectRatio < 0.01) {
-            double delta = (N - aspectRatio * M)/2.;
-            int Nprime = (int) Math.round(aspectRatio * M);
-            geometry = " -s " + Nprime + "x" + M +
-                    " -vf 'pad=" + N + ":" + M + ":" + delta + ":0:black' ";
-        } else if (targetAspectRatio - aspectRatio < 0.01) {
-            int Mprime = (int) Math.round(N/aspectRatio);
-            int delta = (M - Mprime)/2;
-            geometry = " -s " + N + "x" + Mprime +
-                    " -vf 'pad="  + N + ":" + M + ":0:" + delta + ":black' ";
-        }
+
         int length;
         //This if/else looks screwy but works so long as we use ffprobeDurationSeconds only for
         //reklamfilmer/snapshot-recodings where there is only a single input file.
-        if (request.getFfprobeDurationSeconds() != null) {
-          length = Math.round(request.getFfprobeDurationSeconds());
+        if (ffprobeDurationSeconds != null) {
+            length = Math.round(ffprobeDurationSeconds);
         } else {
-          length = (int) (MetadataUtils.findProgramLengthMillis(request)/1000L);
+            length = (int) (MetadataUtils.findProgramLengthMillis(request)/1000L);
         }
-        if (length < 3*paddingSeconds) {   //quick fix for very short programs
-            paddingSeconds = 0;
-        }
-        int modLength = length - 2*paddingSeconds;
-        String rate = (nframes - 1) + "/" + modLength;
-        commandLine = commandLine + " -ss " + paddingSeconds + " -t " + modLength + " -r "  + rate + geometry
-                + " -an -y -vframes " + (nframes + 1) + " " + FileUtils.getSnapshotOutputFileStringTemplate(request, context);
+
+        String snapshotOutputFileStringTemplate = FileUtils.getSnapshotOutputFileStringTemplate(request, context);
+
+
+        String commandLine = createCommandline(aspectRatio, objectPid, targetNumerator, targetDenominator, scale, paddingSeconds, nframes, fullMediaFile, length, snapshotOutputFileStringTemplate);
+
+
         final long timeout = (long) (1000.0 * (float) length / timeoutDivisor);
+
+
         record.setExtractionCommand(commandLine);
         try {
             ExternalJobRunner.runClipperCommand(timeout, commandLine);
@@ -107,7 +96,7 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
             logger.warn(message);
             record.setErrorMessage(message);
             record.setExtractionState(TranscodingStateEnum.FAILED);
-            throw new ProcessorException("Process Timed out for " + request.getObjectPid() + " after " + timeout + "ms.",e);
+            throw new ProcessorException("Process Timed out for " + objectPid + " after " + timeout + "ms.",e);
         }
         // This is a dirty fix because ffmpeg generates 2 snapshots close together at the start
         String fileTemplate = FileUtils.getSnapshotOutputFileStringTemplate(request, context);
@@ -117,6 +106,27 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         } catch (Exception e) {
             logger.warn("Could not delete " + firstFile);
         }
+    }
+
+    protected String createCommandline(Double aspectRatio, String objectPid, int targetNumerator, int targetDenominator, int scale, int paddingSeconds, int nframes, File fullMediaFile, int length, String snapshotOutputFileStringTemplate) {
+        String commandLine = "ffmpeg -i " + fullMediaFile.getAbsolutePath();
+
+        logger.debug("Creating snapshot for video with display aspect ratio '" + aspectRatio + "' for " + objectPid);
+        int N = targetNumerator * scale;
+        int M = targetDenominator * scale;
+        logger.debug("Required aspect ratio is '" + N + "/" + M + "' for " + objectPid);
+
+        //        From https://lists.ffmpeg.org/pipermail/ffmpeg-user/2011-July/001746.html
+        String geometry = " -s " + N + "x" + M + " -vf \"scale=iw*sar:ih , pad=max(iw\\,ih*("+targetNumerator+"/"+targetDenominator+")):ow/("+targetNumerator+"/"+targetDenominator+"):(ow-iw)/2:(oh-ih)/2\" -aspect "+targetNumerator+":"+targetDenominator;
+
+        if (length < 3*paddingSeconds) {   //quick fix for very short programs
+            paddingSeconds = 0;
+        }
+        int modLength = length - 2*paddingSeconds;
+        String rate = (nframes - 1) + "/" + modLength;
+        commandLine = commandLine + " -ss " + paddingSeconds + " -t " + modLength + " -r "  + rate + geometry
+                + " -an -y -vframes " + (nframes + 1) + " " + snapshotOutputFileStringTemplate;
+        return commandLine;
     }
 
 }
