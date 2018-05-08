@@ -3,6 +3,8 @@ package dk.statsbiblioteket.broadcasttranscoder.util;
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 import dk.statsbiblioteket.doms.central.CentralWebserviceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
@@ -14,6 +16,9 @@ import java.util.Map;
  *
  */
 public class CentralWebserviceFactory {
+    private static Logger logger = LoggerFactory.getLogger(CentralWebserviceFactory.class);
+
+
     private static final QName CENTRAL_WEBSERVICE_SERVICE = new QName(
             "http://central.doms.statsbiblioteket.dk/",
             "CentralWebserviceService");
@@ -26,6 +31,7 @@ public class CentralWebserviceFactory {
         URL domsWSAPIEndpoint;
         try {
             domsWSAPIEndpoint = new URL(context.getDomsEndpoint());
+            logger.debug("Initialising connection to doms at {}", context.getDomsEndpoint());
         } catch (MalformedURLException e) {
             throw new RuntimeException("URL to DOMS not configured correctly. Was: " + context.getDomsEndpoint(), e);
         }
