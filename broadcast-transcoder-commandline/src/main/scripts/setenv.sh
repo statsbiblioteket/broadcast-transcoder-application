@@ -32,3 +32,9 @@ esac
 
 # Log configuration for hibernate passed as parameters to the JVM
 hibernate_log_config="-Dcom.mchange.v2.log.MLog=com.mchange.v2.log.FallbackMLog -Dcom.mchange.v2.log.FallbackMLog.DEFAULT_CUTOFF_LEVEL=WARNING"
+
+#Source this to get vlc and an OLD ffmpeg
+source /opt/rh/sb-btatools1/enable
+
+#Source this to get a newer ffmpeg
+source /opt/ffmpeg34/enable
