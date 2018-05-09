@@ -1,6 +1,5 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingStateEnum;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
@@ -52,19 +51,12 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
     }
 
     private void doExtraction(TranscodeRequest request, SingleTranscodingContext context, ThumbnailExtractionRecord record) throws ProcessorException {
-        Double aspectRatio = request.getDisplayAspectRatio();
-        String objectPid = request.getObjectPid();
-        Float ffprobeDurationSeconds = request.getFfprobeDurationSeconds();
-
-
         int targetNumerator = context.getSnapshotTargetNumerator();
         int targetDenominator = context.getSnapshotTargetDenominator();
         int scale = context.getSnapshotScale();
-
         int paddingSeconds = context.getSnapshotPaddingSeconds();
         int nframes = context.getSnapshotFrames();
         float timeoutDivisor = context.getSnapshotTimeoutDivisor();
-
         File fullMediaFile = FileUtils.getFinalMediaOutputFile(request, context);
         File snapshotOutputDir = FileUtils.getSnapshotOutputDir(request, context);
         snapshotOutputDir.mkdirs();
@@ -72,21 +64,23 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         int length;
         //This if/else looks screwy but works so long as we use ffprobeDurationSeconds only for
         //reklamfilmer/snapshot-recodings where there is only a single input file.
-        if (ffprobeDurationSeconds != null) {
-            length = Math.round(ffprobeDurationSeconds);
+        if (request.getFfprobeDurationSeconds() != null) {
+          length = Math.round(request.getFfprobeDurationSeconds());
         } else {
-            length = (int) (MetadataUtils.findProgramLengthMillis(request)/1000L);
+          length = (int) (MetadataUtils.findProgramLengthMillis(request)/1000L);
         }
 
-        String snapshotOutputFileStringTemplate = FileUtils.getSnapshotOutputFileStringTemplate(request, context);
-
-
-        String commandLine = createCommandline(aspectRatio, objectPid, targetNumerator, targetDenominator, scale, paddingSeconds, nframes, fullMediaFile, length, snapshotOutputFileStringTemplate);
-
+        String commandLine = createCommandline(
+                targetNumerator,
+                targetDenominator,
+                scale,
+                paddingSeconds,
+                nframes,
+                fullMediaFile,
+                length,
+                FileUtils.getSnapshotOutputFileStringTemplate(request, context));
 
         final long timeout = (long) (1000.0 * (float) length / timeoutDivisor);
-
-
         record.setExtractionCommand(commandLine);
         try {
             ExternalJobRunner.runClipperCommand(timeout, commandLine);
@@ -96,7 +90,7 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
             logger.warn(message);
             record.setErrorMessage(message);
             record.setExtractionState(TranscodingStateEnum.FAILED);
-            throw new ProcessorException("Process Timed out for " + objectPid + " after " + timeout + "ms.",e);
+            throw new ProcessorException("Process Timed out for " + request.getObjectPid() + " after " + timeout + "ms.",e);
         }
         // This is a dirty fix because ffmpeg generates 2 snapshots close together at the start
         String fileTemplate = FileUtils.getSnapshotOutputFileStringTemplate(request, context);
@@ -108,16 +102,20 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         }
     }
 
-    protected String createCommandline(Double aspectRatio, String objectPid, int targetNumerator, int targetDenominator, int scale, int paddingSeconds, int nframes, File fullMediaFile, int length, String snapshotOutputFileStringTemplate) {
+    protected String createCommandline(int numerator, int denominator, int scale, int paddingSeconds, int nframes, File fullMediaFile, int length, String snapshotOutputFileStringTemplate) {
         String commandLine = "ffmpeg -i " + fullMediaFile.getAbsolutePath();
 
-        logger.debug("Creating snapshot for video with display aspect ratio '" + aspectRatio + "' for " + objectPid);
-        int N = targetNumerator * scale;
-        int M = targetDenominator * scale;
-        logger.debug("Required aspect ratio is '" + N + "/" + M + "' for " + objectPid);
+        int width = numerator * scale;
+        int height = denominator * scale;
+        logger.debug("Creating snapshot for video with aspect ratio ("+numerator+"/"+denominator+") = ("+width+"/"+height+")");
 
         //        From https://lists.ffmpeg.org/pipermail/ffmpeg-user/2011-July/001746.html
-        String geometry = " -s " + N + "x" + M + " -vf \"scale=iw*sar:ih , pad=max(iw\\,ih*("+targetNumerator+"/"+targetDenominator+")):ow/("+targetNumerator+"/"+targetDenominator+"):(ow-iw)/2:(oh-ih)/2\" -aspect "+targetNumerator+":"+targetDenominator;
+        //First we set the resolution
+        String geometry = " -s " + width + "x" + height + " ";
+        //Then the magic filter that scales and pads and everything
+        geometry += " -vf \"scale=iw*sar:ih , pad=max(iw\\,ih*("+numerator+"/"+denominator+")):ow/("+numerator+"/"+denominator+"):(ow-iw)/2:(oh-ih)/2\" ";
+        //And then we state the aspect ratio again
+        geometry +=" -aspect "+numerator+":"+denominator+" ";
 
         if (length < 3*paddingSeconds) {   //quick fix for very short programs
             paddingSeconds = 0;
