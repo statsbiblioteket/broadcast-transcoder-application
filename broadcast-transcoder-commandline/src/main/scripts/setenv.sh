@@ -37,4 +37,5 @@ hibernate_log_config="-Dcom.mchange.v2.log.MLog=com.mchange.v2.log.FallbackMLog 
 source /opt/rh/sb-btatools1/enable
 
 #Source this to get a newer ffmpeg
-source /opt/ffmpeg34/enable
+#source /opt/ffmpeg34/enable
+source /opt/ffmpeg40/enable
