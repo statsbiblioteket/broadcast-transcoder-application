@@ -86,7 +86,7 @@ public class BtaDomsFetcherTest {
         context.setViewAngle("SummaVisible");
         context.setDomsPassword("fedoraAdminPass");
         context.setDomsUsername("fedoraAdmin");
-        context.setDomsEndpoint("http://alhena:7480/centralWebservice-service/central/");
+        context.setDomsEndpoint("http://alhena:7980/centralWebservice-service/central/");
         CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);
         List<RecordDescription> records = BtaDomsFetcher.requestInBatches(doms, context);
         for (RecordDescription record : records) {
@@ -95,18 +95,4 @@ public class BtaDomsFetcherTest {
         assertTrue("No records found",records.size()>0);
     }
 
-    @Test
-    public void getBundle() throws MethodFailedException, InvalidResourceException, InvalidCredentialsException {
-        FetcherContext context = new FetcherContext();
-        context.setBatchSize(100);
-        context.setCollection("doms:RadioTV_Collection");
-        context.setFedoraState("Published");
-        context.setViewAngle("SummaVisible");
-        context.setDomsUsername("fedoraReadOnlyAdmin");
-        context.setDomsPassword("7HRphHtn");
-        context.setDomsEndpoint("http://naiad:7880/centralWebservice-service/central/");
-        CentralWebservice doms = CentralWebserviceFactory.getServiceInstance(context);
-        ViewBundle bundle =  doms.getViewBundle("uuid:1d4ea35e-6cc4-436f-aa7f-0e48b37dc495", "GUI");
-        System.out.println(bundle.getContents());
-    }
 }
