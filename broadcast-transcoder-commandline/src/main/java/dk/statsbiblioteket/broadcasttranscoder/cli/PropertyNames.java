@@ -38,6 +38,7 @@ public class PropertyNames {
     public static final String HEIGHT = "heightInPixels";
     public static final String VLC_TRANSCODING_STRING = "vlcTranscodingString";
     public static final String FFMPEG_TRANSCODING_STRING = "ffmpegTranscodingString";
+    public static final String FFMPEG_TRANSCODING_WITH_SUBTITLES_STRING = "ffmpegTranscodingWithSubtitlesString";
     public static final String VLC_REMUXING_STRING = "vlcRemuxingString";
     public static final String TRANSCODING_DIVISOR = "transcodingTimeoutDivisor";
     public static final String ANALYSIS_CLIP_LENGTH = "analysisCliplengthBytes";

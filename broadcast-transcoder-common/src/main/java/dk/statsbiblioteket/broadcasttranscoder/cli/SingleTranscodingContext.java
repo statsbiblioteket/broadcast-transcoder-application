@@ -26,6 +26,7 @@ public class SingleTranscodingContext<T extends TranscodingRecord> extends Infra
     private int videoHeight;
     private String vlcTranscodingString;
     private String ffmpegTranscodingString;
+    private String ffmpegTranscodingWithSubtitlesString;
     private String vlcRemuxingString;
     private float transcodingTimeoutDivisor;
     private long analysisClipLength;
@@ -409,5 +410,13 @@ public class SingleTranscodingContext<T extends TranscodingRecord> extends Infra
 
     public void setVideoOutputSuffix(String videoOutputSuffix) {
         this.videoOutputSuffix = videoOutputSuffix;
+    }
+    
+    public String getFfmpegTranscodingWithSubtitlesString() {
+        return ffmpegTranscodingWithSubtitlesString;
+    }
+    
+    public void setFfmpegTranscodingWithSubtitlesString(String ffmpegTranscodingStringWithSubtitles) {
+        this.ffmpegTranscodingWithSubtitlesString = ffmpegTranscodingStringWithSubtitles;
     }
 }
