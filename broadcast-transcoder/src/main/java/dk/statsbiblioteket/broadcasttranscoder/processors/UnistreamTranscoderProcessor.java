@@ -75,6 +75,7 @@ public class UnistreamTranscoderProcessor extends ProcessorChainElement {
                    + " -b:a $$AUDIO_BITRATE$$000 -y $$OUTPUT_FILE$$";
     
         }
+        line = line.replace("$$AUDIO_STREAM$$", request.getAudioStereoPid());
         line = line.replace("$$AUDIO_BITRATE$$", context.getAudioBitrate()+"");
         line = line.replace("$$VIDEO_BITRATE$$", context.getVideoBitrate()+"");
         line = line.replace("$$FFMPEG_ASPECT_RATIO$$", getFfmpegAspectRatio(request, context));
