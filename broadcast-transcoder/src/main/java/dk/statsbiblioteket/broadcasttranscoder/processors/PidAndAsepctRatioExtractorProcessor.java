@@ -55,13 +55,20 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
 
         logger.info("Executing '" + command + "'");
         ExternalJobRunner runner;
+        String ffprobe_output;
         try {
             runner = new ExternalJobRunner(new String[]{"bash", "-c", command});
-            logger.debug("Command '" + command + "' returned with output '" + runner.getError());
+            ffprobe_output = runner.getError();
+            logger.debug("Command '" + command + "' returned with output '" + ffprobe_output);
         } catch (Exception e) {
             throw new ProcessorException("Failed to run command "+command,e);
         }
-        String[] commandOutput = runner.getError().split("\\n");
+        parseFFProbeOutput(request, context, ffprobe_output);
+    }
+    
+    protected static void parseFFProbeOutput(TranscodeRequest request, SingleTranscodingContext context, String ffprobe_output)
+            throws ProcessorException {
+        String[] commandOutput = ffprobe_output.split("\\n");
         if (request.getFileFormat().equals(FileFormatEnum.MULTI_PROGRAM_MUX)) {
             findPidsMultiMux(commandOutput, request, context);
         }  else {
@@ -71,8 +78,8 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
             validateFoundData(request, context);
         }
     }
-
-    private void validateFoundData(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
+    
+    private static void validateFoundData(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
         if (request.getAudioPids().isEmpty() && request.getFileFormat().equals(FileFormatEnum.MULTI_PROGRAM_MUX)) {
             throw new ProcessorException("No audio stream discovered for " + request.getObjectPid());
         } else if (request.getAudioPids().isEmpty()) {
@@ -85,14 +92,14 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
         }
     }
 
-    private void findPidsSingleMuxOrMpeg(String[] commandOutput, TranscodeRequest request, SingleTranscodingContext context) {
+    private static void findPidsSingleMuxOrMpeg(String[] commandOutput, TranscodeRequest request, SingleTranscodingContext context) {
         boolean foundProgram = false;
         for (String line: commandOutput) {
             findPidInLine(line, request, context);
         }
     }
 
-    private void findPidsMultiMux(String[] commandOutput, TranscodeRequest request, SingleTranscodingContext context) {
+    private static void findPidsMultiMux(String[] commandOutput, TranscodeRequest request, SingleTranscodingContext context) {
         boolean foundProgram = false;
         Pattern thisProgramPattern = Pattern.compile(".*Program\\s"+request.getClips().get(0).getProgramId()+".*");
         Pattern programPattern = Pattern.compile(".*Program.*");
@@ -114,7 +121,7 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
         }
     }
 
-    private void findPidInLine(String line, TranscodeRequest request, SingleTranscodingContext context) {
+    private static void findPidInLine(String line, TranscodeRequest request, SingleTranscodingContext context) {
         Pattern dvbsubPattern = Pattern.compile(".*Stream.*\\[(0x[0-9a-f]*)\\].*dvb.*sub.*");
         Pattern videoPattern = Pattern.compile(".*Stream.*\\[(0x[0-9a-f]*)\\].*Video.*DAR\\s(([0-9]*):([0-9]*)).*");
         Pattern audioPattern1 = Pattern.compile(".*Stream.*\\[(0x[0-9a-f]*)\\].*Audio.*");
