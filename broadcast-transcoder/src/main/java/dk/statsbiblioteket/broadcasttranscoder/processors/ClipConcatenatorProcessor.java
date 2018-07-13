@@ -6,7 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Calculates the command to cut and concatenate the source files (excluding the initial "cat").
+ * Calculates the command to cut and concatenate the source files (excluding the initial "cat"). Only used by the multistreamTranscoder
+ * @see MultistreamVideoTranscoderProcessor
  */
 public class ClipConcatenatorProcessor extends ProcessorChainElement  {
 
