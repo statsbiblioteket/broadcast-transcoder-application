@@ -12,6 +12,7 @@ import dk.statsbiblioteket.broadcasttranscoder.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.File;
 import java.util.stream.Collectors;
 
@@ -80,64 +81,118 @@ public class UnistreamTranscoderProcessor extends ProcessorChainElement {
         
         line = line.replace("$$OUTPUT_FILE$$", FileUtils.getTemporaryMediaOutputFile(request, context).getAbsolutePath());
     
-        //Concat only works for transportStreams, but no mpeg file will ever have more than one clip, so this is not a problem
-        String inputFiles = "-i \"concat:"
-                            + request.getClips()
-                                     .stream()
-                                     .map(TranscodeRequest.FileClip::getFilepath)
-                                     .collect(Collectors.joining("|"))
-                            + "\"";
-        line = line.replace("$$INPUT_FILES$$", inputFiles);
+        
+        
+        
+        long programStartMillis = getProgramStartMillis(request, context);
     
-        line = handleOffsetAndEnd(request, context, line);
+        Long firstFileStartTimeMillis = request.getClips().get(0).getFileStartTime();
+    
+        //We start 5 secs before, and then skip the first 5 secs of the transcoding. This ensures misaligned frames
+        // do not destroy the first second of the transcoding
+        long programStartSecondsInFirstFile = (programStartMillis - firstFileStartTimeMillis) / 1000 - 5;
+    
+    
+        long programEndMillis = getProgramEndMillis(request, context);
+    
+    
+        long programLengthSeconds = (programEndMillis - programStartMillis) / 1000;
+    
+        line = line.replace("$$LENGTH$$", programLengthSeconds + "");
+    
+        
+        
+    
+        if (!request.getFileFormat().equals(FileFormatEnum.MPEG_PS)) {
+            //Concat only works for transportStreams, but no mpeg file will ever have more than one clip, so this is not a problem
+            String inputFiles = "-i \"concat:"
+                                + request.getClips()
+                                         .stream()
+                                         .map(TranscodeRequest.FileClip::getFilepath)
+                                         .collect(Collectors.joining("|"))
+                                + "\"";
+            line = line.replace("$$INPUT_FILES$$", inputFiles);
+        } else {
+            long offsetInFirstFile = programStartSecondsInFirstFile;
+            String inputFiles = "-f concat -safe 0 -i <(echo -e \""
+                                + request.getClips()
+                                         .stream()
+                                         .findFirst()
+                                         .map(fileClip -> "file '" + fileClip.getFilepath() + "' \\n"
+                                                          +"inpoint "+offsetInFirstFile+" \\n")
+                                         .orElse("")
+                                + request.getClips()
+                                         .stream()
+                                         .skip(1)
+                                         .map(fileClip -> "file '" + fileClip.getFilepath() + "' ")
+                                         .collect(Collectors.joining("\\n"))
+                                + "\")";
+            line = line.replace("$$INPUT_FILES$$", inputFiles);
+            programStartSecondsInFirstFile = 0;
+        }
+    
+        line = line.replace("$$START_OFFSET$$", programStartSecondsInFirstFile + "");
+    
+    
         return line;
     }
     
-    private static String handleOffsetAndEnd(TranscodeRequest request, SingleTranscodingContext context, String line) {
-        long programStartMillis = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStart());
-        long programEndMillis = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStop());
-        int startOffsetSeconds;
+    private static long getProgramMillis(TranscodeRequest request,
+                                         XMLGregorianCalendar timeStop,
+                                         int endOffsetPSWithTVMeter,
+                                         int endOffsetPS,
+                                         int endOffsetWAV,
+                                         int endOffsetTSWithTVMeter, int endOffsetTS, long additionalEndOffset) {
+        long programEndMillis = CalendarUtils.getTimestamp(timeStop);
+        
         int endOffsetSeconds;
         switch (request.getFileFormat()) {
             case MPEG_PS:
                 if (request.isTvmeter()) {
-                    startOffsetSeconds = context.getStartOffsetPSWithTVMeter();
-                    endOffsetSeconds = context.getEndOffsetPSWithTVMeter();
+                    endOffsetSeconds = endOffsetPSWithTVMeter;
                 } else {
-                    startOffsetSeconds = context.getStartOffsetPS();
-                    endOffsetSeconds = context.getEndOffsetPS();
+                    endOffsetSeconds = endOffsetPS;
                 }
                 break;
             case AUDIO_WAV:
-                startOffsetSeconds = context.getStartOffsetWAV();
-                endOffsetSeconds = context.getEndOffsetWAV();
+                endOffsetSeconds = endOffsetWAV;
                 break;
             default:
                 if (request.isTvmeter()) {
-                    startOffsetSeconds = context.getStartOffsetTSWithTVMeter();
-                    endOffsetSeconds = context.getEndOffsetTSWithTVMeter();
+                    endOffsetSeconds = endOffsetTSWithTVMeter;
                 } else {
-                    startOffsetSeconds = context.getStartOffsetTS();
-                    endOffsetSeconds = context.getEndOffsetTS();
+                    endOffsetSeconds = endOffsetTS;
                 }
                 break;
         }
-        startOffsetSeconds += request.getAdditionalStartOffset();
-        endOffsetSeconds += request.getAdditionalEndOffset();
-        programStartMillis += startOffsetSeconds*1000L;
-        programEndMillis += endOffsetSeconds*1000L;
-        
-        Long firstFileStartTimeMillis = request.getClips().get(0).getFileStartTime();
-
-        //We start 5 secs before, and then skip the first 5 secs of the transcoding. This ensures misaligned frames
-        // do not destroy the first second of the transcoding
-        long programStartSecondsInFirstFile = (programStartMillis - firstFileStartTimeMillis) / 1000 - 5;
-
-        long programLengthSeconds = (programEndMillis - programStartMillis) / 1000;
-
-        line = line.replace("$$START_OFFSET$$", programStartSecondsInFirstFile + "");
-        line = line.replace("$$LENGTH$$", programLengthSeconds + "");
-        return line;
+        endOffsetSeconds += additionalEndOffset;
+        programEndMillis += endOffsetSeconds * 1000L;
+        return programEndMillis;
+    }
+    
+    private static long getProgramStartMillis(TranscodeRequest request, SingleTranscodingContext context) {
+        long programStartMillis = getProgramMillis(request,
+                                                   request.getProgramBroadcast().getTimeStart(),
+                                                   context.getStartOffsetPSWithTVMeter(),
+                                                   context.getStartOffsetPS(),
+                                                   context.getStartOffsetWAV(),
+                                                   context.getStartOffsetTSWithTVMeter(),
+                                                   context.getStartOffsetTS(),
+                                                   request.getAdditionalStartOffset());
+        return programStartMillis;
+    }
+    
+    
+    private static long getProgramEndMillis(TranscodeRequest request, SingleTranscodingContext context) {
+        long programStartMillis = getProgramMillis(request,
+                                                   request.getProgramBroadcast().getTimeStop(),
+                                                   context.getEndOffsetPSWithTVMeter(),
+                                                   context.getEndOffsetPS(),
+                                                   context.getEndOffsetWAV(),
+                                                   context.getEndOffsetTSWithTVMeter(),
+                                                   context.getEndOffsetTS(),
+                                                   request.getAdditionalEndOffset());
+        return programStartMillis;
     }
     
 
