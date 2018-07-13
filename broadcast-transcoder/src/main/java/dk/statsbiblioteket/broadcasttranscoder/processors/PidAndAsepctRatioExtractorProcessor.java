@@ -121,8 +121,10 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
         Pattern audioPattern2 = Pattern.compile(".*Stream.*\\[(0x[0-9a-f]*)\\].*0x0011.*");
         Matcher dvbsubMatcher = dvbsubPattern.matcher(line);
         if (dvbsubMatcher.matches()){
-            request.setDvbsubPid(dvbsubMatcher.group(1));
-            logger.info("Setting pid for dvbsub '" + dvbsubMatcher.group(1) + "'");
+            if (line.contains("(dan)") && !line.contains("(hearing impaired)")) {
+                request.setDvbsubPid(dvbsubMatcher.group(1));
+                logger.info("Setting pid for dvbsub '" + dvbsubMatcher.group(1) + "'");
+            }
         }
         Matcher videoMatcher = videoPattern.matcher(line);
         if (videoMatcher.matches()) {
