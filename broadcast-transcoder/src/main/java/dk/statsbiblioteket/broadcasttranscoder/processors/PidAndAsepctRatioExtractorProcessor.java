@@ -139,6 +139,10 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
         }
         Matcher audioMatcher = audioPattern1.matcher(line);
         if (audioMatcher.matches()) {
+            if (line.contains(" stereo, ")) {
+                request.setAudioStereoPid(audioMatcher.group(1));
+                logger.info("Setting pid for stereo audio '" + audioMatcher.group(1) + "'");
+            }
             request.addAudioPid(audioMatcher.group(1));
             logger.info("Setting pid for audio '" + audioMatcher.group(1) + "'");
             if (line.contains("aac_latm")) {

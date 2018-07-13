@@ -42,6 +42,7 @@ public class TranscodeRequest {
 
     private String dvbsubPid;
     private String videoPid;
+    private String audioStereoPid;
     private String videoFcc;
     private String audioFcc;
 
@@ -194,7 +195,15 @@ public class TranscodeRequest {
         }
         return minimum;
     }
-
+    
+    public String getAudioStereoPid() {
+        return audioStereoPid;
+    }
+    
+    public void setAudioStereoPid(String audioStereoPid) {
+        this.audioStereoPid = audioStereoPid;
+    }
+    
     public Double getDisplayAspectRatio() {
         return displayAspectRatio;
     }
