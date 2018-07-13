@@ -26,16 +26,16 @@ import java.util.Set;
  */
 @Path("/bta")
 public class BroadcastTranscoderService {
-
+    
     public static Logger logger = LoggerFactory.getLogger(BroadcastTranscoderService.class);
-
+    
     private static Set<String> runningTranscodes = new HashSet<String>();
-
+    
     @Context
     ServletConfig config;
     @Context
     ServletContext context;
-
+    
     @GET
     @Path("/btaDVDTranscode")
     @Produces(MediaType.APPLICATION_XML)
@@ -52,19 +52,23 @@ public class BroadcastTranscoderService {
         filenamePrefix = sanitiseTitle(filenamePrefix);
         final String programDescription = " " + title + " " + programPid + " " + channel + " " + startTime;
         logger.info("Received request for" + programDescription);
-        logger.debug("Parameters: additional_start_offset/additional_end_offset: " + additionalStartOffset + " / " + additionalEndOffset);
+        logger.debug("Parameters: additional_start_offset/additional_end_offset: " + additionalStartOffset + " / "
+                     + additionalEndOffset);
         checkContext();
         TranscodeRequest request = new TranscodeRequest();
-        SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext = (SingleTranscodingContext<BroadcastTranscodingRecord>) context.getAttribute("transcodingContext");
+        SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext
+                = (SingleTranscodingContext<BroadcastTranscodingRecord>) context.getAttribute("transcodingContext");
         request.setObjectPid(programPid);
-        request.setOutputBasename(filenamePrefix+"_"+startTime+"_"+additionalStartOffset+"_"+additionalEndOffset);
+        request.setOutputBasename(
+                filenamePrefix + "_" + startTime + "_" + additionalStartOffset + "_" + additionalEndOffset);
         request.setAdditionalStartOffset(additionalStartOffset);
         request.setAdditionalEndOffset(additionalEndOffset);
         return getBtaResponse(request, transcodingContext, programDescription);
     }
-
+    
     /**
      * Create a dissemination copy suitable for download, using the pid as the basename of the output file.
+     *
      * @param programPid the doms pid of the program to be transcoded.
      * @return the current status of the transcoding.
      */
@@ -73,19 +77,22 @@ public class BroadcastTranscoderService {
     @Produces(MediaType.APPLICATION_XML)
     public BtaResponse startDorqTranscoding(@QueryParam("programpid") String programPid) {
         TranscodeRequest request = new TranscodeRequest();
-        SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext = (SingleTranscodingContext<BroadcastTranscodingRecord>) context.getAttribute("transcodingContext");
+        SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext
+                = (SingleTranscodingContext<BroadcastTranscodingRecord>) context.getAttribute("transcodingContext");
         request.setObjectPid(programPid);
         request.setOutputBasename(programPid.replaceAll("uuid:", ""));
         request.setAdditionalStartOffset(0L);
         request.setAdditionalEndOffset(0L);
         return getBtaResponse(request, transcodingContext, programPid);
     }
-
+    
     public static String sanitiseTitle(String filenamePrefix) {
         return filenamePrefix.replaceAll("[^a-zA-Z0-9_.\\-æøåÆØÅ%+]", "_");
     }
-
-    private BtaResponse getBtaResponse(final TranscodeRequest request, final SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext, String programDescription) {
+    
+    private BtaResponse getBtaResponse(final TranscodeRequest request,
+                                       final SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext,
+                                       String programDescription) {
         BtaResponse response = new BtaResponse();
         response.setFilename(request.getOutputBasename());
         boolean isTranscoding = FileUtils.hasTemporarMediaOutputFile(request, transcodingContext);
@@ -129,16 +136,18 @@ public class BroadcastTranscoderService {
                     }
                 }.start();
             } else {
-               response.setStatus("ALREADY_QUEUED");
+                response.setStatus("ALREADY_QUEUED");
             }
             return response;
         }
     }
-
-    private static void performTranscoding(TranscodeRequest request, SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext) throws ProcessorException {
+    
+    private static void performTranscoding(TranscodeRequest request,
+                                           SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext)
+            throws ProcessorException {
         ProcessorChainElement pbcorer = new PbcoreMetadataExtractorProcessor();
         ProcessorChainElement programFetcher = new ProgramMetadataFetcherProcessor();
-        ProcessorChainElement filedataFetcher    = new FileMetadataFetcherProcessor();
+        ProcessorChainElement filedataFetcher = new FileMetadataFetcherProcessor();
         ProcessorChainElement sanitiser = new SanitiseBroadcastMetadataProcessor();
         ProcessorChainElement sorter = new BroadcastMetadataSorterProcessor();
         ProcessorChainElement fileFinderFetcher = new NearlineFilefinderFetcherProcessor();
@@ -163,54 +172,47 @@ public class BroadcastTranscoderService {
         ProcessorChainElement secondChain;
         ProcessorChainElement pider = new PidAndAsepctRatioExtractorProcessor();
         ProcessorChainElement waver = new WavTranscoderProcessor();
-        ProcessorChainElement multistreamer = new MultistreamVideoTranscoderProcessor();
-        ProcessorChainElement unistreamvideoer = new UnistreamVideoTranscoderProcessor();
-        ProcessorChainElement unistreamaudioer = new UnistreamAudioTranscoderProcessor();
+        ProcessorChainElement multiStreamTranscoder = new MultistreamVideoTranscoderProcessor();
+        ProcessorChainElement unistreamtranscoder = new UnistreamTranscoderProcessor();
         ProcessorChainElement renamer = new FinalMediaFileRenamerProcessor();
         switch (request.getFileFormat()) {
             case MULTI_PROGRAM_MUX:
                 if (transcodingContext.getVideoOutputSuffix().equals("mpeg")) {
                     logger.debug("Generating DVD video. No previews or snapshots for " + request.getObjectPid());
                     secondChain = ProcessorChainElement.makeChain(pider,
-                            multistreamer,
-                            renamer
+                                                                  multiStreamTranscoder,
+                                                                  renamer
                     );
                 } else {
                     secondChain = ProcessorChainElement.makeChain(pider,
-                            multistreamer,
-                            renamer);
+                                                                  multiStreamTranscoder,
+                                                                  renamer);
                 }
                 break;
             case MPEG_PS: //Note deliberate use of fall-though here!
-                          //MPEG-PS also uses unistreamvideoer
+                //MPEG-PS also uses unistreamtranscoder
             case SINGLE_PROGRAM_VIDEO_TS:
                 if (transcodingContext.getVideoOutputSuffix().equals("mpeg")) {
                     logger.debug("Generating DVD video. No previews or snapshots for " + request.getObjectPid());
-                }
+                }//Note deliberate use of fall-though here!
+            case SINGLE_PROGRAM_AUDIO_TS:
                 secondChain = ProcessorChainElement.makeChain(pider,
-                        unistreamvideoer,
-                        renamer
+                                                              unistreamtranscoder,
+                                                              renamer);
+                break;
+            case AUDIO_WAV:
+                secondChain = ProcessorChainElement.makeChain(waver,
+                                                              renamer
                 );
                 break;
-              case SINGLE_PROGRAM_AUDIO_TS:
-                  secondChain = ProcessorChainElement.makeChain(pider,
-                          unistreamaudioer,
-                          renamer);
-                  break;
-              case AUDIO_WAV:
-                  secondChain = ProcessorChainElement.makeChain(waver,
-                          renamer
-                  );
-                  break;
-              default:
-                  return;
-          }
+            default:
+                return;
+        }
         secondChain.processIteratively(request, transcodingContext);
     }
-
-
+    
+    
     /**
-     *
      * @param programPid
      * @param title
      * @param channel
@@ -218,11 +220,12 @@ public class BroadcastTranscoderService {
      * @param additionalStartOffset
      * @param additionalEndOffset
      * @param filenamePrefix
-     * @param sendEmailParam Ignored. Exists for backwards compatibility.
-     * @param alternative  Ignored. Exists for backwards compatibility.
+     * @param sendEmailParam        Ignored. Exists for backwards compatibility.
+     * @param alternative           Ignored. Exists for backwards compatibility.
      * @return
      */
-    @GET @Path("/digitv_transcode")
+    @GET
+    @Path("/digitv_transcode")
     @Produces(MediaType.APPLICATION_XML)
     public BtaResponse startDigitvTranscoding(
             @QueryParam("programpid") String programPid,
@@ -233,17 +236,17 @@ public class BroadcastTranscoderService {
             @QueryParam("additional_end_offset") long additionalEndOffset,
             @QueryParam("filename_prefix") String filenamePrefix,
             @DefaultValue("false") @QueryParam("send_email") String sendEmailParam,
-            @DefaultValue("false") @QueryParam("alternative") String alternative ) throws ProcessorException {
+            @DefaultValue("false") @QueryParam("alternative") String alternative) throws ProcessorException {
         return startDVDTranscoding(programPid, title, channel, startTime,
-                additionalStartOffset, additionalEndOffset, filenamePrefix, "true");
+                                   additionalStartOffset, additionalEndOffset, filenamePrefix, "true");
     }
-
-
+    
+    
     public void checkContext() throws ProcessorException {
         Object o = context.getAttribute("transcodingContext");
-        if (! (o instanceof SingleTranscodingContext)) {
+        if (!(o instanceof SingleTranscodingContext)) {
             throw new ProcessorException("Web context not initialised with SingleTranscodingContext");
         }
     }
-
+    
 }

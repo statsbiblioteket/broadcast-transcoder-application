@@ -13,15 +13,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.stream.Collectors;
 
-public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
+public class UnistreamTranscoderProcessor extends ProcessorChainElement {
 
-    private static Logger log = LoggerFactory.getLogger(UnistreamVideoTranscoderProcessor.class);
+    private static Logger log = LoggerFactory.getLogger(UnistreamTranscoderProcessor.class);
 
-    public UnistreamVideoTranscoderProcessor() {
+    public UnistreamTranscoderProcessor() {
     }
 
-    public UnistreamVideoTranscoderProcessor(ProcessorChainElement childElement) {
+    public UnistreamTranscoderProcessor(ProcessorChainElement childElement) {
         super(childElement);
     }
 
@@ -66,81 +67,95 @@ public class UnistreamVideoTranscoderProcessor extends ProcessorChainElement {
         } else if (request.getFileFormat().equals(FileFormatEnum.MPEG_PS) && context.getVideoOutputSuffix().equals("mpeg")) {
             //From mpeg to mpeg, no need to transcode, just do remux
             line = context.getVlcRemuxingString();
+        } else if (request.getFileFormat().equals(FileFormatEnum.SINGLE_PROGRAM_AUDIO_TS)){
+            line = "ffmpeg -ss $$START_OFFSET$$ -t $$LENGTH$$ "
+                   + " $$INPUT_FILES$$ -ss 00:00:05 "
+                   + " -acodec libmp3lame -ar 44100 -ac 2 "
+                   + " -b:a $$AUDIO_BITRATE$$000 -y $$OUTPUT_FILE$$";
+    
         }
         line = line.replace("$$AUDIO_BITRATE$$", context.getAudioBitrate()+"");
         line = line.replace("$$VIDEO_BITRATE$$", context.getVideoBitrate()+"");
         line = line.replace("$$FFMPEG_ASPECT_RATIO$$", getFfmpegAspectRatio(request, context));
-        line = line.replace("$$OUTPUT_FILE$$", FileUtils.getTemporaryMediaOutputFile(request, context).getAbsolutePath());
         
-        String inputFiles = getInputFiles(request);
-        line = line.replace("$$INPUT_FILES$$",inputFiles);
+        line = line.replace("$$OUTPUT_FILE$$", FileUtils.getTemporaryMediaOutputFile(request, context).getAbsolutePath());
+    
+        //Concat only works for transportStreams, but no mpeg file will ever have more than one clip, so this is not a problem
+        String inputFiles = "-i \"concat:"
+                            + request.getClips()
+                                     .stream()
+                                     .map(TranscodeRequest.FileClip::getFilepath)
+                                     .collect(Collectors.joining("|"))
+                            + "\"";
+        line = line.replace("$$INPUT_FILES$$", inputFiles);
     
         line = handleOffsetAndEnd(request, context, line);
         return line;
     }
     
     private static String handleOffsetAndEnd(TranscodeRequest request, SingleTranscodingContext context, String line) {
-        long programStart = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStart());
-        long programEnd = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStop());
-        int startOffset;
-        int endOffset;
+        long programStartMillis = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStart());
+        long programEndMillis = CalendarUtils.getTimestamp(request.getProgramBroadcast().getTimeStop());
+        int startOffsetSeconds;
+        int endOffsetSeconds;
         switch (request.getFileFormat()) {
             case MPEG_PS:
                 if (request.isTvmeter()) {
-                    startOffset = context.getStartOffsetPSWithTVMeter();
-                    endOffset = context.getEndOffsetPSWithTVMeter();
+                    startOffsetSeconds = context.getStartOffsetPSWithTVMeter();
+                    endOffsetSeconds = context.getEndOffsetPSWithTVMeter();
                 } else {
-                    startOffset = context.getStartOffsetPS();
-                    endOffset = context.getEndOffsetPS();
+                    startOffsetSeconds = context.getStartOffsetPS();
+                    endOffsetSeconds = context.getEndOffsetPS();
                 }
                 break;
             case AUDIO_WAV:
-                startOffset = context.getStartOffsetWAV();
-                endOffset = context.getEndOffsetWAV();
+                startOffsetSeconds = context.getStartOffsetWAV();
+                endOffsetSeconds = context.getEndOffsetWAV();
                 break;
             default:
                 if (request.isTvmeter()) {
-                    startOffset = context.getStartOffsetTSWithTVMeter();
-                    endOffset = context.getEndOffsetTSWithTVMeter();
+                    startOffsetSeconds = context.getStartOffsetTSWithTVMeter();
+                    endOffsetSeconds = context.getEndOffsetTSWithTVMeter();
                 } else {
-                    startOffset = context.getStartOffsetTS();
-                    endOffset = context.getEndOffsetTS();
+                    startOffsetSeconds = context.getStartOffsetTS();
+                    endOffsetSeconds = context.getEndOffsetTS();
                 }
                 break;
         }
-        startOffset += request.getAdditionalStartOffset();
-        endOffset += request.getAdditionalEndOffset();
-        programStart += startOffset*1000L;
-        programEnd += endOffset*1000L;
+        startOffsetSeconds += request.getAdditionalStartOffset();
+        endOffsetSeconds += request.getAdditionalEndOffset();
+        programStartMillis += startOffsetSeconds*1000L;
+        programEndMillis += endOffsetSeconds*1000L;
         
-        line = line.replace("$$START_OFFSET$$",(programStart-request.getClips().get(0).getFileStartTime())/1000+"");
-        line = line.replace("$$LENGTH$$",(programEnd-programStart)/1000+"");
+        Long firstFileStartTimeMillis = request.getClips().get(0).getFileStartTime();
+
+        //We start 5 secs before, and then skip the first 5 secs of the transcoding. This ensures misaligned frames
+        // do not destroy the first second of the transcoding
+        long programStartSecondsInFirstFile = (programStartMillis - firstFileStartTimeMillis) / 1000 - 5;
+
+        long programLengthSeconds = (programEndMillis - programStartMillis) / 1000;
+
+        line = line.replace("$$START_OFFSET$$", programStartSecondsInFirstFile + "");
+        line = line.replace("$$LENGTH$$", programLengthSeconds + "");
         return line;
     }
     
-    private static String getInputFiles(TranscodeRequest request) {
-        StringBuilder inputFiles = new StringBuilder();
-        inputFiles.append("-i \"concat:");
-        for (TranscodeRequest.FileClip fileClip : request.getClips()) {
-            inputFiles.append(fileClip.getFilepath()).append("|");
-        }
-        inputFiles.append("\"");
-        return inputFiles.toString();
-    }
 
 
     protected static String getFfmpegAspectRatio(TranscodeRequest request, SingleTranscodingContext context) {
-        Double aspectRatio = request.getDisplayAspectRatio();
-        String ffmpegResolution;
-        Long height = context.getVideoHeight()*1L;
-        if (aspectRatio != null) {
-            long width = 2*Math.round(aspectRatio*height/2);
-            //if (width%2 == 1) width += 1;
-            ffmpegResolution =  width + "x" + height;
+        if (request.getDisplayAspectRatio() != null) {
+            Double aspectRatio = request.getDisplayAspectRatio();
+            Long height = (long) context.getVideoHeight();
+            if (aspectRatio != null) {
+                long width = 2 * Math.round(aspectRatio * height / 2);
+                //if (width%2 == 1) width += 1;
+                return width + "x" + height;
+            } else {
+                return "320x240";
+            }
         } else {
-            ffmpegResolution = " 320x240";
+            return "";
         }
-        return ffmpegResolution;
     }
 
 }

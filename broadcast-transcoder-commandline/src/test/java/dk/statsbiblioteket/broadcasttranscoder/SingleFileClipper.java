@@ -69,14 +69,9 @@ public class SingleFileClipper {
         request.setProgramBroadcast(pb);
         ProcessorChainElement pider = new PidAndAsepctRatioExtractorProcessor();
         ProcessorChainElement concatenator = new ClipConcatenatorProcessor();
-        ProcessorChainElement video = new UnistreamVideoTranscoderProcessor();
-        ProcessorChainElement audio = new UnistreamVideoTranscoderProcessor();
+        ProcessorChainElement transcoder = new UnistreamTranscoderProcessor();
         ProcessorChainElement chain = null;
-        if (format.equals(FileFormatEnum.SINGLE_PROGRAM_AUDIO_TS)) {
-            chain = ProcessorChainElement.makeChain(pider, concatenator, audio);
-        } else {
-            chain = ProcessorChainElement.makeChain(pider, concatenator, video);
-        }
+        chain = ProcessorChainElement.makeChain(pider, concatenator, transcoder);
         chain.processIteratively(request, context);
     }
 

@@ -119,9 +119,8 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
     
         ProcessorChainElement pider = new PidAndAsepctRatioExtractorProcessor();
         ProcessorChainElement waver = new WavTranscoderProcessor();
-        ProcessorChainElement multistreamer = new MultistreamVideoTranscoderProcessor();
-        ProcessorChainElement unistreamvideoer = new UnistreamVideoTranscoderProcessor();
-        ProcessorChainElement unistreamaudioer = new UnistreamAudioTranscoderProcessor();
+        ProcessorChainElement multistreamTranscoder = new MultistreamVideoTranscoderProcessor();
+        ProcessorChainElement unistreamTrancoder = new UnistreamTranscoderProcessor();
         ProcessorChainElement renamer = new FinalMediaFileRenamerProcessor();
         ProcessorChainElement previewer = new PreviewClipperProcessor();
         ProcessorChainElement snapshotter = new SnapshotExtractorProcessor();
@@ -135,7 +134,7 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
                     secondChain = ProcessorChainElement.makeChain(
                             concatenator,
                             pider,
-                            multistreamer,
+                            multistreamTranscoder,
                             renamer,
                             zeroChecker
                     );
@@ -143,57 +142,34 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
                     secondChain = ProcessorChainElement.makeChain(
                             concatenator,
                             pider,
-                            multistreamer,
+                            multistreamTranscoder,
                             renamer,
                             zeroChecker,
                             previewer,
                             snapshotter);
                 }
                 break;
+            case MPEG_PS:
+                //Deliberate use of fallthrough here,
             case SINGLE_PROGRAM_VIDEO_TS:
                 if (context.getVideoOutputSuffix().equals("mpeg")) {
                     logger.debug("Generating DVD video. No previews or snapshots for " + request.getObjectPid());
                     secondChain = ProcessorChainElement.makeChain(pider,
-                            unistreamvideoer,
+                            unistreamTrancoder,
                             renamer,
                             zeroChecker
                     );
-                } else {
-                    secondChain = ProcessorChainElement.makeChain(pider,
-                         unistreamvideoer,
-                         renamer,
-                         zeroChecker,
-                         previewer,
-                         snapshotter);
-                }
-                break;
+                    break;
+                } //Deliberate use of fallthrough here, same chain for mpeg_ps, videoTS and audioTS
             case SINGLE_PROGRAM_AUDIO_TS:
                 secondChain = ProcessorChainElement.makeChain(pider,
-                        unistreamaudioer,
+                        unistreamTrancoder,
                         renamer,
                         zeroChecker,
                         previewer);
                 break;
-            case MPEG_PS:
-                if (context.getVideoOutputSuffix().equals("mpeg")) {
-                    logger.debug("Generating DVD video. No previews or snapshots for " + request.getObjectPid());
-                    secondChain = ProcessorChainElement.makeChain(pider,
-                            unistreamvideoer,
-                            renamer,
-                            zeroChecker
-                    );
-                } else {
-                    secondChain = ProcessorChainElement.makeChain(pider,
-                            unistreamvideoer,
-                            renamer,
-                            zeroChecker,
-                            previewer,
-                            snapshotter);
-                }
-                break;
             case AUDIO_WAV:
                 secondChain = ProcessorChainElement.makeChain(
-                        concatenator,
                         waver,
                         renamer,
                         zeroChecker,

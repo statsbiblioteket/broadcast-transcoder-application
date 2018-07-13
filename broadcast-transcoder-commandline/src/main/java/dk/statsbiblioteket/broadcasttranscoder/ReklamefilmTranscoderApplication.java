@@ -9,14 +9,10 @@ import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.GoNoGoProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmFileResolverProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmPersistentRecordEnricherProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmFileResolverImpl;
-import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.ReklamefilmTranscodingRecordDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  *
@@ -45,7 +41,7 @@ public class ReklamefilmTranscoderApplication extends TranscoderApplication {
             if (request.isGoForTranscoding()) {
                 ProcessorChainElement resolver = new ReklamefilmFileResolverProcessor();
                 ProcessorChainElement aspecter = new PidAndAsepctRatioExtractorProcessor();
-                ProcessorChainElement transcoder = new UnistreamVideoTranscoderProcessor();
+                ProcessorChainElement transcoder = new UnistreamTranscoderProcessor();
                 ProcessorChainElement renamer = new FinalMediaFileRenamerProcessor();
                 ProcessorChainElement zeroChecker = new ZeroLengthCheckerProcessor();
                 ProcessorChainElement ffprober = new FfprobeFetcherProcessor();
