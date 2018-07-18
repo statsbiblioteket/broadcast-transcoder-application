@@ -5,7 +5,7 @@
     <parent>
         <groupId>dk.statsbiblioteket.sbprojects</groupId>
         <artifactId>sbprojects-parent</artifactId>
-        <version>3</version>
+        <version>7</version>
     </parent>
 
     <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>
