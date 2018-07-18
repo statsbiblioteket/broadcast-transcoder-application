@@ -5,7 +5,7 @@
     <parent>
         <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>
         <artifactId>broadcast-transcoder-application</artifactId>
-        <version>0.5.0</version>
+        <version>0.6-SNAPSHOT</version>
     </parent>
 
 
