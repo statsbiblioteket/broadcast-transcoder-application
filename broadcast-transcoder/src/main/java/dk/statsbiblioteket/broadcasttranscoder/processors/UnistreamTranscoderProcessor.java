@@ -70,7 +70,7 @@ public class UnistreamTranscoderProcessor extends ProcessorChainElement {
             line = context.getVlcRemuxingString();
         } else if (request.getFileFormat().equals(FileFormatEnum.SINGLE_PROGRAM_AUDIO_TS)){
             line = "ffmpeg -ss $$START_OFFSET$$ -t $$LENGTH$$ "
-                   + " $$INPUT_FILES$$ -ss 00:00:05 "
+                   + " $$INPUT_FILES$$ -ss $$SKIP_SECONDS$$ "
                    + " -acodec libmp3lame -ar 44100 -ac 2 "
                    + " -b:a $$AUDIO_BITRATE$$000 -y $$OUTPUT_FILE$$";
     
@@ -91,7 +91,16 @@ public class UnistreamTranscoderProcessor extends ProcessorChainElement {
     
         //We start 5 secs before, and then skip the first 5 secs of the transcoding. This ensures misaligned frames
         // do not destroy the first second of the transcoding
-        long programStartSecondsInFirstFile = (programStartMillis - firstFileStartTimeMillis) / 1000 - 5;
+
+        //We take it as max(,0), so that if the the program starts before the file, we do not get negative values
+        long offsetIntoFirstFileSeconds = Math.max((programStartMillis - firstFileStartTimeMillis) / 1000,0);
+
+        //If the program starts less than 5 seconds into the file, only skip to the start of the file, and no longer
+        long skipSeconds=Math.min(offsetIntoFirstFileSeconds,5);
+        
+        line = line.replace("$$SKIP_SECONDS$$",skipSeconds+"");
+        
+        long programStartSecondsInFirstFile = offsetIntoFirstFileSeconds - skipSeconds;
     
     
         long programEndMillis = getProgramEndMillis(request, context);
