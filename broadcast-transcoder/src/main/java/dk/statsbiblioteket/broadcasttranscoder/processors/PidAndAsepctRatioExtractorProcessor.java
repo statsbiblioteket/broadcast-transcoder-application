@@ -122,10 +122,35 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
     }
 
     private static void findPidInLine(String line, TranscodeRequest request, SingleTranscodingContext context) {
+        
+        /*
+        Subtitle lines can look like this. I have noted which are matched and which are not
+        
+        not matched -> Stream #0:2[0x83](dan): Subtitle: dvb_teletext ([6][0][0][0] / 0x0006)
+            matched -> Stream #0:3[0x87](dan): Subtitle: dvb_subtitle ([6][0][0][0] / 0x0006)
+            matched -> Stream #0:4[0x88](dan): Subtitle: dvb_subtitle ([6][0][0][0] / 0x0006) (hearing impaired)
+            
+            Note that we later filter out the non-"dan" and/or hearing impaired subtitles
+            
+         Group 1 is the pid (0x87)
+         */
         Pattern dvbsubPattern = Pattern.compile(".*Stream.*\\[(0x[0-9a-f]*)\\].*dvb.*sub.*");
+        
+        
+        //Lines like:
+        //Stream #0:0[0x1e0]: Video: mpeg2video (Main), yuv420p(tv, top first), 720x576 [SAR 16:15 DAR 4:3], 6500 kb/s, 25 fps, 25 tbr, 90k tbn, 50 tbc
+        //Group 1 is the pid (0x1e0)
+        //Group 2 is the aspect (4:3)
         Pattern videoPattern = Pattern.compile(".*Stream.*\\[(0x[0-9a-f]*)\\].*Video.*DAR\\s(([0-9]*):([0-9]*)).*");
+        
+        //Stream #0:1[0x1c0]: Audio: mp2, 48000 Hz, stereo, s16p, 192 kb/s
+        //Group 1 is the pid (0x1c0)
         Pattern audioPattern1 = Pattern.compile(".*Stream.*\\[(0x[0-9a-f]*)\\].*Audio.*");
+        
+        //I dunno, is is there to handle a problem in an older version of ffprobe or some weird files?
         Pattern audioPattern2 = Pattern.compile(".*Stream.*\\[(0x[0-9a-f]*)\\].*0x0011.*");
+        
+        
         Matcher dvbsubMatcher = dvbsubPattern.matcher(line);
         if (dvbsubMatcher.matches()){
             if (line.contains("(dan)") && !line.contains("(hearing impaired)")) {
