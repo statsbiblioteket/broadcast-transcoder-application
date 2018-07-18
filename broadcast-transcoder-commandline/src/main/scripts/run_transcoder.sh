@@ -13,8 +13,9 @@ queue_cmd=$HOME/services/bin/queue.sh
 # Logs go here
 logdir=$HOME/logs
 
+SCRIPT_PATH=$(dirname $(readlink -f $BASH_SOURCE[0]))
 # Source optional config file
-configfile=$(readlink -f $(dirname $(readlink -f $0))/../config/run_transcoder.conf)
+configfile=${SCRIPT_PATH}/../config/run_transcoder.conf
 [ -r $configfile ] && . $configfile
 
 # Keep track of how many jobs we've forked

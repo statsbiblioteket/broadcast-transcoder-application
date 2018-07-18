@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCRIPT_PATH=$(dirname $(readlink -f $0))
+SCRIPT_PATH=$(dirname $(readlink -f $BASH_SOURCE[0]))
 CLASSPATH="$SCRIPT_PATH/../lib/*"
 
 uuid=$1

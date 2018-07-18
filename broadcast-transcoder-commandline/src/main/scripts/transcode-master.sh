@@ -7,7 +7,8 @@
 transcode_cmd=$HOME/services/bin/run_transcoder.sh
 
 # Source optional config file
-configfile=$(readlink -f $(dirname $(readlink -f $0))/../config/transcode-master.conf)
+SCRIPT_PATH=$(dirname $(readlink -f $BASH_SOURCE[0]))
+configfile=${SCRIPT_PATH}/../config/transcode-master.conf
 [ -r $configfile ] && . $configfile
 
 # Check if we are running with a tty

@@ -8,7 +8,7 @@ succesList=$3
 failureList=$4
 
 # Get settings
-SCRIPT_PATH=$(dirname $(readlink -f $0))
+SCRIPT_PATH=$(dirname $(readlink -f $BASH_SOURCE[0]))
 source $SCRIPT_PATH/setenv.sh
 
 java -Dlogback.configurationFile=$confDir/logback-analyzeOldPrograms.xml $hibernate_log_config \

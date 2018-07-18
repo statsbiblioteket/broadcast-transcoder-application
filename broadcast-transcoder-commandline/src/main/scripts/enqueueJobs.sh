@@ -4,7 +4,7 @@ collection=$1
 timestamp=$2
 
 # Get settings
-SCRIPT_PATH=$(dirname $(readlink -f $0))
+SCRIPT_PATH=$(dirname $(readlink -f $BASH_SOURCE[0]))
 source $SCRIPT_PATH/setenv.sh
 
 java -Dlogback.configurationFile=$confDir/logback-enqueueJobs.xml $hibernate_log_config \

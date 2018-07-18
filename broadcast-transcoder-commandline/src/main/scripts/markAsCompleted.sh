@@ -5,7 +5,7 @@ programList=$1
 collection=Broadcast
 
 # Get settings
-SCRIPT_PATH=$(dirname $(readlink -f $0))
+SCRIPT_PATH=$(dirname $(readlink -f $BASH_SOURCE[0]))
 source $SCRIPT_PATH/setenv.sh
 
 java -Dlogback.configurationFile=$confDir/logback-markAsCompleted.xml $hibernate_log_config \
