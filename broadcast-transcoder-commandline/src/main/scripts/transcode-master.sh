@@ -44,7 +44,7 @@ map_keys()
 # Raw pgrep output of running jobs
 func_joblist()
 {
-    pgrep -f -l -u bta "$transcode_cmd[ ]-h[ ].*[ ]-j[ ].*"
+    pgrep -f -a -u bta "$transcode_cmd[ ]-h[ ].*[ ]-j[ ].*"
 }
 
 # Find all running transcode jobs and construct a hashmap
