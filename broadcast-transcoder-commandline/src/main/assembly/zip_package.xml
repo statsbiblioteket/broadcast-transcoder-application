@@ -43,6 +43,12 @@
 
 
     </fileSets>
+    <files>
+        <file>
+            <source>${project.basedir}/../Changelog.md</source>
+            <destName>Changelog.md</destName>
+        </file>
+    </files>
     <dependencySets>
         <dependencySet>
             <outputDirectory>lib</outputDirectory>
