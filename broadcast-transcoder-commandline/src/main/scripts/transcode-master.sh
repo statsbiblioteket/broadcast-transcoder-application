@@ -54,10 +54,10 @@ func_jobsummary()
     local numjobs pid bash transcode_cmd dashh host dashj queuefile
     while read pid bash transcode_cmd dashh host dashj queuefile
     do
-	numjobs=$(map_get jobs $host)
-	[ -z "$numjobs" ] && numjobs=0	# Initialize counter if we have not seen this host before
-	((numjobs++))
-	map_put jobs $host $numjobs
+	    numjobs=$(map_get jobs $host)
+	    [ -z "$numjobs" ] && numjobs=0	# Initialize counter if we have not seen this host before
+	    ((numjobs++))
+	    map_put jobs $host $numjobs
     done < <(func_joblist)
 }
 
@@ -154,42 +154,42 @@ fi
 # Check that we got the args we wanted
 case $mode in
     start)
-	[ -z "$host" ] && print_usage && exit 2
-	[ -z "$numjobs" ] && print_usage && exit 3
-	[ -z "$jobfile" -o ! -r "$jobfile" ] && print_usage && exit 4
-	# Tally current jobs
-	func_jobsummary
-	currentjobs=$(map_get jobs $host)
-	[ -z "$currentjobs" ] && currentjobs=0
-	if [ $currentjobs -lt $numjobs ]; then
-	    startjobs=$((numjobs - currentjobs))
-	else
-	    [ $quiet -eq 0 ] && echo "$currentjobs jobs already running on $host, not starting any more"
-	    exit 5
-	fi
-	[ $quiet -eq 0 ] && echo "Starting $startjobs jobs on $host"
-	for ((x=1; x <= $startjobs; x++))
-	do
-	    print_dot
-	    $transcode_cmd -h $host -j $jobfile &
-	done
-	[ $notty -eq 0 -a $quiet -eq 0 ] && echo
-	;;
+        [ -z "$host" ] && print_usage && exit 2
+        [ -z "$numjobs" ] && print_usage && exit 3
+        [ -z "$jobfile" -o ! -r "$jobfile" ] && print_usage && exit 4
+        # Tally current jobs
+        func_jobsummary
+        currentjobs=$(map_get jobs $host)
+        [ -z "$currentjobs" ] && currentjobs=0
+        if [ $currentjobs -lt $numjobs ]; then
+            startjobs=$((numjobs - currentjobs))
+        else
+            [ $quiet -eq 0 ] && echo "$currentjobs jobs already running on $host, not starting any more"
+            exit 5
+        fi
+        [ $quiet -eq 0 ] && echo "Starting $startjobs jobs on $host"
+        for ((x=1; x <= $startjobs; x++))
+        do
+            print_dot
+            $transcode_cmd -h $host -j $jobfile &
+        done
+        [ $notty -eq 0 -a $quiet -eq 0 ] && echo
+        ;;
     stop)
-	# Missing, implement support for -n to reduce number of jobs
-	pids=$(func_joblist | awk "/$host/"'{ print $1 }')
-	func_status
-	[ $quiet -eq 0 ] && echo "Shutting them down"
-	for pid in $pids
-	do
-	    print_dot
-	    kill $pid
-	done
-	[ $notty -eq 0 -a $quiet -eq 0 ] && echo
-	;;
+        # Missing, implement support for -n to reduce number of jobs
+        pids=$(func_joblist | awk "/$host/"'{ print $1 }')
+        func_status
+        [ $quiet -eq 0 ] && echo "Shutting them down"
+        for pid in $pids
+        do
+            print_dot
+            kill $pid
+        done
+        [ $notty -eq 0 -a $quiet -eq 0 ] && echo
+        ;;
     status)
-	func_status
-	;;
+        func_status
+        ;;
 esac
 
 # vim: set sw=4 sts=4 et ft=sh : #
