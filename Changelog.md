@@ -1,6 +1,9 @@
 
 0.5.0
 -----
+* config/run_transcoder.conf and config/transcode-master.conf is now based on $SCRIPT_PATH, as this gives nicer paths without ..
+* transcode-master.sh status and stop now actually works;  pgrep needed flag -a instead of -l
+
 * Final deploy_on_devel script
 
 * Updated UnistreamTrancoder to correctly handle programs that start less than 5 seconds into their first file.
