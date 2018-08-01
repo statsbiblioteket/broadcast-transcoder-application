@@ -3,6 +3,7 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.*;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +24,7 @@ public class ProgramStructureUpdaterProcessor extends ProcessorChainElement {
     private static final Logger logger = LoggerFactory.getLogger(ProgramStructureUpdaterProcessor.class);
 
     @Override
-    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-        ProgramStructure domsProgramStructure = request.getDomsProgramStructure();
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        ProgramStructure domsProgramStructure = request.getDomsProgramStructure();
         ProgramStructure localProgramStructure = request.getLocalProgramStructure();
         if (isDummy(domsProgramStructure) ||
                 !areSemanticallyEqual(domsProgramStructure, localProgramStructure)) {

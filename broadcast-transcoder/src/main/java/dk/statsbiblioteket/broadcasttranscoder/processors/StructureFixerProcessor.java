@@ -10,6 +10,7 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.*;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,8 +26,7 @@ public class StructureFixerProcessor extends ProcessorChainElement {
 
 
     @Override
-    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-        handleMissingStart(request, context);
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        handleMissingStart(request, context);
         handleMissingEnd(request, context);
         handleHoles(request, context);
         handleOverlaps(request, context);

@@ -3,6 +3,7 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.doms.central.*;
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public class FileMetadataFetcherProcessor extends ProcessorChainElement {
 
 
     @Override
-    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {
         List<String> fileObjectPids = null;
         try {
             fileObjectPids = findFileObjects(request,context);

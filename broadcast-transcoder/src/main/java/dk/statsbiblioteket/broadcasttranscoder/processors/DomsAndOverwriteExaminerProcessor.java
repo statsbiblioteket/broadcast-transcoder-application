@@ -2,6 +2,7 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.TranscodingProcessInterface;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.doms.central.*;
@@ -53,8 +54,7 @@ public class DomsAndOverwriteExaminerProcessor extends ProcessorChainElement {
      * @throws ProcessorException
      */
     @Override
-    public void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-
+    public <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {
         final String pid = request.getObjectPid();
 
 
@@ -82,10 +82,10 @@ public class DomsAndOverwriteExaminerProcessor extends ProcessorChainElement {
         request.setGoForTranscoding(majorChange);
     }
 
-    private boolean checkDoms( SingleTranscodingContext context, String pid) throws ProcessorException {
+    private <T extends TranscodingRecord> boolean checkDoms( SingleTranscodingContext<T> context, String pid) throws ProcessorException {
         long timeStampOfNewChange = context.getTranscodingTimestamp();
         logger.info("Transcode doms record for " + pid + " timestamp " + timeStampOfNewChange + "=" + new Date(timeStampOfNewChange));
-        TranscodingProcessInterface persister = context.getTranscodingProcessInterface();
+        TranscodingProcessInterface<T> persister = context.getTranscodingProcessInterface();
         Long oldTranscodingTimestamp = persister.getLatestTranscodingTimestamp(pid);
         if (oldTranscodingTimestamp == null) {
             logger.info("Using default transcoding timestamp for " + pid);

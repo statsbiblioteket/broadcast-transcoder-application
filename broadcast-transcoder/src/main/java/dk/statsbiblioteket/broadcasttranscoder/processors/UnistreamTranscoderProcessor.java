@@ -8,6 +8,7 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +29,7 @@ public class UnistreamTranscoderProcessor extends ProcessorChainElement {
     }
 
     @Override
-    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-        mpegClip(request, context);
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        mpegClip(request, context);
     }
 
     private void mpegClip(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {

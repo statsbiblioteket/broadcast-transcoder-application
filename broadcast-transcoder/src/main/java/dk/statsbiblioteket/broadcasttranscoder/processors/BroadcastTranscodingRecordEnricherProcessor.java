@@ -1,6 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.util.MetadataUtils;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.BroadcastTranscodingRecordDAO;
@@ -15,7 +16,7 @@ import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
  */
 public class BroadcastTranscodingRecordEnricherProcessor extends ProcessorChainElement {
     @Override
-    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {
         HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
         BroadcastTranscodingRecordDAO dao = new BroadcastTranscodingRecordDAO(util);
         BroadcastTranscodingRecord record = dao.read(request.getObjectPid());

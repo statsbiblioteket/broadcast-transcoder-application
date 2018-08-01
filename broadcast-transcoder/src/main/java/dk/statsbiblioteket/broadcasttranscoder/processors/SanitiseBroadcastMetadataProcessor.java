@@ -3,6 +3,7 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 
 import java.util.*;
 
@@ -15,8 +16,7 @@ public class SanitiseBroadcastMetadataProcessor extends ProcessorChainElement {
 
 
     @Override
-    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-        if (request.isHasExactFile()) {
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        if (request.isHasExactFile()) {
             return;
         }
         List<BroadcastMetadata> bm = request.getBroadcastMetadata();

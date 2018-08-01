@@ -17,8 +17,7 @@ public class OldThumbnailDeleter extends ProcessorChainElement {
     private static Logger logger = LoggerFactory.getLogger(OldThumbnailDeleter.class);
 
     @Override
-    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {
-        File thumbnailDir = FileUtils.getSnapshotOutputDir(request, context);
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        File thumbnailDir = FileUtils.getSnapshotOutputDir(request, context);
         final String nameElement = request.getObjectPid().replaceAll("uuid:", "");
         FilenameFilter thumbnailFilter = new MyFilenameFilter(nameElement);
         File[] thumbnails = thumbnailDir.listFiles(thumbnailFilter);

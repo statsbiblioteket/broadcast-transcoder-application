@@ -19,8 +19,7 @@ public class OutputFileFfprobeAnalyser extends ProcessorChainElement {
     private static Logger logger = LoggerFactory.getLogger(OutputFileFfprobeAnalyser.class);
 
     @Override
-    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {
-        File outputFile = FileUtils.findFinalMediaOutputFile(request, context);
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        File outputFile = FileUtils.findFinalMediaOutputFile(request, context);
         String command = "ffprobe " + outputFile.getAbsolutePath() + " -show_format ";
         logger.info("Executing '" + command + "'");
         ExternalJobRunner runner;

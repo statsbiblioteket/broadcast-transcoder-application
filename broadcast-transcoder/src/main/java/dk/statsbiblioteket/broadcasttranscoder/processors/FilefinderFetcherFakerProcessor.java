@@ -3,6 +3,7 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 import dk.statsbiblioteket.broadcasttranscoder.cli.ProgramAnalyzerContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.util.MockFile;
 
 import java.io.File;
@@ -13,10 +14,9 @@ import java.util.Map;
  * This processor brings each file in the BroadcastMetadata online, and initialises the Filemap
  */
 public class FilefinderFetcherFakerProcessor extends ProcessorChainElement {
-
-
-    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-
+    
+    
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {
         HashMap<BroadcastMetadata, File> fileMap = new HashMap<BroadcastMetadata, File>();
         if (context instanceof ProgramAnalyzerContext) {
             ProgramAnalyzerContext programAnalyzerContext = (ProgramAnalyzerContext) context;

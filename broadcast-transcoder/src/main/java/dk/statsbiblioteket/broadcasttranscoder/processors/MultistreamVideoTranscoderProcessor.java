@@ -1,6 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,10 +34,9 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
     }
 
     private static Logger logger = LoggerFactory.getLogger(MultistreamVideoTranscoderProcessor.class);
-
-
-    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-        int programNumber = 0;
+    
+    
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        int programNumber = 0;
         if (request.getFileFormat().equals(FileFormatEnum.MULTI_PROGRAM_MUX)) {
             Integer programNumberObject = request.getClips().get(0).getProgramId();
             if (programNumberObject == null) {

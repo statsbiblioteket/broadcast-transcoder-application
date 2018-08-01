@@ -1,6 +1,7 @@
 package dk.statsbiblioteket.broadcasttranscoder;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.processors.DomsAndOverwriteExaminerProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import dk.statsbiblioteket.util.Streams;
@@ -30,7 +31,7 @@ public class DomsTranscodingStructureFetcherTest  {
     @Test
     public void testProcessThis() throws Exception {
 
-        SingleTranscodingContext context = new SingleTranscodingContext();
+        SingleTranscodingContext<TranscodingRecord> context = new SingleTranscodingContext<TranscodingRecord>();
         try {
             InetAddress.getByName("alhena");
         } catch (UnknownHostException e) {

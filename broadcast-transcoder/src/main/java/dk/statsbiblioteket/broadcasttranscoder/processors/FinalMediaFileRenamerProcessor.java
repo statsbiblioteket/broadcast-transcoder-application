@@ -20,8 +20,7 @@ public class FinalMediaFileRenamerProcessor extends ProcessorChainElement {
     private static Logger logger = LoggerFactory.getLogger(FinalMediaFileRenamerProcessor.class);
 
     @Override
-    protected  void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-        final File tempFile = FileUtils.getTemporaryMediaOutputFile(request, context);
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        final File tempFile = FileUtils.getTemporaryMediaOutputFile(request, context);
         final File finalFile = FileUtils.getFinalMediaOutputFile(request, context);
         logger.debug("Renaming " + tempFile.getAbsolutePath() + " to " + finalFile.getAbsolutePath());
         try {

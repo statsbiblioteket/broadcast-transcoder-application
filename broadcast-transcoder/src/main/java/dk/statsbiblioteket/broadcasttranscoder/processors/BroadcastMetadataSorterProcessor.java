@@ -3,6 +3,7 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,8 +15,7 @@ public class BroadcastMetadataSorterProcessor extends ProcessorChainElement {
 
 
     @Override
-    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-        List<BroadcastMetadata> broadcastMetadata = request.getBroadcastMetadata();
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        List<BroadcastMetadata> broadcastMetadata = request.getBroadcastMetadata();
         int size = broadcastMetadata.size();
         boolean done = true;
         do {

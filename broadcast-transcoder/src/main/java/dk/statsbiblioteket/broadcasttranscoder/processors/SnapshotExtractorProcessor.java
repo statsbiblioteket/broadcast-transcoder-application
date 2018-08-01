@@ -5,6 +5,7 @@ import dk.statsbiblioteket.broadcasttranscoder.persistence.TranscodingStateEnum;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.ThumbnailExtractionRecordDAO;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.ThumbnailExtractionRecord;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutException;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
@@ -40,8 +41,7 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
     }
 
     @Override
-    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-        HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
         ThumbnailExtractionRecordDAO dao = new ThumbnailExtractionRecordDAO(util);
         ThumbnailExtractionRecord record = dao.readOrCreate(request.getObjectPid());
         try {

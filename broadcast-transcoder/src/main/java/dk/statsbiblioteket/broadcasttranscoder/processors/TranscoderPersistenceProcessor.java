@@ -2,6 +2,7 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
 import dk.statsbiblioteket.broadcasttranscoder.util.MetadataUtils;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
@@ -24,8 +25,7 @@ public class TranscoderPersistenceProcessor extends ProcessorChainElement {
 
 
     @Override
-    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-        ProgramMediaInfo info = new ProgramMediaInfo();
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        ProgramMediaInfo info = new ProgramMediaInfo();
         switch (request.getFileFormat()) {
             case MULTI_PROGRAM_MUX:
                 info.setBroadcastType(BroadcastTypeEnum.TV);

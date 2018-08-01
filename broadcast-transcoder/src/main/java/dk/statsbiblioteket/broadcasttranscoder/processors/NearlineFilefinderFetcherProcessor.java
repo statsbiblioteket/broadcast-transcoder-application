@@ -2,6 +2,7 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.util.NearlineFileFinder;
 
 /**
@@ -10,7 +11,6 @@ import dk.statsbiblioteket.broadcasttranscoder.util.NearlineFileFinder;
 public class NearlineFilefinderFetcherProcessor extends ProcessorChainElement {
 
     @Override
-    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-        request.setFileMap(new NearlineFileFinder().findAndBringOnline(request, context));
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        request.setFileMap(new NearlineFileFinder().findAndBringOnline(request, context));
     }
 }

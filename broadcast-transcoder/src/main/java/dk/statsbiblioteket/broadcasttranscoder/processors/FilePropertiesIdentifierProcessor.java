@@ -3,6 +3,7 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +19,7 @@ public class FilePropertiesIdentifierProcessor extends ProcessorChainElement {
     private static Logger logger = LoggerFactory.getLogger(FilePropertiesIdentifierProcessor.class);
 
     @Override
-    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-        //Assume all files have same format and bitrate or we've lost before we start.
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        //Assume all files have same format and bitrate or we've lost before we start.
         Map.Entry<BroadcastMetadata, File> entry =  request.getFileMap().entrySet().iterator().next();
         Long fileLength = entry.getValue().length();  //bytes
         Long duration = entry.getKey().getStopTime().toGregorianCalendar().getTimeInMillis()

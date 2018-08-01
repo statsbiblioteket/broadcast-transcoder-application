@@ -4,6 +4,7 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.*;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.util.CalendarUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +18,9 @@ public class CoverageAnalyserProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(CoverageAnalyserProcessor.class);
     private static int gapToleranceSeconds;
-
-
-    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-        gapToleranceSeconds = context.getGapToleranceSeconds();
+    
+    
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        gapToleranceSeconds = context.getGapToleranceSeconds();
         ProgramStructure localStructure = new ProgramStructure();
         ProgramStructure.Holes holes = new ProgramStructure.Holes();
         localStructure.setHoles(holes);

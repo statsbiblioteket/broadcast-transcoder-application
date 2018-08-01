@@ -18,8 +18,7 @@ public class OnlineFilefinderProcessor extends ProcessorChainElement {
         private static Logger logger = LoggerFactory.getLogger(OnlineFilefinderProcessor.class);
 
     @Override
-    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {
-        request.setFileMap(new OnlineFileFinder().findAndBringOnline(request, context));
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        request.setFileMap(new OnlineFileFinder().findAndBringOnline(request, context));
         if (request.getFileMap().size() != request.getBroadcastMetadata().size()) {
             logger.info("Transcoding rejected because not all files are online");
             request.setRejected(true);

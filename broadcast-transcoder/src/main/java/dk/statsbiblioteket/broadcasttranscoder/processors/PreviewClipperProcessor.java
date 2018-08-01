@@ -9,6 +9,7 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalJobRunner;
 import dk.statsbiblioteket.broadcasttranscoder.util.ExternalProcessTimedOutException;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileUtils;
@@ -21,10 +22,9 @@ import java.io.File;
 public class PreviewClipperProcessor extends ProcessorChainElement {
 
     private static Logger logger = LoggerFactory.getLogger(PreviewClipperProcessor.class);
-
-
-    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-        long programLength = MetadataUtils.findProgramLengthMillis(request);
+    
+    
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        long programLength = MetadataUtils.findProgramLengthMillis(request);
         File sourceFile = FileUtils.getFinalMediaOutputFile(request, context);
         File outputDir = FileUtils.getPreviewOutputDir(request, context);
         outputDir.mkdirs();

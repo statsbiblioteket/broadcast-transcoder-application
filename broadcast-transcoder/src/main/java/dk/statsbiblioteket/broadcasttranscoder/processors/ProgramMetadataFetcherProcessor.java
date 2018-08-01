@@ -4,6 +4,7 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramBroadcast;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramStructure;
+import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.util.CentralWebserviceFactory;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 import dk.statsbiblioteket.doms.central.InvalidResourceException;
@@ -27,8 +28,7 @@ public class ProgramMetadataFetcherProcessor extends ProcessorChainElement {
 
 
     @Override
-    protected void processThis(TranscodeRequest request, SingleTranscodingContext context) throws ProcessorException {
-        ProgramBroadcast programBroadcast = getProgramBroadcast(request,context);
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        ProgramBroadcast programBroadcast = getProgramBroadcast(request, context);
         request.setProgramBroadcast(programBroadcast);
         ProgramStructure programStructure = getProgramStructure(request,context);
         request.setDomsProgramStructure(programStructure);
