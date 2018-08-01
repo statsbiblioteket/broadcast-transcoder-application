@@ -155,7 +155,6 @@ public class BroadcastTranscoderService {
         ProcessorChainElement clipper = new ClipFinderProcessor();
         ProcessorChainElement coverage = new CoverageAnalyserProcessor();
         ProcessorChainElement fixer = new StructureFixerProcessor();
-        ProcessorChainElement concatenator = new ClipConcatenatorProcessor();
         ProcessorChainElement firstChain = ProcessorChainElement.makeChain(
                 pbcorer,
                 programFetcher,
@@ -166,25 +165,31 @@ public class BroadcastTranscoderService {
                 identifier,
                 clipper,
                 coverage,
-                fixer,
-                concatenator);
+                fixer);
+        
         firstChain.processIteratively(request, transcodingContext);
         ProcessorChainElement secondChain;
+        ProcessorChainElement concatenator = new ClipConcatenatorProcessor();
         ProcessorChainElement pider = new PidAndAsepctRatioExtractorProcessor();
         ProcessorChainElement waver = new WavTranscoderProcessor();
         ProcessorChainElement multiStreamTranscoder = new MultistreamVideoTranscoderProcessor();
         ProcessorChainElement unistreamtranscoder = new UnistreamTranscoderProcessor();
         ProcessorChainElement renamer = new FinalMediaFileRenamerProcessor();
+        ProcessorChainElement zeroChecker = new ZeroLengthCheckerProcessor();
+        
         switch (request.getFileFormat()) {
             case MULTI_PROGRAM_MUX:
                 if (transcodingContext.getVideoOutputSuffix().equals("mpeg")) {
                     logger.debug("Generating DVD video. No previews or snapshots for " + request.getObjectPid());
-                    secondChain = ProcessorChainElement.makeChain(pider,
+                    secondChain = ProcessorChainElement.makeChain(concatenator,
+                                                                  pider,
                                                                   multiStreamTranscoder,
-                                                                  renamer
+                                                                  renamer,
+                                                                  zeroChecker
                     );
                 } else {
-                    secondChain = ProcessorChainElement.makeChain(pider,
+                    secondChain = ProcessorChainElement.makeChain(concatenator,
+                                                                  pider,
                                                                   multiStreamTranscoder,
                                                                   renamer);
                 }
@@ -198,11 +203,13 @@ public class BroadcastTranscoderService {
             case SINGLE_PROGRAM_AUDIO_TS:
                 secondChain = ProcessorChainElement.makeChain(pider,
                                                               unistreamtranscoder,
-                                                              renamer);
+                                                              renamer,
+                                                              zeroChecker);
                 break;
             case AUDIO_WAV:
                 secondChain = ProcessorChainElement.makeChain(waver,
-                                                              renamer
+                                                              renamer,
+                                                              zeroChecker
                 );
                 break;
             default:
@@ -212,18 +219,6 @@ public class BroadcastTranscoderService {
     }
     
     
-    /**
-     * @param programPid
-     * @param title
-     * @param channel
-     * @param startTime
-     * @param additionalStartOffset
-     * @param additionalEndOffset
-     * @param filenamePrefix
-     * @param sendEmailParam        Ignored. Exists for backwards compatibility.
-     * @param alternative           Ignored. Exists for backwards compatibility.
-     * @return
-     */
     @GET
     @Path("/digitv_transcode")
     @Produces(MediaType.APPLICATION_XML)
