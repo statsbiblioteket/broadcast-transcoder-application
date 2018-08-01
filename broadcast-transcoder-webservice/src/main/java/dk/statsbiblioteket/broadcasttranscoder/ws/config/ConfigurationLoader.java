@@ -37,7 +37,7 @@ public class ConfigurationLoader implements ServletContextListener {
         lc.reset();
         try {
             configurator.doConfigure(new File(logbackFilepath));
-        } catch (JoranException e) {
+        } catch (Exception e) {
             System.out.println("Could not initialise logging. " + e.getMessage());
             System.out.println("File path to logging configuration was " + logbackFilepath);
             throw new RuntimeException(e);
@@ -80,7 +80,9 @@ public class ConfigurationLoader implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         SingleTranscodingContext<BroadcastTranscodingRecord> transcodingContext = (SingleTranscodingContext<BroadcastTranscodingRecord>) sce.getServletContext().getAttribute("transcodingContext");
-        FileUtils.cleanupAllTempDirs(transcodingContext);
+        if (transcodingContext != null) {
+            FileUtils.cleanupAllTempDirs(transcodingContext);
+        }
     }
 
     public static GenericObjectPool getThePool() {
