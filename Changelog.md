@@ -1,3 +1,20 @@
+0.6.0
+-----
+Mogens Vestergaard Kjeldsen huskede mig på at DORQ var en ting, så nu har jeg fikset bta-ws også
+
+Der er kommet et review til Thomas H. Lange:  <https://sbprojects.statsbiblioteket.dk/fisheye/cru/CR-MP-24>
+
+hvor jeg har ændret bta-ws til at gøre netop det.
+
+Jeg har ændret EN ting for  `msdrs@iapetus`, for at se at det virkede.
+
+`dk.statsbiblioteket.mediestream.dorq.btawsroot=http://iapetus.statsbiblioteket.dk:9641/bta-dorq.ws/bta`
+  
+Og når Thomas har godkendt det, skal det bare i stage.
+
+Så er det op til nogen andre at verificere at DORQ ikke har andre issues, men jeg kan i hvert fald se at de mp4 filer den laver i devel har undertekster. 
+
+
 
 0.5.0
 -----
