@@ -61,6 +61,7 @@
                 <configuration combine.self="override">
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <failOnError>false</failOnError>
+                    <additionalOptions>-Xdoclint:none</additionalOptions>
                 </configuration>
                 <executions>
                     <execution>
