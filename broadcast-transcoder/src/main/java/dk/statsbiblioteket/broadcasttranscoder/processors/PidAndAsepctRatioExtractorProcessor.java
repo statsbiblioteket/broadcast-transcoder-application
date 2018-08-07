@@ -173,6 +173,10 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
         }
         Matcher audioMatcher = audioPattern1.matcher(line);
         if (audioMatcher.matches()) {
+            if (request.getAudioStereoPid() == null) {
+                request.setAudioStereoPid(audioMatcher.group(1));
+                logger.info("Setting pid for stereo audio to first audio stream '" + audioMatcher.group(1) + "', just to ensure we got SOMETHING");
+            }
             if (line.contains(" stereo, ")) {
                 request.setAudioStereoPid(audioMatcher.group(1));
                 logger.info("Setting pid for stereo audio '" + audioMatcher.group(1) + "'");
