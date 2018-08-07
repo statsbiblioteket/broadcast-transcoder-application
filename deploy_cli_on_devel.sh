@@ -20,7 +20,7 @@ ssh $develHost "tar -xvzf $archive --directory /home/bta/bta --strip 1"
 set +e
 # Stop trancodering:
 ssh $develHost '~/bta/bin/transcode-master.sh stop'
-ssh $develHost 'ps -ef | grep ffmpeg | grep ^bta | grep -v grep| sed 's/ \+/ /g' | cut -d' ' -f2 | xargs -r kill'
+ssh $develHost "ps -ef | grep ffmpeg | grep ^bta | grep -v grep| sed 's/ \+/ /g' | cut -d' ' -f2 | xargs -r kill"
 set -e
 
 ssh $develHost 'rm -f streamingContent/*.mp3'
