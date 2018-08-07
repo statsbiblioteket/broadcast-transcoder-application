@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#This actually queries the bta database for jobs
+
 collection=$1
 
 # Get settings

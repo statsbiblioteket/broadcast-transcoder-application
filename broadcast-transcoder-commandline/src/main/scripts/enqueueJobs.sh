@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#This queries doms for jobs and stores them in the bta database
+
+# See queryChangesDoms.sh for the script that fetches the jobs from the database for the transcoder
+
 collection=$1
 timestamp=$2
 
