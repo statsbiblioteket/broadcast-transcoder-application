@@ -1,7 +1,6 @@
 package dk.statsbiblioteket.broadcasttranscoder.util;
 
 import java.io.File;
-import java.net.URI;
 
 /**
  * Created with IntelliJ IDEA.

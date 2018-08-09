@@ -2,7 +2,6 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
-import dk.statsbiblioteket.broadcasttranscoder.util.NearlineFileFinder;
 import dk.statsbiblioteket.broadcasttranscoder.util.OnlineFileFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -7,9 +7,13 @@
  */
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
-import dk.statsbiblioteket.broadcasttranscoder.domscontent.*;
+import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
+import dk.statsbiblioteket.broadcasttranscoder.domscontent.Hole;
+import dk.statsbiblioteket.broadcasttranscoder.domscontent.MissingEnd;
+import dk.statsbiblioteket.broadcasttranscoder.domscontent.MissingStart;
+import dk.statsbiblioteket.broadcasttranscoder.domscontent.Overlap;
+import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramStructure;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

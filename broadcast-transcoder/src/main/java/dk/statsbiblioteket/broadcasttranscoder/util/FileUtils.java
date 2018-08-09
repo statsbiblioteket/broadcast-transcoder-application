@@ -6,7 +6,6 @@ import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import org.apache.commons.io.filefilter.FalseFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.NameFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -135,7 +134,7 @@ public class FileUtils {
         return filename;
     }
 
-    public static File getPreviewOutputFile(TranscodeRequest request, InfrastructureContext context) {
+    public static File getPreviewOutputFile(TranscodeRequest request, SingleTranscodingContext context) {
         File dir = getPreviewOutputDir(request, context);
         String filename = request.getObjectPid().replace("uuid:","");
         switch (request.getFileFormat()) {
@@ -146,7 +145,7 @@ public class FileUtils {
                 filename += ".mp3";
                 break;
             default:
-                filename += ".flv";
+                filename += "." + context.getVideoOutputSuffix();
         }
         return new File(dir, filename);
     }

@@ -2,7 +2,12 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
-import dk.statsbiblioteket.broadcasttranscoder.domscontent.*;
+import dk.statsbiblioteket.broadcasttranscoder.domscontent.Hole;
+import dk.statsbiblioteket.broadcasttranscoder.domscontent.MissingEnd;
+import dk.statsbiblioteket.broadcasttranscoder.domscontent.MissingStart;
+import dk.statsbiblioteket.broadcasttranscoder.domscontent.ObjectFactory;
+import dk.statsbiblioteket.broadcasttranscoder.domscontent.Overlap;
+import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramStructure;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.doms.central.CentralWebservice;
 import org.slf4j.Logger;

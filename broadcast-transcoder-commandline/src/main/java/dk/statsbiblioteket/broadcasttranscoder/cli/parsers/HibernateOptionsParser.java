@@ -2,18 +2,11 @@ package dk.statsbiblioteket.broadcasttranscoder.cli.parsers;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.AbstractOptionsParser;
 import dk.statsbiblioteket.broadcasttranscoder.cli.HibernateContext;
-import dk.statsbiblioteket.broadcasttranscoder.cli.InfrastructureContext;
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.BroadcastTranscodingRecordDAO;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
-import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.TranscodingRecordDao;
-import dk.statsbiblioteket.broadcasttranscoder.processors.TranscoderPersistenceProcessor;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created with IntelliJ IDEA.
