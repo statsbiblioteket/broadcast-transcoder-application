@@ -166,7 +166,8 @@ public class BroadcastTranscoderApplication extends TranscoderApplication{
                         unistreamTrancoder,
                         renamer,
                         zeroChecker,
-                        previewer);
+                        previewer,
+                        snapshotter);
                 break;
             case AUDIO_WAV:
                 secondChain = ProcessorChainElement.makeChain(

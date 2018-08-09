@@ -41,13 +41,16 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
     }
 
     @Override
-    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {        HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
-        ThumbnailExtractionRecordDAO dao = new ThumbnailExtractionRecordDAO(util);
-        ThumbnailExtractionRecord record = dao.readOrCreate(request.getObjectPid());
-        try {
-            doExtraction(request, context, record);
-        } finally {
-            dao.update(record);
+    protected <T extends TranscodingRecord> void processThis(TranscodeRequest request, SingleTranscodingContext<T> context) throws ProcessorException {
+        if (request.isVideo()) { //Do not attempt snapshot extraction of non-video....
+            HibernateUtil util = HibernateUtil.getInstance(context.getHibernateConfigFile().getAbsolutePath());
+            ThumbnailExtractionRecordDAO dao = new ThumbnailExtractionRecordDAO(util);
+            ThumbnailExtractionRecord record = dao.readOrCreate(request.getObjectPid());
+            try {
+                doExtraction(request, context, record);
+            } finally {
+                dao.update(record);
+            }
         }
     }
 
