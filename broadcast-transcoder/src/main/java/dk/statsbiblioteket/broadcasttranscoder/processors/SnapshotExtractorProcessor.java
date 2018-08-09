@@ -25,7 +25,7 @@ import java.io.File;
  * Time: 3:16 PM
  * To change this template use File | Settings | File Templates.
  *
- ffmpeg -i ./f/6/f/d/f6fdec8f-bde5-4795-8688-f3d5f8a1d540.flv -ss 120 -r 5/1557-an -s 312x234
+ ffmpeg -i ./f/6/f/d/f6fdec8f-bde5-4795-8688-f3d5f8a1d540.mp4 -ss 120 -r 5/1557-an -s 312x234
  -vf 'pad=416:234:52:0:black' -an outdir/file.%d.bmp
 
  */
