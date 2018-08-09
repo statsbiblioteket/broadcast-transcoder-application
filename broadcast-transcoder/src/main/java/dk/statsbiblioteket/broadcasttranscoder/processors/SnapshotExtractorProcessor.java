@@ -77,9 +77,9 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         String commandline = createCommandLineKUANA(
                 targetNumerator,
                 targetDenominator,
-                nframes,
-                paddingSeconds,
                 scale,
+                paddingSeconds,
+                nframes,
                 fullMediaFile,
                 length,
                 FileUtils.getSnapshotOutputFileStringTemplate(request, context),
