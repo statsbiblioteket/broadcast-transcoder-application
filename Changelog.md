@@ -1,23 +1,40 @@
 0.6.0
------
-Mogens Vestergaard Kjeldsen huskede mig på at DORQ var en ting, så nu har jeg fikset bta-ws også
+=======
 
-Der er kommet et review til Thomas H. Lange:  <https://sbprojects.statsbiblioteket.dk/fisheye/cru/CR-MP-24>
+Transcode to mp4, not flv
+-------------------------
+* Fixed bug where the snapshot extractor confused to params and thus made VERY small thumbnails
+* Fixed bug that caused the system to forgo making thumbnails
+* Transcode to mp4.
 
-hvor jeg har ændret bta-ws til at gøre netop det.
+Formidlingsfiler pixelerer
+--------------------------
 
-Jeg har ændret EN ting for  `msdrs@iapetus`, for at se at det virkede.
+* TODO: `-sample_fmt s16` in `ffmpegTranscodingString` in `bta.behaviour.properties`. Does this actually improve sound quality?
+    * It is only a config change, so it might be rolled back after release.  
+* Documentation of scripts `enqueueJobs.sh` and `queryChangesDoms.sh` 
+* Use the first found audio stream, if no stereo audio stream is found. This bug caused the transcoding to fail for some files.
 
-`dk.statsbiblioteket.mediestream.dorq.btawsroot=http://iapetus.statsbiblioteket.dk:9641/bta-dorq.ws/bta`
-  
-Og når Thomas har godkendt det, skal det bare i stage.
+dorq subtitles
+--------------
 
-Så er det op til nogen andre at verificere at DORQ ikke har andre issues, men jeg kan i hvert fald se at de mp4 filer den laver i devel har undertekster. 
+* Due to the new name of the dorq webservice, change this property
+`dk.statsbiblioteket.mediestream.dorq.btawsroot` to the value `http://iapetus.statsbiblioteket.dk:9641/bta-dorq.ws/bta` 
+in `msdrs@iapetus:/home/msdrs/dorq.properties`. This same should be done for the stage and prod versions of dorq.
 
+* Increased timeout x5 for the dorq/bta webservice, as it failed to complete a transcoding in devel (`transcodingTimeoutDivisor=0.2` in `bta.behaviour.ws.properties` and `bta-dorq.behaviour.ws.properties`)
+
+* broadcast-transcoder-webservice: Now package an archive containing both the bta.ws and the bta-dorq.ws. These can now coexist in the same tomcat, even.
+
+* BTA webservice (and thus dorq webservice): Implemented the better file merge and cutting (use `ffmpeg`'s own logic, not `dd`)
+
+* Implemented the new changes so the bta webservice and dorq webservice encode subtitles
+
+* Reformatted `bta.behaviour.properties`, `bta.behaviour.ws.properties` and 
 
 
 0.5.0
------
+=====
 * config/run_transcoder.conf and config/transcode-master.conf is now based on $SCRIPT_PATH, as this gives nicer paths without ..
 * transcode-master.sh status and stop now actually works;  pgrep needed flag -a instead of -l
 
@@ -54,7 +71,7 @@ Så er det op til nogen andre at verificere at DORQ ikke har andre issues, men j
 
 
 0.4.0
------
+=====
 
 * Added DORQ webservice method and config.
     * Note that you must have a separate instance of BTA webservice running for DORQ, as it uses a different behaivour.ws.properties file
