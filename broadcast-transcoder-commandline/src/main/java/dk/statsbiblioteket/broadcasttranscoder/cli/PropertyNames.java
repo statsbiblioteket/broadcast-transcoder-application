@@ -39,6 +39,10 @@ public class PropertyNames {
     public static final String VLC_TRANSCODING_STRING = "vlcTranscodingString";
     public static final String FFMPEG_TRANSCODING_STRING = "ffmpegTranscodingString";
     public static final String FFMPEG_TRANSCODING_WITH_SUBTITLES_STRING = "ffmpegTranscodingWithSubtitlesString";
+    public static final String FFMPEG_TRANSCODING_AUDIO_TRANSPORT_STREAM_STRING = "ffmpegTranscodingAudioTransportStreamString";
+    public static final String FFMPEG_MULTI_STREAM_AUDIO_CLIPPER_COMMAND = "ffmpegMultiStreamAudioClipperCommand";
+    public static final String FFMPEG_PREVIEW_CLIPPER_COMMAND = "ffmpegPreviewClipperCommand";
+    public static final String SNAPSHOT_EXTRACTOR_COMMAND = "snapshotExtractorCommand";
     public static final String VLC_REMUXING_STRING = "vlcRemuxingString";
     public static final String TRANSCODING_DIVISOR = "transcodingTimeoutDivisor";
     public static final String ANALYSIS_CLIP_LENGTH = "analysisCliplengthBytes";

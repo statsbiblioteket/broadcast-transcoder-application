@@ -74,11 +74,7 @@ public class UnistreamTranscoderProcessor extends ProcessorChainElement {
             //From mpeg to mpeg, no need to transcode, just do remux
             line = context.getVlcRemuxingString();
         } else if (request.getFileFormat().equals(FileFormatEnum.SINGLE_PROGRAM_AUDIO_TS)){
-            line = "ffmpeg -ss $$START_OFFSET$$ -t $$LENGTH$$ "
-                   + " $$INPUT_FILES$$ -ss $$SKIP_SECONDS$$ "
-                   + " -acodec libmp3lame -ar 44100 -ac 2 "
-                   + " -b:a $$AUDIO_BITRATE$$000 -y $$OUTPUT_FILE$$";
-    
+            line = context.getFfmpegTranscodingAudioTransportStreamString();
         }
         line = line.replace("$$AUDIO_STREAM$$", request.getAudioStereoIndex());
         line = line.replace("$$AUDIO_BITRATE$$", context.getAudioBitrate()+"");

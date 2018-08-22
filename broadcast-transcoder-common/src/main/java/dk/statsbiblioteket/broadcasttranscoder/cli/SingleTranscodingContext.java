@@ -4,6 +4,7 @@ import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingR
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmFileResolver;
 
 import java.io.File;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,6 +28,9 @@ public class SingleTranscodingContext<T extends TranscodingRecord> extends Infra
     private String vlcTranscodingString;
     private String ffmpegTranscodingString;
     private String ffmpegTranscodingWithSubtitlesString;
+    
+    private String ffmpegTranscodingAudioTransportStreamString;
+    
     private String vlcRemuxingString;
     private float transcodingTimeoutDivisor;
     private long analysisClipLength;
@@ -70,7 +74,10 @@ public class SingleTranscodingContext<T extends TranscodingRecord> extends Infra
     private ReklamefilmFileResolver reklamefilmFileResolver;
 
     private String domsViewAngle;
-
+    private String ffmpegMultiStreamAudioClipperCommand;
+    private String ffmpegPreviewClipperCommand;
+    private String snapshotExtractorCommand;
+    
     public String getVlcRemuxingString() {
         return vlcRemuxingString;
     }
@@ -418,5 +425,37 @@ public class SingleTranscodingContext<T extends TranscodingRecord> extends Infra
     
     public void setFfmpegTranscodingWithSubtitlesString(String ffmpegTranscodingStringWithSubtitles) {
         this.ffmpegTranscodingWithSubtitlesString = ffmpegTranscodingStringWithSubtitles;
+    }
+    
+    public String getFfmpegTranscodingAudioTransportStreamString() {
+        return ffmpegTranscodingAudioTransportStreamString;
+    }
+    
+    public void setFfmpegTranscodingAudioTransportStreamString(String ffmpegTranscodingAudioTransportStreamString) {
+        this.ffmpegTranscodingAudioTransportStreamString = ffmpegTranscodingAudioTransportStreamString;
+    }
+    
+    public String getFfmpegMultiStreamAudioClipperCommand() {
+        return ffmpegMultiStreamAudioClipperCommand;
+    }
+    
+    public void setFfmpegMultiStreamAudioClipperCommand(String ffmpegMultiStreamAudioClipperCommand) {
+        this.ffmpegMultiStreamAudioClipperCommand = ffmpegMultiStreamAudioClipperCommand;
+    }
+    
+    public String getFfmpegPreviewClipperCommand() {
+        return ffmpegPreviewClipperCommand;
+    }
+    
+    public void setFfmpegPreviewClipperCommand(String ffmpegPreviewClipperCommand) {
+        this.ffmpegPreviewClipperCommand = ffmpegPreviewClipperCommand;
+    }
+    
+    public String getSnapshotExtractorCommand() {
+        return snapshotExtractorCommand;
+    }
+    
+    public void setSnapshotExtractorCommand(String snapshotExtractorCommand) {
+        this.snapshotExtractorCommand = snapshotExtractorCommand;
     }
 }

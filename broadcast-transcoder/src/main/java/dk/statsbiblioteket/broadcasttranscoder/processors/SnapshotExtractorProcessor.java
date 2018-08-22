@@ -74,7 +74,7 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
           length = (int) (MetadataUtils.findProgramLengthMillis(request)/1000L);
         }
 
-        String commandline = createCommandLineKUANA(
+        String commandline = createCommandLineProperties(context.getSnapshotExtractorCommand(),
                 targetNumerator,
                 targetDenominator,
                 scale,
@@ -107,6 +107,27 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
 //        }
     }
     
+    protected String createCommandLineProperties(String command,
+                                                 int targetNumerator,
+                                                 int targetDenominator,
+                                                 int scale,
+                                                 int paddingSeconds,
+                                                 int nframes,
+                                                 File fullMediaFile,
+                                                 int length,
+                                                 String snapshotOutputFileStringTemplate,
+                                                 double input_scale) {
+        return calculateVideoFilterArguments(command
+                                                     .replace("$$START_OFFSET$$", paddingSeconds + "")
+                                                     .replace("$$INPUT_FILES$$", " -i " + fullMediaFile + " ")
+                                                     .replace("$$NFRAMES$$", nframes + "")
+                                                     .replace("$$LENGTH$$", length + "")
+                                                     .replace("$$HEIGHT$$", targetNumerator * scale + "")
+                                                     .replace("$$WIDTH$$", targetDenominator * scale + "")
+                                                     .replace("$$OUTPUT_FILE$$", snapshotOutputFileStringTemplate)
+                , input_scale);
+    }
+    
     
     protected String createCommandLineKUANA(int targetNumerator,
                                             int targetDenominator,
@@ -119,6 +140,7 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
                                             double input_scale) {
         String commandline = "";
 
+        //TODO this command line in config
         commandline += "ffmpeg";
         commandline += " -i " + fullMediaFile;
         commandline += " -ss " + paddingSeconds;
@@ -128,12 +150,12 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
 
 
         commandline += " -vf " + calculateVideoFilterArguments(
-                "\"fps=5/[LENGTH],scale=[WIDTH]x[HEIGHT],pad="+targetNumerator*scale+":"+targetDenominator*scale+":[PADDING_X]:[PADDING_Y]\"",
-                input_scale,
-                length);
+                "\"fps="+nframes+"/"+length+",scale=[WIDTH]x[HEIGHT],pad="+targetNumerator*scale+":"+targetDenominator*scale+":[PADDING_X]:[PADDING_Y]\"",
+                input_scale
+        );
         commandline += " -an";
-        commandline += " -y";
         commandline += " -vframes "+nframes;
+        commandline += " -y";
         commandline += " " + snapshotOutputFileStringTemplate;
         return commandline;
     }
@@ -144,10 +166,9 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
      * That example will generate 5 snapshots of size 416x234.
      * @param videoFilterTemplate Template for the filter arguments
      * @param inputVideoAspectRatio
-     * @param length
      * @return The calculated filter arguments, ready for the executor.
      */
-    protected String calculateVideoFilterArguments(String videoFilterTemplate, double inputVideoAspectRatio, long length) {
+    protected String calculateVideoFilterArguments(String videoFilterTemplate, double inputVideoAspectRatio) {
         String[] paddingFilter = StringUtils.substringAfter(videoFilterTemplate, "pad=").split(":");
         if(paddingFilter.length < 2){
             throw new RuntimeException("pad filter not found for Video Filter option '" + videoFilterTemplate + "' on Snapshot Generator registry tool");
@@ -184,7 +205,6 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         }
 
         return videoFilterTemplate
-                .replace("[LENGTH]", String.valueOf(length))
                 .replace("[WIDTH]", String.valueOf(videoWidth))
                 .replace("[HEIGHT]", String.valueOf(videoHeight))
                 .replace("[PADDING_X]", String.valueOf(paddingX))
@@ -216,6 +236,7 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
                                        int length,
                                        String snapshotOutputFileStringTemplate,
                                        double input_scale) {
+        //TODO this command line in config
         String commandLine = "ffmpeg -i " + fullMediaFile.getAbsolutePath();
 
         logger.debug("Creating snapshot for video with aspect ratio ("+numerator+"/"+denominator+") = ("+ numerator * scale +"/"+ denominator * scale +")");
@@ -234,7 +255,7 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         geometry +=" -aspect "+numerator+":"+denominator+" ";
 
         commandLine = commandLine + " -ss " + paddingSeconds + " -t " + length + geometry
-                + " -an -y -vframes " + (nframes) + " " + snapshotOutputFileStringTemplate;
+                + " -an -vframes " + (nframes) + " -y " + snapshotOutputFileStringTemplate;
         return commandLine;
     }
     
@@ -274,7 +295,7 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         int modLength = length - 2*paddingSeconds;
         String rate = (nframes - 1) + "/" + modLength;
         commandLine = commandLine + " -ss " + paddingSeconds + " -t " + modLength + " -r "  + rate + geometry
-                + " -an -y -vframes " + (nframes + 1) + " " + snapshotOutputFileStringTemplate;
+                + " -an -vframes " + (nframes + 1) + " -y " + snapshotOutputFileStringTemplate;
         return commandLine;
 
     }

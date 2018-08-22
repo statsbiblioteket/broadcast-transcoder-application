@@ -69,8 +69,12 @@ public class SingleTranscodingOptionsParser<T extends TranscodingRecord> extends
         context.setAudioBitrate(readIntegerProperty(AUDIO_BITRATE, props));
         context.setVideoHeight(readIntegerProperty(HEIGHT, props));
         context.setVlcTranscodingString(readStringProperty(VLC_TRANSCODING_STRING, props));
+        context.setFfmpegTranscodingAudioTransportStreamString(readStringProperty(FFMPEG_TRANSCODING_AUDIO_TRANSPORT_STREAM_STRING,props));
         context.setFfmpegTranscodingWithSubtitlesString(readStringProperty(FFMPEG_TRANSCODING_WITH_SUBTITLES_STRING, props));
         context.setFfmpegTranscodingString(readStringProperty(FFMPEG_TRANSCODING_STRING, props));
+        context.setFfmpegMultiStreamAudioClipperCommand(readStringProperty(FFMPEG_MULTI_STREAM_AUDIO_CLIPPER_COMMAND, props));
+        context.setFfmpegPreviewClipperCommand(readStringProperty(FFMPEG_PREVIEW_CLIPPER_COMMAND, props));
+        context.setSnapshotExtractorCommand(readStringProperty(SNAPSHOT_EXTRACTOR_COMMAND, props));
         context.setTranscodingTimeoutDivisor(readFloatProperty(TRANSCODING_DIVISOR, props));
         context.setAnalysisClipLength(readLongProperty(ANALYSIS_CLIP_LENGTH, props));
         context.setStartOffsetTS(readIntegerProperty(START_OFFSET_TS, props));

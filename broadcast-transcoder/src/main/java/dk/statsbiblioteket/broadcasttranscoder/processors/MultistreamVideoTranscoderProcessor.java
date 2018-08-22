@@ -73,9 +73,10 @@ public class MultistreamVideoTranscoderProcessor extends ProcessorChainElement {
     }
 
     private String findAudioClipperCommand(TranscodeRequest request, SingleTranscodingContext context, String processSubstitutionFileList) {
-        return "cat " + processSubstitutionFileList + "| "
-                + "ffmpeg -i - -acodec libmp3lame -ar 44100 -ac 2 -ab "
-                + context.getAudioBitrate() + "000 -y " + FileUtils.getTemporaryMediaOutputDir(request, context);
+        return "cat " + processSubstitutionFileList + "| " +
+               context.getFfmpegMultiStreamAudioClipperCommand()
+                      .replace("$$AUDIO_BITRATE$$", context.getAudioBitrate()+"")
+                      .replace("$$OUTPUT_FILE$$", FileUtils.getTemporaryMediaOutputDir(request, context).getAbsolutePath());
     }
 
     private String findVideoClipperCommand(TranscodeRequest request, SingleTranscodingContext context, String processSubstitutionFileList) throws ProcessorException {
