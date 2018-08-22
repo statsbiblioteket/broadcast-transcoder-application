@@ -1,6 +1,11 @@
 0.6.0
 =======
 
+Configurable
+------------
+* Specified the the commands `ffmpegTranscodingAudioTransportStream`, `ffmpegMultiStreamAudioClipperCommand`, `ffmpegPreviewClipperCommand` and `snapshotExtractorCommand` in the config file (`bta.behaivour.properties`) rather than hardcoded. 
+* The commands `WavTranscoderProcessor.getMultiClipCommand`, `OutputFileFfprobeAnalyser`, `PidAndAsepctRatioExtractorProcessor`, and `ReklamefilmFileResolverImpl` are still hardcoded, but will be handled later.  
+
 Choosing the right Audio Stream
 -------------------------------
 * Use the stereo audio stream instead of the 5.1 channel, as this gives better transcoded sound
