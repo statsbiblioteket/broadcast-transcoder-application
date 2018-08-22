@@ -132,57 +132,66 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
             
             Note that we later filter out the non-"dan" and/or hearing impaired subtitles
             
-         Group 1 is the pid (0x87)
+         Group 1 is the index (0:3)
+         Group 2 is the pid (0x87)
          */
-        Pattern dvbsubPattern = Pattern.compile(".*Stream.*\\[(0x[0-9a-f]*)\\].*dvb.*sub.*");
+        Pattern dvbsubPattern = Pattern.compile(".*Stream #(\\d+:\\d+)\\[(0x[0-9a-f]*)\\].*dvb.*sub.*");
         
         
         //Lines like:
         //Stream #0:0[0x1e0]: Video: mpeg2video (Main), yuv420p(tv, top first), 720x576 [SAR 16:15 DAR 4:3], 6500 kb/s, 25 fps, 25 tbr, 90k tbn, 50 tbc
-        //Group 1 is the pid (0x1e0)
-        //Group 2 is the aspect (4:3)
-        Pattern videoPattern = Pattern.compile(".*Stream.*\\[(0x[0-9a-f]*)\\].*Video.*DAR\\s(([0-9]*):([0-9]*)).*");
+        //Group 1 is the index (0:0)
+        //Group 2 is the pid (0x1e0)
+        //Group 3 is the aspect (4:3)
+        Pattern videoPattern = Pattern.compile(".*Stream #(\\d+:\\d+)\\[(0x[0-9a-f]*)\\].*Video.*DAR\\s(([0-9]*):([0-9]*)).*");
         
         //Stream #0:1[0x1c0]: Audio: mp2, 48000 Hz, stereo, s16p, 192 kb/s
-        //Group 1 is the pid (0x1c0)
-        Pattern audioPattern1 = Pattern.compile(".*Stream.*\\[(0x[0-9a-f]*)\\].*Audio.*");
+        //Group 1 is the index (0:1)
+        //Group 2 is the pid (0x1c0)
+        Pattern audioPattern1 = Pattern.compile(".*Stream #(\\d+:\\d+)\\[(0x[0-9a-f]*)\\].*Audio.*");
         
         //I dunno, is is there to handle a problem in an older version of ffprobe or some weird files?
-        Pattern audioPattern2 = Pattern.compile(".*Stream.*\\[(0x[0-9a-f]*)\\].*0x0011.*");
+        Pattern audioPattern2 = Pattern.compile(".*Stream #(\\d+:\\d+)\\[(0x[0-9a-f]*)\\].*0x0011.*");
         
         
         Matcher dvbsubMatcher = dvbsubPattern.matcher(line);
         if (dvbsubMatcher.matches()){
             if (line.contains("(dan)") && !line.contains("(hearing impaired)")) {
-                request.setDvbsubPid(dvbsubMatcher.group(1));
-                logger.info("Setting pid for dvbsub '" + dvbsubMatcher.group(1) + "'");
+                String dvbsubPid = dvbsubMatcher.group(2);
+                request.setDvbsubPid(dvbsubPid);
+                logger.info("Setting pid for dvbsub '" + dvbsubPid + "'");
             }
         }
         Matcher videoMatcher = videoPattern.matcher(line);
         if (videoMatcher.matches()) {
-            request.setVideoPid(videoMatcher.group(1));
-            logger.info("Setting pid for video '" + videoMatcher.group(1) + "'");
+            String videoPid = videoMatcher.group(2);
+            request.setVideoPid(videoPid);
+            logger.info("Setting pid for video '" + videoPid + "'");
             if (line.contains("mpeg2video")) {
                 request.setVideoFcc("mpgv");
             } else if (line.contains("h264")) {
                 request.setVideoFcc("h264");
             }
             logger.debug("Identified video fourcc for " + request.getObjectPid() + ": " + request.getVideoFcc());
-            request.setDisplayAspectRatioString(videoMatcher.group(2));
+            String displayAspectRatio = videoMatcher.group(3);
+            request.setDisplayAspectRatioString(displayAspectRatio);
             logger.debug("Identified aspect ratio '" + request.getDisplayAspectRatioString() + "'");
         }
         Matcher audioMatcher = audioPattern1.matcher(line);
         if (audioMatcher.matches()) {
-            if (request.getAudioStereoPid() == null) {
-                request.setAudioStereoPid(audioMatcher.group(1));
-                logger.info("Setting pid for stereo audio to first audio stream '" + audioMatcher.group(1) + "', just to ensure we got SOMETHING");
+            String audioStereoIndex = audioMatcher.group(1);
+            String audioStereoPid = audioMatcher.group(2);
+            if (request.getAudioStereoIndex() == null) {
+                request.setAudioStereoIndex(audioStereoIndex);
+                logger.info("Setting index for stereo audio to first audio stream '" + audioStereoIndex
+                            + "', just to ensure we got SOMETHING");
             }
             if (line.contains(" stereo, ")) {
-                request.setAudioStereoPid(audioMatcher.group(1));
-                logger.info("Setting pid for stereo audio '" + audioMatcher.group(1) + "'");
+                request.setAudioStereoIndex(audioStereoIndex);
+                logger.info("Setting pid for stereo audio '" + audioStereoIndex + "'");
             }
-            request.addAudioPid(audioMatcher.group(1));
-            logger.info("Setting pid for audio '" + audioMatcher.group(1) + "'");
+            request.addAudioPid(audioStereoPid);
+            logger.info("Setting pid for audio '" + audioStereoPid + "'");
             if (line.contains("aac_latm")) {
                 request.setAudioFcc("mp4a");
             } else if (line.contains("mp2")) {
@@ -192,17 +201,18 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
             }
             logger.debug("Identified audio fourcc for " + request.getObjectPid() + ": " + request.getAudioFcc());
         }
-        audioMatcher = audioPattern2.matcher(line);
-        if (audioMatcher.matches() && !line.contains("5.1")) {
-            request.addAudioPid(audioMatcher.group(1));
-            logger.info("Setting pid for audio '" + audioMatcher.group(1) + "'");
+        Matcher audioMatcher2 = audioPattern2.matcher(line);
+        if (audioMatcher2.matches() && !line.contains("5.1")) {
+            String audioStereoPid = audioMatcher2.group(2);
+            request.addAudioPid(audioStereoPid);
+            logger.info("Setting pid for audio '" + audioStereoPid + "'");
             request.setAudioFcc("mp4a");
             logger.debug("Identified audio fourcc for " + request.getObjectPid() + ": " + request.getAudioFcc());
         }
         Matcher darMatcher = videoPattern.matcher(line);
         if (darMatcher.matches()) {
-            String top = darMatcher.group(3);
-            String bottom = darMatcher.group(4);
+            String top = darMatcher.group(4);
+            String bottom = darMatcher.group(5);
             logger.debug("Matched DAR '" + top + ":" + bottom);
             final double displayAspectRatio = Double.parseDouble(top) / Double.parseDouble(bottom);
             logger.info("Detected aspect ratio '" + displayAspectRatio + "' for '" + request.getObjectPid() + "'");

@@ -1,11 +1,17 @@
 0.6.0
 =======
 
+Choosing the right Audio Stream
+-------------------------------
+* Use the stereo audio stream instead of the 5.1 channel, as this gives better transcoded sound
+* Use stream index rather than stream pid when specifying audio stream for `ffmpeg`. Stream pids are lost when mpeg files are concatenated, but stream indexes should remain valid. The Kuana transcode workflow also use stream indexes 
+
+
 Transcode to mp4, not flv
 -------------------------
-* Fixed bug where the snapshot extractor confused to params and thus made VERY small thumbnails
-* Fixed bug that caused the system to forgo making thumbnails
 * Transcode to mp4.
+* Fixed bug that caused the system to forgo making thumbnails
+* Fixed bug where the snapshot extractor confused to params and thus made VERY small thumbnails
 
 Formidlingsfiler pixelerer
 --------------------------
@@ -30,7 +36,7 @@ in `msdrs@iapetus:/home/msdrs/dorq.properties`. This same should be done for the
 
 * Implemented the new changes so the bta webservice and dorq webservice encode subtitles
 
-* Reformatted `bta.behaviour.properties`, `bta.behaviour.ws.properties` and 
+* Reformatted `bta.behaviour.properties`, `bta.behaviour.ws.properties` and `bta-dorq.behaivour.ws.properties`
 
 
 0.5.0

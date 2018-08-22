@@ -78,7 +78,7 @@ public class PidAndAsepctRatioExtractorProcessorTest {
         PidAndAsepctRatioExtractorProcessor.parseFFProbeOutput(request,context,ffprobeOutput);
         assertEquals("0x857",request.getDvbsubPid());
         assertEquals("0x83f",request.getVideoPid());
-        assertEquals("0x849", request.getAudioStereoPid());
+        assertEquals("0:5", request.getAudioStereoIndex());
         assertEquals("0x849", request.getAudioPids().iterator().next());
         assertEquals(1, request.getAudioPids().size());
         assertEquals("mpgv",request.getVideoFcc());
@@ -117,7 +117,7 @@ public class PidAndAsepctRatioExtractorProcessorTest {
         PidAndAsepctRatioExtractorProcessor.parseFFProbeOutput(request,context,ffprobeOutput);
         assertEquals(null,request.getDvbsubPid());
         assertEquals("0x1011",request.getVideoPid());
-        assertEquals("0x1100", request.getAudioStereoPid());
+        assertEquals("0:1", request.getAudioStereoIndex());
         assertEquals("0x1100", request.getAudioPids().iterator().next());
         assertEquals(1, request.getAudioPids().size());
         assertEquals("h264",request.getVideoFcc());
@@ -159,7 +159,7 @@ public class PidAndAsepctRatioExtractorProcessorTest {
         PidAndAsepctRatioExtractorProcessor.parseFFProbeOutput(request,context,ffprobeOutput);
         assertEquals(null,request.getDvbsubPid());
         assertEquals("0x21",request.getVideoPid());
-        assertEquals("0x24", request.getAudioStereoPid());
+        assertEquals("0:1", request.getAudioStereoIndex());
         Iterator<String> audioPids = request.getAudioPids().iterator();
         assertEquals("0x25", audioPids.next());
         assertEquals("0x24", audioPids.next());
@@ -206,7 +206,7 @@ public class PidAndAsepctRatioExtractorProcessorTest {
         PidAndAsepctRatioExtractorProcessor.parseFFProbeOutput(request,context,ffprobeOutput);
         assertEquals("0x87",request.getDvbsubPid());
         assertEquals("0x6f",request.getVideoPid());
-        assertEquals("0x79", request.getAudioStereoPid());
+        assertEquals("0:1", request.getAudioStereoIndex());
         Iterator<String> audioPids = request.getAudioPids().iterator();
         assertEquals("0x79", audioPids.next());
         assertEquals(1, request.getAudioPids().size());
@@ -245,7 +245,7 @@ public class PidAndAsepctRatioExtractorProcessorTest {
         PidAndAsepctRatioExtractorProcessor.parseFFProbeOutput(request,context,ffprobeOutput);
         assertEquals(null,request.getDvbsubPid());
         assertEquals("0x1e0",request.getVideoPid());
-        assertEquals("0x1c0", request.getAudioStereoPid());
+        assertEquals("0:1", request.getAudioStereoIndex());
         Iterator<String> audioPids = request.getAudioPids().iterator();
         assertEquals("0x1c0", audioPids.next());
         assertEquals(1, request.getAudioPids().size());

@@ -39,7 +39,7 @@ public class UnistreamTranscoderProcessorTest {
         request.setFileFormat(FileFormatEnum.MPEG_PS);
         request.setObjectPid("uuid:457513af-30c6-477a-8c3e-b8b19d0fbaac");
         request.setDisplayAspectRatio(49.0/27);
-        request.setAudioStereoPid("01c0");
+        request.setAudioStereoIndex("0:1");
         TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip("/bitarkiv/0400/files/tv3_S09-TV3_S09-TV3_mpeg1_20111113045601_20111114045502_encoder6-2.mpeg");
         clip.setFileEndTime(1321242902000L);
         clip.setFileStartTime(1321156561000L);
@@ -62,7 +62,7 @@ public class UnistreamTranscoderProcessorTest {
         String commandLine = UnistreamTranscoderProcessor.getFfmpegCommandLine(request, context);
 //        String expectedCommandLine
 //                = "ffmpeg -ss 38574 -t 2820 -i concat:/bitarkiv/0400/files/tv3_S09-TV3_S09-TV3_mpeg1_20111113045601_20111114045502_encoder6-2.mpeg -ss 00:00:05 -async 2 -vcodec libx264 -deinterlace -ar 44100 -profile:v High -level 3.0 -preset superfast -threads 0 -b:v 400000 -ac 2 -b:a 96000 -y -filter_complex [0:v]scale= 522x288 /home/bta/streamingContent/temp/457513af-30c6-477a-8c3e-b8b19d0fbaac.mp4";
-        String expectedCommandLine = "ffmpeg -ss 0 -t 2820 -f concat -safe 0 -i <(echo -e \"file '/bitarkiv/0400/files/tv3_S09-TV3_S09-TV3_mpeg1_20111113045601_20111114045502_encoder6-2.mpeg' \\ninpoint 38574 \\n\") -ss 5 -async 2 -vcodec libx264 -deinterlace -ar 44100 -profile:v High -level 3.0 -preset superfast -map 0:a:#01c0 -threads 0 -b:v 400000 -ac 2 -b:a 96000 -y -filter_complex \"[0:v]scale=522x288\" /temp/457513af-30c6-477a-8c3e-b8b19d0fbaac.mp4";
+        String expectedCommandLine = "ffmpeg -ss 0 -t 2820 -f concat -safe 0 -i <(echo -e \"file '/bitarkiv/0400/files/tv3_S09-TV3_S09-TV3_mpeg1_20111113045601_20111114045502_encoder6-2.mpeg' \\ninpoint 38574 \\n\") -ss 5 -async 2 -vcodec libx264 -deinterlace -ar 44100 -profile:v High -level 3.0 -preset superfast -map 0:1 -threads 0 -b:v 400000 -ac 2 -b:a 96000 -y -filter_complex \"[0:v]scale=522x288\" /temp/457513af-30c6-477a-8c3e-b8b19d0fbaac.mp4";
         Assert.assertEquals(expectedCommandLine,commandLine);
         
     }

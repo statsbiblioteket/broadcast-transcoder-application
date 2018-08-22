@@ -42,7 +42,7 @@ public class TranscodeRequest {
 
     private String dvbsubPid;
     private String videoPid;
-    private String audioStereoPid;
+    private String audioStereoIndex;
     private String videoFcc;
     private String audioFcc;
 
@@ -196,12 +196,12 @@ public class TranscodeRequest {
         return minimum;
     }
     
-    public String getAudioStereoPid() {
-        return audioStereoPid;
+    public String getAudioStereoIndex() {
+        return audioStereoIndex;
     }
     
-    public void setAudioStereoPid(String audioStereoPid) {
-        this.audioStereoPid = audioStereoPid;
+    public void setAudioStereoIndex(String audioStereoIndex) {
+        this.audioStereoIndex = audioStereoIndex;
     }
     
     public Double getDisplayAspectRatio() {
