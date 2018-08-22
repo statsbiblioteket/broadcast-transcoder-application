@@ -66,7 +66,6 @@ public class UnistreamTranscoderProcessor extends ProcessorChainElement {
     public static String getFfmpegCommandLine(TranscodeRequest request, SingleTranscodingContext context) {
         String line = context.getFfmpegTranscodingString();
         if (request.getFileFormat().equals(FileFormatEnum.SINGLE_PROGRAM_VIDEO_TS) && request.getDvbsubPid() != null){
-            log.warn("Transcoding with subtitles, so exiting :) {},{}",request,context);
             //We have a transport stream with a subtitle track, so use it
             line = context.getFfmpegTranscodingWithSubtitlesString();
             line = line.replace("$$DVBSUB_STREAM$$", request.getDvbsubPid());

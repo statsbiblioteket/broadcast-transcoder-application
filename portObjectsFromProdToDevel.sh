@@ -28,9 +28,8 @@ do
     curl --silent --show-error --netrc -H "Content-Type: text/xml" -ufedoraAdmin:fedoraAdminPass "http://alhena:7980/fedora/objects/new" -X POST --data-binary "@$line.xml" -vvv
 done
 
-
-#Auth through ~/.pgpass
-psql --username=bta --dbname='bta-devel' --host=iapetus --echo-queries --command="INSERT INTO public.broadcasttranscodingrecord (id, domslatesttimestamp, failuremessage, lasttranscodedtimestamp, transcodingstate, broadcastendtime, broadcaststarttime, channel, endoffset, startoffset, title, transcodingcommand, tvmeter, video) VALUES ('$object', 1000, null, null, 0, null, null, null, 0, 0, null, null, true, true);"
+#Enqueue the new object in the bta queue database
+"${SCRIPT_DIR}/enqueueJob.sh" "$object"
 
 
 

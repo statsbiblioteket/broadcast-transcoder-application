@@ -46,6 +46,7 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
             program = clip.getProgramId();
             filename = clip.getFilepath();
         }
+        //TODO sync this with the UnistreamTranscoderProcessors way of skipping
         String command = "dd if=" + filename + " "
                 + "bs=" + blocksize + " "
                 + "count=" + blockcount + " "
