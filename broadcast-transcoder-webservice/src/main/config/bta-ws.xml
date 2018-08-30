@@ -1,0 +1,8 @@
+<Context docBase="${user.home}/services/tomcat-apps/broadcast-transcoder-webservice.war">
+    <Parameter name="bta.behaviour.properties" value="${user.home}/services/conf/bta.behaviour.ws.properties" />
+    <Parameter name="bta.infrastructure.properties" value="${user.home}/services/conf/bta.infrastructure.ws.properties" />
+    <Parameter name="bta.logback.xml" value="${user.home}/services/conf/bta.logback.ws.xml" />
+
+    <Parameter name="bta.maxActive" value="4"/>
+
+</Context>

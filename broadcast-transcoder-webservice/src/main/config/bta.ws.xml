@@ -1,8 +1,0 @@
-<Context docBase="bta-ws.war">
-    <Parameter name="bta.behaviour.properties" value="/home/bta/services/conf/bta.behaviour.ws.properties" />
-    <Parameter name="bta.infrastructure.properties" value="/home/bta/services/conf/bta.infrastructure.ws.properties" />
-    <Parameter name="bta.logback.xml" value="/home/bta/services/conf/bta.logback.ws.xml" />
-
-    <Parameter name="bta.maxActive" value="4"/>
-
-</Context>

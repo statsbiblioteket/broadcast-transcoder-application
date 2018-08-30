@@ -21,8 +21,8 @@
             <directory>${basedir}/src/main/config</directory>
             <outputDirectory>tomcat/conf/Catalina/localhost/</outputDirectory>
             <includes>
-                <include>bta.ws.xml</include>
-                <include>bta-dorq.ws.xml</include>
+                <include>bta-ws.xml</include>
+                <include>dorq-bta.xml</include>
             </includes>
             <filtered>false</filtered>
         </fileSet>
@@ -30,14 +30,8 @@
     </fileSets>
     <files>
         <file>
-            <outputDirectory>services/webapps/</outputDirectory>
+            <outputDirectory>services/tomcat-apps/</outputDirectory>
             <source>${project.build.directory}/broadcast-transcoder-webservice.war</source>
-            <destName>bta.ws.war</destName>
-        </file>
-        <file>
-            <outputDirectory>services/webapps/</outputDirectory>
-            <source>${project.build.directory}/broadcast-transcoder-webservice.war</source>
-            <destName>bta-dorq.ws.war</destName>
         </file>
         <file>
             <outputDirectory>tomcat/bin/</outputDirectory>

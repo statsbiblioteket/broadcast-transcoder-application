@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Context docBase="bta-dorq.ws.war">
-     <Parameter name="bta.behaviour.properties" value="/home/bta/services/conf/bta-dorq.behaviour.ws.properties" />
-     <Parameter name="bta.infrastructure.properties" value="/home/bta/services/conf/bta-dorq.infrastructure.ws.properties" />
-     <Parameter name="bta.logback.xml" value="/home/bta/services/conf/bta-dorq.logback.ws.xml" />
-
-    <Parameter name="bta.maxActive" value="4"/>
-
-</Context>
