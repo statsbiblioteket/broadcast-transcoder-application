@@ -17,13 +17,13 @@ scp broadcast-transcoder-webservice/target/$archive $develHost:.
 ssh $develHost "~/tomcat/bin/shutdown.sh"
 sleep 5
 
-ssh $develHost "tar -xvzf $archive --overwrite --directory /home/bta/ --strip 1"
-ssh $develHost "mkdir -p home/bta/lockdir/bta home/bta/lockdir/bta-dorq"
+ssh $develHost "tar -xvzf $archive --overwrite --directory \$HOME --strip 1"
+ssh $develHost "mkdir -p \$HOME/lockdir/bta \$HOME/lockdir/bta-dorq"
 
 ssh $develHost "~/tomcat/bin/shutdown.sh"
 sleep 5
 ssh $develHost "~/tomcat/bin/startup.sh"
 
-ssh $develHost "tail -f ~/tomcat/logs/catalina.*.log"
+ssh $develHost "tail -f ~/tomcat/logs/catalina.$(date +%Y-%m-%d).log"
 
 set +e
