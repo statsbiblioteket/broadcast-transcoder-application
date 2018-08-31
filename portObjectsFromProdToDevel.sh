@@ -26,7 +26,7 @@ curl --silent --show-error --netrc "$sourceDoms/$object/relationships" | \
     xargs -r -i curl --silent --show-error --netrc "$sourceDoms/{}/objectXML" -o "$dir/{}.xml"
 
 cat "$dir/objects" | grep uuid | while read line; do
-    curl --silent --show-error --netrc -H "Content-Type: text/xml" "$targetDoms/objects/new" -X POST --data-binary "@$dir/$line.xml" -vvv
+    curl --silent --show-error --netrc -H "Content-Type: text/xml" "$targetDoms/new" -X POST --data-binary "@$dir/$line.xml" -vvv
 done
 
 #Enqueue the new object in the bta queue database
