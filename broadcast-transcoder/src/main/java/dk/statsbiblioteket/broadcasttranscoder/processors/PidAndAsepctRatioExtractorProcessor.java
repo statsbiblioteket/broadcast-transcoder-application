@@ -179,36 +179,37 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
             logger.debug("Identified aspect ratio '" + request.getDisplayAspectRatioString() + "'");
         }
         Matcher audioMatcher = audioPattern1.matcher(line);
+        if (!audioMatcher.matches()) {
+            audioMatcher = audioPattern2.matcher(line);
+            if (audioMatcher.matches()) {
+                request.setAudioFcc("mp4a");
+            }
+        }
         if (audioMatcher.matches()) {
             String audioStereoIndex = audioMatcher.group(1);
             String audioStereoPid = audioMatcher.group(2);
-            if (request.getAudioStereoIndex() == null) {
-                request.setAudioStereoIndex(audioStereoIndex);
-                logger.info("Setting index for stereo audio to first audio stream '" + audioStereoIndex
-                            + "', just to ensure we got SOMETHING");
-            }
-            if (line.contains(" stereo, ")) {
+            if (request.getAudioStereoIndex() == null
+                || (line.contains(" stereo, ")
+                    && !line.contains("(Syn)")
+                    && !line.contains("(visual impaired)"))) {
+
                 request.setAudioStereoIndex(audioStereoIndex);
                 logger.info("Setting pid for stereo audio '" + audioStereoIndex + "'");
+
+                request.addAudioPid(audioStereoPid);
+                logger.info("Setting pid for audio '" + audioStereoPid + "'");
+                
+                if (request.getAudioFcc() == null) {
+                    if (line.contains("aac_latm")) {
+                        request.setAudioFcc("mp4a");
+                    } else if (line.contains("mp2")) {
+                        request.setAudioFcc("mpga");
+                    } else if (line.contains("ac3")) {
+                        request.setAudioFcc("a52");
+                    }
+                    logger.debug("Identified audio fourcc for " + request.getObjectPid() + ": " + request.getAudioFcc());
+                }
             }
-            request.addAudioPid(audioStereoPid);
-            logger.info("Setting pid for audio '" + audioStereoPid + "'");
-            if (line.contains("aac_latm")) {
-                request.setAudioFcc("mp4a");
-            } else if (line.contains("mp2")) {
-                request.setAudioFcc("mpga");
-            } else if (line.contains("ac3")) {
-                request.setAudioFcc("a52");
-            }
-            logger.debug("Identified audio fourcc for " + request.getObjectPid() + ": " + request.getAudioFcc());
-        }
-        Matcher audioMatcher2 = audioPattern2.matcher(line);
-        if (audioMatcher2.matches() && !line.contains("5.1")) {
-            String audioStereoPid = audioMatcher2.group(2);
-            request.addAudioPid(audioStereoPid);
-            logger.info("Setting pid for audio '" + audioStereoPid + "'");
-            request.setAudioFcc("mp4a");
-            logger.debug("Identified audio fourcc for " + request.getObjectPid() + ": " + request.getAudioFcc());
         }
         Matcher darMatcher = videoPattern.matcher(line);
         if (darMatcher.matches()) {

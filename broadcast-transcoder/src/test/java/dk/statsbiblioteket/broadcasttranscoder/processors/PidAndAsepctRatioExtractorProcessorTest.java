@@ -257,5 +257,34 @@ public class PidAndAsepctRatioExtractorProcessorTest {
         
     }
     
+    @Test
+    public void parseFFProbeOutput_Syns() throws ProcessorException {
+        String ffprobeOutput = "Input #0, mpegts, from '/bitarkiv/0400/files/kanal4_yousee.1491242400-2017-04-03-20.00.00_1491246000-2017-04-03-21.00.00_yousee.ts':\n"
+                               + "  Duration: 01:00:01.14, start: 2441.141356, bitrate: 8626 kb/s\n"
+                               + "  Program 2 \n"
+                               + "    Stream #0:0[0x21]: Video: h264 (Main) ([27][0][0][0] / 0x001B), yuv420p(tv, bt709, top first), 1920x1080 [SAR 1:1 DAR 16:9], 25 fps, 50 tbr, 90k tbn, 50 tbc\n"
+                               + "    Stream #0:1[0x24](dan): Audio: mp2 ([3][0][0][0] / 0x0003), 48000 Hz, stereo, fltp, 192 kb/s\n"
+                               + "    Stream #0:2[0x3c](Syn): Audio: mp2 ([3][0][0][0] / 0x0003), 48000 Hz, stereo, fltp, 192 kb/s (visual impaired)";
+        
+        TranscodeRequest request = new TranscodeRequest();
+        request.setFileFormat(FileFormatEnum.MPEG_PS);
+        TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip("path");
+        clip.setProgramId(101);
+        SingleTranscodingContext<TranscodingRecord> context = new SingleTranscodingContext<>();
+        PidAndAsepctRatioExtractorProcessor.parseFFProbeOutput(request,context,ffprobeOutput);
+        assertEquals(null,request.getDvbsubPid());
+        assertEquals("0x21",request.getVideoPid());
+        assertEquals("0:1", request.getAudioStereoIndex());
+        Iterator<String> audioPids = request.getAudioPids().iterator();
+        assertEquals(1, request.getAudioPids().size());
+        assertEquals("0x24", audioPids.next());
+        assertEquals("h264",request.getVideoFcc());
+        assertEquals("mpga",request.getAudioFcc());
+        assertEquals("16:9", request.getDisplayAspectRatioString());
+        assertEquals(16.0/9.0, request.getDisplayAspectRatio(), 0.001);
+        System.out.println(request);
+        
+    }
+    
     
 }
