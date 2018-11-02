@@ -6,6 +6,7 @@ import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 
 import static org.junit.Assert.*;
@@ -154,18 +155,17 @@ public class PidAndAsepctRatioExtractorProcessorTest {
         request.setFileFormat(FileFormatEnum.SINGLE_PROGRAM_VIDEO_TS);
         TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip("path");
         clip.setProgramId(2);
-        request.setClips(Arrays.asList(clip));
+        request.setClips(Collections.singletonList(clip));
         SingleTranscodingContext<TranscodingRecord> context = new SingleTranscodingContext<>();
         PidAndAsepctRatioExtractorProcessor.parseFFProbeOutput(request,context,ffprobeOutput);
-        assertEquals(null,request.getDvbsubPid());
+        assertNull(request.getDvbsubPid());
         assertEquals("0x21",request.getVideoPid());
         assertEquals("0:1", request.getAudioStereoIndex());
         Iterator<String> audioPids = request.getAudioPids().iterator();
-        assertEquals("0x25", audioPids.next());
-        assertEquals("0x24", audioPids.next());
-        assertEquals(2, request.getAudioPids().size());
+        assertEquals("0x24", audioPids.next()); //We only get the 0x24 stream, as the other does not contain the "stereo" keyword
+        assertEquals(1, request.getAudioPids().size());
         assertEquals("h264",request.getVideoFcc());
-        assertEquals("a52",request.getAudioFcc());
+        assertEquals("mpga",request.getAudioFcc());
         assertEquals("16:9", request.getDisplayAspectRatioString());
         assertEquals(16.0/9.0, request.getDisplayAspectRatio(), 0.001);
         System.out.println(request);
