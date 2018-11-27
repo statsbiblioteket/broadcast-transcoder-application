@@ -364,6 +364,7 @@ public class TranscodeRequest {
                 ", fileFormat=" + fileFormat +
                 ", clips=" + clips +
                 ", dvbsubPid='" + dvbsubPid + '\'' +
+                ", isVideo='" + video + '\'' +
                 ", videoPid='" + videoPid + '\'' +
                 ", videoFcc='" + videoFcc + '\'' +
                 ", audioFcc='" + audioFcc + '\'' +
