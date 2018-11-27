@@ -1,3 +1,7 @@
+0.7.0
+=====
+* Reklamefilm can transcode and generate snapshots
+
 0.6.1
 =====
 * Include up2date database schemas (`dbschema.0.5.sql`). These schemas have been generated with `IntelliJ Database manager -> SQL scripts -> copy DDL to console`

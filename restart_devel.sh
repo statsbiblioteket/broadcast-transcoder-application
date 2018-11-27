@@ -43,11 +43,6 @@ fi
 
 set +x
 
-
-
-
-
-
 #Info to port prod programs to devel
 #http://naiad:7880/fedora/objects?pid=true&label=true&title=true&identifier=true&terms=&query=label~*teracom*&maxResults=20#
 #
