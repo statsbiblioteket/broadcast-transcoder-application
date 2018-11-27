@@ -55,12 +55,44 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
     }
 
     private void doExtraction(TranscodeRequest request, SingleTranscodingContext context, ThumbnailExtractionRecord record) throws ProcessorException {
+        String commandline = getCommandLine(request, context);
+    
+        int length;
+        //This if/else looks screwy but works so long as we use ffprobeDurationSeconds only for
+        //reklamfilmer/snapshot-recodings where there is only a single input file.
+        if (request.getFfprobeDurationSeconds() != null) {
+            length = Math.round(request.getFfprobeDurationSeconds());
+        } else {
+            length = (int) (MetadataUtils.findProgramLengthMillis(request)/1000L);
+        }
+        final long timeout = (long) (1000.0 * length / context.getSnapshotTimeoutDivisor());
+        try {
+            process(record, commandline, timeout);
+        } catch (ExternalProcessTimedOutException e) {
+            String message = "Process '" + commandline + "' timed out after " + timeout + "ms.";
+            logger.warn(message);
+            record.setErrorMessage(message);
+            record.setExtractionState(TranscodingStateEnum.FAILED);
+            throw new ProcessorException("Process Timed out for " + request.getObjectPid() + " after " + timeout + "ms.",e);
+        }
+    
+    
+//        // This is a dirty fix because ffmpeg generates 2 snapshots close together at the start
+//        String fileTemplate = FileUtils.getSnapshotOutputFileStringTemplate(request, context);
+//        String firstFile = fileTemplate.replace("%d", "1");
+//        try {
+//            (new File(firstFile)).delete();
+//        } catch (Exception e) {
+//            logger.warn("Could not delete " + firstFile);
+//        }
+    }
+    
+    protected String getCommandLine(TranscodeRequest request, SingleTranscodingContext context) {
         int targetNumerator = context.getSnapshotTargetNumerator();
         int targetDenominator = context.getSnapshotTargetDenominator();
         int scale = context.getSnapshotScale();
         int paddingSeconds = context.getSnapshotPaddingSeconds();
         int nframes = context.getSnapshotFrames();
-        float timeoutDivisor = context.getSnapshotTimeoutDivisor();
         File fullMediaFile = FileUtils.getFinalMediaOutputFile(request, context);
         File snapshotOutputDir = FileUtils.getSnapshotOutputDir(request, context);
         snapshotOutputDir.mkdirs();
@@ -74,7 +106,7 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
           length = (int) (MetadataUtils.findProgramLengthMillis(request)/1000L);
         }
 
-        String commandline = createCommandLineProperties(context.getSnapshotExtractorCommand(),
+        return createCommandLineProperties(context.getSnapshotExtractorCommand(),
                 targetNumerator,
                 targetDenominator,
                 scale,
@@ -84,27 +116,14 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
                 length,
                 FileUtils.getSnapshotOutputFileStringTemplate(request, context),
                 request.getDisplayAspectRatio());
-
-        final long timeout = (long) (1000.0 * (float) length / timeoutDivisor);
+    }
+    
+    private void process(ThumbnailExtractionRecord record,
+                         String commandline,
+                         long timeout) throws ProcessorException, ExternalProcessTimedOutException {
         record.setExtractionCommand(commandline);
-        try {
-            ExternalJobRunner.runClipperCommand(timeout, commandline);
-            record.setExtractionState(TranscodingStateEnum.COMPLETE);
-        } catch (ExternalProcessTimedOutException e) {
-            String message = "Process '" + commandline + "' timed out after " + timeout + "ms.";
-            logger.warn(message);
-            record.setErrorMessage(message);
-            record.setExtractionState(TranscodingStateEnum.FAILED);
-            throw new ProcessorException("Process Timed out for " + request.getObjectPid() + " after " + timeout + "ms.",e);
-        }
-//        // This is a dirty fix because ffmpeg generates 2 snapshots close together at the start
-//        String fileTemplate = FileUtils.getSnapshotOutputFileStringTemplate(request, context);
-//        String firstFile = fileTemplate.replace("%d", "1");
-//        try {
-//            (new File(firstFile)).delete();
-//        } catch (Exception e) {
-//            logger.warn("Could not delete " + firstFile);
-//        }
+        ExternalJobRunner.runClipperCommand(timeout, commandline);
+        record.setExtractionState(TranscodingStateEnum.COMPLETE);
     }
     
     protected String createCommandLineProperties(String command,
