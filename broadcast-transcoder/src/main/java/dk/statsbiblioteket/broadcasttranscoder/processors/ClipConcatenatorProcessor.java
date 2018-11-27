@@ -30,10 +30,10 @@ public class ClipConcatenatorProcessor extends ProcessorChainElement  {
                 if (offsetBytes == null || offsetBytes < 0) offsetBytes = 0L;
                 if (clipLength != null && clipSize == 1) {
                     Long totalLengthBytes = clipLength;   //Program contained within file
-                    processSubstitutionFileList += " <(dd if=" + clip.getFilepath() + " bs="+blocksize + " skip=" + offsetBytes/blocksize
+                    processSubstitutionFileList += " <(dd if='" + clip.getFilepath() + "' bs="+blocksize + " skip=" + offsetBytes/blocksize
                             + " count=" + totalLengthBytes/blocksize + ") " ;
                 } else {         //Otherwise always go to end of file
-                    processSubstitutionFileList += " <(dd if=" + clip.getFilepath() + " bs="+blocksize + " skip=" + offsetBytes/blocksize + ") " ;
+                    processSubstitutionFileList += " <(dd if='" + clip.getFilepath() + "' bs="+blocksize + " skip=" + offsetBytes/blocksize + ") " ;
                 }
 
             } else if (iclip == clipSize - 1 && clipSize != 1) {   //last clip in multiclip program
@@ -43,9 +43,9 @@ public class ClipConcatenatorProcessor extends ProcessorChainElement  {
                     skipString = " skip=" + (clip.getStartOffsetBytes())/blocksize + " ";
                 }
                 if (clipLength != null) {
-                    processSubstitutionFileList +=" <(dd if=" + clip.getFilepath() + " bs=" + blocksize + skipString +  " count=" + clipLength/blocksize + ") ";
+                    processSubstitutionFileList +=" <(dd if='" + clip.getFilepath() + "' bs=" + blocksize + skipString +  " count=" + clipLength/blocksize + ") ";
                 } else {
-                    processSubstitutionFileList +=" <(dd if=" + clip.getFilepath() + " bs=" + blocksize + skipString  + ") ";
+                    processSubstitutionFileList +=" <(dd if='" + clip.getFilepath() + "' bs=" + blocksize + skipString  + ") ";
                 }
             } else {   //A file in the middle of a program so take the whole file
                 String skipString = "";
@@ -53,7 +53,7 @@ public class ClipConcatenatorProcessor extends ProcessorChainElement  {
                     logger.warn("Found non-zero offset outside first clip for '" + request.getObjectPid());
                     skipString = " skip=" + clip.getStartOffsetBytes()/blocksize + " ";
                 }
-                processSubstitutionFileList += " <(dd if=" + clip.getFilepath() + " bs=" + blocksize + skipString + ") ";
+                processSubstitutionFileList += " <(dd if='" + clip.getFilepath() + "' bs=" + blocksize + skipString + ") ";
             }
         }
         request.setClipperCommand(processSubstitutionFileList);

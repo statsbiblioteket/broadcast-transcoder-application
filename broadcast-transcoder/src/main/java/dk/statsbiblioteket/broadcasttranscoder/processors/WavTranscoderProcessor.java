@@ -53,7 +53,7 @@ public class WavTranscoderProcessor extends ProcessorChainElement {
         for (int i=0; i<clips.size(); i++) {
             TranscodeRequest.FileClip clip = clips.get(i);
             String soxTranscodeParameters = context.getSoxTranscodeParams();
-            command += " <(sox " + clip.getFilepath() + " " + soxTranscodeParameters + " - ";
+            command += " <(sox '" + clip.getFilepath() + "' " + soxTranscodeParameters + " - ";
             if ((clip.getStartOffsetBytes() != null && clip.getStartOffsetBytes() != 0) || clip.getClipLength() != null) {
                 String trimFilter = " trim ";
                 if (clip.getStartOffsetBytes() != null && clip.getStartOffsetBytes() != 0) {
