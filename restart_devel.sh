@@ -2,8 +2,11 @@
 
 SCRIPT_DIR=$(dirname $(readlink -f $BASH_SOURCE[0]))
 
-
 develHost="bta@iapetus"
+NPROCS=8
+
+type="${1:-Broadcast}"
+#Alternative is Reklamefilm
 
 set +e
 # Stop trancodering:
@@ -21,15 +24,27 @@ ssh $develHost 'rm -f logs/* || true'
 
 
 #Initialisation
-ssh $develHost "psql -d bta-devel -c 'update broadcasttranscodingrecord set transcodingstate=0 ;'"
-ssh $develHost "psql -d bta-devel -c 'update reklamefilmtranscodingrecord set transcodingstate=0 ;'"
+if [ "$type" == "Reklamefilm" ]; then
+    echo "Reklamefilm transcoding"
+    ssh $develHost "psql -d bta-devel -c 'update reklamefilmtranscodingrecord set transcodingstate=0 ;'"
+    ssh $develHost "~/bta/bin/enqueueJobs.sh Reklamefilm 0"
+    ssh $develHost '~/bta/bin/queryChangesDoms.sh Reklamefilm > ~/Reklamefilm_queue.txt'
+    ssh $develHost "~/bta/bin/transcode-master.sh start -h localhost -n $NPROCS -j ~/Reklamefilm_queue.txt -v"
+fi
 
-ssh $develHost "~/bta/bin/enqueueJobs.sh Reklamefilm 0"
-ssh $develHost '~/bta/bin/queryChangesDoms.sh Reklamefilm > ~/queue$(date +"%y%m%d").txt'
-ssh $develHost 'head -n100 ~/queue$(date +"%y%m%d").txt > ~/queue.txt'
+if [ "$type" == "Broadcast" ]; then
+    echo "Broadcast transcoding"
+    ssh $develHost "psql -d bta-devel -c 'update broadcasttranscodingrecord set transcodingstate=0 ;'"
+    ssh $develHost "~/bta/bin/enqueueJobs.sh Broadcast 0"
+    ssh $develHost '~/bta/bin/queryChangesDoms.sh Broadcast > ~/Broadcast_queue$(date +"%y%m%d").txt'
+    ssh $develHost 'head -n200 ~/Broadcast_queue$(date +"%y%m%d").txt > ~/Broadcast_queue.txt'
+    ssh $develHost "~/bta/bin/transcode-master.sh start -h localhost -n $NPROCS -j ~/Broadcast_queue.txt -v"
+fi
+
 set +x
 
-ssh $develHost '~/bta/bin/transcode-master.sh start -h localhost -n 1 -j ~/queue.txt -v'
+
+
 
 
 
