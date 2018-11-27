@@ -11,10 +11,11 @@ ssh $develHost '~/bta/bin/transcode-master.sh stop'
 ssh $develHost "ps -ef | grep ffmpeg | grep ^bta | grep -v grep| sed 's/ \+/ /g' | cut -d' ' -f2 | xargs -r kill"
 set -e
 
-ssh $develHost 'rm -f streamingContent/*.mp3'
-ssh $develHost 'rm -f streamingContent/*.flv'
-ssh $develHost 'rm -f streamingContent/*.mp4'
-ssh $develHost 'rm -f imageDirectory/*.png'
+set -x
+ssh $develHost 'rm -fr streamingContent/?/?/?/?/*.mp3'
+ssh $develHost 'rm -fr streamingContent/?/?/?/?/*.flv'
+ssh $develHost 'rm -fr streamingContent/?/?/?/?/*.mp4'
+ssh $develHost 'rm -fr imageDirectory/?/?/?/?/*.png'
 
 ssh $develHost 'rm -f logs/* || true'
 
@@ -24,7 +25,9 @@ ssh $develHost "psql -d bta-devel -c 'update broadcasttranscodingrecord set tran
 ssh $develHost "~/bta/bin/enqueueJobs.sh Broadcast 0"
 ssh $develHost '~/bta/bin/queryChangesDoms.sh Broadcast > ~/queue$(date +"%y%m%d").txt'
 ssh $develHost 'head -n100 ~/queue$(date +"%y%m%d").txt > ~/queue.txt'
-ssh $develHost '~/bta/bin/transcode-master.sh start -h localhost -n 8 -j ~/queue.txt -v'
+set +x
+
+ssh $develHost '~/bta/bin/transcode-master.sh start -h localhost -n 1 -j ~/queue.txt -v'
 
 
 
