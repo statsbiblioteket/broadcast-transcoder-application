@@ -105,6 +105,10 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
         } else {
           length = (int) (MetadataUtils.findProgramLengthMillis(request)/1000L);
         }
+        //Ignore padding-seconds if the record is too short
+        if (paddingSeconds >= length){
+            paddingSeconds = 0;
+        }
 
         return createCommandLineProperties(context.getSnapshotExtractorCommand(),
                 targetNumerator,

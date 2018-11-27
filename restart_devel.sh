@@ -22,8 +22,10 @@ ssh $develHost 'rm -f logs/* || true'
 
 #Initialisation
 ssh $develHost "psql -d bta-devel -c 'update broadcasttranscodingrecord set transcodingstate=0 ;'"
-ssh $develHost "~/bta/bin/enqueueJobs.sh Broadcast 0"
-ssh $develHost '~/bta/bin/queryChangesDoms.sh Broadcast > ~/queue$(date +"%y%m%d").txt'
+ssh $develHost "psql -d bta-devel -c 'update reklamefilmtranscodingrecord set transcodingstate=0 ;'"
+
+ssh $develHost "~/bta/bin/enqueueJobs.sh Reklamefilm 0"
+ssh $develHost '~/bta/bin/queryChangesDoms.sh Reklamefilm > ~/queue$(date +"%y%m%d").txt'
 ssh $develHost 'head -n100 ~/queue$(date +"%y%m%d").txt > ~/queue.txt'
 set +x
 

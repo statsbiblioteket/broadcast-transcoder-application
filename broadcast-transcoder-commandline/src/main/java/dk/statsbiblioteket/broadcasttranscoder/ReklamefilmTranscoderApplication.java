@@ -29,6 +29,7 @@ public class ReklamefilmTranscoderApplication extends TranscoderApplication {
         context.setReklamefilmFileResolver(new ReklamefilmFileResolverImpl(context));
         TranscodeRequest request = new TranscodeRequest();
         request.setObjectPid(context.getProgrampid());
+        request.setVideo(true); //reklamefilms are Always videos
 
         String origThreadName = Thread.currentThread().getName();
         try {

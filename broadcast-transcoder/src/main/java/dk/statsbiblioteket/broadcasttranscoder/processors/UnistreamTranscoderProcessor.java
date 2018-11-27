@@ -84,32 +84,53 @@ public class UnistreamTranscoderProcessor extends ProcessorChainElement {
     
         
         
-        
-        long programStartMillis = getProgramStartMillis(request, context);
-    
-        Long firstFileStartTimeMillis = request.getClips().get(0).getFileStartTime();
-    
-        //We start 5 secs before, and then skip the first 5 secs of the transcoding. This ensures misaligned frames
-        // do not destroy the first second of the transcoding
-
-        //We take it as max(,0), so that if the the program starts before the file, we do not get negative values
-        long offsetIntoFirstFileSeconds = Math.max((programStartMillis - firstFileStartTimeMillis) / 1000,0);
-
-        //If the program starts less than 5 seconds into the file, only skip to the start of the file, and no longer
-        long skipSeconds=Math.min(offsetIntoFirstFileSeconds,5);
-        
-        line = line.replace("$$SKIP_SECONDS$$",skipSeconds+"");
-        
-        long programStartSecondsInFirstFile = offsetIntoFirstFileSeconds - skipSeconds;
+        long programStartSecondsInFirstFile;
+        if (request.isHasExactFile()){
     
     
-        long programEndMillis = getProgramEndMillis(request, context);
+            //We take it as max(,0), so that if the the program starts before the file, we do not get negative values
+    
+            //If the program starts less than 5 seconds into the file, only skip to the start of the file, and no further
+    
+            line = line.replace("$$SKIP_SECONDS$$", 0l + "");
+    
+            programStartSecondsInFirstFile = 0;
     
     
-        long programLengthSeconds = (programEndMillis - programStartMillis) / 1000;
+            long programEndMillis = request.getClips().get(0).getFileEndTime() - request.getClips().get(0).getFileStartTime();
     
-        line = line.replace("$$LENGTH$$", programLengthSeconds + "");
     
+            long programLengthSeconds = (programEndMillis) / 1000;
+    
+            line = line.replace("$$LENGTH$$", programLengthSeconds + "");
+    
+    
+        } else {
+            long programStartMillis = getProgramStartMillis(request, context);
+    
+            Long firstFileStartTimeMillis = request.getClips().get(0).getFileStartTime();
+    
+            //We start 5 secs before, and then skip the first 5 secs of the transcoding. This ensures misaligned frames
+            // do not destroy the first second of the transcoding
+    
+            //We take it as max(,0), so that if the the program starts before the file, we do not get negative values
+            long offsetIntoFirstFileSeconds = Math.max((programStartMillis - firstFileStartTimeMillis) / 1000,0);
+    
+            //If the program starts less than 5 seconds into the file, only skip to the start of the file, and no longer
+            long skipSeconds=Math.min(offsetIntoFirstFileSeconds,5);
+    
+            line = line.replace("$$SKIP_SECONDS$$",skipSeconds+"");
+    
+            programStartSecondsInFirstFile = offsetIntoFirstFileSeconds - skipSeconds;
+    
+    
+            long programEndMillis = getProgramEndMillis(request, context);
+    
+    
+            long programLengthSeconds = (programEndMillis - programStartMillis) / 1000;
+    
+            line = line.replace("$$LENGTH$$", programLengthSeconds + "");
+        }
         
         
     

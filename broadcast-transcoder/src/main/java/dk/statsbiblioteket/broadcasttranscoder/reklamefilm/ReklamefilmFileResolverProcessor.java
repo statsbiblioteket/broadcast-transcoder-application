@@ -29,13 +29,31 @@ public class ReklamefilmFileResolverProcessor extends ProcessorChainElement {
         File mediafile = resolver.resolverPidToLocalFile(pid);
         request.setClipperCommand("'" + mediafile.getAbsolutePath() + "'");
         logger.info("Resolved " + pid + " to " + request.getClipperCommand());
+    
+    
+    
+        decorateReklamefile(request, context, mediafile);
+    
+    }
+    
+    public static <T extends TranscodingRecord> void decorateReklamefile(TranscodeRequest request,
+                                                                   SingleTranscodingContext<T> context,
+                                                                         File mediafile)
+            throws ProcessorException {
+    
         final long nominalDurationSeconds = 300L;
         request.setBitrate(mediafile.length()/nominalDurationSeconds);
         request.setTimeoutMilliseconds((long) (nominalDurationSeconds*1000L/context.getTranscodingTimeoutDivisor()));
         request.setFileFormat(FileFormatEnum.MPEG_PS);
-        TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip("'" + mediafile.getAbsolutePath() + "'");
+        
+        TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip(mediafile.getAbsolutePath());
+        clip.setFileStartTime(0L);
+        clip.setFileEndTime(clip.getFileStartTime()+nominalDurationSeconds*1000);
         List<TranscodeRequest.FileClip> clips = new ArrayList<TranscodeRequest.FileClip>();
         clips.add(clip);
         request.setClips(clips);
-      }
+        
+        request.setHasExactFile(true);
+
+    }
 }
