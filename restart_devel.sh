@@ -37,7 +37,7 @@ if [ "$type" == "Broadcast" ]; then
     ssh $develHost "psql -d bta-devel -c 'update broadcasttranscodingrecord set transcodingstate=0 ;'"
     ssh $develHost "~/bta/bin/enqueueJobs.sh Broadcast 0"
     ssh $develHost '~/bta/bin/queryChangesDoms.sh Broadcast > ~/Broadcast_queue$(date +"%y%m%d").txt'
-    ssh $develHost 'head -n200 ~/Broadcast_queue$(date +"%y%m%d").txt > ~/Broadcast_queue.txt'
+    ssh $develHost 'head -n10 ~/Broadcast_queue$(date +"%y%m%d").txt > ~/Broadcast_queue.txt'
     ssh $develHost "~/bta/bin/transcode-master.sh start -h localhost -n $NPROCS -j ~/Broadcast_queue.txt -v"
 fi
 
