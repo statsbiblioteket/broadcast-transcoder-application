@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,11 +47,11 @@ public class PidAndAsepctRatioExtractorProcessor extends ProcessorChainElement {
             filename = clip.getFilepath();
         }
         //TODO sync this with the UnistreamTranscoderProcessors way of skipping
-        String command = MessageFormat.format("dd if=''{0}'' bs={1} count={2} skip={3} |ffmpeg -i - ",
-                                              filename,
-                                              blocksize,
-                                              blockcount,
-                                              offset / blocksize);
+        String command = "dd if='" + filename + "' "
+                + "bs=" + blocksize + " "
+                + "count=" + blockcount + " "
+                + "skip=" + offset/blocksize + " "
+                + "|ffmpeg -i - ";
 
 
         logger.info("Executing '" + command + "'");

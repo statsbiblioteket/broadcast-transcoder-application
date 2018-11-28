@@ -142,15 +142,13 @@ public class UnistreamTranscoderProcessor extends ProcessorChainElement {
             String firstClip = request.getClips()
                                       .stream()
                                       .findFirst()
-                                      .map(fileClip -> MessageFormat.format("file ''{0}'' \\ninpoint {1} \\n",
-                                                                            fileClip.getFilepath(),
-                                                                            offsetInFirstFile))
+                                      .map(fileClip -> "file '" + fileClip.getFilepath() + "' \\n"
+                                                       +"inpoint "+offsetInFirstFile+" \\n")
                                       .orElse("");
             String otherClips = request.getClips()
                                        .stream()
                                        .skip(1)
-                                       .map(fileClip -> MessageFormat.format("file ''{0}'' ",
-                                                                             fileClip.getFilepath()))
+                                       .map(fileClip -> "file '" + fileClip.getFilepath() + "' ")
                                        .collect(Collectors.joining("\\n"));
             String inputFiles = MessageFormat.format("-f concat -safe 0 -i <(echo -e \"{0}{1}\")",
                                                      firstClip,
