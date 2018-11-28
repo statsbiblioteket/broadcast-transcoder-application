@@ -1,10 +1,26 @@
 0.7.0
 =====
-* Reklamefilm can transcode and generate snapshots
 
-0.6.1
-=====
+Reklamefilm
+------------
+* Reklamefilm can transcode and generate snapshots
+* Handle filenames with spaces, as can happen with reklamefilms
+
+Choosing the right Audio Stream
+-------------------------------
+* Do not use the visuallyImpared audio unless there is no other choice
+
+Configuration and packaging
+--------------
+* setenv use SCL the right way
+* Reverted to the old webservice names
+* Reverted bta-ws heightInPixels to 288, the value of 576 was a copy-pasta error. Credits goes to to TGC
 * Include up2date database schemas (`dbschema.0.5.sql`). These schemas have been generated with `IntelliJ Database manager -> SQL scripts -> copy DDL to console`
+
+Stage testing
+-------------
+* portObjectsFromProdToDevel.sh: Removed ekstra /objects/ from doms path
+* Stagetest docs. Port objects do not auto enqueue 
 
 
 0.6.0
