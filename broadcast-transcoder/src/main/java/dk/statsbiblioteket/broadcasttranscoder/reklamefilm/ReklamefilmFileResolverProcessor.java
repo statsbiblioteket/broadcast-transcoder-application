@@ -42,17 +42,28 @@ public class ReklamefilmFileResolverProcessor extends ProcessorChainElement {
             throws ProcessorException {
     
         final long nominalDurationSeconds = 300L;
+        
+        //Bitrate is not used for Reklamefilm, so why is it set?
         request.setBitrate(mediafile.length()/nominalDurationSeconds);
+        
+        //If timeout is not set, it will be calculated from stuff that might not be set for reklamefilms, so just set it
         request.setTimeoutMilliseconds((long) (nominalDurationSeconds*1000L/context.getTranscodingTimeoutDivisor()));
+        
+        //Assume that all source files are Mpegs
         request.setFileFormat(FileFormatEnum.MPEG_PS);
         
+        //There is just one source file (clip)
         TranscodeRequest.FileClip clip = new TranscodeRequest.FileClip(mediafile.getAbsolutePath());
+        //This is an exact file, so start at 0
         clip.setFileStartTime(0L);
+        //Rather that trying to guess the length, just set the length to something. I do not thing any of them are longer than this
+        
         clip.setFileEndTime(clip.getFileStartTime()+nominalDurationSeconds*1000);
         List<TranscodeRequest.FileClip> clips = new ArrayList<TranscodeRequest.FileClip>();
         clips.add(clip);
         request.setClips(clips);
         
+        //This file is exact, so do not cut
         request.setHasExactFile(true);
 
     }

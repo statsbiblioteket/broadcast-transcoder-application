@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.stream.Collectors;
 
 public class UnistreamTranscoderProcessor extends ProcessorChainElement {
@@ -44,7 +45,7 @@ public class UnistreamTranscoderProcessor extends ProcessorChainElement {
         File outputFile = FileUtils.getTemporaryMediaOutputFile(request, context);
         try {
             long timeout;
-            if (request.getTimeoutMilliseconds() == 0l) {
+            if (request.getTimeoutMilliseconds() == 0L) {
                 timeout = MetadataUtils.getTimeout(request, context);
             } else if (request.getFfprobeDurationSeconds() != null) {
                 timeout = (long) (Math.round(request.getFfprobeDurationSeconds()*1000L
@@ -79,91 +80,86 @@ public class UnistreamTranscoderProcessor extends ProcessorChainElement {
         line = line.replace("$$AUDIO_BITRATE$$", context.getAudioBitrate()+"");
         line = line.replace("$$VIDEO_BITRATE$$", context.getVideoBitrate()+"");
         line = line.replace("$$FFMPEG_ASPECT_RATIO$$", getFfmpegAspectRatio(request, context));
-        
         line = line.replace("$$OUTPUT_FILE$$", FileUtils.getTemporaryMediaOutputFile(request, context).getAbsolutePath());
-    
-        
-        
+
+        //SKIP_SECONDS and LENGTH
         long programStartSecondsInFirstFile;
         if (request.isHasExactFile()){
-    
-    
-            //We take it as max(,0), so that if the the program starts before the file, we do not get negative values
-    
-            //If the program starts less than 5 seconds into the file, only skip to the start of the file, and no further
-    
+            //There is one exact file, so do not skip
             line = line.replace("$$SKIP_SECONDS$$", 0l + "");
     
             programStartSecondsInFirstFile = 0;
     
-    
-            long programEndMillis = request.getClips().get(0).getFileEndTime() - request.getClips().get(0).getFileStartTime();
-    
+            //When hasExactFile, there should really only be one clip
+            TranscodeRequest.FileClip clip = request.getClips().get(0);
+            if (request.getClips().size() > 1){
+                log.error("Request {}, clips > 1 ({}) but hasExactFile is set",request,request.getClips());
+            }
+            
+            long programEndMillis = clip.getFileEndTime() - clip.getFileStartTime();
     
             long programLengthSeconds = (programEndMillis) / 1000;
     
+            //Length should not really be set, as we should use the entire file. We hope that the clip.EndTime is set
+            // correctly, so that we get the entire file
             line = line.replace("$$LENGTH$$", programLengthSeconds + "");
-    
-    
         } else {
-            long programStartMillis = getProgramStartMillis(request, context);
-    
-            Long firstFileStartTimeMillis = request.getClips().get(0).getFileStartTime();
-    
+            //This is a cut from source files, so skip so that
             //We start 5 secs before, and then skip the first 5 secs of the transcoding. This ensures misaligned frames
             // do not destroy the first second of the transcoding
+    
+            // SKIP_SECONDS
+            long programStartMillis = getProgramStartMillis(request, context);
+            Long firstFileStartTimeMillis = request.getClips().get(0).getFileStartTime();
     
             //We take it as max(,0), so that if the the program starts before the file, we do not get negative values
             long offsetIntoFirstFileSeconds = Math.max((programStartMillis - firstFileStartTimeMillis) / 1000,0);
     
             //If the program starts less than 5 seconds into the file, only skip to the start of the file, and no longer
             long skipSeconds=Math.min(offsetIntoFirstFileSeconds,5);
-    
+
             line = line.replace("$$SKIP_SECONDS$$",skipSeconds+"");
     
+            //LENGTH
             programStartSecondsInFirstFile = offsetIntoFirstFileSeconds - skipSeconds;
-    
-    
             long programEndMillis = getProgramEndMillis(request, context);
-    
-    
             long programLengthSeconds = (programEndMillis - programStartMillis) / 1000;
     
             line = line.replace("$$LENGTH$$", programLengthSeconds + "");
         }
-        
-        
     
+        //INPUT_FILES
         if (!request.getFileFormat().equals(FileFormatEnum.MPEG_PS)) {
             //Concat only works for transportStreams, but no mpeg file will ever have more than one clip, so this is not a problem
-            String inputFiles = "-i \"concat:"
-                                + request.getClips()
-                                         .stream()
-                                         .map(TranscodeRequest.FileClip::getFilepath)
-                                         .collect(Collectors.joining("|"))
-                                + "\"";
+            String clips = request.getClips()
+                                    .stream()
+                                    .map(TranscodeRequest.FileClip::getFilepath)
+                                    .collect(Collectors.joining("|"));
+            String inputFiles = MessageFormat.format("-i \"concat:{0}\"", clips);
             line = line.replace("$$INPUT_FILES$$", inputFiles);
         } else {
             long offsetInFirstFile = programStartSecondsInFirstFile;
-            String inputFiles = "-f concat -safe 0 -i <(echo -e \""
-                                + request.getClips()
-                                         .stream()
-                                         .findFirst()
-                                         .map(fileClip -> "file '" + fileClip.getFilepath() + "' \\n"
-                                                          +"inpoint "+offsetInFirstFile+" \\n")
-                                         .orElse("")
-                                + request.getClips()
-                                         .stream()
-                                         .skip(1)
-                                         .map(fileClip -> "file '" + fileClip.getFilepath() + "' ")
-                                         .collect(Collectors.joining("\\n"))
-                                + "\")";
+            String firstClip = request.getClips()
+                                      .stream()
+                                      .findFirst()
+                                      .map(fileClip -> MessageFormat.format("file ''{0}'' \\ninpoint {1} \\n",
+                                                                            fileClip.getFilepath(),
+                                                                            offsetInFirstFile))
+                                      .orElse("");
+            String otherClips = request.getClips()
+                                       .stream()
+                                       .skip(1)
+                                       .map(fileClip -> MessageFormat.format("file ''{0}'' ",
+                                                                             fileClip.getFilepath()))
+                                       .collect(Collectors.joining("\\n"));
+            String inputFiles = MessageFormat.format("-f concat -safe 0 -i <(echo -e \"{0}{1}\")",
+                                                     firstClip,
+                                                     otherClips);
             line = line.replace("$$INPUT_FILES$$", inputFiles);
             programStartSecondsInFirstFile = 0;
         }
     
         line = line.replace("$$START_OFFSET$$", programStartSecondsInFirstFile + "");
-    
     
         return line;
     }

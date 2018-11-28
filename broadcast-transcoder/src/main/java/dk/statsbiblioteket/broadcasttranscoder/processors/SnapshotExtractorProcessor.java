@@ -75,16 +75,6 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
             record.setExtractionState(TranscodingStateEnum.FAILED);
             throw new ProcessorException("Process Timed out for " + request.getObjectPid() + " after " + timeout + "ms.",e);
         }
-    
-    
-//        // This is a dirty fix because ffmpeg generates 2 snapshots close together at the start
-//        String fileTemplate = FileUtils.getSnapshotOutputFileStringTemplate(request, context);
-//        String firstFile = fileTemplate.replace("%d", "1");
-//        try {
-//            (new File(firstFile)).delete();
-//        } catch (Exception e) {
-//            logger.warn("Could not delete " + firstFile);
-//        }
     }
     
     protected String getCommandLine(TranscodeRequest request, SingleTranscodingContext context) {
@@ -170,7 +160,7 @@ public class SnapshotExtractorProcessor extends ProcessorChainElement {
 
 
         commandline += " -t " + length;
-
+    
 
         commandline += " -vf " + calculateVideoFilterArguments(
                 "\"fps="+nframes+"/"+length+",scale=[WIDTH]x[HEIGHT],pad="+targetNumerator*scale+":"+targetDenominator*scale+":[PADDING_X]:[PADDING_Y]\"",
