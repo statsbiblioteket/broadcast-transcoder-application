@@ -47,3 +47,6 @@ set +x
 #http://naiad:7880/fedora/objects?pid=true&label=true&title=true&identifier=true&terms=&query=label~*teracom*&maxResults=20#
 #
 #curl -H "Content-Type: text/xml" -ufedoraAdmin:fedoraAdminPass http://alhena:7980/fedora/objects/new -X POST --data-binary @objectXML1.xml -vvv
+
+#Count transcoded programs
+ssh $develHost "find ~/streamingContent/ -type f -path './?/?/?/?/*.mp?' | grep -v temp | wc -l"
