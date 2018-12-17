@@ -21,6 +21,27 @@
     </properties>
 
 
+    <distributionManagement>
+        <repository>
+            <id>sbprojects-nexus</id>
+            <name>Internal SBProjects Nexus Repo manager</name>
+            <url>https://sbprojects.statsbiblioteket.dk/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>sbprojects-nexus</id>
+            <name>Internal SBForge Nexus Repo manager</name>
+            <url>https://sbprojects.statsbiblioteket.dk/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <!-- This needs to be overridden in projects with subproject, where the
+          (sub)projects typically will be deployed to a common site url based on the
+          parent projects artifactId
+        <site>
+          <id>sbprojects-nexus</id>
+          <url>dav:https://sbprojects.statsbiblioteket.dk/maven/${project.artifactId}/sites/${project.version}</url>
+        </site>-->
+    </distributionManagement>
+
+
     <scm>
         <connection>scm:git:git@github.com:statsbiblioteket/broadcast-transcoder-application.git</connection>
         <developerConnection>scm:git:git@github.com:statsbiblioteket/broadcast-transcoder-application.git</developerConnection>
