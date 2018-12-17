@@ -10,7 +10,7 @@
 
     <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>
     <artifactId>broadcast-transcoder-application</artifactId>
-    <version>0.8-SNAPSHOT</version>
+    <version>0.7.1</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -31,7 +31,7 @@
         <connection>scm:git:git@github.com:statsbiblioteket/broadcast-transcoder-application.git</connection>
         <developerConnection>scm:git:git@github.com:statsbiblioteket/broadcast-transcoder-application.git</developerConnection>
         <url>https://github.com/statsbiblioteket/broadcast-transcoder-application</url>
-      <tag>HEAD</tag>
+      <tag>broadcast-transcoder-application-0.7.1</tag>
   </scm>
 
     <build>
