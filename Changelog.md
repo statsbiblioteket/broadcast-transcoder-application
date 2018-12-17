@@ -1,3 +1,7 @@
+0.7.1
+=====
+* FinalMediaFileRenamerProcessor can now overwrite files when overwrite=true in `bta.behaivour.properties`
+
 0.7.0
 =====
 
