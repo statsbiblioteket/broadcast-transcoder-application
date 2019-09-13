@@ -108,7 +108,7 @@ public class UnistreamTranscoderProcessorTest {
         String commandLine = UnistreamTranscoderProcessor.getFfmpegCommandLine(request, context);
 //        String expectedCommandLine
 //                = "ffmpeg -ss 38574 -t 2820 -i concat:/bitarkiv/0400/files/tv3_S09-TV3_S09-TV3_mpeg1_20111113045601_20111114045502_encoder6-2.mpeg -ss 00:00:05 -async 2 -vcodec libx264 -deinterlace -ar 44100 -profile:v High -level 3.0 -preset superfast -threads 0 -b:v 400000 -ac 2 -b:a 96000 -y -filter_complex [0:v]scale= 522x288 /home/bta/streamingContent/temp/457513af-30c6-477a-8c3e-b8b19d0fbaac.mp4";
-        String expectedCommandLine = "ffmpeg -ss 0 -t 300 -f concat -safe 0 -i <(echo -e \"file '/net/zone1.isilon.sblokalnet/ifs/archive/bitmag-devel01-data/bitmag1/disk1/perm/reklame/reklame_tv2/splits/2005/tv2rekl200505_0033.mpg' \\ninpoint 0 \\n\") -ss 0 -async 2 -vcodec libx264 -deinterlace -ar 44100 -profile:v High -level 3.0 -preset superfast -map 0:1 -threads 0 -b:v 400000 -ac 2 -b:a 96000 -y -filter_complex \"[0:v]scale=384x288\" /temp/3b980622-67cb-484b-993a-37a5d3732f0f.mp4";
+        String expectedCommandLine = "ffmpeg     -f concat -safe 0 -i <(echo -e \"file '/net/zone1.isilon.sblokalnet/ifs/archive/bitmag-devel01-data/bitmag1/disk1/perm/reklame/reklame_tv2/splits/2005/tv2rekl200505_0033.mpg' \\ninpoint 0 \\n\") -ss 0 -async 2 -vcodec libx264 -deinterlace -ar 44100 -profile:v High -level 3.0 -preset superfast -map 0:1 -threads 0 -b:v 400000 -ac 2 -b:a 96000 -y -filter_complex \"[0:v]scale=384x288\" /temp/3b980622-67cb-484b-993a-37a5d3732f0f.mp4";
         Assert.assertEquals(expectedCommandLine,commandLine);
         
     }
