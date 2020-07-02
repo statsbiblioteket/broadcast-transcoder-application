@@ -6,13 +6,12 @@ import dk.statsbiblioteket.broadcasttranscoder.processors.DomsAndOverwriteExamin
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import dk.statsbiblioteket.util.Streams;
 import junit.framework.TestCase;
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.XMLUnit;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.builder.DiffBuilder;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -56,9 +55,9 @@ public class DomsTranscodingStructureFetcherTest  {
 
         String result = thing.killNewerVersions(bundleString, 14000000000002L);
 
-        XMLUnit.setIgnoreWhitespace(true);
-        Diff smallDiff = new Diff(bundleString,result);
-        assertTrue("pieces of XML are similar", smallDiff.similar());
+
+        Diff smallDiff = DiffBuilder.compare(result).withTest(bundleString).ignoreWhitespace().checkForSimilar().build();
+        assertTrue("pieces of XML are similar", !smallDiff.hasDifferences());
 
     }
 
