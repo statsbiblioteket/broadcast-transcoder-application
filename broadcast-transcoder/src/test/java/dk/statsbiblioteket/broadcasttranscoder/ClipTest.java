@@ -4,10 +4,10 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.ProgramBroadcast;
 import dk.statsbiblioteket.broadcasttranscoder.processors.*;
 import dk.statsbiblioteket.broadcasttranscoder.util.FileFormatEnum;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -40,9 +40,9 @@ public class ClipTest  {
     private String pid;
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
-        Assume.assumeTrue(new File(scratchDir).exists());
+        assumeTrue(new File(scratchDir).exists());
 
         pid = "uuid:foobar";
         context.setAnalysisClipLength(100000000l);
@@ -73,6 +73,7 @@ public class ClipTest  {
         context.setSoxTranscodeParams(" -t raw -s -b 16 -c2");
         context.setFileOutputRootdir(new File(scratchWriteDir+"outputdir"));
     }
+
 
     public void testMultiProgramMux() throws ProcessorException, DatatypeConfigurationException {
         TranscodeRequest request = new TranscodeRequest();
@@ -157,7 +158,7 @@ public class ClipTest  {
     }
 
     @Test
-    @Ignore
+    @Disabled
      public void testAnimal() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
         request.setObjectPid(pid);
@@ -185,7 +186,7 @@ public class ClipTest  {
     }
 
     @Test
-    @Ignore
+    @Disabled
      public void testDr1() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
         request.setObjectPid(pid);
@@ -213,7 +214,7 @@ public class ClipTest  {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testDrp8() throws DatatypeConfigurationException, ProcessorException {
         TranscodeRequest request = new TranscodeRequest();
         request.setObjectPid(pid);

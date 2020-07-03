@@ -8,14 +8,16 @@ import dk.statsbiblioteket.util.Streams;
 import junit.framework.TestCase;
 import org.xmlunit.diff.Diff;
 import org.xmlunit.builder.DiffBuilder;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.opentest4j.TestAbortedException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,7 +36,7 @@ public class DomsTranscodingStructureFetcherTest  {
         try {
             InetAddress.getByName("alhena");
         } catch (UnknownHostException e) {
-            Assume.assumeNoException(e);
+            throw new TestAbortedException();
         }
         context.setDomsViewAngle("GUI");
         context.setDomsPassword("fedoraAdminPass");
@@ -48,7 +50,7 @@ public class DomsTranscodingStructureFetcherTest  {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testKillNewVersions() throws Exception {
         DomsAndOverwriteExaminerProcessor thing = new DomsAndOverwriteExaminerProcessor();
         String bundleString = Streams.getUTF8Resource("src/main/resources/xslt/sampleObject.xml");
@@ -57,7 +59,7 @@ public class DomsTranscodingStructureFetcherTest  {
 
 
         Diff smallDiff = DiffBuilder.compare(result).withTest(bundleString).ignoreWhitespace().checkForSimilar().build();
-        assertTrue("pieces of XML are similar", !smallDiff.hasDifferences());
+        assertTrue(!smallDiff.hasDifferences(), "pieces of XML are similar");
 
     }
 

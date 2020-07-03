@@ -3,10 +3,9 @@ package dk.statsbiblioteket.broadcasttranscoder.processors;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
 import dk.statsbiblioteket.broadcasttranscoder.util.CalendarUtils;
-import junit.framework.TestCase;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -14,20 +13,21 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import org.opentest4j.TestAbortedException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
  */
 public class BroadcastMetadataSorterProcessorTest {
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    public void setUp() throws TestAbortedException {
         try {
-            InetAddress.getByName("carme");
+             InetAddress.getByName("carme");
         } catch (UnknownHostException e) {
-            Assume.assumeNoException(e);
+            throw new TestAbortedException();
         }
     }
 

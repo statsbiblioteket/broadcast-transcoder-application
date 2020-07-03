@@ -1,9 +1,10 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import junit.framework.Assert;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.BroadcastMetadata;
 import dk.statsbiblioteket.broadcasttranscoder.util.CalendarUtils;
@@ -16,18 +17,16 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.Assert.*;
-
 /**
  * Test of file properties identifier.
  */
 public class FilePropertiesIdentifierProcessorTest {
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
 
     }
@@ -39,41 +38,36 @@ public class FilePropertiesIdentifierProcessorTest {
 
         request = getMockRequest("file.ts");
         filePropertiesIdentifierProcessor.processThis(request, null);
-        assertEquals("Should have right file type", FileFormatEnum.SINGLE_PROGRAM_AUDIO_TS, request.getFileFormat());
-        assertEquals("Should have right bit rate", 0, request.getBitrate());
+        assertEquals(FileFormatEnum.SINGLE_PROGRAM_AUDIO_TS, request.getFileFormat(), "Should have right file type");
+        assertEquals(0, request.getBitrate(), "Should have right bit rate");
 
         request = getMockRequest("file.mpg");
         filePropertiesIdentifierProcessor.processThis(request, null);
-        assertEquals("Should have right file type", FileFormatEnum.MPEG_PS, request.getFileFormat());
-        assertEquals("Should have right bit rate", 0, request.getBitrate());
+        assertEquals(FileFormatEnum.MPEG_PS, request.getFileFormat(), "Should have right file type");
+        assertEquals(0, request.getBitrate(), "Should have right bit rate");
 
         request = getMockRequest("file.mpeg");
         filePropertiesIdentifierProcessor.processThis(request, null);
-        assertEquals("Should have right file type", FileFormatEnum.MPEG_PS, request.getFileFormat());
-        assertEquals("Should have right bit rate", 0, request.getBitrate());
+        assertEquals(FileFormatEnum.MPEG_PS, request.getFileFormat(), "Should have right file type");
+        assertEquals(0, request.getBitrate(), "Should have right bit rate");
 
         request = getMockRequest("file.mpeg1");
         filePropertiesIdentifierProcessor.processThis(request, null);
-        assertEquals("Should have right file type", FileFormatEnum.MPEG_PS, request.getFileFormat());
-        assertEquals("Should have right bit rate", 0, request.getBitrate());
+        assertEquals(FileFormatEnum.MPEG_PS, request.getFileFormat(), "Should have right file type");
+        assertEquals(0, request.getBitrate(), "Should have right bit rate");
 
         request = getMockRequest("file.wav");
         filePropertiesIdentifierProcessor.processThis(request, null);
-        assertEquals("Should have right file type", FileFormatEnum.AUDIO_WAV, request.getFileFormat());
-        assertEquals("Should have right bit rate", 0, request.getBitrate());
+        assertEquals(FileFormatEnum.AUDIO_WAV, request.getFileFormat(), "Should have right file type");
+        assertEquals(0, request.getBitrate(), "Should have right bit rate");
 
         request = getMockRequest("muxfile.ts");
         filePropertiesIdentifierProcessor.processThis(request, null);
-        assertEquals("Should have right file type", FileFormatEnum.MULTI_PROGRAM_MUX, request.getFileFormat());
-        assertEquals("Should have right bit rate", 0, request.getBitrate());
+        assertEquals(FileFormatEnum.MULTI_PROGRAM_MUX, request.getFileFormat(), "Should have right file type");
+        assertEquals(0, request.getBitrate(), "Should have right bit rate");
 
-        request = getMockRequest("file.txt");
-        try {
-            filePropertiesIdentifierProcessor.processThis(request, null);
-            fail("Should throw excpetion on unknown file type");
-        } catch (ProcessorException e) {
-            // Expected
-        }
+        TranscodeRequest specialRequest = getMockRequest("file.txt");
+        assertThrows(Exception.class, () -> {filePropertiesIdentifierProcessor.processThis(specialRequest, null);  }, "Should throw excpetion on unknown file type");
     }
 
     private TranscodeRequest getMockRequest(String filename) throws DatatypeConfigurationException {

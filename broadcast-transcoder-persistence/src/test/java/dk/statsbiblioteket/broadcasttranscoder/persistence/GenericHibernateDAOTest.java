@@ -3,17 +3,17 @@ package dk.statsbiblioteket.broadcasttranscoder.persistence;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.GenericHibernateDAO;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
-import org.hamcrest.core.IsNull;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.Date;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,13 +24,13 @@ import static org.junit.Assert.assertThat;
  */
 public class GenericHibernateDAOTest {
     String configFile;
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
         configFile = new File(Thread.currentThread().getContextClassLoader().getResource("hibernate.cfg.xml").toURI()).getAbsolutePath();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
 
     }
@@ -51,23 +51,23 @@ public class GenericHibernateDAOTest {
 
         dao.create(testObject);
         BroadcastTranscodingRecord readObject = dao.read(testObject.getID());
-        assertThat(readObject,is(testObject));
+        assertEquals(readObject,testObject);
         System.out.println(readObject);
 
         readObject.setTitle("title is not different");
 
-        assertThat(readObject,not(testObject));
+        assertNotEquals(readObject,testObject);
 
         dao.update(readObject);
 
         BroadcastTranscodingRecord readObject2 = dao.read(readObject.getID());
 
-        assertThat(readObject2,is(readObject));
+        assertEquals(readObject2,readObject);
 
         dao.delete(readObject2);
 
         BroadcastTranscodingRecord readObject3 = dao.read(readObject2.getID());
-        assertThat((readObject3),IsNull.nullValue());
+        assertNull(readObject3);
 
     }
 
