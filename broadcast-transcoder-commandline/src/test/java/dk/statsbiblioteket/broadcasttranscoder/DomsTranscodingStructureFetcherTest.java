@@ -5,7 +5,6 @@ import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingR
 import dk.statsbiblioteket.broadcasttranscoder.processors.DomsAndOverwriteExaminerProcessor;
 import dk.statsbiblioteket.broadcasttranscoder.processors.TranscodeRequest;
 import dk.statsbiblioteket.util.Streams;
-import junit.framework.TestCase;
 import org.xmlunit.diff.Diff;
 import org.xmlunit.builder.DiffBuilder;
 
