@@ -3,7 +3,7 @@ package dk.statsbiblioteket.broadcasttranscoder.persistence.dao;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.cfg.Configuration;
 
 import java.io.File;
 
@@ -30,7 +30,7 @@ public class HibernateUtil implements HibernateUtilIF {
         if (instance == null) {
             instance = new HibernateUtil();
             File file = new File(configFilePath);
-            AnnotationConfiguration configure = (new AnnotationConfiguration()).configure(file);
+            Configuration configure = (new Configuration()).configure(file);
             configure.addAnnotatedClass(BroadcastTranscodingRecord.class);
             configure.addAnnotatedClass(ReklamefilmTranscodingRecord.class);
             configure.addAnnotatedClass(ProgramMediaInfo.class);
