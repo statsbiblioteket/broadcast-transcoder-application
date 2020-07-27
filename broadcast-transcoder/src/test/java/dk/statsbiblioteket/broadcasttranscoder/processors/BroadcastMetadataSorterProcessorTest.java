@@ -25,7 +25,7 @@ public class BroadcastMetadataSorterProcessorTest {
     @BeforeEach
     public void setUp() throws TestAbortedException {
         try {
-             InetAddress.getByName("carme");
+            InetAddress.getByName("carme");
         } catch (UnknownHostException e) {
             throw new TestAbortedException();
         }

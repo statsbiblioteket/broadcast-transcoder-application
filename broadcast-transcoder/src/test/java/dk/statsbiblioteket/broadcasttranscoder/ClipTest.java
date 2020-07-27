@@ -74,7 +74,6 @@ public class ClipTest  {
         context.setFileOutputRootdir(new File(scratchWriteDir+"outputdir"));
     }
 
-
     public void testMultiProgramMux() throws ProcessorException, DatatypeConfigurationException {
         TranscodeRequest request = new TranscodeRequest();
         request.setObjectPid(pid);

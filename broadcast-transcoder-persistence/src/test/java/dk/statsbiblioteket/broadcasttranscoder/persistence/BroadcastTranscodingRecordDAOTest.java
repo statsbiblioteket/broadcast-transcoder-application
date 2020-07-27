@@ -66,7 +66,7 @@ public class BroadcastTranscodingRecordDAOTest {
         assertEquals(pendings.size(), 5);
         Long cutoff = pendings.get(2).getDomsLatestTimestamp();
         List<BroadcastTranscodingRecord> fewerPendings = dao.getAllTranscodings(cutoff, TranscodingStateEnum.PENDING);
-        assertEquals(3, fewerPendings.size());
+        assertEquals(fewerPendings.size(), 3);
 
 
     }
