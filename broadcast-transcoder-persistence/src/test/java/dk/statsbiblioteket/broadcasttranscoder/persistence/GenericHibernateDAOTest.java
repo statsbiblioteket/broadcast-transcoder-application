@@ -37,7 +37,6 @@ public class GenericHibernateDAOTest {
 
     @Test
     public void testCreateReadUpdateDelete() throws Exception {
-
         GenericHibernateDAO<BroadcastTranscodingRecord, String> dao
                 = new GenericHibernateDAO<BroadcastTranscodingRecord, String>(
                 BroadcastTranscodingRecord.class,

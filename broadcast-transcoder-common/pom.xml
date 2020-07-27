@@ -11,7 +11,6 @@
 
     <artifactId>broadcast-transcoder-common</artifactId>
 
-
     <dependencies>
         <dependency>
             <groupId>dk.statsbiblioteket.doms.central</groupId>

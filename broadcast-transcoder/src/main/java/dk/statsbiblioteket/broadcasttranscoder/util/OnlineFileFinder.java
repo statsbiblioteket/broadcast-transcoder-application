@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ public class OnlineFileFinder implements FileFinder {
             } catch (IOException e) {
                 throw new ProcessorException("Failed to open URL " + url,e);
             }
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             try {
                 String line = bufferedReader.readLine();
                 if (line == null) {

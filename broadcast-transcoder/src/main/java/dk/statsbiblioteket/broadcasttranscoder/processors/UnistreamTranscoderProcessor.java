@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class UnistreamTranscoderProcessor extends ProcessorChainElement {

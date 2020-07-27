@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -96,7 +97,7 @@ public class ExternalJobRunner {
                         notifyAll();
                     }
                     String line;
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
                     try {
                         while ((line = reader.readLine()) != null) {
                             buffer.append(line+"\n");

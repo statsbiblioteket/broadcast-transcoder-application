@@ -26,6 +26,8 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * This class implements the logic for deciding go/no-go for transcoding. The logic is as follows:
@@ -178,7 +180,8 @@ public class DomsAndOverwriteExaminerProcessor extends ProcessorChainElement {
     }
 
     String getTimeString(long timestamp) {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSS'Z'");
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSS'Z'", Locale.ROOT);
+        format.setTimeZone(TimeZone.getTimeZone("Europe/Copenhagen"));
         return format.format(new Date(timestamp));
 
     }

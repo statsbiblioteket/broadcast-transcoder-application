@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +63,7 @@ public class NearlineFileFinder implements FileFinder {
         } catch (IOException e) {
             throw new ProcessorException("Failed to open URL "+url,e);
         }
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         String line;
         try {
             while ((line=bufferedReader.readLine())!=null) {
@@ -104,7 +105,7 @@ public class NearlineFileFinder implements FileFinder {
             String url = finderBaseUrl + "?" + "*"+filename;
             try {
                 InputStream is = new URL(url).openStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
                 int lines = 0;
                 while (bufferedReader.readLine() != null){
                     lines++;

@@ -9,7 +9,6 @@
     </parent>
 
     <artifactId>broadcast-transcoder-persistence</artifactId>
-
     <dependencies>
         <dependency>
             <groupId>org.hibernate</groupId>
