@@ -13,9 +13,13 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.File;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
+import java.util.Locale;
 
 /**
  *
@@ -38,6 +42,9 @@ public class ClipTest  {
     //String ts_dr1 = scratchDir+"DR1_20121008_120000_20121008_130000.mux";
     String ts_drp8 = scratchDir+"DRP8_20121008_120000_20121008_130000.mux";
     private String pid;
+    String zoneString = "Europe/Copenhagen";
+    TimeZone localTZ = TimeZone.getTimeZone(zoneString);
+    ZoneId localId = ZoneId.of(zoneString);
 
 
     @BeforeEach
@@ -86,10 +93,17 @@ public class ClipTest  {
         clips.add(clip);
         request.setClips(clips);
 
-
         ProgramBroadcast pb = new ProgramBroadcast();
-        XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,34));
-        XMLGregorianCalendar xmlcalstart = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,30));
+        ZonedDateTime startTime = ZonedDateTime.of(0,0,1,4,30, 0,0, localId);
+        ZonedDateTime endTime = ZonedDateTime.of(0,0,1,4,34, 0, 0, localId);
+        GregorianCalendar gregCal = new GregorianCalendar(localTZ, Locale.ROOT);
+
+        gregCal.setTimeInMillis(startTime.toInstant().toEpochMilli());
+        XMLGregorianCalendar xmlcalstart = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
+
+        gregCal.setTimeInMillis(endTime.toInstant().toEpochMilli());
+        XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
+
         pb.setTimeStart(xmlcalstart);
         pb.setTimeStop(xmlcalend);
         request.setProgramBroadcast(pb);
@@ -118,8 +132,14 @@ public class ClipTest  {
         request.setObjectPid("uuid:barfoo");
 
         ProgramBroadcast pb = new ProgramBroadcast();
-        XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,5,0));
-        XMLGregorianCalendar xmlcalstart = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,30));
+        ZonedDateTime startTime = ZonedDateTime.of(0,0,1,4,30,0,0,localId);
+        ZonedDateTime endTime = ZonedDateTime.of(0,0,1,5,0,0,0,localId);
+        GregorianCalendar gregCal = new GregorianCalendar(localTZ, Locale.ROOT);
+
+        gregCal.setTimeInMillis(startTime.toInstant().toEpochMilli());
+        XMLGregorianCalendar xmlcalstart = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
+        gregCal.setTimeInMillis(endTime.toInstant().toEpochMilli());
+        XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
         pb.setTimeStart(xmlcalstart);
         pb.setTimeStop(xmlcalend);
         request.setProgramBroadcast(pb);
@@ -145,8 +165,14 @@ public class ClipTest  {
         request.setObjectPid("uuid:carfoo");
 
         ProgramBroadcast pb = new ProgramBroadcast();
-        XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,5,0));
-        XMLGregorianCalendar xmlcalstart = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,30));
+        ZonedDateTime startTime = ZonedDateTime.of(0,0,1,4,30,0,0,localId);
+        ZonedDateTime endTime = ZonedDateTime.of(0,0,1,5,0,0,0,localId);
+        GregorianCalendar gregCal = new GregorianCalendar(localTZ, Locale.ROOT);
+
+        gregCal.setTimeInMillis(startTime.toInstant().toEpochMilli());
+        XMLGregorianCalendar xmlcalstart = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
+        gregCal.setTimeInMillis(endTime.toInstant().toEpochMilli());
+        XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
         pb.setTimeStart(xmlcalstart);
         pb.setTimeStop(xmlcalend);
         request.setProgramBroadcast(pb);
@@ -173,8 +199,14 @@ public class ClipTest  {
         request.setObjectPid("uuid:animal");
 
         ProgramBroadcast pb = new ProgramBroadcast();
-        XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,32));
-        XMLGregorianCalendar xmlcalstart = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,30));
+        ZonedDateTime startTime = ZonedDateTime.of(0,0,1,4,30,0,0,localId);
+        ZonedDateTime endTime = ZonedDateTime.of(0,0,1,4,32,0,0,localId);
+        GregorianCalendar gregCal = new GregorianCalendar(localTZ, Locale.ROOT);
+
+        gregCal.setTimeInMillis(startTime.toInstant().toEpochMilli());
+        XMLGregorianCalendar xmlcalstart = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
+        gregCal.setTimeInMillis(endTime.toInstant().toEpochMilli());
+        XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
         pb.setTimeStart(xmlcalstart);
         pb.setTimeStop(xmlcalend);
         request.setProgramBroadcast(pb);
@@ -201,8 +233,14 @@ public class ClipTest  {
         request.setObjectPid("uuid:drone");
 
         ProgramBroadcast pb = new ProgramBroadcast();
-        XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,32));
-        XMLGregorianCalendar xmlcalstart = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,30));
+        ZonedDateTime startTime = ZonedDateTime.of(0,0,1,4,30,0,0,localId);
+        ZonedDateTime endTime = ZonedDateTime.of(0,0,1,4,32,0,0,localId);
+        GregorianCalendar gregCal = new GregorianCalendar(localTZ, Locale.ROOT);
+
+        gregCal.setTimeInMillis(startTime.toInstant().toEpochMilli());
+        XMLGregorianCalendar xmlcalstart = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
+        gregCal.setTimeInMillis(endTime.toInstant().toEpochMilli());
+        XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
         pb.setTimeStart(xmlcalstart);
         pb.setTimeStop(xmlcalend);
         request.setProgramBroadcast(pb);
@@ -229,8 +267,14 @@ public class ClipTest  {
         request.setObjectPid("uuid:drp8");
 
         ProgramBroadcast pb = new ProgramBroadcast();
-        XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,32));
-        XMLGregorianCalendar xmlcalstart = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar(0,0,1,4,30));
+        ZonedDateTime startTime = ZonedDateTime.of(0,0,1,4,30,0,0,localId);
+        ZonedDateTime endTime = ZonedDateTime.of(0,0,1,4,32,0,0,localId);
+        GregorianCalendar gregCal = new GregorianCalendar(localTZ, Locale.ROOT);
+
+        gregCal.setTimeInMillis(startTime.toInstant().toEpochMilli());
+        XMLGregorianCalendar xmlcalstart = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
+        gregCal.setTimeInMillis(endTime.toInstant().toEpochMilli());
+        XMLGregorianCalendar xmlcalend = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
         pb.setTimeStart(xmlcalstart);
         pb.setTimeStop(xmlcalend);
         request.setProgramBroadcast(pb);

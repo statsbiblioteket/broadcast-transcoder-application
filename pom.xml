@@ -6,14 +6,18 @@
     <artifactId>broadcast-transcoder-application</artifactId>
     <version>0.8-SNAPSHOT</version>
     <packaging>pom</packaging>
-
-    <modules>
+      <modules>
         <module>broadcast-transcoder</module>
         <module>broadcast-transcoder-commandline</module>
         <module>broadcast-transcoder-persistence</module>
         <module>broadcast-transcoder-common</module>
         <module>broadcast-transcoder-webservice</module>
     </modules>
+    <parent>
+        <groupId>dk.statsbiblioteket.sbprojects</groupId>
+        <artifactId>sbprojects-parent</artifactId>
+        <version>23</version>
+    </parent>
     <properties>
         <api.check.phase>process-test-classes</api.check.phase>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -112,7 +116,6 @@
     <dependencyManagement>
 
         <dependencies>
-
             <dependency>
                 <groupId>com.sun.jersey</groupId>
                 <artifactId>jersey-servlet</artifactId>
