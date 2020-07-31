@@ -150,8 +150,8 @@ public class UnistreamTranscoderProcessor extends ProcessorChainElement {
             String otherClips = request.getClips()
                                        .stream()
                                        .skip(1)
-                                       .map(fileClip -> "file '" + fileClip.getFilepath() + "'¤ ")
-                                       .collect(Collectors.joining("#\\n"));
+                                       .map(fileClip -> "file '" + fileClip.getFilepath() + "' ")
+                                       .collect(Collectors.joining("\\n"));
             String inputFiles = String.format(Locale.ROOT,
                                              "-f concat -safe 0 -i <(echo -e \"%s%s\")",
                                              firstClip,

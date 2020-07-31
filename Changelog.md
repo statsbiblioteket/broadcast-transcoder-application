@@ -1,3 +1,9 @@
+0.8
+=====
+* Update dependencies
+* Test changes due to {junit, xmlunit} update
+* Complying with forbidden api
+
 0.7.1
 =====
 * FinalMediaFileRenamerProcessor can now overwrite files when overwrite=true in `bta.behaivour.properties`
