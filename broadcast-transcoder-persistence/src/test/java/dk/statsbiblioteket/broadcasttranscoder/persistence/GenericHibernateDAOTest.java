@@ -11,8 +11,9 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
@@ -50,18 +51,18 @@ public class GenericHibernateDAOTest {
 
         dao.create(testObject);
         BroadcastTranscodingRecord readObject = dao.read(testObject.getID());
-        assertEquals(readObject,testObject);
+        assertThat(readObject,is(testObject));
         System.out.println(readObject);
 
         readObject.setTitle("title is not different");
 
-        assertNotEquals(readObject,testObject);
+        assertThat(readObject,not(testObject));
 
         dao.update(readObject);
 
         BroadcastTranscodingRecord readObject2 = dao.read(readObject.getID());
 
-        assertEquals(readObject2,readObject);
+        assertThat(readObject2, is(readObject));
 
         dao.delete(readObject2);
 
