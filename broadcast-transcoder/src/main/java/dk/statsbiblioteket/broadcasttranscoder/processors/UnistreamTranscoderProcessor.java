@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class UnistreamTranscoderProcessor extends ProcessorChainElement {
@@ -135,7 +136,8 @@ public class UnistreamTranscoderProcessor extends ProcessorChainElement {
                                     .stream()
                                     .map(TranscodeRequest.FileClip::getFilepath)
                                     .collect(Collectors.joining("|"));
-            String inputFiles = MessageFormat.format("-i \"concat:{0}\"", clips);
+            MessageFormat formatter = (new MessageFormat("-i \"concat:{0}\"", Locale.ROOT));
+            String inputFiles = formatter.format(clips);
             line = line.replace("$$INPUT_FILES$$", inputFiles);
         } else {
             long offsetInFirstFile = programStartSecondsInFirstFile;
@@ -150,9 +152,11 @@ public class UnistreamTranscoderProcessor extends ProcessorChainElement {
                                        .skip(1)
                                        .map(fileClip -> "file '" + fileClip.getFilepath() + "' ")
                                        .collect(Collectors.joining("\\n"));
-            String inputFiles = MessageFormat.format("-f concat -safe 0 -i <(echo -e \"{0}{1}\")",
-                                                     firstClip,
-                                                     otherClips);
+            String inputFiles = String.format(Locale.ROOT,
+                                             "-f concat -safe 0 -i <(echo -e \"%s%s\")",
+                                             firstClip,
+                                             otherClips)
+                                             .trim();
             line = line.replace("$$INPUT_FILES$$", inputFiles);
             programStartSecondsInFirstFile = 0;
         }

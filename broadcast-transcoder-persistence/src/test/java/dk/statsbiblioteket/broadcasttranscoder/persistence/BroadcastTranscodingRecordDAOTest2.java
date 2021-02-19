@@ -3,14 +3,15 @@ package dk.statsbiblioteket.broadcasttranscoder.persistence;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.BroadcastTranscodingRecordDAO;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,7 +26,7 @@ public class BroadcastTranscodingRecordDAOTest2  {
     HibernateUtil util;
     private String programPid;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
         util = HibernateUtil.getInstance(getHibernateConfigFile().getAbsolutePath());
@@ -41,13 +42,13 @@ public class BroadcastTranscodingRecordDAOTest2  {
 
 
     @Test
-    public void testSomthing(){
+    public void testSomething(){
 
 
 
         BroadcastTranscodingRecordDAO dao = new BroadcastTranscodingRecordDAO(util);
         Long temp = dao.read(programPid).getLastTranscodedTimestamp();
-        assertNull("Database is not empty",temp);
+        assertNull(temp, "Database is not empty");
 
 
 
@@ -70,7 +71,7 @@ public class BroadcastTranscodingRecordDAOTest2  {
 
         System.out.println(record);
         System.out.println(record2);
-        assertEquals("object changed by persistence",record,record2);
+        assertEquals(record, record2, "object changed by persistence");
 
 
     }

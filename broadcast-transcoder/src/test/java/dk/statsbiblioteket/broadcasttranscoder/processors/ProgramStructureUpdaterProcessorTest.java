@@ -1,8 +1,9 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.domscontent.*;
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 /**
  * Created with IntelliJ IDEA.
  * User: csr
@@ -10,8 +11,9 @@ import junit.framework.TestCase;
  * Time: 11:40
  * To change this template use File | Settings | File Templates.
  */
-public class ProgramStructureUpdaterProcessorTest extends TestCase {
+public class ProgramStructureUpdaterProcessorTest {
 
+    @Test
     public void testAreSemanticallyEqualMissingStart() {
         //Empty structure are equal
         ProgramStructure s1 = new ProgramStructure();
@@ -35,7 +37,7 @@ public class ProgramStructureUpdaterProcessorTest extends TestCase {
         ms2.setMissingSeconds(30);
         assertTrue(processor.areSemanticallyEqual(s1, s2));
     }
-
+    @Test
     public void testAreSemanticallyEqualMissingEnd() {
         //Empty structure are equal
         ProgramStructure s1 = new ProgramStructure();
@@ -60,7 +62,7 @@ public class ProgramStructureUpdaterProcessorTest extends TestCase {
         assertTrue(processor.areSemanticallyEqual(s1, s2));
     }
 
-
+    @Test
     public void testAreSemanticallyEqualHoles() {
         ProgramStructure s1 = new ProgramStructure();
         ProgramStructure s2 = new ProgramStructure();
@@ -94,7 +96,7 @@ public class ProgramStructureUpdaterProcessorTest extends TestCase {
         holes1.getHole().add(hole1);    //different number of holes
         assertFalse(processor.areSemanticallyEqual(s1, s2));
     }
-
+    @Test
     public void testAreSemanticallyEqualOverlap() {
         ProgramStructure s1 = new ProgramStructure();
         ProgramStructure s2 = new ProgramStructure();

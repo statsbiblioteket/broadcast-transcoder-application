@@ -9,7 +9,9 @@ import org.apache.commons.cli.*;
 import org.apache.commons.cli.ParseException;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.*;
+import java.util.Locale;
 
 /**
  * Created with IntelliJ IDEA.
@@ -67,7 +69,7 @@ public class MarkAsCompleteOptionsParser<T extends TranscodingRecord> extends In
             throw new OptionParseException(configFile.getAbsolutePath() + " is not a file.");
         }
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(configFile));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8));
             String line;
             while ((line = reader.readLine()) != null ){
 
@@ -95,7 +97,7 @@ public class MarkAsCompleteOptionsParser<T extends TranscodingRecord> extends In
 
     private Long parseDate(String timestamp) throws java.text.ParseException {
         String normalizedTimestamp = normalizeFedoraDate(timestamp);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ROOT);
         return dateFormat.parse(normalizedTimestamp).getTime();
     }
 

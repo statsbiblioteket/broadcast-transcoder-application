@@ -15,6 +15,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created with IntelliJ IDEA.
@@ -55,10 +57,11 @@ public class SingleFileClipper {
         long start = System.currentTimeMillis();
         long end = start + duration*1000L;
 
+        TimeZone localTZ = TimeZone.getTimeZone("Europe/Copenhagen");
 
-        final GregorianCalendar calStart = new GregorianCalendar();
+        final GregorianCalendar calStart = new GregorianCalendar(localTZ, Locale.ROOT);
         calStart.setTimeInMillis(start);
-        final GregorianCalendar calEnd = new GregorianCalendar();
+        final GregorianCalendar calEnd = new GregorianCalendar(localTZ, Locale.ROOT);
         calEnd.setTimeInMillis(end);
         XMLGregorianCalendar xmlcalstart = DatatypeFactory.newInstance().newXMLGregorianCalendar(calStart);
 

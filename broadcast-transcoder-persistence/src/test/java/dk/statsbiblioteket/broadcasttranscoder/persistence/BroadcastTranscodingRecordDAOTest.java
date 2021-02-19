@@ -3,18 +3,20 @@ package dk.statsbiblioteket.broadcasttranscoder.persistence;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.BroadcastTranscodingRecordDAO;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.dao.HibernateUtil;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.BroadcastTranscodingRecord;
-import org.hamcrest.core.Is;
-import org.hamcrest.core.IsNot;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
 
 import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.assertThat;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,7 +30,7 @@ public class BroadcastTranscodingRecordDAOTest {
     BroadcastTranscodingRecordDAO dao;
     private String known;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         configFile = new File(Thread.currentThread().getContextClassLoader().getResource("hibernate.cfg.xml").toURI()).getAbsolutePath();
 
@@ -43,7 +45,7 @@ public class BroadcastTranscodingRecordDAOTest {
 
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         List<BroadcastTranscodingRecord> transcodings = dao.getAllTranscodings(0, null);
         for (BroadcastTranscodingRecord transcoding : transcodings) {
@@ -63,10 +65,10 @@ public class BroadcastTranscodingRecordDAOTest {
     @Test
     public void testGetAllTranscodings() throws Exception {
         List<BroadcastTranscodingRecord> pendings = dao.getAllTranscodings(0, TranscodingStateEnum.PENDING);
-        assertThat(pendings.size(), Is.is(5));
+        assertThat(pendings.size(), is(5));
         Long cutoff = pendings.get(2).getDomsLatestTimestamp();
         List<BroadcastTranscodingRecord> fewerPendings = dao.getAllTranscodings(cutoff, TranscodingStateEnum.PENDING);
-        assertThat(fewerPendings.size(),Is.is(3));
+        assertThat(fewerPendings.size(), is(3));
 
 
     }
@@ -74,54 +76,54 @@ public class BroadcastTranscodingRecordDAOTest {
     @Test
     public void testMarkAsChangedInDoms() throws Exception {
         List<BroadcastTranscodingRecord> pendings = dao.getAllTranscodings(0, TranscodingStateEnum.PENDING);
-        assertThat(pendings.size(), Is.is(5));
+        assertThat(pendings.size(), is(5));
         BroadcastTranscodingRecord latest = pendings.get(4);
-        assertThat(latest.getID(), IsNot.not(known));
+        assertThat(latest.getID(), not(known));
 
 
         dao.markAsChangedInDoms(known,new Date().getTime());
         pendings = dao.getAllTranscodings(0, TranscodingStateEnum.PENDING);
-        assertThat(pendings.size(), Is.is(5));
+        assertThat(pendings.size(), is(5));
         latest = pendings.get(4);
-        assertThat(latest.getID(),Is.is(known));
+        assertThat(latest.getID(),is(known));
     }
 
     @Test
     public void testMarkAsAlreadyTranscoded() throws Exception {
         List<BroadcastTranscodingRecord> pendings = dao.getAllTranscodings(0, TranscodingStateEnum.PENDING);
-        assertThat(pendings.size(), Is.is(5));
+        assertThat(pendings.size(), is(5));
 
         dao.markAsAlreadyTranscoded(known,new Date().getTime());
         pendings = dao.getAllTranscodings(0, TranscodingStateEnum.PENDING);
-        assertThat(pendings.size(), Is.is(4));
+        assertThat(pendings.size(), is(4));
         pendings = dao.getAllTranscodings(0, TranscodingStateEnum.COMPLETE);
-        assertThat(pendings.size(), Is.is(1));
+        assertThat(pendings.size(), is(1));
 
     }
 
     @Test
     public void testMarkAsFailed() throws Exception {
         List<BroadcastTranscodingRecord> pendings = dao.getAllTranscodings(0, TranscodingStateEnum.PENDING);
-        assertThat(pendings.size(), Is.is(5));
+        assertThat(pendings.size(), is(5));
 
         dao.markAsFailed(known,new Date().getTime(),"Test of failed");
         pendings = dao.getAllTranscodings(0, TranscodingStateEnum.PENDING);
-        assertThat(pendings.size(), Is.is(4));
+        assertThat(pendings.size(), is(4));
         pendings = dao.getAllTranscodings(0, TranscodingStateEnum.FAILED);
-        assertThat(pendings.size(), Is.is(1));
+        assertThat(pendings.size(), is(1));
 
     }
 
     @Test
     public void testMarkAsRejected() throws Exception {
         List<BroadcastTranscodingRecord> pendings = dao.getAllTranscodings(0, TranscodingStateEnum.PENDING);
-        assertThat(pendings.size(), Is.is(5));
+        assertThat(pendings.size(), is(5));
 
         dao.markAsRejected(known,new Date().getTime(),"Test of rejected");
         pendings = dao.getAllTranscodings(0, TranscodingStateEnum.PENDING);
-        assertThat(pendings.size(), Is.is(4));
+        assertThat(pendings.size(), is(4));
         pendings = dao.getAllTranscodings(0, TranscodingStateEnum.REJECTED);
-        assertThat(pendings.size(), Is.is(1));
+        assertThat(pendings.size(), is(1));
 
     }
 }

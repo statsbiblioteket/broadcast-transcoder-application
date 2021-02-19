@@ -9,7 +9,6 @@ import dk.statsbiblioteket.doms.central.MethodFailedException;
 import dk.statsbiblioteket.doms.central.RecordDescription;
 import dk.statsbiblioteket.doms.central.ViewBundle;
 import org.apache.commons.io.FileUtils;
-import org.junit.*;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -17,7 +16,12 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.opentest4j.TestAbortedException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,7 +34,7 @@ public class BtaDomsFetcherTest {
 
     private File foobar4;
 
-    @Before
+    @BeforeEach
       public void setUp() throws Exception {
           foobar4 = new File("./foobar4");
           foobar4.mkdir();
@@ -38,12 +42,12 @@ public class BtaDomsFetcherTest {
         try {
             InetAddress.getByName("alhena");
         } catch (UnknownHostException e) {
-            Assume.assumeNoException(e);
+            throw new TestAbortedException();
         }
 
       }
 
-      @After
+      @AfterEach
       public void tearDown() throws Exception {
           FileUtils.deleteDirectory(foobar4);
 
@@ -62,8 +66,8 @@ public class BtaDomsFetcherTest {
         final File behaviouralFile = new File(resource1.toURI());
         String hibernate = new File(contextClassLoader.getResource("hibernate-derby.xml").toURI()).getAbsolutePath();
 
-        assertTrue(infrastructureFile.getAbsolutePath() + " should exist.", infrastructureFile.exists());
-        assertTrue(behaviouralFile.getAbsolutePath() + " should exist.", behaviouralFile.exists());
+        assertTrue(infrastructureFile.exists(), infrastructureFile.getAbsolutePath() + " should exist.");
+        assertTrue(behaviouralFile.exists(), behaviouralFile.getAbsolutePath() + " should exist.");
         BtaDomsFetcher.main(
                 new String[]{
                         "-infrastructure_configfile",
@@ -77,7 +81,7 @@ public class BtaDomsFetcherTest {
 
 
     @Test
-    @Ignore("to slow")
+    @Disabled("Too slow")
     public void testFetcher() throws InvalidCredentialsException, MethodFailedException {
         FetcherContext context = new FetcherContext();
         context.setBatchSize(100);
@@ -92,7 +96,7 @@ public class BtaDomsFetcherTest {
         for (RecordDescription record : records) {
             System.out.println(record.getPid()+":"+record.getDate());
         }
-        assertTrue("No records found",records.size()>0);
+        assertTrue(records.size()>0, "No records found");
     }
 
 }

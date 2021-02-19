@@ -5,10 +5,11 @@ import dk.statsbiblioteket.broadcasttranscoder.mock.DomsMockApi;
 import dk.statsbiblioteket.doms.central.InvalidCredentialsException;
 import dk.statsbiblioteket.doms.central.InvalidResourceException;
 import dk.statsbiblioteket.doms.central.MethodFailedException;
-import junit.framework.TestCase;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.opentest4j.TestAbortedException;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -19,12 +20,12 @@ import java.util.LinkedList;
  */
 public class ProgramMetadataFetcherProcessorTest {
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    public void setUp() throws TestAbortedException {
         try {
             InetAddress.getByName("alhena");
         } catch (UnknownHostException e) {
-            Assume.assumeNoException(e);
+            throw new TestAbortedException();
         }
     }
 

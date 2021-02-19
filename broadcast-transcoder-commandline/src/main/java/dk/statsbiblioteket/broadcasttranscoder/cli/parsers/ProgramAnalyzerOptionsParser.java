@@ -5,6 +5,7 @@ import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingR
 import org.apache.commons.cli.*;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 import static dk.statsbiblioteket.broadcasttranscoder.cli.PropertyNames.*;
@@ -71,7 +72,7 @@ public class ProgramAnalyzerOptionsParser<T extends TranscodingRecord> extends I
             throw new OptionParseException(configFile.getAbsolutePath() + " is not a file.");
         }
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(configFile));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8));
             String line;
 
             while ((line = reader.readLine()) != null ) {
@@ -99,7 +100,7 @@ public class ProgramAnalyzerOptionsParser<T extends TranscodingRecord> extends I
             throw new OptionParseException(configFile.getAbsolutePath() + " is not a file.");
         }
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(configFile));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8));
             String line;
             while ((line = reader.readLine()) != null ){
                 String pid = line.trim();

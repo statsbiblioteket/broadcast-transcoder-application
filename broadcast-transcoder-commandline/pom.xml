@@ -9,8 +9,6 @@
 
     <artifactId>broadcast-transcoder-commandline</artifactId>
 
-
-
     <dependencies>
         <dependency>
             <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>
@@ -24,8 +22,8 @@
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -47,7 +45,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.4</version>
+                <version>3.3.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -75,7 +73,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
+                <version>3.2.0</version>
                 <configuration>
                     <archive>
                         <manifest>

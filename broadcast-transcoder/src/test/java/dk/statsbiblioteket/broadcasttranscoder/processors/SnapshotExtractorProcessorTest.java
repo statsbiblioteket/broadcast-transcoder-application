@@ -4,8 +4,8 @@ import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
 import dk.statsbiblioteket.broadcasttranscoder.persistence.entities.TranscodingRecord;
 import dk.statsbiblioteket.broadcasttranscoder.reklamefilm.ReklamefilmFileResolverProcessor;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -131,7 +131,7 @@ public class SnapshotExtractorProcessorTest {
                                                    .replaceAll("\\s+"," ");
         System.out.println("PropertyBasedCommandLine:\n"+propertyBasedCommandLine+"\n");
         
-        Assert.assertEquals(commandLineKUANA,
+        assertEquals(commandLineKUANA,
                             propertyBasedCommandLine);
         
 //        4.0 version:          ffmpeg -i /home/bta/streamingContent/6a844744-45ba-486d-902e-b552c0e89d4f.mp4 -ss 120 -t 1260 -r 4/1260 -s 416x229 -vf 'pad=416:234:0:2:black'  -an -y -vframes 6 /home/larm/imageDirectory/6a844744-45ba-486d-902e-b552c0e89d4f.%d.png

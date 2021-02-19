@@ -4,6 +4,8 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,7 +21,7 @@ public class CalendarUtils {
     }
 
     public static XMLGregorianCalendar getCalendar() throws DatatypeConfigurationException {
-        GregorianCalendar cal = new GregorianCalendar();
+        GregorianCalendar cal = new GregorianCalendar(TimeZone.getTimeZone("Europe/Copenhagen"), Locale.ROOT);
         XMLGregorianCalendar xmlcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
         return xmlcal;
     }

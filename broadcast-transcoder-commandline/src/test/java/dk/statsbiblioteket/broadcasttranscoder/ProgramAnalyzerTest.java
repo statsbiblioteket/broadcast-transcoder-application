@@ -1,9 +1,9 @@
 package dk.statsbiblioteket.broadcasttranscoder;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
@@ -18,14 +18,14 @@ public class ProgramAnalyzerTest {
 
     private File foobar4;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         foobar4 = new File("./foobar4");
         foobar4.mkdir();
         foobar4.deleteOnExit();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         FileUtils.deleteDirectory(foobar4);
 

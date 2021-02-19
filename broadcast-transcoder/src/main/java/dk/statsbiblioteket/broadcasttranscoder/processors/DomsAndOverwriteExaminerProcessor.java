@@ -10,8 +10,8 @@ import dk.statsbiblioteket.doms.central.InvalidCredentialsException;
 import dk.statsbiblioteket.doms.central.InvalidResourceException;
 import dk.statsbiblioteket.doms.central.MethodFailedException;
 import dk.statsbiblioteket.doms.central.ViewBundle;
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.XMLUnit;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.builder.DiffBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -26,6 +26,8 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * This class implements the logic for deciding go/no-go for transcoding. The logic is as follows:
@@ -119,20 +121,14 @@ public class DomsAndOverwriteExaminerProcessor extends ProcessorChainElement {
             throw new ProcessorException("Failed to extract the BTA structure from the object bundle for pid " +  pid, e);
         }
 
-        XMLUnit.setIgnoreWhitespace(true);
-        try {
 
             //TODO sort order of file objects?
-            Diff smallDiff = new Diff(oldStructure, newStructure);
-            if (smallDiff.similar()) {
+            Diff smallDiff = DiffBuilder.compare(oldStructure).withTest(newStructure).ignoreWhitespace().checkForSimilar().build();
+
+            if (!smallDiff.hasDifferences()) {
                 logger.info("Not retranscoding " + pid + " as no significant changes found.");
                 return false;
             }
-        } catch (SAXException e) {
-            throw new ProcessorException("Failed to parse the BTA structure from the object bundle for pid " +  pid + " for comparison");
-        } catch (IOException e) {
-            throw new ProcessorException("Failed to parse the BTA structure from the object bundle for pid " +  pid + " for comparison");
-        }
         logger.info("Retranscoding " + pid + " as significant changes found.");
         return true;
 
@@ -184,7 +180,8 @@ public class DomsAndOverwriteExaminerProcessor extends ProcessorChainElement {
     }
 
     String getTimeString(long timestamp) {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSS'Z'");
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSS'Z'", Locale.ROOT);
+        format.setTimeZone(TimeZone.getTimeZone("Europe/Copenhagen"));
         return format.format(new Date(timestamp));
 
     }

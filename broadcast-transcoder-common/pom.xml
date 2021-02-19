@@ -11,7 +11,6 @@
 
     <artifactId>broadcast-transcoder-common</artifactId>
 
-
     <dependencies>
         <dependency>
             <groupId>dk.statsbiblioteket.doms.central</groupId>
@@ -20,7 +19,7 @@
         <dependency>
         	<groupId>com.sun.xml.ws</groupId>
         	<artifactId>jaxws-tools</artifactId>
-        	<version>2.1.4</version>
+        	<version>2.3.2</version>
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.mediestream.broadcast-transcoder-application</groupId>
@@ -28,8 +27,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
 
             <scope>test</scope>
         </dependency>
@@ -39,7 +38,7 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>javassist</groupId>
+            <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
             <scope>runtime</scope>
         </dependency>

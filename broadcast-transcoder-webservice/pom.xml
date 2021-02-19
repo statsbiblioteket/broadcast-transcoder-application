@@ -14,7 +14,7 @@
             <plugin>
                 <groupId>org.jvnet.jaxb2.maven2</groupId>
                 <artifactId>maven-jaxb2-plugin</artifactId>
-                <version>0.8.3</version>
+                <version>0.14.0</version>
                 <configuration>
                     <args>
                         <arg>-XtoString</arg>
@@ -23,7 +23,7 @@
                         <plugin>
                             <groupId>org.jvnet.jaxb2_commons</groupId>
                             <artifactId>jaxb2-basics</artifactId>
-                            <version>0.6.4</version>
+                            <version>0.12.0</version>
                         </plugin>
                     </plugins>
                 </configuration>
@@ -48,7 +48,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.4</version>
+                <version>3.3.0</version>
                 <configuration>
                     <finalName>broadcast-transcoder-webservice-${project.version}</finalName>
                     <!--<archive>
@@ -110,8 +110,8 @@
             <artifactId>jersey-json</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>

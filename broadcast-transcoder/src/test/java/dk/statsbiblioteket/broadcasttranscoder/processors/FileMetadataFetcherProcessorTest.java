@@ -1,10 +1,11 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.SingleTranscodingContext;
-import junit.framework.TestCase;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import org.opentest4j.TestAbortedException;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -16,14 +17,14 @@ import java.net.UnknownHostException;
  * Time: 12:39 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FileMetadataFetcherProcessorTest  {
+public class FileMetadataFetcherProcessorTest {
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    public void setUp() throws TestAbortedException {
         try {
             InetAddress.getByName("carme");
         } catch (UnknownHostException e) {
-            Assume.assumeNoException(e);
+            throw new TestAbortedException();
         }
     }
 

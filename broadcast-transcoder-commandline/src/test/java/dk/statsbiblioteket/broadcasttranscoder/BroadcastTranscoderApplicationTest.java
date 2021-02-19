@@ -2,10 +2,9 @@ package dk.statsbiblioteket.broadcasttranscoder;
 
 import dk.statsbiblioteket.broadcasttranscoder.cli.OptionParseException;
 import dk.statsbiblioteket.broadcasttranscoder.processors.ProcessorException;
-import junit.framework.TestCase;
-import org.junit.Test;
 
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  *
@@ -14,12 +13,7 @@ public class BroadcastTranscoderApplicationTest{
 
     @Test
     public void testMainError() throws Exception {
-        try {
-            BroadcastTranscoderApplication.main(null);
-            fail();
-        } catch (OptionParseException e) {
-            //expected
-        }
+        assertThrows(OptionParseException.class, () -> BroadcastTranscoderApplication.main(null), "expecting exception");
     }
 
     @Test

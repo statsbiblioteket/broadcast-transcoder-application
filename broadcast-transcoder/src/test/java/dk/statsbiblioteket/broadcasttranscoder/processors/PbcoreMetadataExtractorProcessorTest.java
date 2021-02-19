@@ -1,6 +1,8 @@
 package dk.statsbiblioteket.broadcasttranscoder.processors;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,7 +11,7 @@ import junit.framework.TestCase;
  * Time: 2:32 PM
  * To change this template use File | Settings | File Templates.
  */
-public class PbcoreMetadataExtractorProcessorTest extends TestCase {
+public class PbcoreMetadataExtractorProcessorTest {
 
     String test1 = "" +
             "<PBCoreDescriptionDocument xmlns=\"http://www.pbcore.org/PBCore/PBCoreNamespace.html\">" +
@@ -79,16 +81,18 @@ public class PbcoreMetadataExtractorProcessorTest extends TestCase {
             "  </pbcoreTitle>" +
             "</PBCoreDescriptionDocument>" ;
 
-
+    @Test
     public void testIsTvmeterMetadata() {
         assertTrue((new PbcoreMetadataExtractorProcessor()).hasTvmeter(test1));
     }
 
+    @Test
      public void testIsTvmeterMetadataFalse() {
         assertFalse((new PbcoreMetadataExtractorProcessor()).hasTvmeter(test2));
         assertFalse((new PbcoreMetadataExtractorProcessor()).hasTvmeter(test3));
     }
 
+    @Test
     public void testGetTitle() {
         assertTrue((new PbcoreMetadataExtractorProcessor()).getTitle(test3).contains("kylling"));
     }
